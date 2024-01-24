@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ChoiceDatabaseActivity"
+    android:background="@drawable/gradientbackground"
+    android:layoutDirection="rtl"
+    >
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/activition_Version"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/color_black"
+            android:textSize="30dp"
+            android:gravity="center"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:weightSum="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/activition_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="کد فعال سازی"
+                android:textDirection="rtl"
+                android:inputType="number"
+                android:textSize="36sp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:textColor="@color/grey_1000"
+                android:maxLength="6"
+                app:backgroundTint="@color/grey_200"
+                app:strokeColor="@color/grey_1000"
+                app:strokeWidth="10dp"
+                android:layout_weight="0.3"
+                android:layout_margin="5dp"
+                style="?attr/editTextBackground" />
+
+            <Button
+                android:id="@+id/activition_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ثبت"
+                android:textSize="36sp"
+                android:padding="5dp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/green_600"
+                app:strokeColor="@color/grey_1000"
+                app:strokeWidth="1dp"
+                app:iconTint="@color/white"
+                android:layout_weight="0.7"
+                android:layout_margin="5dp"
+
+                style="?attr/materialButtonOutlinedStyle" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:background="@color/orange_800"
+                android:id="@+id/activition_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="5dp" />
+        </ScrollView>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
