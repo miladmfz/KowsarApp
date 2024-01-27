@@ -1,5 +1,6 @@
 package com.kits.kowsarapp.application;
 
+
 import android.app.Application;
 import android.content.Context;
 
@@ -15,7 +16,7 @@ public class App extends Application {
         super.onCreate();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/iransansmobile_medium.ttf")
-                .setFontAttrId(R.attr.fontPath)
+                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
                 .build()
         );
     }

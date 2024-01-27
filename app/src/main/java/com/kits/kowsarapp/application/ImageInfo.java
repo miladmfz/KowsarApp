@@ -3,6 +3,7 @@ package com.kits.kowsarapp.application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,7 +39,7 @@ public class ImageInfo {
             out.flush();
             out.close();
         } catch (Exception e) {
-            callMethod.ErrorLog(e.getMessage());
+            Log.e("Kowsarapp",e.getMessage());
         }
 
     }
@@ -50,7 +51,7 @@ public class ImageInfo {
                 dir.mkdirs();
             }
         } catch (Exception e) {
-            callMethod.ErrorLog(e.getMessage());
+            Log.e("Kowsarapp",e.getMessage());
         }
         String fname = code + ".jpg";
         File file = new File(dir, fname);
@@ -61,8 +62,7 @@ public class ImageInfo {
             out.flush();
             out.close();
         } catch (Exception e) {
-            callMethod.ErrorLog(e.getMessage());
-
+            Log.e("Kowsarapp",e.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public class ImageInfo {
             file.delete();
         } catch (Exception e) {
 
-            callMethod.ErrorLog(e.getMessage());
+            Log.e("Kowsarapp",e.getMessage());
         }
     }
 
