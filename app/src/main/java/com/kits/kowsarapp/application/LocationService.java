@@ -53,7 +53,7 @@ public class LocationService extends Service {
                 calendar1.setTimeInMillis((Objects.requireNonNull(locationResult.getLastLocation()).getTime() + 12600000));
                 if (calendar1.get(Calendar.HOUR_OF_DAY) > 7 && calendar1.get(Calendar.HOUR_OF_DAY) < 20) {
                     dbh.UpdateLocationService(locationResult, calendar1.getPersianShortDateTime());
-                    Log.e("kowsar__1", "startLocationService");
+                    callMethod.Log("startLocationService");
                 }
             }
         }
@@ -67,7 +67,7 @@ public class LocationService extends Service {
     }
 
     private void startLocationService() {
-        Log.e("kowsar__", "startLocationService");
+        callMethod.Log("startLocationService");
         String channelId = "location_notification_channel";
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -150,7 +150,8 @@ public class LocationService extends Service {
             CallMethod callMethod = new CallMethod(App.getContext());
             dbh = new DatabaseHelper(App.getContext(), callMethod.ReadString("DatabaseName"));
         } else {
-            Log.e("kowsar_query", "dbh=null");
+            callMethod.Log("dbh=null");
+
         }
         HandlerThread thread = new HandlerThread("ServiceStartArguments", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();

@@ -59,12 +59,15 @@ public class CallMethod extends Application {
         return shPref.getBoolean("FirstStart", true);
     }
 
-    public void showToast(String string) {
+    public void showToast(String message) {
         if (toast!=null){
             toast.cancel();
         }
-        toast = Toast.makeText(context, string, Toast.LENGTH_LONG);
+        toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         toast.show();
+    }
+    public void Log(String message) {
+        Log.e("KowsarApp",message);
     }
 
 

@@ -39,7 +39,8 @@ public class ImageInfo {
             out.flush();
             out.close();
         } catch (Exception e) {
-            Log.e("Kowsarapp",e.getMessage());
+            callMethod.Log(e.getMessage());
+
         }
 
     }
@@ -51,7 +52,7 @@ public class ImageInfo {
                 dir.mkdirs();
             }
         } catch (Exception e) {
-            Log.e("Kowsarapp",e.getMessage());
+            callMethod.Log(e.getMessage());
         }
         String fname = code + ".jpg";
         File file = new File(dir, fname);
@@ -62,7 +63,7 @@ public class ImageInfo {
             out.flush();
             out.close();
         } catch (Exception e) {
-            Log.e("Kowsarapp",e.getMessage());
+            callMethod.Log(e.getMessage());
         }
     }
 
@@ -78,7 +79,7 @@ public class ImageInfo {
             file.delete();
         } catch (Exception e) {
 
-            Log.e("Kowsarapp",e.getMessage());
+            callMethod.Log(e.getMessage());
         }
     }
 

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl">
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/NavActivity_appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/MainActivity_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_weight="1"
+                android:background="?attr/colorPrimary"
+                app:titleTextColor="@color/white"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:title="@string/app_name">
+
+
+            </androidx.appcompat.widget.Toolbar>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_round_selected"
+            android:layout_margin="2dp">
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/customerfactorheader"
+                    android:textSize="14sp"
+                    android:layout_weight="0.7"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/MainActivity_customer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="18sp"
+                    android:layout_weight="0.3"
+                    android:gravity="center" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/MainActivity_ll_sum_factor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/totalfactorheader"
+                    android:textSize="14sp"
+                    android:layout_weight="0.7"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/MainActivity_sum_factor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:textSize="18sp"
+                    android:gravity="center" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/my_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:visibility="gone" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/listView" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mainactivity_test_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_margin="10dp"
+                        android:text="تستی نرم افزار"
+                        android:textColor="#ffffff"
+                        app:rippleColor="@color/deep_purple_300"
+                        app:strokeColor="@color/grey_1000"
+                        app:strokeWidth="1dp"
+                        app:backgroundTint="@color/red_900"
+                        android:textSize="42sp"
+                        android:onClick="test_fun"
+                        android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/mainactivity_test_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@color/grey_1000"
+                        android:visibility="gone"
+                        android:text="tv_test"
+                        />
+                    <TextView
+                        android:id="@+id/mainactivity_test_tv2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@color/grey_1000"
+                        android:visibility="gone"
+                        android:text="tv_test"
+                        />
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mainactivity_create_factor"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_margin="10dp"
+                        android:text="@string/insert_prefactor"
+                        android:textColor="#ffffff"
+                        app:rippleColor="@color/deep_purple_300"
+                        app:strokeColor="@color/grey_1000"
+                        app:strokeWidth="1dp"
+                        app:backgroundTint="@color/green_600"
+                        android:textSize="42sp" />
+
+                    <com.google.android.material.button.MaterialButton
+
+                        android:id="@+id/mainactivity_good_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_margin="10dp"
+                        android:text="@string/good_search"
+                        android:textColor="@color/grey_1000"
+                        android:textSize="42sp"
+                        app:strokeColor="@color/grey_1000"
+                        app:strokeWidth="1dp"
+                        app:backgroundTint="@color/green_100"
+                        app:rippleColor="@color/deep_purple_300" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mainactivity_open_factor"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        app:backgroundTint="@color/white"
+                        app:strokeColor="@color/grey_1000"
+                        app:strokeWidth="1dp"
+                        android:focusable="true"
+                        android:textColor="@color/grey_1000"
+                        app:rippleColor="@color/deep_purple_300"
+
+                        android:text="@string/open_prefactor"
+                        android:textSize="42sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/mainactivity_all_factor"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/grey_1000"
+                        app:rippleColor="@color/deep_purple_300"
+                        app:backgroundTint="@color/red_100"
+                        app:strokeColor="@color/grey_1000"
+                        app:strokeWidth="1dp"
+                        android:text="@string/all_prefactor"
+                        android:textSize="42sp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.core.widget.NestedScrollView>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+
+
+

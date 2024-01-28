@@ -70,7 +70,7 @@ public class Print {
     }
 
     public void dialogProg() {
-        dialogProg.setContentView(R.layout.rep_prog);
+        dialogProg.setContentView(R.layout.broker_spinner_box);
         tv_rep = dialogProg.findViewById(R.id.rep_prog_text);
         LottieAnimationView animationView = dialogProg.findViewById(R.id.lottie_raw);
         animationView.setAnimation(R.raw.receipt);

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,7 +22,7 @@ import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.App;
 import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.databinding.ActivityChoiceDatabaseBinding;
+import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
 import com.kits.kowsarapp.model.Activation;
 import com.kits.kowsarapp.model.DatabaseHelper;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -52,13 +51,13 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
     Button btn_prog;
     Intent intent;
     int downloadId;
-    ActivityChoiceDatabaseBinding binding;
+    DefaultActivityDbBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityChoiceDatabaseBinding.inflate(getLayoutInflater());
+        binding = DefaultActivityDbBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Config();
@@ -66,7 +65,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
         try {
             init();
         } catch (Exception e) {
-            callMethod.ErrorLog(e.getMessage());
+            callMethod.Log(e.getMessage());
         }
     }
 
@@ -80,7 +79,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
         dbhbase = new DatabaseHelper(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
         dbhbase.CreateActivationDb();
 
-        dialog.setContentView(R.layout.rep_prog);
+        dialog.setContentView(R.layout.broker_spinner_box);
         tv_rep = dialog.findViewById(R.id.rep_prog_text);
         tv_step = dialog.findViewById(R.id.rep_prog_step);
         btn_prog = dialog.findViewById(R.id.rep_prog_btn);
@@ -93,13 +92,11 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
         activations = dbhbase.getActivation();
 
         binding.activitionVersion.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : " + BuildConfig.VERSION_NAME));
-        callMethod.ErrorLog("0");
         for (Activation singleactive : activations) {
-            callMethod.ErrorLog("11");
             try {
                 CreateView(singleactive);
             }catch (Exception e){
-                callMethod.ErrorLog(e.getMessage());
+                callMethod.Log(e.getMessage());
             }
 
         }
@@ -122,7 +119,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    Log.e("test",t.getMessage());
+                    callMethod.Log(t.getMessage());
                 }
             });
 
@@ -334,7 +331,8 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                    callMethod.ErrorLog(t.getMessage());
+
+                    callMethod.Log(t.getMessage());
                 }
             });
         });

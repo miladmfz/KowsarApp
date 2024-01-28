@@ -15,13 +15,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.work.WorkManager;
@@ -49,13 +46,14 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.default_activity_splash);
         Config();
         try {
             init();
 
         } catch (Exception e) {
-            callMethod.ErrorLog(e.getMessage());
+            callMethod.Log(e.getMessage());
+
         }
 
     }
@@ -228,13 +226,13 @@ public class SplashActivity extends AppCompatActivity {
 //                        finish();
 
                         if (callMethod.ReadString("AppType").equals("0")){
-                            Log.e("kowsar-AppType","company");
+                            callMethod.Log("company");
                         }else if (callMethod.ReadString("AppType").equals("1")){
-                            Log.e("kowsar-AppType","broker");
+                            callMethod.Log("broker");
                         }else if (callMethod.ReadString("AppType").equals("2")){
-                            Log.e("kowsar-AppType","ocr");
+                            callMethod.Log("ocr");
                         }else if (callMethod.ReadString("AppType").equals("3")){
-                            Log.e("kowsar-AppType","order");
+                            callMethod.Log("order");
                         }
 
 
