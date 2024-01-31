@@ -13,7 +13,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.AppPrinter;
-import com.kits.kowsarapp.model.DatabaseHelper;
+import com.kits.kowsarapp.model.broker.Broker_DBH;
 
 import com.kits.kowsarapp.model.RetrofitResponse;
 import com.kits.kowsarapp.webService.APIClient;
@@ -36,7 +36,7 @@ public class Print {
     public Broker_APIInterface broker_apiInterface;
     public Call<RetrofitResponse> call;
     CallMethod callMethod;
-    DatabaseHelper dbh;
+    Broker_DBH dbh;
     Integer il;
     Integer sizetext;
     PersianCalendar persianCalendar;
@@ -57,7 +57,7 @@ public class Print {
         this.mContext = mContext;
         this.il = 0;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
+        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
         this.persianCalendar = new PersianCalendar();
         this.dialog = new Dialog(mContext);

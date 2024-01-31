@@ -14,7 +14,6 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Process;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +25,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.model.DatabaseHelper;
+import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import java.util.Calendar;
@@ -35,7 +34,7 @@ import java.util.Objects;
 
 public class LocationService extends Service {
 
-    DatabaseHelper dbh;
+    Broker_DBH dbh;
     CallMethod callMethod = new CallMethod(App.getContext());
     PersianCalendar calendar1 = new PersianCalendar();
 
@@ -148,7 +147,7 @@ public class LocationService extends Service {
 
         if (dbh == null) {
             CallMethod callMethod = new CallMethod(App.getContext());
-            dbh = new DatabaseHelper(App.getContext(), callMethod.ReadString("DatabaseName"));
+            dbh = new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
         } else {
             callMethod.Log("dbh=null");
 

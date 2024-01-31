@@ -24,7 +24,7 @@ import com.kits.kowsarapp.application.App;
 import com.kits.kowsarapp.application.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
 import com.kits.kowsarapp.model.Activation;
-import com.kits.kowsarapp.model.DatabaseHelper;
+import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.NumberFunctions;
 import com.kits.kowsarapp.model.RetrofitResponse;
 import com.kits.kowsarapp.webService.APIClient_kowsar;
@@ -42,8 +42,8 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
     APIInterface_kowsar apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface_kowsar.class);
     CallMethod callMethod;
     Activation activation;
-    DatabaseHelper dbh;
-    DatabaseHelper dbhbase;
+    Broker_DBH dbh;
+    Broker_DBH dbhbase;
     TextView tv_rep;
     TextView tv_step;
     Dialog dialog;
@@ -76,7 +76,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
         dialog = new Dialog(this);
         activation = new Activation();
 
-        dbhbase = new DatabaseHelper(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
+        dbhbase = new Broker_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
         dbhbase.CreateActivationDb();
 
         dialog.setContentView(R.layout.broker_spinner_box);
@@ -182,7 +182,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                         File CompletefILE = new File(activation.getDatabaseFolderPath() + "/KowsarDb.sqlite");
                         DownloadTemp.renameTo(CompletefILE);
                         callMethod.EditString("DatabaseName", activation.getDatabaseFilePath());
-                        dbh = new DatabaseHelper(App.getContext(), callMethod.ReadString("DatabaseName"));
+                        dbh = new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
                         dbh.DatabaseCreate();
                         File tempdb = new File(activation.getDatabaseFolderPath() + "/tempDb");
 

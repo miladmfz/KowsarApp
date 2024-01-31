@@ -26,7 +26,7 @@ import androidx.work.WorkManager;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.App;
 import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.model.DatabaseHelper;
+import com.kits.kowsarapp.model.broker.Broker_DBH;
 
 import java.io.File;
 import java.util.Locale;
@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
     Intent intent;
     CallMethod callMethod;
     Handler handler;
-    DatabaseHelper dbh, dbhbase;
+    Broker_DBH dbh, dbhbase;
     WorkManager workManager;
     int i = 0;
 
@@ -80,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
     @SuppressLint("SdCardPath")
     public void init() {
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
+        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
 
         if (callMethod.ReadString("ServerURLUse").equals("")) {
             callMethod.EditString("DatabaseName", "");
@@ -156,7 +156,7 @@ public class SplashActivity extends AppCompatActivity {
             callMethod.EditString("ActivationCode", "");
             callMethod.EditString("AppType", "");
 
-            dbhbase = new DatabaseHelper(App.getContext(), "/data/data/com.kits.brokerkowsar/databases/KowsarDb.sqlite");
+            dbhbase = new Broker_DBH(App.getContext(), "/data/data/com.kits.brokerkowsar/databases/KowsarDb.sqlite");
             dbhbase.CreateActivationDb();
             //endregion
 

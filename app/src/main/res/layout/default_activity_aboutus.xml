@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activity.AboutUsActivity"
+    android:orientation="vertical"
+    android:layoutDirection="rtl">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/SearchActivity_appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/AboutusActivity_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_weight="1"
+                android:background="?attr/colorPrimary"
+                app:title="@string/aboutus"
+                app:titleTextColor="@color/white">
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:padding="20dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/kits" />
+
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/aboutus_address"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:layout_marginTop="20sp"
+                />
+
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/aboutus_number"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:layout_marginTop="20sp"
+
+                />
+            <TextView
+                android:id="@+id/tv4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/aboutus_localnumber"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:layout_marginTop="20sp"
+                />
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/aboutus_email"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:layout_marginTop="20sp"
+                />
+
+
+            <TextView
+                android:id="@+id/tv5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Download New Version"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:layout_marginTop="20sp"
+                android:textColor="@color/deep_purple_500"
+
+                />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

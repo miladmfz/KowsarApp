@@ -13,14 +13,14 @@
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/NavActivity_appbar"
+            android:id="@+id/b_nav_a_appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             >
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/MainActivity_toolbar"
+                android:id="@+id/b_main_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_weight="1"
@@ -57,7 +57,7 @@
                     android:gravity="center" />
 
                 <TextView
-                    android:id="@+id/MainActivity_customer"
+                    android:id="@+id/b_main_a_customer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="18sp"
@@ -69,7 +69,7 @@
 
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/MainActivity_ll_sum_factor"
+                android:id="@+id/b_main_a_ll_sum_factor"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5">
@@ -83,7 +83,7 @@
                     android:gravity="center" />
 
                 <TextView
-                    android:id="@+id/MainActivity_sum_factor"
+                    android:id="@+id/b_main_a_sum_factor"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
@@ -97,27 +97,6 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/my_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="20dp" />
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center_horizontal"
-                android:padding="10dp"
-                android:visibility="gone" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
         <androidx.core.widget.NestedScrollView
@@ -143,7 +122,7 @@
                         android:id="@+id/listView" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/mainactivity_test_btn"
+                        android:id="@+id/b_main_a_test_btn"
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_margin="10dp"
@@ -157,7 +136,7 @@
                         android:onClick="test_fun"
                         android:visibility="gone" />
                     <TextView
-                        android:id="@+id/mainactivity_test_tv"
+                        android:id="@+id/b_main_a_test_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
@@ -166,7 +145,7 @@
                         android:text="tv_test"
                         />
                     <TextView
-                        android:id="@+id/mainactivity_test_tv2"
+                        android:id="@+id/b_main_a_test_tv2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
@@ -177,7 +156,7 @@
 
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/mainactivity_create_factor"
+                        android:id="@+id/b_main_a_create_factor"
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_margin="10dp"
@@ -191,7 +170,7 @@
 
                     <com.google.android.material.button.MaterialButton
 
-                        android:id="@+id/mainactivity_good_search"
+                        android:id="@+id/b_main_a_good_search"
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_margin="10dp"
@@ -204,7 +183,7 @@
                         app:rippleColor="@color/deep_purple_300" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/mainactivity_open_factor"
+                        android:id="@+id/b_main_a_open_factor"
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_margin="10dp"
@@ -220,7 +199,7 @@
                         android:textSize="42sp" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/mainactivity_all_factor"
+                        android:id="@+id/b_main_a_all_factor"
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_margin="10dp"

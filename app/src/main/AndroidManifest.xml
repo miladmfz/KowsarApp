@@ -45,6 +45,7 @@
         android:theme="@style/GrayDefault"
         tools:ignore="AllowBackup"
         tools:targetApi="n">
+
         <activity
             android:name=".activity.broker.Broker_NavActivity"
             android:exported="false" />
@@ -57,6 +58,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <service
             android:name=".application.LocationService"

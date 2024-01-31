@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.model;
+package com.kits.kowsarapp.model.broker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,13 +6,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.LocationResult;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.model.Activation;
+import com.kits.kowsarapp.model.Column;
+import com.kits.kowsarapp.model.Customer;
+import com.kits.kowsarapp.model.Good;
+import com.kits.kowsarapp.model.GoodGroup;
+import com.kits.kowsarapp.model.PreFactor;
+import com.kits.kowsarapp.model.ReplicationModel;
+import com.kits.kowsarapp.model.TableDetail;
+import com.kits.kowsarapp.model.UserInfo;
+import com.kits.kowsarapp.model.Utilities;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class Broker_DBH extends SQLiteOpenHelper {
     CallMethod callMethod;
     ArrayList<Column> columns;
     ArrayList<Good> goods;
@@ -52,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     String joinDetail;
     String joinbasket;
 
-    public DatabaseHelper(Context context, String DATABASE_NAME) {
+    public Broker_DBH(Context context, String DATABASE_NAME) {
         super(context, DATABASE_NAME, null, 1);
         this.callMethod = new CallMethod(context);
         this.goods = new ArrayList<>();

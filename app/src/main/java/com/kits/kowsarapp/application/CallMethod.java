@@ -1,25 +1,11 @@
 package com.kits.kowsarapp.application;
 
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.kits.kowsarapp.BuildConfig;
-import com.kits.kowsarapp.model.DatabaseHelper;
-import com.kits.kowsarapp.model.UserInfo;
-import com.kits.kowsarapp.webService.APIClient_kowsar;
-import com.kits.kowsarapp.webService.APIInterface_kowsar;
-import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 
 public class CallMethod extends Application {
