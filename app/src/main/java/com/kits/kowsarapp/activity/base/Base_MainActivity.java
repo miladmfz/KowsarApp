@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.activity;
+package com.kits.kowsarapp.activity.base;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.kits.kowsarapp.R;
 
-public class MainActivity extends AppCompatActivity {
+public class Base_MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

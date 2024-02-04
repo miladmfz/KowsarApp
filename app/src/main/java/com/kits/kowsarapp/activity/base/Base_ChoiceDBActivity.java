@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.activity;
+package com.kits.kowsarapp.activity.base;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -20,15 +20,15 @@ import com.downloader.Status;
 import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.App;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
 import com.kits.kowsarapp.model.Activation;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.NumberFunctions;
 import com.kits.kowsarapp.model.RetrofitResponse;
-import com.kits.kowsarapp.webService.APIClient_kowsar;
-import com.kits.kowsarapp.webService.APIInterface_kowsar;
+import com.kits.kowsarapp.webService.base.APIClient_kowsar;
+import com.kits.kowsarapp.webService.base.APIInterface_kowsar;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChoiceDatabaseActivity extends AppCompatActivity {
+public class Base_ChoiceDBActivity extends AppCompatActivity {
 
     APIInterface_kowsar apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface_kowsar.class);
     CallMethod callMethod;
@@ -200,7 +200,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                         callMethod.EditString("ActivationCode", activation.getActivationCode());
                         callMethod.EditString("AppType", activation.getAppType());
 
-                        intent = new Intent(App.getContext(), SplashActivity.class);
+                        intent = new Intent(App.getContext(), Base_SplashActivity.class);
                         startActivity(intent);
                         finish();
                         dialog.dismiss();
@@ -302,7 +302,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                 callMethod.EditString("ActivationCode", singleactive.getActivationCode());
                 callMethod.EditString("AppType", singleactive.getAppType());
 
-                intent = new Intent(this, SplashActivity.class);
+                intent = new Intent(this, Base_SplashActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -14,8 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_GoodBasketAdapter;
 
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
+import com.kits.kowsarapp.databinding.BrokerActivityBasketBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -32,7 +33,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
     Broker_GoodBasketAdapter adapter;
     GridLayoutManager gridLayoutManager;
     CallMethod callMethod;
-    BrokerActivityBuyBinding binding;
+    BrokerActivityBasketBinding binding;
     private Broker_Action action;
     private String PreFac = "0";
     private Broker_DBH dbh;
@@ -42,7 +43,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        binding = ActivityBuyBinding.inflate(getLayoutInflater());
+        binding = BrokerActivityBasketBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
 
@@ -61,12 +62,11 @@ public class Broker_BasketActivity extends AppCompatActivity {
 
     //*****************************************************************
 
-
     public void Config() {
         action = new Broker_Action(this);
         callMethod = new CallMethod(this);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        setSupportActionBar(binding.BuyActivityToolbar);
+        setSupportActionBar(binding.bBasketAToolbar);
 
     }
 
@@ -74,26 +74,26 @@ public class Broker_BasketActivity extends AppCompatActivity {
 
 
         goods = dbh.getAllPreFactorRows("", PreFac);
-        adapter = new GoodBasketAdapter(goods, this);
+        adapter = new Broker_GoodBasketAdapter(goods, this);
         if (adapter.getItemCount() == 0) {
             callMethod.showToast("سبد خرید خالی می باشد");
         }
         gridLayoutManager = new GridLayoutManager(this, 1);
-        binding.BuyActivityR1.setLayoutManager(gridLayoutManager);
-        binding.BuyActivityR1.setAdapter(adapter);
-        binding.BuyActivityR1.setItemAnimator(new DefaultItemAnimator());
-        binding.BuyActivityR1.setVisibility(View.VISIBLE);
+        binding.bBasketAR1.setLayoutManager(gridLayoutManager);
+        binding.bBasketAR1.setAdapter(adapter);
+        binding.bBasketAR1.setItemAnimator(new DefaultItemAnimator());
+        binding.bBasketAR1.setVisibility(View.VISIBLE);
 
         try {
-            binding.BuyActivityR1.scrollToPosition(Integer.parseInt(callMethod.ReadString("BasketItemView")) - 1);
+            binding.bBasketAR1.scrollToPosition(Integer.parseInt(callMethod.ReadString("BasketItemView")) - 1);
         } catch (Exception e) {
-            binding.BuyActivityR1.scrollToPosition(0);
+            binding.bBasketAR1.scrollToPosition(0);
             callMethod.EditString("BasketItemView", "0");
 
         }
 
 
-        binding.BuyActivityR1.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.bBasketAR1.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NotNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
@@ -103,13 +103,13 @@ public class Broker_BasketActivity extends AppCompatActivity {
         });
 
 
-        binding.BuyActivityTotalPriceBuy.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(PreFac)))));
-        binding.BuyActivityTotalAmountBuy.setText(NumberFunctions.PerisanNumber(dbh.getFactorSumAmount(PreFac)));
-        binding.BuyActivityTotalCustomerBuy.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(PreFac)));
-        binding.BuyActivityTotalRowBuy.setText(NumberFunctions.PerisanNumber(String.valueOf(goods.size())));
+        binding.bBasketATotalPriceBuy.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(PreFac)))));
+        binding.bBasketATotalAmountBuy.setText(NumberFunctions.PerisanNumber(dbh.getFactorSumAmount(PreFac)));
+        binding.bBasketATotalCustomerBuy.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(PreFac)));
+        binding.bBasketATotalRowBuy.setText(NumberFunctions.PerisanNumber(String.valueOf(goods.size())));
 
 
-        binding.BuyActivityTotalDelete.setOnClickListener(view ->
+        binding.bBasketATotalDelete.setOnClickListener(view ->
 
 
                 {
@@ -138,7 +138,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
         );
 
 
-        binding.BuyActivityTest.setOnClickListener(view ->
+        binding.bBasketATest.setOnClickListener(view ->
 
 
                 {

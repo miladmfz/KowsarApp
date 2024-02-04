@@ -1,10 +1,8 @@
-package com.kits.kowsarapp.application;
+package com.kits.kowsarapp.application.base;
 
 
 import android.app.Application;
 import android.content.Context;
-
-import com.kits.kowsarapp.R;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 

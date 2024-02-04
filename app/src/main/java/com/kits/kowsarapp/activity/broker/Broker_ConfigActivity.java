@@ -12,23 +12,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.databinding.BrokerActivityConfigBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.NumberFunctions;
-
-import java.text.DecimalFormat;
 
 
 public class Broker_ConfigActivity extends AppCompatActivity {
 
     private Broker_DBH dbh;
     private CallMethod callMethod;
-    private ActivityConfigBinding binding;
+    private BrokerActivityConfigBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityConfigBinding.inflate(getLayoutInflater());
+        binding = BrokerActivityConfigBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Initialize variables and configurations
@@ -48,25 +47,24 @@ public class Broker_ConfigActivity extends AppCompatActivity {
     }
 
      void populateViews() {
-        DecimalFormat decimalFormat = new DecimalFormat("0,000");
-        //binding.configSumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(dbh.getsum_sumfactor())));
-        binding.configBorker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
-        binding.configGrid.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Grid")));
-        binding.configDelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
-        binding.configTitlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
-        binding.configBodysize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BodySize")));
-        binding.configPhonenumber.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PhoneNumber")));
-        binding.configPhonenumber.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PhoneNumber")));
+        //binding.bConfigASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(dbh.getsum_sumfactor())));
+        binding.bConfigABorker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
+        binding.bConfigAGrid.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Grid")));
+        binding.bConfigADelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
+        binding.bConfigATitlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
+        binding.bConfigABodysize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BodySize")));
+        binding.bConfigAPhonenumber.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PhoneNumber")));
+        binding.bConfigAPhonenumber.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PhoneNumber")));
 
-        binding.configSelloff.setChecked(Integer.parseInt(callMethod.ReadString("SellOff")) != 0);
-        binding.configAutorep.setChecked(callMethod.ReadBoolan("AutoReplication"));
-        binding.configKeyboardrunnable.setChecked(callMethod.ReadBoolan("keyboardRunnable"));
-        binding.configDetailshow.setChecked(callMethod.ReadBoolan("ShowDetail"));
-        binding.configLineview.setChecked(callMethod.ReadBoolan("LineView"));
+        binding.bConfigASelloff.setChecked(Integer.parseInt(callMethod.ReadString("SellOff")) != 0);
+        binding.bConfigAAutorep.setChecked(callMethod.ReadBoolan("AutoReplication"));
+        binding.bConfigAKeyboardrunnable.setChecked(callMethod.ReadBoolan("keyboardRunnable"));
+        binding.bConfigADetailshow.setChecked(callMethod.ReadBoolan("ShowDetail"));
+        binding.bConfigALineview.setChecked(callMethod.ReadBoolan("LineView"));
     }
 
      void setButtonListeners() {
-        binding.configBtnToReg.setOnClickListener(view -> {
+        binding.bConfigAToReg.setOnClickListener(view -> {
 
 
             if (callMethod.ReadString("ActivationCode").equals("111111")) {

@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.application;
+package com.kits.kowsarapp.application.base;
 
 public class Constants {
 

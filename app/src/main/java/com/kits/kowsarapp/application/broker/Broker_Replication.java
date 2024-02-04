@@ -15,7 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.NavActivity;
+import com.kits.kowsarapp.activity.broker.Broker_NavActivity;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.model.Column;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Location;
@@ -24,8 +26,8 @@ import com.kits.kowsarapp.model.ReplicationModel;
 import com.kits.kowsarapp.model.RetrofitResponse;
 import com.kits.kowsarapp.model.TableDetail;
 import com.kits.kowsarapp.model.UserInfo;
-import com.kits.kowsarapp.webService.APIClient;
-import com.kits.kowsarapp.webService.APIInterface;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -49,7 +51,7 @@ public class Broker_Replication {
     Location location;
 
     CallMethod callMethod;
-    APIInterface apiInterface;
+    Broker_APIInterface broker_apiInterface;
     Intent intent;
     ImageInfo image_info;
     String GpsLocationLastCode;
@@ -75,7 +77,7 @@ public class Broker_Replication {
         url = callMethod.ReadString("ServerURLUse");
         database = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
         sqLiteDatabase = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
     }
 
@@ -91,14 +93,14 @@ public class Broker_Replication {
             tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی تنظیم جدول"));
             GoodTypeReplication();
         } else {
-            Call<RetrofitResponse> call1 = apiInterface.MaxRepLogCode("MaxRepLogCode");
-            callMethod.ErrorLog(call1.request().toString()+"");
+            Call<RetrofitResponse> call1 = broker_apiInterface.MaxRepLogCode("MaxRepLogCode");
+            callMethod.Log(call1.request().toString()+"");
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                     assert response.body() != null;
-                    callMethod.ErrorLog(response.body().getText()+"");
+                    callMethod.Log(response.body().getText()+"");
                     dbh.SaveConfig("MaxRepLogCode", Objects.requireNonNull(response.body()).getText());
                     RetrofitReplicate(0);
                 }
@@ -115,7 +117,7 @@ public class Broker_Replication {
 
     public void DoingReplicateAuto() {
 
-        Call<RetrofitResponse> call1 = apiInterface.MaxRepLogCode("MaxRepLogCode");
+        Call<RetrofitResponse> call1 = broker_apiInterface.MaxRepLogCode("MaxRepLogCode");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
@@ -159,24 +161,24 @@ public class Broker_Replication {
             LastRepCode = String.valueOf(replicatedetail.getLastRepLogCode());
             UserInfo userInfo = dbh.LoadPersonalInfo();
 
-            Call<RetrofitResponse> call1 = apiInterface.RetrofitReplicate("repinfo",
+            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
                     String.valueOf(replicatedetail.getLastRepLogCode()),
                     replicatedetail.getServerTable(),
                     "",
                     "1",
                     String.valueOf(RepRowCount)
             );
-            callMethod.ErrorLog(call1.request().toString());
+            callMethod.Log(call1.request().toString());
 
 
-            callMethod.ErrorLog("lastreplog= "+String.valueOf(replicatedetail.getLastRepLogCode()));
+            callMethod.Log("lastreplog= "+String.valueOf(replicatedetail.getLastRepLogCode()));
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                     if (response.isSuccessful()) {
                         try {
-                            callMethod.ErrorLog("8");
+                            callMethod.Log("8");
                             JSONArray arrayobject = null;
                             if (response.body() != null) {
                                 arrayobject = new JSONArray(response.body().getText());
@@ -342,15 +344,15 @@ public class Broker_Replication {
                             }
                         } catch (Exception ignored) {
                             Log.e("kowsar_1=", ignored.getMessage());
-                            callMethod.ErrorLog("10");
+                            callMethod.Log("10");
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    callMethod.ErrorLog("9");
-                    callMethod.ErrorLog("kowsar_____"+t.getMessage());
+                    callMethod.Log("9");
+                    callMethod.Log("kowsar_____"+t.getMessage());
                     RetrofitReplicate(replicatelevel);
                 }
             });
@@ -375,7 +377,7 @@ public class Broker_Replication {
             String where = replicatedetail.getCondition().replace("BrokerCondition", dbh.ReadConfig("BrokerCode"));
 
             Log.e("kowsar_LastRepCode",LastRepCode);
-            Call<RetrofitResponse> call1 = apiInterface.RetrofitReplicate("repinfo",
+            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
                     LastRepCode,
                     replicatedetail.getServerTable(),
                     "",
@@ -560,7 +562,7 @@ public class Broker_Replication {
         LastRepCode = cursor.getString(0);
         cursor.close();
 
-        Call<RetrofitResponse> call1 = apiInterface.RetrofitReplicate("repinfo",
+        Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
                  LastRepCode
                 , RepTable
                 ,""
@@ -650,7 +652,7 @@ public class Broker_Replication {
                         } else {
                             tv_step.setVisibility(View.GONE);
                             dialog.dismiss();
-                            intent = new Intent(mContext, NavActivity.class);
+                            intent = new Intent(mContext, Broker_NavActivity.class);
                             mContext.startActivity(intent);
                             ((Activity) mContext).finish();
                             callMethod.showToast("بروز رسانی انجام شد");
@@ -673,7 +675,7 @@ public class Broker_Replication {
 
         UserInfo userInfo = dbh.LoadPersonalInfo();
         dbh.DatabaseCreate();
-        Call<RetrofitResponse> call1 = apiInterface.BrokerStack( "BrokerStack",userInfo.getBrokerCode());
+        Call<RetrofitResponse> call1 = broker_apiInterface.BrokerStack( "BrokerStack",userInfo.getBrokerCode());
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -694,7 +696,7 @@ public class Broker_Replication {
 
     public void GroupCodeDefult() {
 
-        Call<RetrofitResponse> call1 = apiInterface.info("kowsar_info", "AppBroker_DefaultGroupCode");
+        Call<RetrofitResponse> call1 = broker_apiInterface.info("kowsar_info", "AppBroker_DefaultGroupCode");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -718,7 +720,7 @@ public class Broker_Replication {
     }
 
     public void MenuBroker() {
-        Call<RetrofitResponse> call1 = apiInterface.MenuBroker("GetMenuBroker");
+        Call<RetrofitResponse> call1 = broker_apiInterface.MenuBroker("GetMenuBroker");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -739,7 +741,7 @@ public class Broker_Replication {
 
     public void GoodTypeReplication() {
 
-        Call<RetrofitResponse> call1 = apiInterface.GetGoodType("GetGoodType");
+        Call<RetrofitResponse> call1 = broker_apiInterface.GetGoodType("GetGoodType");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -763,10 +765,10 @@ public class Broker_Replication {
 
     public void columnReplication(Integer i) {
 
-callMethod.ErrorLog(""+i);
+callMethod.Log(""+i);
         if (i < 4) {
-            Call<RetrofitResponse> call2 = apiInterface.GetColumnList( "GetColumnList","" + i, "1", "1");
-            callMethod.ErrorLog(call2.request().toString());
+            Call<RetrofitResponse> call2 = broker_apiInterface.GetColumnList( "GetColumnList","" + i, "1", "1");
+            callMethod.Log(call2.request().toString());
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -787,7 +789,7 @@ callMethod.ErrorLog(""+i);
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                    callMethod.ErrorLog(t.getMessage());
+                    callMethod.Log(t.getMessage());
                 }
             });
         } else {
@@ -822,7 +824,7 @@ callMethod.ErrorLog(""+i);
         Log.e("kowsar", GpsLocationString);
 
         if (locations.size()>0) {
-            Call<RetrofitResponse> call1 = apiInterface.UpdateLocation( "UpdateLocation",GpsLocationString);
+            Call<RetrofitResponse> call1 = broker_apiInterface.UpdateLocation( "UpdateLocation",GpsLocationString);
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

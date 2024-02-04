@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.activity;
+package com.kits.kowsarapp.activity.base;
 
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -26,7 +26,7 @@ import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityAboutusBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -34,7 +34,7 @@ import com.kits.kowsarapp.model.NumberFunctions;
 import java.io.File;
 
 
-public class AboutUsActivity extends AppCompatActivity {
+public class Base_AboutUsActivity extends AppCompatActivity {
     CallMethod callMethod;
     Broker_DBH dbh;
 
@@ -80,7 +80,7 @@ public class AboutUsActivity extends AppCompatActivity {
                         startActivityForResult(intent1, 1);
                     } else {
 
-                        final Dialog dialog = new Dialog(AboutUsActivity.this);
+                        final Dialog dialog = new Dialog(Base_AboutUsActivity.this);
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog.setContentView(R.layout.default_loginconfig);
                         EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
@@ -110,7 +110,7 @@ public class AboutUsActivity extends AppCompatActivity {
                                         if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).length()>5) {
                                             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
 
-                                                Intent intent = new Intent(AboutUsActivity.this, Broker_RegistrationActivity.class);
+                                                Intent intent = new Intent(Base_AboutUsActivity.this, Broker_RegistrationActivity.class);
                                                 startActivity(intent);
                                             } else {
                                                 callMethod.showToast("رمز عبور صیحیح نیست");
@@ -200,7 +200,7 @@ public class AboutUsActivity extends AppCompatActivity {
                         if (status == DownloadManager.STATUS_SUCCESSFUL) {
 
                             Uri apkUri = FileProvider.getUriForFile(
-                                    AboutUsActivity.this,
+                                    Base_AboutUsActivity.this,
                                     BuildConfig.APPLICATION_ID + ".provider",
                                     new File(Environment.getExternalStorageDirectory() + "/Android/data/com.kits.brokerkowsar/files/Download/BrokerKowsar.apk")
                             );

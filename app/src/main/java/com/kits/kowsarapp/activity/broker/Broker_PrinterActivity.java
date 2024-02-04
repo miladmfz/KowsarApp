@@ -23,10 +23,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bixolon.printer.BixolonPrinter;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.App;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.ImageInfo;
-import com.kits.kowsarapp.model.BluetoothUtil;
+import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ImageInfo;
+import com.kits.kowsarapp.model.broker.Broker_BluetoothUtil;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -82,7 +82,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_printer);
+        setContentView(R.layout.broker_activity_printer);
 
         callMethod = new CallMethod(this);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
@@ -91,13 +91,13 @@ public class Broker_PrinterActivity extends AppCompatActivity {
         }
 
 
-        debugTextView = findViewById(R.id.debug);
+        debugTextView = findViewById(R.id.b_printer_a_debug);
 
-        printButton = findViewById(R.id.print);
+        printButton = findViewById(R.id.b_printer_a_print);
 
-        layoutLoading = findViewById(R.id.layoutLoading);
-        layoutThereArentPairedPrinters = findViewById(R.id.layoutNoExisteImpresora);
-        layoutPrinterReady = findViewById(R.id.layoutImpresoraPreparada);
+        layoutLoading = findViewById(R.id.b_printer_a_layoutLoading);
+        layoutThereArentPairedPrinters = findViewById(R.id.b_printer_a_layoutNoExisteImpresora);
+        layoutPrinterReady = findViewById(R.id.b_printer_a_layoutImpresoraPreparada);
 
         printButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -365,9 +365,9 @@ public class Broker_PrinterActivity extends AppCompatActivity {
                 t.start();
             }
         });
-        findViewById(R.id.pairPrinter).setOnClickListener(v -> {
+        findViewById(R.id.b_printer_a_pairPrinter).setOnClickListener(v -> {
             for (String mac : pairedPrinters) {
-                BluetoothUtil.unpairMac(mac);
+                Broker_BluetoothUtil.unpairMac(mac);
             }
             pairedPrinters.clear();
 
@@ -414,10 +414,10 @@ public class Broker_PrinterActivity extends AppCompatActivity {
         super.onResume();
 
         bixolonPrinterApi = new BixolonPrinter(this, handler, null);
-        task = new PrinterActivity.PairWithPrinterTask();
+        task = new Broker_PrinterActivity.PairWithPrinterTask();
         task.execute();
         updatePrintButtonState();
-        BluetoothUtil.startBluetooth();
+        Broker_BluetoothUtil.startBluetooth();
     }
 
 
@@ -508,7 +508,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
                                 pairedPrinters.add(device.getAddress());
                             }
                             if (pairedPrinters.size() == 1) {
-                                PrinterActivity.bixolonPrinterApi.connect(pairedPrinters.get(0));
+                                Broker_PrinterActivity.bixolonPrinterApi.connect(pairedPrinters.get(0));
                             }
                         }
                     }
@@ -644,7 +644,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
     public void iconLoadingStart() {
 
-        View loading = findViewById(R.id.loading);
+        View loading = findViewById(R.id.b_printer_a_loading);
         if (loading != null && !animated) {
             loading.startAnimation(rotation);
             loading.setVisibility(View.VISIBLE);
@@ -660,7 +660,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
     public void iconLoadingStop() {
         setProgressBarIndeterminateVisibility(Boolean.FALSE);
-        View loading = findViewById(R.id.loading);
+        View loading = findViewById(R.id.b_printer_a_loading);
         if (loading != null) {
             loading.clearAnimation();
             loading.setVisibility(View.INVISIBLE);

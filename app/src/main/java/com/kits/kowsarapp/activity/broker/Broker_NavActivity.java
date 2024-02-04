@@ -27,8 +27,9 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.AboutUsActivity;
-import com.kits.kowsarapp.activity.SplashActivity;
+import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
+import com.kits.kowsarapp.activity.base.Base_SplashActivity;
+import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
@@ -41,14 +42,14 @@ import java.util.concurrent.TimeUnit;
 
 
 import com.kits.kowsarapp.BuildConfig;
-import com.kits.kowsarapp.application.AlarmReceiver;
-import com.kits.kowsarapp.application.App;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.WManager;
+import com.kits.kowsarapp.application.base.AlarmReceiver;
+import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.WManager;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.GoodGroup;
 import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.webService.APIClient;
+import com.kits.kowsarapp.webService.base.APIClient;
 
 
 
@@ -80,6 +81,8 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     TextView tv_test, tv_test2;
     WorkManager workManager;
     private Broker_Action broker_action;
+    private Base_Action base_action;
+
     private boolean doubleBackToExitPressedOnce = false;
     private Intent intent;
     private Broker_Replication broker_replication;
@@ -311,7 +314,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             callMethod.EditString("DatabaseName", "");
             callMethod.EditString("AppType", "");
 
-            intent = new Intent(this, SplashActivity.class);
+            intent = new Intent(this, Base_SplashActivity.class);
             finish();
             startActivity(intent);
         });
@@ -348,7 +351,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             intent.putExtra("title", "جستجوی کالا");
             startActivity(intent);
         } else if (id == R.id.aboutus) {
-            intent = new Intent(this, AboutUsActivity.class);
+            intent = new Intent(this, Base_AboutUsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_allview) {
             intent = new Intent(this, Broker_AllGrpActivity.class);
@@ -363,7 +366,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         } else if (id == R.id.nav_rep) {
 
             broker_replication.BrokerStack();
-            broker_action.app_info();
+            base_action.app_info();
             try {
                 workManager.cancelAllWork();
                 broker_replication.DoingReplicate();

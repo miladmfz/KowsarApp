@@ -19,9 +19,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.github.juanlabrador.badgecounter.BadgeCounter;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_PFAdapter;
-import com.kits.kowsarapp.adapters.PreFactorHeaderAdapter;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.databinding.ActivityPrefactorBinding;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.databinding.BrokerActivityPfBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.NumberFunctions;
 import com.kits.kowsarapp.model.PreFactor;
@@ -44,13 +43,13 @@ public class Broker_PFActivity extends AppCompatActivity {
 
     String search_target = "";
 
-    ActivityPrefactorBinding binding;
+    BrokerActivityPfBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityPrefactorBinding.inflate(getLayoutInflater());
+        binding = BrokerActivityPfBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
 
@@ -58,8 +57,8 @@ public class Broker_PFActivity extends AppCompatActivity {
         dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.rep_prog);
-        TextView repw = dialog1.findViewById(R.id.rep_prog_text);
+        dialog1.setContentView(R.layout.broker_spinner_box);
+        TextView repw = dialog1.findViewById(R.id.b_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
 
@@ -84,7 +83,7 @@ public class Broker_PFActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         pfcode = Integer.parseInt(callMethod.ReadString("PreFactorCode"));
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        Toolbar toolbar = findViewById(R.id.PrefactorActivity_toolbar);
+        Toolbar toolbar = findViewById(R.id.b_pf_a_toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -93,15 +92,15 @@ public class Broker_PFActivity extends AppCompatActivity {
     public void init() {
 
 
-        binding.PrefactorActivityLastfactor.setText(NumberFunctions.PerisanNumber(String.valueOf(pfcode)));
+        binding.bPfALastfactor.setText(NumberFunctions.PerisanNumber(String.valueOf(pfcode)));
         callfactor();
 
-        binding.PrefactorActivityRefresh.setOnClickListener(view -> {
+        binding.bPfARefresh.setOnClickListener(view -> {
             finish();
             startActivity(getIntent());
         });
 
-        binding.PrefactorActivityEdtsearch.addTextChangedListener(
+        binding.bPfAEdtsearch.addTextChangedListener(
                 new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -118,11 +117,11 @@ public class Broker_PFActivity extends AppCompatActivity {
                             search_target = NumberFunctions.EnglishNumber(editable.toString());
                             callfactor();
                         }, Integer.parseInt(callMethod.ReadString("Delay")));
-                        handler.postDelayed(() -> binding.PrefactorActivityEdtsearch.selectAll(), 5000);
+                        handler.postDelayed(() -> binding.bPfAEdtsearch.selectAll(), 5000);
                     }
                 });
 
-        binding.PrefactorActivityAddfactor.setOnClickListener(view -> {
+        binding.bPfAAddfactor.setOnClickListener(view -> {
             intent = new Intent(this, Broker_CustomerActivity.class);
             intent.putExtra("edit", "0");
             intent.putExtra("factor_code", "0");
@@ -139,9 +138,9 @@ public class Broker_PFActivity extends AppCompatActivity {
         preFactors = dbh.getAllPrefactorHeader(search_target);
         adapter = new Broker_PFAdapter(preFactors, this);
         gridLayoutManager = new GridLayoutManager(this, 1);
-        binding.PrefactorActivityRecyclerView.setLayoutManager(gridLayoutManager);
-        binding.PrefactorActivityRecyclerView.setAdapter(adapter);
-        binding.PrefactorActivityRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        binding.bPfARecyclerView.setLayoutManager(gridLayoutManager);
+        binding.bPfARecyclerView.setAdapter(adapter);
+        binding.bPfARecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
 

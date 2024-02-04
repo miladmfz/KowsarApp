@@ -9,13 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.GoodGroup;
-import com.kits.kowsarapp.viewholder.GroupLabelViewHolder;
+import com.kits.kowsarapp.viewholder.broker.Broker_GroupLabelViewHolder;
+
 
 import java.util.ArrayList;
 
-public class Broker_GroupLableAdapter extends RecyclerView.Adapter<GroupLabelViewHolder> {
+public class Broker_GroupLableAdapter extends RecyclerView.Adapter<Broker_GroupLabelViewHolder> {
 
     Context mContext;
     CallMethod callMethod;
@@ -31,14 +32,14 @@ public class Broker_GroupLableAdapter extends RecyclerView.Adapter<GroupLabelVie
 
     @NonNull
     @Override
-    public GroupLabelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Broker_GroupLabelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grp_v_list_detail, parent, false);
-        return new GroupLabelViewHolder(view);
+        return new Broker_GroupLabelViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull GroupLabelViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull Broker_GroupLabelViewHolder holder, int position) {
 
         holder.bind(GoodGroups.get(position), mContext);
 

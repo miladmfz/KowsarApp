@@ -18,17 +18,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_SliderAdapter;
-import com.kits.kowsarapp.adapters.SliderAdapter;
-import com.kits.kowsarapp.application.Action;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
-import com.kits.kowsarapp.databinding.ActivityDetailTBinding;
+import com.kits.kowsarapp.databinding.BrokerActivityDetailBinding;
 import com.kits.kowsarapp.model.Column;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.webService.APIClient;
-import com.kits.kowsarapp.webService.APIInterface;
+import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -51,17 +48,14 @@ public class Broker_DetailActivity extends AppCompatActivity {
     ArrayList<Good> imagelists;
     Broker_Action action;
 
-    SliderView sliderView;
-
-    ActivityDetailTBinding binding;
+    BrokerActivityDetailBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_t);
 
 
-        binding = ActivityDetailTBinding.inflate(getLayoutInflater());
+        binding = BrokerActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         intent();
@@ -94,19 +88,19 @@ public class Broker_DetailActivity extends AppCompatActivity {
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
         Columns = dbh.GetColumns(id, "", "0");
         gooddetail = dbh.getGoodByCode(id);
-        setSupportActionBar(binding.DetailActivityToolbar);
+        setSupportActionBar(binding.bDetailAToolbar);
     }
 
 
     @SuppressLint("UseCompatLoadingForColorStateLists")
     public void init() {
         if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) == 0) {
-            binding.DetailActivityCustomer.setText("فاکتوری انتخاب نشده");
-            binding.DetailActivityLlSumFactor.setVisibility(View.GONE);
+            binding.bDetailACustomer.setText("فاکتوری انتخاب نشده");
+            binding.bDetailALlSumFactor.setVisibility(View.GONE);
         } else {
-            binding.DetailActivityLlSumFactor.setVisibility(View.VISIBLE);
-            binding.DetailActivityCustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.DetailActivitySumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            binding.bDetailALlSumFactor.setVisibility(View.VISIBLE);
+            binding.bDetailACustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
+            binding.bDetailASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
 
         for (Column Column : Columns) {
@@ -123,12 +117,12 @@ public class Broker_DetailActivity extends AppCompatActivity {
         SliderView();
 
         if (gooddetail.getGoodFieldValue("ActiveStack").equals("1")){
-            binding.DetailActivityBtnbuy.setBackgroundTintList(getResources().getColorStateList(R.color.green_600));
+            binding.bDetailABtnbuy.setBackgroundTintList(getResources().getColorStateList(R.color.green_600));
         }else{
-            binding.DetailActivityBtnbuy.setBackgroundTintList(getResources().getColorStateList(R.color.grey_700));
+            binding.bDetailABtnbuy.setBackgroundTintList(getResources().getColorStateList(R.color.grey_700));
         }
 
-        binding.DetailActivityBtnbuy.setOnClickListener(view -> {
+        binding.bDetailABtnbuy.setOnClickListener(view -> {
             if (gooddetail.getGoodFieldValue("ActiveStack").equals("1")) {
 
                 if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
@@ -186,8 +180,8 @@ public class Broker_DetailActivity extends AppCompatActivity {
         extra_ViewPager.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 3));
         extra_ViewPager.setBackgroundResource(R.color.grey_40);
 
-        binding.DetailActivityLineProperty.addView(ll_1);
-        binding.DetailActivityLineProperty.addView(extra_ViewPager);
+        binding.bDetailALineProperty.addView(ll_1);
+        binding.bDetailALineProperty.addView(extra_ViewPager);
 
     }
 
@@ -230,14 +224,14 @@ public class Broker_DetailActivity extends AppCompatActivity {
 
 
         Broker_SliderAdapter adapter = new Broker_SliderAdapter(imagelists, true, this);
-        binding.DetailActivityImageSlider.setSliderAdapter(adapter);
-        binding.DetailActivityImageSlider.setIndicatorAnimation(IndicatorAnimations.SCALE);
-        binding.DetailActivityImageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        binding.DetailActivityImageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        binding.DetailActivityImageSlider.setIndicatorSelectedColor(Color.WHITE);
-        binding.DetailActivityImageSlider.setIndicatorUnselectedColor(Color.GRAY);
-        binding.DetailActivityImageSlider.setScrollTimeInSec(3);
-        binding.DetailActivityImageSlider.startAutoCycle();
+        binding.bDetailAImageSlider.setSliderAdapter(adapter);
+        binding.bDetailAImageSlider.setIndicatorAnimation(IndicatorAnimations.SCALE);
+        binding.bDetailAImageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        binding.bDetailAImageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+        binding.bDetailAImageSlider.setIndicatorSelectedColor(Color.WHITE);
+        binding.bDetailAImageSlider.setIndicatorUnselectedColor(Color.GRAY);
+        binding.bDetailAImageSlider.setScrollTimeInSec(3);
+        binding.bDetailAImageSlider.startAutoCycle();
 
     }
 

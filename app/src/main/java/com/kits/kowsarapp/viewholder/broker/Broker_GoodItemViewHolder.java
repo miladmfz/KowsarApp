@@ -20,16 +20,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.PrefactoropenActivity;
+import com.kits.kowsarapp.activity.broker.Broker_PFOpenActivity;
 import com.kits.kowsarapp.application.Action;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.ImageInfo;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ImageInfo;
+import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.Column;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.NumberFunctions;
 import com.kits.kowsarapp.model.RetrofitResponse;
-import com.kits.kowsarapp.webService.APIClient;
+import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.APIInterface;
+import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -60,10 +63,10 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
     Broker_DBH dbh;
 
-    APIInterface apiInterface;
+    Broker_APIInterface broker_apiInterface;
     private final ImageInfo image_info;
     public Call<RetrofitResponse> call;
-    Action action;
+    Broker_Action broker_action;
     ArrayList<Column> Columns;
 
 
@@ -74,9 +77,9 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
         this.callMethod = new CallMethod(mContext);
         this.image_info = new ImageInfo(mContext);
         this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.action = new Broker_Action(mContext);
+        this.broker_action = new Broker_Action(mContext);
         this.Columns = dbh.GetColumns("id", "", "1");
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        this.broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
         mainline = itemView.findViewById(R.id.prosearch_mainline);
         img = itemView.findViewById(R.id.good_prosearch_img);
@@ -168,9 +171,9 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
         btnadd.setOnClickListener(view -> {
             if (good.getGoodFieldValue("ActiveStack").equals("1")) {
                 if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                    action.buydialog(good.getGoodFieldValue("GoodCode"), "0");
+                    broker_action.buydialog(good.getGoodFieldValue("GoodCode"), "0");
                 } else {
-                    Intent intent = new Intent(mContext, PrefactoropenActivity.class);
+                    Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                     intent.putExtra("fac", "0");
                     mContext.startActivity(intent);
                 }
@@ -189,9 +192,9 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
             if (good.getGoodFieldValue("ActiveStack").equals("1")) {
                 if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                    action.buydialog(good.getGoodFieldValue("GoodCode"), "0");
+                    broker_action.buydialog(good.getGoodFieldValue("GoodCode"), "0");
                 } else {
-                    Intent intent = new Intent(mContext, PrefactoropenActivity.class);
+                    Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                     intent.putExtra("fac", "0");
                     mContext.startActivity(intent);
                 }
@@ -225,8 +228,8 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
 
 
-        call = apiInterface.GetImageFromKsr("GetImageFromKsr",good.getGoodFieldValue("KsrImageCode"));
-        callMethod.ErrorLog(call.request().toString());
+        call = broker_apiInterface.GetImageFromKsr("GetImageFromKsr",good.getGoodFieldValue("KsrImageCode"));
+        callMethod.Log(call.request().toString());
         if (!image_info.Image_exist(imagecode)) {
 
 
@@ -252,7 +255,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                    callMethod.ErrorLog(t.getMessage());
+                    callMethod.Log(t.getMessage());
 
                 }
             });

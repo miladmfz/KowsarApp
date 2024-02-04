@@ -18,9 +18,15 @@ import com.kits.kowsarapp.activity.BasketHistoryActivity;
 import com.kits.kowsarapp.activity.CustomerActivity;
 import com.kits.kowsarapp.activity.PrefactorActivity;
 import com.kits.kowsarapp.activity.SearchActivity;
+import com.kits.kowsarapp.activity.broker.Broker_BasketActivity;
+import com.kits.kowsarapp.activity.broker.Broker_BasketHistoryActivity;
+import com.kits.kowsarapp.activity.broker.Broker_CustomerActivity;
+import com.kits.kowsarapp.activity.broker.Broker_PFActivity;
+import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.Action;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.Print;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.Print;
+import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -110,11 +116,11 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
             , Context mContext
             , Broker_DBH dbh
             , CallMethod callMethod
-            , Action action
+            , Broker_Action action
     ) {
         fac_history_good.setOnClickListener(view -> {
             callMethod.EditString("PreFactorGood", preFactor.getPreFactorFieldValue("PreFactorCode"));
-            intent = new Intent(mContext, BasketHistoryActivity.class);
+            intent = new Intent(mContext, Broker_BasketHistoryActivity.class);
             mContext.startActivity(intent);
         });
 
@@ -173,7 +179,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                         builder.setMessage("فاکتور دارای کالا می باشد،کالاها حذف شود؟");
 
                         builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                            intent = new Intent(mContext, BasketActivity.class);
+                            intent = new Intent(mContext, Broker_BasketActivity.class);
                             intent.putExtra("PreFac", preFactor.getPreFactorFieldValue("PreFactorCode"));
                             mContext.startActivity(intent);
                         });
@@ -193,7 +199,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
 
                     callMethod.EditString("PreFactorCode", "0");
 
-                    intent = new Intent(mContext, PrefactorActivity.class);
+                    intent = new Intent(mContext, Broker_PFActivity.class);
                     ((Activity) mContext).finish();
                     ((Activity) mContext).overridePendingTransition(0, 0);
                     mContext.startActivity(intent);
@@ -210,7 +216,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
         fac_good_edit.setOnClickListener(view -> {
 
             callMethod.EditString("PreFactorCode", preFactor.getPreFactorFieldValue("PreFactorCode"));
-            intent = new Intent(mContext, BasketActivity.class);
+            intent = new Intent(mContext, Broker_BasketActivity.class);
             intent.putExtra("PreFac", preFactor.getPreFactorFieldValue("PreFactorCode"));
             mContext.startActivity(intent);
 
@@ -260,7 +266,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                     builder.setMessage("آیا مایل به اصلاح مشتری می باشید؟");
 
                     builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                        intent = new Intent(mContext, CustomerActivity.class);
+                        intent = new Intent(mContext, Broker_CustomerActivity.class);
                         intent.putExtra("edit", "1");
                         intent.putExtra("factor_code", preFactor.getPreFactorFieldValue("PreFactorCode"));
                         intent.putExtra("id", "0");
@@ -317,7 +323,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                 callMethod.EditString("PreFactorCode", preFactor.getPreFactorFieldValue("PreFactorCode"));
 
                 callMethod.showToast("فاکتور مورد نظر انتخاب شد");
-                intent = new Intent(mContext, SearchActivity.class);
+                intent = new Intent(mContext, Broker_SearchActivity.class);
                 intent.putExtra("scan", "");
                 intent.putExtra("id", "0");
                 intent.putExtra("title", "جستجوی کالا");

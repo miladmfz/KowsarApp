@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.broker.Broker_ByDateActivity"
+    android:orientation="vertical"
+    android:layoutDirection="rtl">
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/b_bydate_a_appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/b_bydate_a_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_weight="1"
+
+                android:background="?attr/colorPrimary"
+                app:titleTextColor="@color/white"
+
+                app:title=" جدید ترین ها">
+
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/b_bydate_a_switch_amount"
+                    android:checked="true"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:text="@string/active_activeswitch" />
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_round_selected"
+            android:layout_margin="4dp">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/customerfactorheader"
+                    android:textSize="14sp"
+                    android:layout_weight="0.7"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/b_bydate_a_customer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="18sp"
+                    android:layout_weight="0.3"
+                    android:gravity="center" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/b_bydate_a_ll_sum_factor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/totalfactorheader"
+                    android:textSize="14sp"
+                    android:layout_weight="0.7"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/b_bydate_a_sum_factor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:textSize="18sp"
+                    android:gravity="center" />
+
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_margin="20dp">
+
+            <EditText
+                android:id="@+id/b_bydate_a_date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="تعداد روز را مشخص کنید"
+                android:layout_weight="0.3"
+                android:inputType="number"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+            <Button
+                android:id="@+id/b_bydate_a_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:text="اعمال روز"
+                style="?attr/materialButtonOutlinedStyle"
+                app:backgroundTint="#0B8CC6"
+                app:strokeColor="@color/grey_1000"
+                app:strokeWidth="1dp"
+                android:textColor="@color/white"
+                android:lines="1" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/b_bydate_a_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/b_bydate_a_lottie"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="2dp"
+            app:lottie_rawRes="@raw/notfind"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            />
+
+
+        <TextView
+            android:id="@+id/b_bydate_a_tvstatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:layout_gravity="center"
+            android:textColor="#03a9f4"
+
+            />
+
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/b_bydate_a_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="30dp"
+        app:backgroundTint="@color/red_800"
+        android:visibility="gone"
+        android:src="@drawable/ic_add_shopping_white" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

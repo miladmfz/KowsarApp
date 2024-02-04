@@ -15,12 +15,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_CustomerAdapter;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
+import com.kits.kowsarapp.databinding.BrokerActivityCustomerBinding;
 import com.kits.kowsarapp.model.Customer;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.webService.APIClient;
+import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.util.ArrayList;
@@ -43,12 +44,12 @@ public class Broker_CustomerActivity extends AppCompatActivity {
     private String kodemelli, citycode = "", name, family, address, phone, mobile, email, postcode, zipcode;
     private boolean activecustomer = true;
     private CallMethod callMethod;
-    private ActivityCustomerBinding binding;
+    private BrokerActivityCustomerBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityCustomerBinding.inflate(getLayoutInflater());
+        binding = BrokerActivityCustomerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
 
@@ -71,7 +72,7 @@ public class Broker_CustomerActivity extends AppCompatActivity {
         replication = new Broker_Replication(this);
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        setSupportActionBar(binding.CustomerActivityToolbar);
+        setSupportActionBar(binding.bCustomerAToolbar);
     }
 
 
@@ -98,8 +99,8 @@ public class Broker_CustomerActivity extends AppCompatActivity {
         assert data != null;
     }
     private void Customer_search() {
-        binding.customerSearchLine.setVisibility(View.VISIBLE);
-        binding.CustomerEdtsearch.addTextChangedListener(new TextWatcher() {
+        binding.bCustomerASearchLine.setVisibility(View.VISIBLE);
+        binding.bCustomerAEdtsearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
@@ -114,7 +115,7 @@ public class Broker_CustomerActivity extends AppCompatActivity {
         });
 
 
-        binding.customerNewRegisterBtn.setOnClickListener(v -> {
+        binding.bCustomerANewRegisterBtn.setOnClickListener(v -> {
             Intent intent = new Intent(Broker_CustomerActivity.this, Broker_CustomerActivity.class);
             intent.putExtra("edit", "0");
             intent.putExtra("factor_code", "0");
@@ -122,7 +123,7 @@ public class Broker_CustomerActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        SwitchMaterial mySwitchActivestack = findViewById(R.id.customerActivityswitch);
+        SwitchMaterial mySwitchActivestack = findViewById(R.id.b_customer_a_switch);
         mySwitchActivestack.setOnCheckedChangeListener((compoundButton, b) -> {
             activecustomer = b;
             mySwitchActivestack.setText(b ? "فعال" : "فعال -غیرفعال");
@@ -133,7 +134,7 @@ public class Broker_CustomerActivity extends AppCompatActivity {
     }
 
     public void Customer_new() {
-        binding.customerNewLine.setVisibility(View.VISIBLE);
+        binding.bCustomerANewLine.setVisibility(View.VISIBLE);
         // replication.replicate_customer();
 
 
@@ -145,11 +146,11 @@ public class Broker_CustomerActivity extends AppCompatActivity {
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, city_array);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.customerCitySpinner.setAdapter(spinner_adapter);
-        binding.customerCitySpinner.setSelection(0);
+        binding.bCustomerACitySpinner.setAdapter(spinner_adapter);
+        binding.bCustomerACitySpinner.setSelection(0);
 
 
-        binding.customerCitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.bCustomerACitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 citycode = citys.get(position).getCustomerFieldValue("CityCode");
@@ -162,37 +163,37 @@ public class Broker_CustomerActivity extends AppCompatActivity {
             }
         });
 
-        binding.customerNewKodemelliCheck.setOnClickListener(v -> {
+        binding.bCustomerANewKodemelliCheck.setOnClickListener(v -> {
 
-            if (dbh.Customer_check(binding.customerNewKodemelli.getText().toString()) > 0) {
+            if (dbh.Customer_check(binding.bCustomerANewKodemelli.getText().toString()) > 0) {
 
-                binding.customerNewKodemelliStatus.setText("کد ملی ثبت شده است");
-                binding.customerNewKodemelliStatus.setTextColor(getResources().getColor(R.color.red_300));
+                binding.bCustomerANewKodemelliStatus.setText("کد ملی ثبت شده است");
+                binding.bCustomerANewKodemelliStatus.setTextColor(getResources().getColor(R.color.red_300));
             } else {
 
-                binding.customerNewKodemelliStatus.setText("کد ملی ثبت نشده است");
-                binding.customerNewKodemelliStatus.setTextColor(getResources().getColor(R.color.green_900));
+                binding.bCustomerANewKodemelliStatus.setText("کد ملی ثبت نشده است");
+                binding.bCustomerANewKodemelliStatus.setTextColor(getResources().getColor(R.color.green_900));
 
             }
         });
 
-        binding.customerNewRegisterBtn.setOnClickListener(v -> {
+        binding.bCustomerANewRegisterBtn.setOnClickListener(v -> {
 
-            if (dbh.Customer_check(binding.customerNewKodemelli.getText().toString()) > 0) {
-                binding.customerNewKodemelliStatus.setText("کد ملی ثبت شده است");
-                binding.customerNewKodemelliStatus.setTextColor(getResources().getColor(R.color.red_300));
+            if (dbh.Customer_check(binding.bCustomerANewKodemelli.getText().toString()) > 0) {
+                binding.bCustomerANewKodemelliStatus.setText("کد ملی ثبت شده است");
+                binding.bCustomerANewKodemelliStatus.setTextColor(getResources().getColor(R.color.red_300));
             } else {
 
                 if (Integer.parseInt(dbh.ReadConfig("BrokerCode")) > 0) {
-                    kodemelli = NumberFunctions.EnglishNumber(binding.customerNewKodemelli.getText().toString());
-                    name = NumberFunctions.EnglishNumber(binding.customerNewName.getText().toString());
-                    family = NumberFunctions.EnglishNumber(binding.customerNewFamily.getText().toString());
-                    address = NumberFunctions.EnglishNumber(binding.customerNewAddress.getText().toString());
-                    phone = NumberFunctions.EnglishNumber(binding.customerNewPhone.getText().toString());
-                    mobile = NumberFunctions.EnglishNumber(binding.customerNewMobile.getText().toString());
-                    email = NumberFunctions.EnglishNumber(binding.customerNewEmail.getText().toString());
-                    postcode = NumberFunctions.EnglishNumber(binding.customerNewPostcode.getText().toString());
-                    zipcode = NumberFunctions.EnglishNumber(binding.customerNewZipcode.getText().toString());
+                    kodemelli = NumberFunctions.EnglishNumber(binding.bCustomerANewKodemelli.getText().toString());
+                    name = NumberFunctions.EnglishNumber(binding.bCustomerANewName.getText().toString());
+                    family = NumberFunctions.EnglishNumber(binding.bCustomerANewFamily.getText().toString());
+                    address = NumberFunctions.EnglishNumber(binding.bCustomerANewAddress.getText().toString());
+                    phone = NumberFunctions.EnglishNumber(binding.bCustomerANewPhone.getText().toString());
+                    mobile = NumberFunctions.EnglishNumber(binding.bCustomerANewMobile.getText().toString());
+                    email = NumberFunctions.EnglishNumber(binding.bCustomerANewEmail.getText().toString());
+                    postcode = NumberFunctions.EnglishNumber(binding.bCustomerANewPostcode.getText().toString());
+                    zipcode = NumberFunctions.EnglishNumber(binding.bCustomerANewZipcode.getText().toString());
 //
 //                    Call<RetrofitResponse> call = apiInterface.customer_insert( auser.getBrokerCode(), citycode, kodemelli, name, family, address, phone, mobile, email, postcode, zipcode);
 //                    call.enqueue(new Callback<RetrofitResponse>() {
@@ -214,7 +215,7 @@ public class Broker_CustomerActivity extends AppCompatActivity {
 //
 //                        @Override
 //                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-//                            callMethod.ErrorLog(t.getMessage());
+//                            callMethod.Log(t.getMessage());
 //                        }
 //                    });
 
@@ -236,9 +237,9 @@ public class Broker_CustomerActivity extends AppCompatActivity {
         customers = dbh.AllCustomer(srch, activecustomer);
         adapter = new Broker_CustomerAdapter(customers, this, edit, factor_target);
         gridLayoutManager = new GridLayoutManager(this, 1);
-        binding.CustomerR1.setLayoutManager(gridLayoutManager);
-        binding.CustomerR1.setAdapter(adapter);
-        binding.CustomerR1.setItemAnimator(new DefaultItemAnimator());
+        binding.bCustomerAR1.setLayoutManager(gridLayoutManager);
+        binding.bCustomerAR1.setAdapter(adapter);
+        binding.bCustomerAR1.setItemAnimator(new DefaultItemAnimator());
     }
 
 

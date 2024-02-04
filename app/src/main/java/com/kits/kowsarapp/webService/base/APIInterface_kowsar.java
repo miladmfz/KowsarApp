@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.webService;
+package com.kits.kowsarapp.webService.base;
 
 import com.kits.kowsarapp.model.RetrofitResponse;
 

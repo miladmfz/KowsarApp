@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.LocationResult;
 import com.kits.kowsarapp.BuildConfig;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.Activation;
 import com.kits.kowsarapp.model.Column;
 import com.kits.kowsarapp.model.Customer;

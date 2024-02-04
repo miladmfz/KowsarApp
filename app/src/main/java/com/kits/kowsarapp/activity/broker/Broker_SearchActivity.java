@@ -26,11 +26,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_GoodAdapter;
 import com.kits.kowsarapp.adapter.broker.Broker_GroupLableAdapter;
-import com.kits.kowsarapp.adapters.GoodAdapter;
-import com.kits.kowsarapp.adapters.GroupLableAdapter;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.Search_box;
-import com.kits.kowsarapp.databinding.ActivitySearchBinding;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.broker.Broker_ProSearch;
+import com.kits.kowsarapp.databinding.BrokerActivitySearchBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.GoodGroup;
@@ -64,7 +62,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
     Menu item_multi;
     CallMethod callMethod;
     boolean defultenablesellprice;
-    ActivitySearchBinding binding;
+    BrokerActivitySearchBinding binding;
     private ArrayList<Good> Moregoods = new ArrayList<>();
     private Integer grid;
     private boolean loading = true;
@@ -73,7 +71,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
     //*************************************************
     private Runnable keyboardRunnable = () -> {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(binding.SearchActivityEdtsearch.getWindowToken(),
+        imm.hideSoftInputFromWindow(binding.bSearchAEdtsearch.getWindowToken(),
                 0
         );
     };
@@ -82,15 +80,15 @@ public class Broker_SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivitySearchBinding.inflate(getLayoutInflater());
+        binding = BrokerActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
 
         dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.rep_prog);
-        TextView repw = dialog1.findViewById(R.id.rep_prog_text);
+        dialog1.setContentView(R.layout.broker_spinner_box);
+        TextView repw = dialog1.findViewById(R.id.b_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
         intent();
@@ -138,31 +136,31 @@ public class Broker_SearchActivity extends AppCompatActivity {
             id = dbh.ReadConfig("GroupCodeDefult");
         }
 
-        binding.SearchActivityToolbar.setTitle(title);
+        binding.bSearchAToolbar.setTitle(title);
 
 
         goodGroups = dbh.getAllGroups(id);
         grp_adapter = new Broker_GroupLableAdapter(goodGroups, this);
-        binding.SearchActivityGrpRecy.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false));
-        binding.SearchActivityGrpRecy.setAdapter(grp_adapter);
-        adapter = new GoodAdapter(goods, this);
+        binding.bSearchAGrpRecy.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false));
+        binding.bSearchAGrpRecy.setAdapter(grp_adapter);
+        adapter = new Broker_GoodAdapter(goods, this);
         if (goodGroups.size() == 0) {
-            binding.SearchActivityGrpRecy.getLayoutParams().height = 0;
-            binding.SearchActivityGrp.setVisibility(View.GONE);
+            binding.bSearchAGrpRecy.getLayoutParams().height = 0;
+            binding.bSearchAGrp.setVisibility(View.GONE);
         }
 
-        setSupportActionBar(binding.SearchActivityToolbar);
+        setSupportActionBar(binding.bSearchAToolbar);
 
-        binding.SearchActivityEdtsearch.setOnLongClickListener(v -> {
-            binding.SearchActivityEdtsearch.selectAll();
+        binding.bSearchAEdtsearch.setOnLongClickListener(v -> {
+            binding.bSearchAEdtsearch.selectAll();
             return false;
         });
 
 
-        binding.SearchActivityEdtsearch.setFocusable(true);
-        binding.SearchActivityEdtsearch.requestFocus();
+        binding.bSearchAEdtsearch.setFocusable(true);
+        binding.bSearchAEdtsearch.requestFocus();
 
-        binding.SearchActivityEdtsearch.addTextChangedListener(
+        binding.bSearchAEdtsearch.addTextChangedListener(
                 new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -179,13 +177,13 @@ public class Broker_SearchActivity extends AppCompatActivity {
                             AutoSearch = editable.toString();
                             proSearchCondition = "";
                             GetDataFromDataBase();
-                            binding.SearchActivityEdtsearch.setFocusable(true);
-                            binding.SearchActivityEdtsearch.requestFocus();
-                            binding.SearchActivityEdtsearch.selectAll();
+                            binding.bSearchAEdtsearch.setFocusable(true);
+                            binding.bSearchAEdtsearch.requestFocus();
+                            binding.bSearchAEdtsearch.selectAll();
 
                             if (callMethod.ReadBoolan("keyboardRunnable")) {
                                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.showSoftInput(binding.SearchActivityEdtsearch, InputMethodManager.SHOW_IMPLICIT);
+                                imm.showSoftInput(binding.bSearchAEdtsearch, InputMethodManager.SHOW_IMPLICIT);
 
 
                                 keyboardHandler.removeCallbacks(keyboardRunnable);
@@ -201,59 +199,59 @@ public class Broker_SearchActivity extends AppCompatActivity {
                     }
                 });
 
-        binding.SearchActivityScan.setOnClickListener(view -> {
+        binding.bSearchAScan.setOnClickListener(view -> {
             intent = new Intent(this, Broker_ScanCodeActivity.class);
             startActivity(intent);
             finish();
         });
 
-        binding.SearchActivityGrp.setOnClickListener(view -> {
-            if (binding.SearchActivityGrpRecy.getVisibility() == View.GONE) {
-                binding.SearchActivityGrpRecy.setVisibility(View.VISIBLE);
+        binding.bSearchAGrp.setOnClickListener(view -> {
+            if (binding.bSearchAGrpRecy.getVisibility() == View.GONE) {
+                binding.bSearchAGrpRecy.setVisibility(View.VISIBLE);
             } else {
-                binding.SearchActivityGrpRecy.setVisibility(View.GONE);
+                binding.bSearchAGrpRecy.setVisibility(View.GONE);
             }
         });
 
 
-        binding.SearchActivityProSearch.setOnClickListener(view -> {
-            Search_box search_box = new Search_box(this);
+        binding.bSearchAProSearch.setOnClickListener(view -> {
+            Broker_ProSearch search_box = new Broker_ProSearch(this);
             search_box.search_pro();
         });
 
-        binding.SearchActivityswitch.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bSearchASwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                binding.SearchActivityswitch.setText("فعال");
+                binding.bSearchASwitch.setText("فعال");
                 callMethod.EditBoolan("ActiveStack", true);
             } else {
 
-                binding.SearchActivityswitch.setText("فعال -غیرفعال");
+                binding.bSearchASwitch.setText("فعال -غیرفعال");
                 callMethod.EditBoolan("ActiveStack", false);
             }
 
-            binding.SearchActivityEdtsearch.setText(AutoSearch);
+            binding.bSearchAEdtsearch.setText(AutoSearch);
         });
-        binding.SearchActivityswitchAmount.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bSearchASwitchAmount.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                binding.SearchActivityswitchAmount.setText("موجود");
+                binding.bSearchASwitchAmount.setText("موجود");
                 callMethod.EditBoolan("GoodAmount", true);
             } else {
-                binding.SearchActivityswitchAmount.setText("هردو");
+                binding.bSearchASwitchAmount.setText("هردو");
                 callMethod.EditBoolan("GoodAmount", false);
             }
 
-            binding.SearchActivityEdtsearch.setText(AutoSearch);
+            binding.bSearchAEdtsearch.setText(AutoSearch);
         });
 
 
-        binding.SearchActivityFab.setOnClickListener(v -> {
+        binding.bSearchAFab.setOnClickListener(v -> {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.box_multi_buy);
-            Button boxbuy = dialog.findViewById(R.id.box_multi_buy_btn);
-            final EditText amount_mlti = dialog.findViewById(R.id.box_multi_buy_amount);
-            final EditText unitratio_mlti = dialog.findViewById(R.id.box_multi_unitratio);
-            final TextView tv = dialog.findViewById(R.id.box_multi_buy_factor);
+            dialog.setContentView(R.layout.broker_multibuy_box);
+            Button boxbuy = dialog.findViewById(R.id.broker_multibuy_btn);
+            final EditText amount_mlti = dialog.findViewById(R.id.broker_multibuy_amount);
+            final EditText unitratio_mlti = dialog.findViewById(R.id.broker_multibuy_unitratio);
+            final TextView tv = dialog.findViewById(R.id.broker_multibuy_factor);
             String tempvalue = "";
             defultenablesellprice = false;
             Good goodtempdata;
@@ -336,14 +334,14 @@ public class Broker_SearchActivity extends AppCompatActivity {
                             good.setCheck(false);
                         }
                         Multi_Good.clear();
-                        adapter = new GoodAdapter(goods, this);
+                        adapter = new Broker_GoodAdapter(goods, this);
                         adapter.multi_select = false;
                         gridLayoutManager = new GridLayoutManager(this, grid);
                         gridLayoutManager.scrollToPosition(pastVisiblesItems + 2);
-                        binding.SearchActivityAllgood.setLayoutManager(gridLayoutManager);
-                        binding.SearchActivityAllgood.setAdapter(adapter);
-                        binding.SearchActivityAllgood.setItemAnimator(new DefaultItemAnimator());
-                        binding.SearchActivityFab.setVisibility(View.GONE);
+                        binding.bSearchAAllgood.setLayoutManager(gridLayoutManager);
+                        binding.bSearchAAllgood.setAdapter(adapter);
+                        binding.bSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
+                        binding.bSearchAFab.setVisibility(View.GONE);
 
                     } else {
                         callMethod.showToast("تعداد مورد نظر صحیح نمی باشد.");
@@ -358,7 +356,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
             }
         });
 
-        binding.SearchActivityAllgood.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.bSearchAAllgood.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
@@ -370,14 +368,14 @@ public class Broker_SearchActivity extends AppCompatActivity {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount - 1) {
                             loading = false;
                             PageMoreData = String.valueOf(Integer.parseInt(PageMoreData) + 1);
-                            binding.SearchActivityProg.setVisibility(View.VISIBLE);
+                            binding.bSearchAProg.setVisibility(View.VISIBLE);
                             GetMoreDataFromDataBase();
                         }
                     }
                 }
             }
         });
-        binding.SearchActivityEdtsearch.setText(AutoSearch);
+        binding.bSearchAEdtsearch.setText(AutoSearch);
 
     }
 
@@ -395,7 +393,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.bag_shop) {
             if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                intent = new Intent(this, BasketActivity.class);
+                intent = new Intent(this, Broker_BasketActivity.class);
                 intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                 startActivity(intent);
             } else {
@@ -411,13 +409,13 @@ public class Broker_SearchActivity extends AppCompatActivity {
             Multi_Good.clear();
             adapter.multi_select = false;
 
-            adapter = new GoodAdapter(goods, this);
+            adapter = new Broker_GoodAdapter(goods, this);
             gridLayoutManager = new GridLayoutManager(this, grid);
             gridLayoutManager.scrollToPosition(pastVisiblesItems + 2);
-            binding.SearchActivityAllgood.setLayoutManager(gridLayoutManager);
-            binding.SearchActivityAllgood.setAdapter(adapter);
-            binding.SearchActivityAllgood.setItemAnimator(new DefaultItemAnimator());
-            binding.SearchActivityFab.setVisibility(View.GONE);
+            binding.bSearchAAllgood.setLayoutManager(gridLayoutManager);
+            binding.bSearchAAllgood.setAdapter(adapter);
+            binding.bSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
+            binding.bSearchAFab.setVisibility(View.GONE);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -428,7 +426,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
         Multi_Good.clear();
         PageMoreData = "0";
 
-        binding.SearchActivityFab.setVisibility(View.GONE);
+        binding.bSearchAFab.setVisibility(View.GONE);
         item_multi.findItem(R.id.menu_multi).setVisible(false);
 
         loading = true;
@@ -461,11 +459,11 @@ public class Broker_SearchActivity extends AppCompatActivity {
                 goods.addAll(Moregoods);
             }
             adapter.notifyDataSetChanged();
-            binding.SearchActivityProg.setVisibility(View.GONE);
+            binding.bSearchAProg.setVisibility(View.GONE);
             loading = true;
         } else {
             loading = false;
-            binding.SearchActivityProg.setVisibility(View.GONE);
+            binding.bSearchAProg.setVisibility(View.GONE);
             callMethod.showToast("کالای بیشتری یافت نشد");
             PageMoreData = String.valueOf(Integer.parseInt(PageMoreData) - 1);
         }
@@ -477,18 +475,18 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
 
         if (adapter.getItemCount() == 0) {
-            binding.SearchActivityTvstatus.setText("کالایی یافت نشد");
-            binding.SearchActivityTvstatus.setVisibility(View.VISIBLE);
-            binding.SearchActivityLottie.setVisibility(View.VISIBLE);
+            binding.bSearchATvstatus.setText("کالایی یافت نشد");
+            binding.bSearchATvstatus.setVisibility(View.VISIBLE);
+            binding.bSearchALottie.setVisibility(View.VISIBLE);
         } else {
-            binding.SearchActivityLottie.setVisibility(View.GONE);
-            binding.SearchActivityTvstatus.setVisibility(View.GONE);
+            binding.bSearchALottie.setVisibility(View.GONE);
+            binding.bSearchATvstatus.setVisibility(View.GONE);
         }
         gridLayoutManager = new GridLayoutManager(this, grid);
-        binding.SearchActivityAllgood.setLayoutManager(gridLayoutManager);
-        binding.SearchActivityAllgood.setAdapter(adapter);
-        binding.SearchActivityAllgood.setItemAnimator(new DefaultItemAnimator());
-        binding.SearchActivityProg.setVisibility(View.GONE);
+        binding.bSearchAAllgood.setLayoutManager(gridLayoutManager);
+        binding.bSearchAAllgood.setAdapter(adapter);
+        binding.bSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
+        binding.bSearchAProg.setVisibility(View.GONE);
     }
 
 
@@ -496,12 +494,12 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
         if (!Multi_Good.contains(good)) {
             Multi_Good.add(good);
-            binding.SearchActivityFab.setVisibility(View.VISIBLE);
+            binding.bSearchAFab.setVisibility(View.VISIBLE);
             item_multi.findItem(R.id.menu_multi).setVisible(true);
         } else {
             Multi_Good.remove(good);
             if (Multi_Good.size() < 1) {
-                binding.SearchActivityFab.setVisibility(View.GONE);
+                binding.bSearchAFab.setVisibility(View.GONE);
                 adapter.multi_select = false;
                 item_multi.findItem(R.id.menu_multi).setVisible(false);
             }
@@ -510,41 +508,41 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
     public void RefreshState() {
 
-        binding.SearchActivityEdtsearch.selectAll();
+        binding.bSearchAEdtsearch.selectAll();
 
         if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) == 0) {
-            binding.SearchActivityCustomer.setText("فاکتوری انتخاب نشده");
-            binding.SearchActivityLlSumFactor.setVisibility(View.GONE);
+            binding.bSearchACustomer.setText("فاکتوری انتخاب نشده");
+            binding.bSearchALlSumFactor.setVisibility(View.GONE);
         } else {
-            binding.SearchActivityLlSumFactor.setVisibility(View.VISIBLE);
-            binding.SearchActivityCustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.SearchActivitySumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            binding.bSearchALlSumFactor.setVisibility(View.VISIBLE);
+            binding.bSearchACustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
+            binding.bSearchASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
 
         if (callMethod.ReadBoolan("ActiveStack")) {
-            binding.SearchActivityswitch.setChecked(true);
-            binding.SearchActivityswitch.setText("فعال");
+            binding.bSearchASwitch.setChecked(true);
+            binding.bSearchASwitch.setText("فعال");
         } else {
-            binding.SearchActivityswitch.setChecked(false);
-            binding.SearchActivityswitch.setText("فعال -غیرفعال");
+            binding.bSearchASwitch.setChecked(false);
+            binding.bSearchASwitch.setText("فعال -غیرفعال");
         }
 
         if (callMethod.ReadBoolan("GoodAmount")) {
-            binding.SearchActivityswitchAmount.setChecked(true);
-            binding.SearchActivityswitchAmount.setText("موجود");
+            binding.bSearchASwitchAmount.setChecked(true);
+            binding.bSearchASwitchAmount.setText("موجود");
         } else {
-            binding.SearchActivityswitchAmount.setChecked(false);
-            binding.SearchActivityswitchAmount.setText("هردو");
+            binding.bSearchASwitchAmount.setChecked(false);
+            binding.bSearchASwitchAmount.setText("هردو");
         }
 
 
 
         if (callMethod.ReadBoolan("keyboardRunnable")) {
-            binding.SearchActivityEdtsearch.setFocusable(true);
-            binding.SearchActivityEdtsearch.requestFocus();
-            binding.SearchActivityEdtsearch.selectAll();
+            binding.bSearchAEdtsearch.setFocusable(true);
+            binding.bSearchAEdtsearch.requestFocus();
+            binding.bSearchAEdtsearch.selectAll();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(binding.SearchActivityEdtsearch, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(binding.bSearchAEdtsearch, InputMethodManager.SHOW_IMPLICIT);
             keyboardHandler.removeCallbacks(keyboardRunnable);
             keyboardHandler.postDelayed(keyboardRunnable,
                     0

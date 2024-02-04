@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.application;
+package com.kits.kowsarapp.application.base;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -16,7 +16,7 @@ import com.kits.kowsarapp.model.AppPrinter;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 
 import com.kits.kowsarapp.model.RetrofitResponse;
-import com.kits.kowsarapp.webService.APIClient;
+import com.kits.kowsarapp.webService.base.APIClient;
 
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;

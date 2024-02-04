@@ -9,26 +9,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.Action;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.ImageInfo;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ImageInfo;
+import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.viewholder.GoodBasketHistoryViewHolder;
-import com.kits.kowsarapp.webService.APIClient;
-import com.kits.kowsarapp.webService.APIInterface;
+import com.kits.kowsarapp.viewholder.broker.Broker_GoodBasketHistoryViewHolder;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.util.ArrayList;
 
-public class Broker_GoodBasketHistoryAdapter extends RecyclerView.Adapter<GoodBasketHistoryViewHolder> {
+public class Broker_GoodBasketHistoryAdapter extends RecyclerView.Adapter<Broker_GoodBasketHistoryViewHolder> {
     ArrayList<Good> goods;
     Context mContext;
     CallMethod callMethod;
     String itemposition;
-    APIInterface apiInterface;
+    Broker_APIInterface apiInterface;
     ImageInfo image_info;
     Broker_DBH dbh;
-    Action action;
+    Broker_Action action;
     private String itemPosition;
 
     public Broker_GoodBasketHistoryAdapter(ArrayList<Good> goods, String Itemposition, Context mContext) {
@@ -38,14 +38,14 @@ public class Broker_GoodBasketHistoryAdapter extends RecyclerView.Adapter<GoodBa
         this.callMethod = new CallMethod(mContext);
         this.image_info = new ImageInfo(mContext);
         this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
         action = new Broker_Action(mContext);
 
     }
 
     @NonNull
     @Override
-    public GoodBasketHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Broker_GoodBasketHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (itemposition.equals("0")) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_buy_history_line, parent, false);
@@ -53,11 +53,11 @@ public class Broker_GoodBasketHistoryAdapter extends RecyclerView.Adapter<GoodBa
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_buy_history, parent, false);
 
         }
-        return new GoodBasketHistoryViewHolder(view);
+        return new Broker_GoodBasketHistoryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final GoodBasketHistoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final Broker_GoodBasketHistoryViewHolder holder, int position) {
 
         holder.bind(goods.get(position), itemposition);
         holder.Conditionbind(goods.get(position), image_info, callMethod);

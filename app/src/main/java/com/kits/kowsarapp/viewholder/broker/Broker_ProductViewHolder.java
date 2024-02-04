@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.SearchActivity;
-import com.kits.kowsarapp.application.App;
+import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
+import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.model.NumberFunctions;
 import com.kits.kowsarapp.model.Product;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
@@ -39,7 +39,7 @@ public class Broker_ProductViewHolder extends ChildViewHolder {
 
         mtextView.setOnClickListener(v -> {
 
-            Intent intent = new Intent(mContext, SearchActivity.class);
+            Intent intent = new Intent(mContext, Broker_SearchActivity.class);
             intent.putExtra("scan", "");
             intent.putExtra("id", String.valueOf(product.id));
             intent.putExtra("title", product.name);

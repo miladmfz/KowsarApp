@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:id="@+id/rep_prog"
+    android:id="@+id/b_spinner_prog"
     android:layout_margin="10dp"
     app:layout_constraintCircleRadius="10dp"
     android:background="@drawable/bg_round_selected"
@@ -13,7 +13,7 @@
 
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_raw"
+        android:id="@+id/b_spinner_lottie"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_margin="2dp"
@@ -25,7 +25,7 @@
 
 
     <TextView
-        android:id="@+id/rep_prog_text"
+        android:id="@+id/b_spinner_text"
         android:layout_width="wrap_content"
         android:layout_margin="5dp"
         android:layout_height="match_parent"
@@ -37,7 +37,7 @@
         />
 
     <TextView
-        android:id="@+id/rep_prog_step"
+        android:id="@+id/b_spinner_step"
         android:layout_width="match_parent"
         android:layout_margin="5dp"
         android:layout_height="match_parent"
@@ -51,7 +51,7 @@
         android:layout_height="match_parent"
         android:weightSum="1">
         <Button
-            android:id="@+id/rep_prog_btn"
+            android:id="@+id/b_spinner_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.5"

@@ -23,7 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_GoodAdapter;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.databinding.BrokerActivityBydateBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -55,7 +56,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
     ArrayList<Good> Multi_Good = new ArrayList<>();
     Intent intent;
     boolean defultenablesellprice;
-    ActivitySearchDateDetailBinding binding;
+    BrokerActivityBydateBinding binding;
     private ArrayList<Good> Moregoods = new ArrayList<>();
     private Integer grid;
     private String date;
@@ -66,15 +67,15 @@ public class Broker_ByDateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySearchDateDetailBinding.inflate(getLayoutInflater());
+        binding = BrokerActivityBydateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         final Dialog dialog1;
         dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.rep_prog);
-        TextView repw = dialog1.findViewById(R.id.rep_prog_text);
+        dialog1.setContentView(R.layout.broker_spinner_box);
+        TextView repw = dialog1.findViewById(R.id.b_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
 
@@ -99,7 +100,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         calendar1 = new PersianCalendar();
 
-        setSupportActionBar(binding.searchbydateactivityToolbar);
+        setSupportActionBar(binding.bBydateAToolbar);
 
     }
 
@@ -138,16 +139,16 @@ public class Broker_ByDateActivity extends AppCompatActivity {
 
 
         grid = Integer.parseInt(callMethod.ReadString("Grid"));
-        binding.searchbydateactivityDate.setText(date);
+        binding.bBydateADate.setText(date);
         GetDataFromDataBase();
 
 
-        binding.searchbydateactivityBtn.setOnClickListener(view -> {
+        binding.bBydateABtn.setOnClickListener(view -> {
             goods.clear();
 
             calendar1 = new PersianCalendar();
-            if (!binding.searchbydateactivityDate.getText().toString().equals("")) {
-                date = binding.searchbydateactivityDate.getText().toString();
+            if (!binding.bBydateADate.getText().toString().equals("")) {
+                date = binding.bBydateADate.getText().toString();
             } else {
                 date = "7";
             }
@@ -179,19 +180,19 @@ public class Broker_ByDateActivity extends AppCompatActivity {
 
 
         if (callMethod.ReadBoolan("GoodAmount")) {
-            binding.searchbydateactivitySwitchAmount.setChecked(true);
-            binding.searchbydateactivitySwitchAmount.setText("موجود");
+            binding.bBydateASwitchAmount.setChecked(true);
+            binding.bBydateASwitchAmount.setText("موجود");
         } else {
-            binding.searchbydateactivitySwitchAmount.setChecked(false);
-            binding.searchbydateactivitySwitchAmount.setText("هردو");
+            binding.bBydateASwitchAmount.setChecked(false);
+            binding.bBydateASwitchAmount.setText("هردو");
         }
 
-        binding.searchbydateactivitySwitchAmount.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bBydateASwitchAmount.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                binding.searchbydateactivitySwitchAmount.setText("موجود");
+                binding.bBydateASwitchAmount.setText("موجود");
                 callMethod.EditBoolan("GoodAmount", true);
             } else {
-                binding.searchbydateactivitySwitchAmount.setText("هردو");
+                binding.bBydateASwitchAmount.setText("هردو");
                 callMethod.EditBoolan("GoodAmount", false);
             }
             if (conter == 0) {
@@ -201,14 +202,14 @@ public class Broker_ByDateActivity extends AppCompatActivity {
             }
         });
 
-        binding.searchbydateactivityFab.setOnClickListener(v -> {
+        binding.bBydateAFab.setOnClickListener(v -> {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.box_multi_buy);
-            Button boxbuy = dialog.findViewById(R.id.box_multi_buy_btn);
-            final EditText amount_mlti = dialog.findViewById(R.id.box_multi_buy_amount);
-            final EditText unitratio_mlti = dialog.findViewById(R.id.box_multi_unitratio);
-            final TextView tv = dialog.findViewById(R.id.box_multi_buy_factor);
+            dialog.setContentView(R.layout.broker_multibuy_box);
+            Button boxbuy = dialog.findViewById(R.id.broker_multibuy_btn);
+            final EditText amount_mlti = dialog.findViewById(R.id.broker_multibuy_amount);
+            final EditText unitratio_mlti = dialog.findViewById(R.id.broker_multibuy_unitratio);
+            final TextView tv = dialog.findViewById(R.id.broker_multibuy_factor);
             String tempvalue = "";
             defultenablesellprice = false;
 
@@ -294,10 +295,10 @@ public class Broker_ByDateActivity extends AppCompatActivity {
                         adapter.multi_select = false;
                         gridLayoutManager = new GridLayoutManager(this, grid);
                         gridLayoutManager.scrollToPosition(pastVisiblesItems + 2);
-                        binding.searchbydateactivityRecycler.setLayoutManager(gridLayoutManager);
-                        binding.searchbydateactivityRecycler.setAdapter(adapter);
-                        binding.searchbydateactivityRecycler.setItemAnimator(new DefaultItemAnimator());
-                        binding.searchbydateactivityFab.setVisibility(View.GONE);
+                        binding.bBydateARecycler.setLayoutManager(gridLayoutManager);
+                        binding.bBydateARecycler.setAdapter(adapter);
+                        binding.bBydateARecycler.setItemAnimator(new DefaultItemAnimator());
+                        binding.bBydateAFab.setVisibility(View.GONE);
 
                     } else {
                         callMethod.showToast("تعداد مورد نظر صحیح نمی باشد.");
@@ -311,7 +312,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
         });
 
 
-        binding.searchbydateactivityRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.bBydateARecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
@@ -367,10 +368,10 @@ public class Broker_ByDateActivity extends AppCompatActivity {
 
             gridLayoutManager = new GridLayoutManager(this, grid);
             gridLayoutManager.scrollToPosition(pastVisiblesItems + 2);
-            binding.searchbydateactivityRecycler.setLayoutManager(gridLayoutManager);
-            binding.searchbydateactivityRecycler.setAdapter(adapter);
-            binding.searchbydateactivityRecycler.setItemAnimator(new DefaultItemAnimator());
-            binding.searchbydateactivityFab.setVisibility(View.GONE);
+            binding.bBydateARecycler.setLayoutManager(gridLayoutManager);
+            binding.bBydateARecycler.setAdapter(adapter);
+            binding.bBydateARecycler.setItemAnimator(new DefaultItemAnimator());
+            binding.bBydateAFab.setVisibility(View.GONE);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -381,17 +382,17 @@ public class Broker_ByDateActivity extends AppCompatActivity {
     public void CallRecyclerView() {
         adapter = new Broker_GoodAdapter(goods, this);
         if (adapter.getItemCount() == 0) {
-            binding.searchbydateactivityTvstatus.setText("کالایی یافت نشد");
-            binding.searchbydateactivityTvstatus.setVisibility(View.VISIBLE);
-            binding.searchbydateactivityLottie.setVisibility(View.VISIBLE);
+            binding.bBydateATvstatus.setText("کالایی یافت نشد");
+            binding.bBydateATvstatus.setVisibility(View.VISIBLE);
+            binding.bBydateALottie.setVisibility(View.VISIBLE);
         } else {
-            binding.searchbydateactivityLottie.setVisibility(View.GONE);
-            binding.searchbydateactivityTvstatus.setVisibility(View.GONE);
+            binding.bBydateALottie.setVisibility(View.GONE);
+            binding.bBydateATvstatus.setVisibility(View.GONE);
         }
         gridLayoutManager = new GridLayoutManager(this, grid);
-        binding.searchbydateactivityRecycler.setLayoutManager(gridLayoutManager);
-        binding.searchbydateactivityRecycler.setAdapter(adapter);
-        binding.searchbydateactivityRecycler.setItemAnimator(new DefaultItemAnimator());
+        binding.bBydateARecycler.setLayoutManager(gridLayoutManager);
+        binding.bBydateARecycler.setAdapter(adapter);
+        binding.bBydateARecycler.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void GetDataFromDataBase() {
@@ -430,13 +431,13 @@ public class Broker_ByDateActivity extends AppCompatActivity {
         if (!Multi_Good.contains(good)) {
             Multi_Good.add(good);
 
-            binding.searchbydateactivityFab.setVisibility(View.VISIBLE);
+            binding.bBydateAFab.setVisibility(View.VISIBLE);
             item_multi.findItem(R.id.menu_multi).setVisible(true);
         } else {
             Multi_Good.remove(good);
 
             if (Multi_Good.size() < 1) {
-                binding.searchbydateactivityFab.setVisibility(View.GONE);
+                binding.bBydateAFab.setVisibility(View.GONE);
                 adapter.multi_select = false;
                 item_multi.findItem(R.id.menu_multi).setVisible(false);
             }
@@ -445,12 +446,12 @@ public class Broker_ByDateActivity extends AppCompatActivity {
 
     public void factorState() {
         if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) == 0) {
-            binding.searchbydateactivityCustomer.setText("فاکتوری انتخاب نشده");
-            binding.searchbydateactivityLlSumFactor.setVisibility(View.GONE);
+            binding.bBydateACustomer.setText("فاکتوری انتخاب نشده");
+            binding.bBydateALlSumFactor.setVisibility(View.GONE);
         } else {
-            binding.searchbydateactivityLlSumFactor.setVisibility(View.VISIBLE);
-            binding.searchbydateactivityCustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.searchbydateactivitySumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            binding.bBydateALlSumFactor.setVisibility(View.VISIBLE);
+            binding.bBydateACustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
+            binding.bBydateASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
     }
 

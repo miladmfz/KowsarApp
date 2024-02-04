@@ -19,8 +19,8 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.model.Column;
 import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.webService.APIClient;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 

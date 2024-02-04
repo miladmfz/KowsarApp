@@ -3,7 +3,7 @@ package com.kits.kowsarapp.model;
 import android.annotation.SuppressLint;
 
 import com.google.gson.annotations.SerializedName;
-import com.kits.kowsarapp.application.App;
+import com.kits.kowsarapp.application.base.App;
 
 public class Activation {
 

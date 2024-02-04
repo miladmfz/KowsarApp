@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.activity;
+package com.kits.kowsarapp.activity.base;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -24,15 +24,15 @@ import androidx.core.content.ContextCompat;
 import androidx.work.WorkManager;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.App;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 
 import java.io.File;
 import java.util.Locale;
 
 @SuppressLint("CustomSplashScreen")
-public class SplashActivity extends AppCompatActivity {
+public class Base_SplashActivity extends AppCompatActivity {
 
 
     final int PERMISSION_CODE = 1;
@@ -212,7 +212,7 @@ public class SplashActivity extends AppCompatActivity {
                 if (callMethod.ReadString("DatabaseName").equals("")) {
                     handler = new Handler();
                     handler.postDelayed(() -> {
-                        intent = new Intent(this, ChoiceDatabaseActivity.class);
+                        intent = new Intent(this, Base_ChoiceDBActivity.class);
                         startActivity(intent);
                         finish();
                     }, 2000);
@@ -312,7 +312,7 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                 handler = new Handler();
                 handler.postDelayed(() -> {
-                    intent = new Intent(this, SplashActivity.class);
+                    intent = new Intent(this, Base_SplashActivity.class);
                     finish();
                     startActivity(intent);
                 }, 2000);

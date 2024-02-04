@@ -1,9 +1,10 @@
-package com.kits.kowsarapp.application;
+package com.kits.kowsarapp.application.base;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.util.Log;
+
+import com.kits.kowsarapp.application.base.CallMethod;
 
 import java.io.File;
 import java.io.FileOutputStream;

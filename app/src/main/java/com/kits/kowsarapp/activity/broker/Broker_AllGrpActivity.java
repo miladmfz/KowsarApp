@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_ProductAdapter;
-import com.kits.kowsarapp.application.App;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.Category;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.GoodGroup;
 import com.kits.kowsarapp.model.Product;
-import com.kits.kowsarapp.webService.APIClient;
+import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.util.ArrayList;
@@ -31,15 +31,13 @@ public class Broker_AllGrpActivity extends AppCompatActivity {
     CallMethod callMethod;
     Broker_DBH dbh;
     Toolbar toolbar;
-    ArrayList<Category> categories = new ArrayList<>();
     RecyclerView rc;
-    Category category;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_view);
+        setContentView(R.layout.broker_activity_allgrp);
 
 
         Config();
@@ -62,10 +60,10 @@ public class Broker_AllGrpActivity extends AppCompatActivity {
         dbh = new Broker_DBH(this, databaseName);
         dbh.ClearSearchColumn();
 
-        toolbar = findViewById(R.id.allview_toolbar);
+        toolbar = findViewById(R.id.b_allgrp_a_toolbar);
         setSupportActionBar(toolbar);
 
-        rc = findViewById(R.id.allview_rc);
+        rc = findViewById(R.id.b_allgrp_a_rc);
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
 
@@ -95,7 +93,7 @@ public class Broker_AllGrpActivity extends AppCompatActivity {
         }
 
         Broker_ProductAdapter adapter = new Broker_ProductAdapter(categories, App.getContext());
-        RecyclerView rc = findViewById(R.id.allview_rc);
+        RecyclerView rc = findViewById(R.id.b_allgrp_a_rc);
         rc.setAdapter(adapter);
         rc.setLayoutManager(new LinearLayoutManager(this));
     }

@@ -11,20 +11,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.SplashActivity;
-import com.kits.kowsarapp.application.Action;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.Replication;
+import com.kits.kowsarapp.activity.base.Base_SplashActivity;
+import com.kits.kowsarapp.application.base.Base_Action;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
-import com.kits.kowsarapp.databinding.ActivityRegistrationBinding;
+import com.kits.kowsarapp.databinding.BrokerActivityRegistrBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.NumberFunctions;
 import com.kits.kowsarapp.model.RetrofitResponse;
 import com.kits.kowsarapp.model.SellBroker;
 import com.kits.kowsarapp.model.UserInfo;
-import com.kits.kowsarapp.webService.APIClient;
-import com.kits.kowsarapp.webService.APIInterface;
+import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,10 +40,12 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
     Broker_DBH dbh;
     CallMethod callMethod;
-    Broker_Action action;
+    Broker_Action broker_action;
+    Base_Action base_action;
+
     Broker_Replication replication;
     Intent intent;
-    ActivityRegistrationBinding binding;
+    BrokerActivityRegistrBinding binding;
     Broker_APIInterface broker_apiInterface;
     ArrayList<String> SellBroker_Names = new ArrayList<>();
     ArrayList<SellBroker> SellBrokers = new ArrayList<>();
@@ -53,7 +53,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
+        binding = BrokerActivityRegistrBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Config();
@@ -72,7 +72,9 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         replication = new Broker_Replication(this);
-        action = new Broker_Action(this);
+        broker_action = new Broker_Action(this);
+        base_action = new Base_Action(this);
+
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
         Call<RetrofitResponse> call1 = broker_apiInterface.GetSellBroker("GetSellBroker");
@@ -110,7 +112,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
     public void brokerViewConfig() {
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, SellBroker_Names);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.registrSpinnerbroker.setAdapter(spinner_adapter);
+        binding.bRegisterASpinnerbroker.setAdapter(spinner_adapter);
         int possellbroker=0;
         for (SellBroker sellBroker:SellBrokers){
             if (sellBroker.getBrokerCode().equals(dbh.ReadConfig("BrokerCode"))){
@@ -118,13 +120,13 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
             }
         }
 
-        binding.registrSpinnerbroker.setSelection(possellbroker);
-        binding.registrSpinnerbroker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.bRegisterASpinnerbroker.setSelection(possellbroker);
+        binding.bRegisterASpinnerbroker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 dbh.SaveConfig("BrokerCode",SellBrokers.get(position).getBrokerCode());
-                binding.registrBroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
+                binding.bRegisterABroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
 
             }
 
@@ -137,16 +139,16 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
     public void init() {
 
 
-        binding.registrBroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
-        binding.registrGrid.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Grid")));
-        binding.registrDelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
-        binding.registrTitlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
-        binding.registrBodysize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BodySize")));
-        binding.registrPhonenumber.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PhoneNumber")));
-        binding.registrDbname.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PersianCompanyNameUse")));
+        binding.bRegisterABroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
+        binding.bRegisterAGrid.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Grid")));
+        binding.bRegisterADelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
+        binding.bRegisterATitlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
+        binding.bRegisterABodysize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BodySize")));
+        binding.bRegisterAPhonenumber.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PhoneNumber")));
+        binding.bRegisterADbname.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PersianCompanyNameUse")));
 
 
-        binding.registrTotaldelete.setOnClickListener(v -> {
+        binding.bRegisterATotaldelete.setOnClickListener(v -> {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
             builder.setTitle(R.string.textvalue_allert);
@@ -167,7 +169,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
         });
 
-        binding.registrBasedelete.setOnClickListener(v -> {
+        binding.bRegisterABasedelete.setOnClickListener(v -> {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
             builder.setTitle(R.string.textvalue_allert);
@@ -183,7 +185,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
                     callMethod.EditString("EnglishCompanyNameUse", "");
                     callMethod.EditString("ServerURLUse", "");
                     callMethod.EditString("DatabaseName", "");
-                    intent = new Intent(this, SplashActivity.class);
+                    intent = new Intent(this, Base_SplashActivity.class);
                     finish();
                     startActivity(intent);
                     Log.i("test", "Success");
@@ -199,7 +201,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
         });
 
-        binding.registrReplicationcolumn.setOnClickListener(v -> {
+        binding.bRegisterAReplicationcolumn.setOnClickListener(v -> {
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
@@ -210,7 +212,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
                 dbh.deleteColumn();
                 replication.BrokerStack();
                 dbh.DatabaseCreate();
-                action.app_info();
+                base_action.app_info();
                 replication.DoingReplicate();
 
 
@@ -226,17 +228,17 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         });
 
 
-        binding.registrSelloff.setChecked(Integer.parseInt(callMethod.ReadString("SellOff")) != 0);
-        binding.registrAutorep.setChecked(callMethod.ReadBoolan("AutoReplication"));
-        binding.registrCustomercredit.setChecked(callMethod.ReadBoolan("ShowCustomerCredit"));
-        binding.registrKeyboardrunnable.setChecked(callMethod.ReadBoolan("keyboardRunnable"));
-        binding.registrKowsarservice.setChecked(callMethod.ReadBoolan("kowsarService"));
-        binding.registrShowdetail.setChecked(callMethod.ReadBoolan("ShowDetail"));
-        binding.registrLineview.setChecked(callMethod.ReadBoolan("LineView"));
+        binding.bRegisterASelloff.setChecked(Integer.parseInt(callMethod.ReadString("SellOff")) != 0);
+        binding.bRegisterAAutorep.setChecked(callMethod.ReadBoolan("AutoReplication"));
+        binding.bRegisterACustomercredit.setChecked(callMethod.ReadBoolan("ShowCustomerCredit"));
+        binding.bRegisterAKeyboardrunnable.setChecked(callMethod.ReadBoolan("keyboardRunnable"));
+        binding.bRegisterAKowsarservice.setChecked(callMethod.ReadBoolan("kowsarService"));
+        binding.bRegisterAShowdetail.setChecked(callMethod.ReadBoolan("ShowDetail"));
+        binding.bRegisterALineview.setChecked(callMethod.ReadBoolan("LineView"));
 
 
 
-        binding.registrShowdetail.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bRegisterAShowdetail.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("ShowDetail")) {
                 callMethod.EditBoolan("ShowDetail", false);
                 callMethod.showToast("خیر");
@@ -248,20 +250,20 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
 
 
-        binding.registrLineview.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bRegisterALineview.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("LineView")) {
                 callMethod.EditBoolan("LineView", false);
                 callMethod.showToast("خیر");
-                binding.registrGrid.setText(NumberFunctions.PerisanNumber("3"));
+                binding.bRegisterAGrid.setText(NumberFunctions.PerisanNumber("3"));
             } else {
                 callMethod.EditBoolan("LineView", true);
                 callMethod.showToast("بله");
-                binding.registrGrid.setText(NumberFunctions.PerisanNumber("1"));
+                binding.bRegisterAGrid.setText(NumberFunctions.PerisanNumber("1"));
             }
         });
 
 
-        binding.registrCustomercredit.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bRegisterACustomercredit.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("ShowCustomerCredit")) {
                 callMethod.EditBoolan("ShowCustomerCredit", false);
                 callMethod.showToast("خیر");
@@ -274,7 +276,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
 
 
-        binding.registrSelloff.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bRegisterASelloff.setOnCheckedChangeListener((compoundButton, b) -> {
             if (Integer.parseInt(callMethod.ReadString("SellOff")) == 0) {
                 callMethod.EditString("SellOff", "1");
                 callMethod.showToast("بله");
@@ -285,7 +287,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         });
 
 
-        binding.registrAutorep.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bRegisterAAutorep.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("AutoReplication")) {
                 callMethod.EditBoolan("AutoReplication", false);
                 callMethod.showToast("خیر");
@@ -298,7 +300,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
 
 
-        binding.registrKeyboardrunnable.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bRegisterAKeyboardrunnable.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("keyboardRunnable")) {
                 callMethod.EditBoolan("keyboardRunnable", false);
                 callMethod.showToast("خیر");
@@ -309,7 +311,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        binding.registrKowsarservice.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.bRegisterAKowsarservice.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("kowsarService")) {
                 callMethod.EditBoolan("kowsarService", false);
                 callMethod.showToast("خیر");
@@ -321,13 +323,13 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         });
 
 
-        binding.registrBtn.setOnClickListener(view -> {
-            callMethod.EditString("Grid", NumberFunctions.EnglishNumber(binding.registrGrid.getText().toString()));
-            callMethod.EditString("Delay", NumberFunctions.EnglishNumber(binding.registrDelay.getText().toString()));
-            callMethod.EditString("TitleSize", NumberFunctions.EnglishNumber(binding.registrTitlesize.getText().toString()));
-            callMethod.EditString("BodySize", NumberFunctions.EnglishNumber(binding.registrBodysize.getText().toString()));
-            callMethod.EditString("PhoneNumber", NumberFunctions.EnglishNumber(binding.registrPhonenumber.getText().toString()));
-            if(!dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.registrBroker.getText().toString()))){
+        binding.bRegisterABtn.setOnClickListener(view -> {
+            callMethod.EditString("Grid", NumberFunctions.EnglishNumber(binding.bRegisterAGrid.getText().toString()));
+            callMethod.EditString("Delay", NumberFunctions.EnglishNumber(binding.bRegisterADelay.getText().toString()));
+            callMethod.EditString("TitleSize", NumberFunctions.EnglishNumber(binding.bRegisterATitlesize.getText().toString()));
+            callMethod.EditString("BodySize", NumberFunctions.EnglishNumber(binding.bRegisterABodysize.getText().toString()));
+            callMethod.EditString("PhoneNumber", NumberFunctions.EnglishNumber(binding.bRegisterAPhonenumber.getText().toString()));
+            if(!dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.bRegisterABroker.getText().toString()))){
                 Registration();
             }else {
                 finish();
@@ -344,13 +346,13 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
 
             UserInfo UserInfoNew = new UserInfo();
-            UserInfoNew.setBrokerCode(NumberFunctions.EnglishNumber(binding.registrBroker.getText().toString()));
-            callMethod.EditString("BrokerCode", NumberFunctions.EnglishNumber(binding.registrBroker.getText().toString()));
+            UserInfoNew.setBrokerCode(NumberFunctions.EnglishNumber(binding.bRegisterABroker.getText().toString()));
+            callMethod.EditString("BrokerCode", NumberFunctions.EnglishNumber(binding.bRegisterABroker.getText().toString()));
             dbh.SavePersonalInfo(UserInfoNew);
             dbh.DatabaseCreate();
 
             replication.BrokerStack();
-            action.app_info();
+            base_action.app_info();
             replication.DoingReplicate();
 
     }
@@ -366,7 +368,9 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         callMethod.EditString("ServerURLUse", "");
         callMethod.EditString("DatabaseName", "");
         callMethod.EditString("ActivationCode", "");
-        intent = new Intent(this, SplashActivity.class);
+        callMethod.EditString("AppType", "");
+
+        intent = new Intent(this, Base_SplashActivity.class);
         finish();
         startActivity(intent);
 

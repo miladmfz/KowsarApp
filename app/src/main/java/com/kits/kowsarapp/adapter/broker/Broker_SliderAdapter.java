@@ -17,12 +17,12 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.ImageInfo;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.RetrofitResponse;
-import com.kits.kowsarapp.webService.APIClient;
-import com.kits.kowsarapp.webService.APIInterface;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -38,7 +38,7 @@ import retrofit2.Response;
 
 
 public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter.GoodViewHolder> {
-    APIInterface apiInterface;
+    Broker_APIInterface apiInterface;
     private final ArrayList<Good> goods;
     private final Context mcontext;
     private final Boolean image_zoom;
@@ -55,7 +55,7 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
         this.callMethod = new CallMethod(mcontext);
         image_info = new ImageInfo(mcontext);
         url = callMethod.ReadString("ServerURLUse");
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
     }
 
 
@@ -137,7 +137,7 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                    callMethod.ErrorLog(t.getMessage());
+                    callMethod.Log(t.getMessage());
                 }
             });
 

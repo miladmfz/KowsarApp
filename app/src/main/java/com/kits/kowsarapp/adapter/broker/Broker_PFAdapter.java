@@ -10,17 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.Action;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.PreFactor;
-import com.kits.kowsarapp.viewholder.PreFactorHeaderViewHolder;
+import com.kits.kowsarapp.viewholder.broker.Broker_PFViewHolder;
 
 import java.util.ArrayList;
 
 
-public class Broker_PFAdapter extends RecyclerView.Adapter<PreFactorHeaderViewHolder> {
+public class Broker_PFAdapter extends RecyclerView.Adapter<Broker_PFViewHolder> {
 
     private final Context mContext;
     CallMethod callMethod;
@@ -40,14 +39,14 @@ public class Broker_PFAdapter extends RecyclerView.Adapter<PreFactorHeaderViewHo
 
     @NonNull
     @Override
-    public PreFactorHeaderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Broker_PFViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.prefactor_header, parent, false);
-        return new PreFactorHeaderViewHolder(view);
+        return new Broker_PFViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull final PreFactorHeaderViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final Broker_PFViewHolder holder, final int position) {
 
 
         holder.bind(PreFactors.get(position));

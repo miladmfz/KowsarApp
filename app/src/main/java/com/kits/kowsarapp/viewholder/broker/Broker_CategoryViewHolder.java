@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.SearchActivity;
+import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.model.Category;
 import com.kits.kowsarapp.model.NumberFunctions;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
@@ -53,7 +53,7 @@ public class Broker_CategoryViewHolder extends GroupViewHolder {
 
 
         textView.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, SearchActivity.class);
+            Intent intent = new Intent(mContext, Broker_SearchActivity.class);
             intent.putExtra("scan", "");
             intent.putExtra("id", String.valueOf(company.id));
             intent.putExtra("title", company.name);

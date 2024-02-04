@@ -1,6 +1,5 @@
 package com.kits.kowsarapp.application.broker;
 
-import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,28 +16,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.BasketActivity;
-import com.kits.kowsarapp.activity.CustomerActivity;
-import com.kits.kowsarapp.activity.NavActivity;
-import com.kits.kowsarapp.activity.PrefactorActivity;
-import com.kits.kowsarapp.activity.SearchActivity;
-import com.kits.kowsarapp.application.CallMethod;
+import com.kits.kowsarapp.activity.broker.Broker_BasketActivity;
+import com.kits.kowsarapp.activity.broker.Broker_CustomerActivity;
+import com.kits.kowsarapp.activity.broker.Broker_PFActivity;
+import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.RetrofitResponse;
-import com.kits.kowsarapp.webService.APIClient;
-import com.kits.kowsarapp.webService.APIClient_kowsar;
-import com.kits.kowsarapp.webService.APIInterface;
+import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
-import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,11 +39,6 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class Broker_Action {
@@ -72,7 +58,7 @@ public class Broker_Action {
         this.callMethod = new CallMethod(mContext);
         this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         url = callMethod.ReadString("ServerURLUse");
-        broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
     }
 
@@ -191,7 +177,7 @@ public class Broker_Action {
                                     callMethod.showToast("به سبد کالا اضافه شد");
                                     if (!Basketflag.equals("0")) {
 
-                                        intent = new Intent(mContext, BasketActivity.class);
+                                        intent = new Intent(mContext, Broker_BasketActivity.class);
                                         intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                                         ((Activity) mContext).finish();
                                         ((Activity) mContext).overridePendingTransition(0, 0);
@@ -203,7 +189,7 @@ public class Broker_Action {
                                         ((Activity) mContext).finish();
                                     }
                                 } else {
-                                    intent = new Intent(mContext, CustomerActivity.class);
+                                    intent = new Intent(mContext, Broker_CustomerActivity.class);
                                     intent.putExtra("edit", "0");
                                     intent.putExtra("factor_code", "0");
                                     intent.putExtra("id", "0");
@@ -217,7 +203,7 @@ public class Broker_Action {
                             callMethod.showToast("تعداد مورد نظر صحیح نمی باشد.");
                         }
                     } catch (Exception e) {
-                        callMethod.ErrorLog(e.getMessage());
+                        callMethod.Log(e.getMessage());
 
                     }
                 });
@@ -384,7 +370,7 @@ public class Broker_Action {
                                 callMethod.showToast("به سبد کالا اضافه شد");
                                 if (!Basketflag.equals("0")) {
 
-                                    intent = new Intent(mContext, BasketActivity.class);
+                                    intent = new Intent(mContext, Broker_BasketActivity.class);
                                     intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                                     ((Activity) mContext).finish();
                                     ((Activity) mContext).overridePendingTransition(0, 0);
@@ -396,7 +382,7 @@ public class Broker_Action {
                                     ((Activity) mContext).finish();
                                 }
                             } else {
-                                intent = new Intent(mContext, CustomerActivity.class);
+                                intent = new Intent(mContext, Broker_CustomerActivity.class);
                                 intent.putExtra("edit", "0");
                                 intent.putExtra("factor_code", "0");
                                 intent.putExtra("id", "0");
@@ -520,7 +506,7 @@ public class Broker_Action {
                                     callMethod.showToast("به سبد کالا اضافه شد");
                                     if (!Basketflag.equals("0")) {
 
-                                            intent = new Intent(mContext, BasketActivity.class);
+                                            intent = new Intent(mContext, Broker_BasketActivity.class);
                                             intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                                             ((Activity) mContext).finish();
                                             ((Activity) mContext).overridePendingTransition(0, 0);
@@ -532,7 +518,7 @@ public class Broker_Action {
                                         ((Activity) mContext).finish();
                                     }
                                 } else {
-                                    intent = new Intent(mContext, CustomerActivity.class);
+                                    intent = new Intent(mContext, Broker_CustomerActivity.class);
                                     intent.putExtra("edit", "0");
                                     intent.putExtra("factor_code", "0");
                                     intent.putExtra("id", "0");
@@ -546,7 +532,7 @@ public class Broker_Action {
                             callMethod.showToast("تعداد مورد نظر صحیح نمی باشد.");
                         }
                     } catch (Exception e) {
-                        callMethod.ErrorLog(e.getMessage());
+                        callMethod.Log(e.getMessage());
 
                     }
                 });
@@ -713,7 +699,7 @@ public class Broker_Action {
                                 callMethod.showToast("به سبد کالا اضافه شد");
                                 if (!Basketflag.equals("0")) {
 
-                                        intent = new Intent(mContext, BasketActivity.class);
+                                        intent = new Intent(mContext, Broker_BasketActivity.class);
                                         intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                                         ((Activity) mContext).finish();
                                         ((Activity) mContext).overridePendingTransition(0, 0);
@@ -725,7 +711,7 @@ public class Broker_Action {
                                     ((Activity) mContext).finish();
                                 }
                             } else {
-                                intent = new Intent(mContext, CustomerActivity.class);
+                                intent = new Intent(mContext, Broker_CustomerActivity.class);
                                 intent.putExtra("edit", "0");
                                 intent.putExtra("factor_code", "0");
                                 intent.putExtra("id", "0");
@@ -852,7 +838,7 @@ public class Broker_Action {
 //                            ((Activity) mContext).overridePendingTransition(0, 0);
 //                        }
 //                    } catch (JSONException e) {
-//                        callMethod.ErrorLog(e.getMessage());
+//                        callMethod.Log(e.getMessage());
 //                        callMethod.showToast("بروز خطا در اطلاعات");
 //                    }
 //                } else {
@@ -862,7 +848,7 @@ public class Broker_Action {
 //
 //            @Override
 //            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                callMethod.ErrorLog(t.getMessage());            }
+//                callMethod.Log(t.getMessage());            }
 //        });
 //
 //
@@ -917,7 +903,7 @@ public class Broker_Action {
                         dtb.execSQL("Update PreFactorRow set Shortage = " + flag + " Where IfNull(PreFactorRef,0)=" + factor_code + " And GoodRef = " + code);
                     }
                     callMethod.showToast("کالاهای مورد نظر کسر موجودی دارند!");
-                    intent = new Intent(mContext, BasketActivity.class);
+                    intent = new Intent(mContext, Broker_BasketActivity.class);
                     intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                     ((Activity) mContext).finish();
                     ((Activity) mContext).overridePendingTransition(0, 0);
@@ -925,11 +911,11 @@ public class Broker_Action {
                     ((Activity) mContext).overridePendingTransition(0, 0);
                 }
             } catch (JSONException e) {
-                callMethod.ErrorLog(e.getMessage());
+                callMethod.Log(e.getMessage());
                 callMethod.showToast("بروز خطا در اطلاعات");
             }
         }, volleyError -> {
-            callMethod.ErrorLog(volleyError.getMessage());
+            callMethod.Log(volleyError.getMessage());
             callMethod.showToast("ارتباط با سرور میسر نمی باشد.");
         }) {
             @Override
@@ -978,7 +964,7 @@ public class Broker_Action {
 
             String detail = NumberFunctions.EnglishNumber(pf_detail_detail.getText().toString());
             dbh.update_explain(factor_code, detail);
-            intent = new Intent(mContext, PrefactorActivity.class);
+            intent = new Intent(mContext, Broker_PFActivity.class);
             ((Activity) mContext).finish();
             ((Activity) mContext).overridePendingTransition(0, 0);
             mContext.startActivity(intent);
@@ -1009,7 +995,7 @@ public class Broker_Action {
             String prefactor_code = "PreFactorCode";
             callMethod.EditString(prefactor_code, dbh.GetLastPreFactorHeader().toString());
             lottiereceipt();
-            intent = new Intent(mContext, SearchActivity.class);
+            intent = new Intent(mContext, Broker_SearchActivity.class);
             intent.putExtra("scan", "");
             intent.putExtra("id", "0");
             intent.putExtra("title", "جستجوی کالا");
@@ -1022,127 +1008,6 @@ public class Broker_Action {
 
     }
 
-
-    public void lottiereceipt() {
-
-        Dialog dialog1 = new Dialog(mContext);
-        dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.lottie);
-        LottieAnimationView animationView = dialog1.findViewById(R.id.lottie_name);
-        animationView.setAnimation(R.raw.receipt);
-        dialog1.show();
-        animationView.setRepeatCount(0);
-
-        animationView.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                dialog1.dismiss();
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-        });
-
-
-    }
-
-    public void lottieok() {
-        if (mContext != null) {
-            Dialog dialog1 = new Dialog(mContext);
-            dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            dialog1.setContentView(R.layout.lottie);
-            LottieAnimationView animationView = dialog1.findViewById(R.id.lottie_name);
-            animationView.setAnimation(R.raw.oklottie);
-            try {
-                dialog1.show();
-            } catch (Exception e) {
-                Log.e("Lottie", "Error while showing the dialog: " + e.getMessage());
-            }
-            animationView.setRepeatCount(0);
-
-            animationView.addAnimatorListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    dialog1.dismiss();
-                    intent = new Intent(mContext, NavActivity.class);
-                    ((Activity) mContext).finish();
-                    ((Activity) mContext).overridePendingTransition(0, 0);
-                    mContext.startActivity(intent);
-                    ((Activity) mContext).overridePendingTransition(0, 0);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-                }
-            });
-
-        }
-    }
-
-
-
-    @SuppressLint("HardwareIds")
-    public void app_info() {
-
-        @SuppressLint("HardwareIds") String android_id = BuildConfig.BUILD_TYPE.equals("release") ?
-                Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID) :
-                "debug";
-        PersianCalendar calendar1 = new PersianCalendar();
-        calendar1.setTimeZone(TimeZone.getDefault());
-        String version = BuildConfig.VERSION_NAME;
-
-
-
-        APIInterface apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface.class);
-        Call<RetrofitResponse> call = apiInterface.Kowsar_log("Kowsar_log", android_id
-                , url
-                , callMethod.ReadString("PersianCompanyNameUse")
-                , callMethod.ReadString("PreFactorCode")
-                , calendar1.getPersianShortDateTime()
-                , dbh.ReadConfig("BrokerCode")
-                , version);
-
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    // Handle successful response
-                } else {
-                    // Handle unsuccessful response
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
-                // Handle failure
-            }
-        });
-
-
-
-
-
-
-    }
 
 
     public String CursorToJson(Cursor cursor) {

@@ -12,16 +12,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.App;
-import com.kits.kowsarapp.application.CallMethod;
-import com.kits.kowsarapp.application.ImageInfo;
+import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.model.Category;
 import com.kits.kowsarapp.model.Product;
 import com.kits.kowsarapp.model.RetrofitResponse;
-import com.kits.kowsarapp.viewholder.CategoryViewHolder;
-import com.kits.kowsarapp.viewholder.ProductViewHolder;
-import com.kits.kowsarapp.webService.APIClient;
-import com.kits.kowsarapp.webService.APIInterface;
+import com.kits.kowsarapp.viewholder.broker.Broker_CategoryViewHolder;
+import com.kits.kowsarapp.viewholder.broker.Broker_ProductViewHolder;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
@@ -32,11 +32,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 
-public class Broker_ProductAdapter extends ExpandableRecyclerViewAdapter<CategoryViewHolder, ProductViewHolder> {
+public class Broker_ProductAdapter extends ExpandableRecyclerViewAdapter<Broker_CategoryViewHolder, Broker_ProductViewHolder> {
 
     Context mContext;
     CallMethod callMethod;
-    APIInterface apiInterface;
+    Broker_APIInterface apiInterface;
     ImageInfo image_info;
     Call<RetrofitResponse> call;
 
@@ -46,25 +46,25 @@ public class Broker_ProductAdapter extends ExpandableRecyclerViewAdapter<Categor
         this.mContext = mContext;
         this.callMethod = new CallMethod(mContext);
         this.image_info = new ImageInfo(mContext);
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
 
     }
 
     @Override
-    public CategoryViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
+    public Broker_CategoryViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-        return new CategoryViewHolder(v);
+        return new Broker_CategoryViewHolder(v);
     }
 
     @Override
-    public ProductViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
+    public Broker_ProductViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item2, parent, false);
-        return new ProductViewHolder(v);
+        return new Broker_ProductViewHolder(v);
     }
 
     @Override
-    public void onBindChildViewHolder(ProductViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
+    public void onBindChildViewHolder(Broker_ProductViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
 
         final Product product = (Product) group.getItems().get(childIndex);
         holder.bind(product);
@@ -109,7 +109,7 @@ public class Broker_ProductAdapter extends ExpandableRecyclerViewAdapter<Categor
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                    callMethod.ErrorLog(t.getMessage());
+                    callMethod.Log(t.getMessage());
                 }
             });
 
@@ -119,7 +119,7 @@ public class Broker_ProductAdapter extends ExpandableRecyclerViewAdapter<Categor
     }
 
     @Override
-    public void onBindGroupViewHolder(CategoryViewHolder holder, int flatPosition, ExpandableGroup group) {
+    public void onBindGroupViewHolder(Broker_CategoryViewHolder holder, int flatPosition, ExpandableGroup group) {
         final Category company = (Category) group;
 
 
@@ -166,7 +166,7 @@ public class Broker_ProductAdapter extends ExpandableRecyclerViewAdapter<Categor
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                    callMethod.ErrorLog(t.getMessage());
+                    callMethod.Log(t.getMessage());
                 }
             });
 

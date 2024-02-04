@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ChoiceDatabaseActivity"
+    tools:context=".activity.base.Base_ChoiceDBActivity"
     android:background="@drawable/gradientbackground"
     android:layoutDirection="rtl"
     >
