@@ -61,10 +61,10 @@ public class Broker_ProSearch {
 
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);//title laye nadashte bashim
-        dialog.setContentView(R.layout.search_box);
+        dialog.setContentView(R.layout.broker_prosearch_box);
 
-        spinner = dialog.findViewById(R.id.search_box_spinner);
-        layout_view = dialog.findViewById(R.id.search_box_layout_pro);
+        spinner = dialog.findViewById(R.id.b_prosearch_spinner);
+        layout_view = dialog.findViewById(R.id.b_prosearch_layout);
 
         int i = 0;
         int j = 0;

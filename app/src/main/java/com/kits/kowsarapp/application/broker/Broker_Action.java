@@ -25,6 +25,7 @@ import com.kits.kowsarapp.activity.broker.Broker_BasketActivity;
 import com.kits.kowsarapp.activity.broker.Broker_CustomerActivity;
 import com.kits.kowsarapp.activity.broker.Broker_PFActivity;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
+import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Broker_Action {
+public class Broker_Action extends Base_Action {
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     Context mContext;
@@ -53,6 +54,7 @@ public class Broker_Action {
     String url;
     Broker_APIInterface broker_apiInterface;
     public Broker_Action(Context mContext)   {
+        super(mContext);
         this.mContext = mContext;
         this.il = 0;
         this.callMethod = new CallMethod(mContext);

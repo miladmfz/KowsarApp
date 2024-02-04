@@ -61,8 +61,8 @@ public class Base_Action {
 
         Dialog dialog1 = new Dialog(mContext);
         dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.lottie);
-        LottieAnimationView animationView = dialog1.findViewById(R.id.lottie_name);
+        dialog1.setContentView(R.layout.default_lottie);
+        LottieAnimationView animationView = dialog1.findViewById(R.id.d_lottie_name);
         animationView.setAnimation(R.raw.receipt);
         dialog1.show();
         animationView.setRepeatCount(0);
@@ -94,8 +94,8 @@ public class Base_Action {
         if (mContext != null) {
             Dialog dialog1 = new Dialog(mContext);
             dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            dialog1.setContentView(R.layout.lottie);
-            LottieAnimationView animationView = dialog1.findViewById(R.id.lottie_name);
+            dialog1.setContentView(R.layout.default_lottie);
+            LottieAnimationView animationView = dialog1.findViewById(R.id.d_lottie_name);
             animationView.setAnimation(R.raw.oklottie);
             try {
                 dialog1.show();

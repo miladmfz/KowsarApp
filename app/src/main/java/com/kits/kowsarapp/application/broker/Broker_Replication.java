@@ -134,9 +134,9 @@ public class Broker_Replication {
     }
 
     public void dialog() {
-        dialog.setContentView(R.layout.rep_prog);
-        tv_rep = dialog.findViewById(R.id.rep_prog_text);
-        tv_step = dialog.findViewById(R.id.rep_prog_step);
+        dialog.setContentView(R.layout.broker_spinner_box);
+        tv_rep = dialog.findViewById(R.id.b_spinner_text);
+        tv_step = dialog.findViewById(R.id.b_spinner_step);
         dialog.show();
 
 
