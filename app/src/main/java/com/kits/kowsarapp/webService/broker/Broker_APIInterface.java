@@ -12,16 +12,8 @@ import retrofit2.http.Query;
 public interface Broker_APIInterface {
 
 
-
-    String Kits_Url="kits/";
-    String kowsar_Url="kowsar/";
-
-
-
     String Broker_Url="Broker/";
-    String Company_Url="Company/";
-    String Ocr_Url="Ocr/";
-    String order_Url="order/";
+
 
 
 
@@ -60,13 +52,6 @@ public interface Broker_APIInterface {
             , @Field("Scale") String Scale
     );
 
-//
-//    @POST("index.php")
-//    @FormUrlEncoded
-//    Call<RetrofitResponse> Activation(
-//            @Field("tag") String tag
-//            , @Field("ActivationCode") String ActivationCode
-//    );
 
 
     @POST("index.php")
@@ -205,10 +190,7 @@ public interface Broker_APIInterface {
     @FormUrlEncoded
     Call<RetrofitResponse> UpdateLocation(@Field("tag") String tag, @Field("GpsLocations") String GpsLocations);
 
-@GET(Kits_Url+"Activation")
-    Call<RetrofitResponse> Activation(
-            @Query("ActivationCode") String ActivationCode
-    );
+
 
 
 

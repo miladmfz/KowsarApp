@@ -91,14 +91,7 @@ public class Base_SplashActivity extends AppCompatActivity {
             //region $ broker
             callMethod.EditString("SellOff", "1");
             callMethod.EditString("Grid", "3");
-            callMethod.EditString("Delay", "1000");
-            callMethod.EditString("TitleSize", "18");
-            callMethod.EditString("BodySize", "18");
             callMethod.EditString("PhoneNumber", "");
-            callMethod.EditString("Theme", "Green");
-            callMethod.EditBoolan("RealAmount", false);
-            callMethod.EditBoolan("ActiveStack", false);
-            callMethod.EditBoolan("GoodAmount", false);
             callMethod.EditBoolan("AutoReplication", false);
             callMethod.EditBoolan("SellPriceTypeDeactivate", true);
             callMethod.EditBoolan("ShowDetail", true);
@@ -106,48 +99,38 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("keyboardRunnable", false);
             callMethod.EditBoolan("kowsarService", false);
             callMethod.EditBoolan("ShowCustomerCredit", true);
-
-
             //endregion
+
 
             //region $ ocr
             callMethod.EditString("Deliverer", "پیش فرض");
             callMethod.EditString("Category", "0");
             callMethod.EditString("StackCategory", "همه");
             callMethod.EditString("ConditionPosition", "0");
-            callMethod.EditString("TitleSize", "22");
             callMethod.EditString("LastTcPrint", "0");
             callMethod.EditBoolan("ArabicText", true);
-            callMethod.EditString("ServerURLUse", "");
-            callMethod.EditString("SQLiteURLUse", "");
-            callMethod.EditString("PersianCompanyNameUse", "");
-            callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("DatabaseName", "");
-            callMethod.EditString("ActivationCode", "");
             callMethod.EditString("SecendServerURL", "");
             callMethod.EditString("DbName", "");
-            callMethod.EditString("AppType", "");
             callMethod.EditString("FactorDbName", "");
-
             //endregion
 
             //region $ order
+            callMethod.EditString("AppBasketInfoCode", "0");
+            callMethod.EditString("ObjectType", "");
+            //endregion
 
+            //region $ AllApp
+            callMethod.EditString("LANG", "");
             callMethod.EditString("Delay", "1000");
             callMethod.EditString("TitleSize", "20");
             callMethod.EditString("BodySize", "20");
             callMethod.EditString("Theme", "Green");
-            callMethod.EditString("LANG", "");
-            callMethod.EditString("AppBasketInfoCode", "0");
             callMethod.EditBoolan("RealAmount", false);
             callMethod.EditBoolan("ActiveStack", false);
             callMethod.EditBoolan("GoodAmount", false);
-            callMethod.EditString("ObjectType", "");
 
 
-            //endregion
-
-            //region $ AllApp
             callMethod.EditBoolan("FirstStart", false);
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("SQLiteURLUse", "");

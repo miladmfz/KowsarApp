@@ -234,6 +234,55 @@ public class Good implements Serializable {
     private boolean Check;
 
 
+    @SerializedName("TotalAvailable")
+    private String TotalAvailable;
+
+    @SerializedName("size")
+    private String size;
+
+    @SerializedName("CoverType")
+    private String CoverType;
+
+    @SerializedName("PageNo")
+    private String PageNo;
+
+    @SerializedName("FacAmount")
+    private String FacAmount;
+
+
+
+    @SerializedName("GoodMaxSellPrice")
+    private String GoodMaxSellPrice;
+
+    @SerializedName("FactorRowCode")
+    private String FactorRowCode;
+
+    @SerializedName("AppRowIsPacked")
+    private String AppRowIsPacked;
+
+    @SerializedName("AppRowIsControled")
+    private String AppRowIsControled;
+
+    @SerializedName("ShortageAmount")
+    private Integer ShortageAmount;
+
+    @SerializedName("AppOCRFactorRowCode")
+    private String AppOCRFactorRowCode;
+
+    @SerializedName("SumPrice")
+    private String SumPrice;
+
+
+    @SerializedName("CachedBarCode")
+    private String CachedBarCode;
+    @SerializedName("ErrCode")
+    private String ErrCode;
+
+    @SerializedName("ErrMessage")
+    private String ErrMessage;
+
+
+
 
     //region $ getter setter
     public boolean isCheck() {
@@ -1041,6 +1090,983 @@ public class Good implements Serializable {
                 break;
         }
     }
+
+    public String getTotalAvailable() {
+        return TotalAvailable;
+    }
+
+    public void setTotalAvailable(String totalAvailable) {
+        TotalAvailable = totalAvailable;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getCoverType() {
+        return CoverType;
+    }
+
+    public void setCoverType(String coverType) {
+        CoverType = coverType;
+    }
+
+    public String getPageNo() {
+        return PageNo;
+    }
+
+    public void setPageNo(String pageNo) {
+        PageNo = pageNo;
+    }
+
+    public String getFacAmount() {
+        return FacAmount;
+    }
+
+    public void setFacAmount(String facAmount) {
+        FacAmount = facAmount;
+    }
+
+    public String getGoodMaxSellPrice() {
+        return GoodMaxSellPrice;
+    }
+
+    public void setGoodMaxSellPrice(String goodMaxSellPrice) {
+        GoodMaxSellPrice = goodMaxSellPrice;
+    }
+
+    public String getFactorRowCode() {
+        return FactorRowCode;
+    }
+
+    public void setFactorRowCode(String factorRowCode) {
+        FactorRowCode = factorRowCode;
+    }
+
+    public String getAppRowIsPacked() {
+        return AppRowIsPacked;
+    }
+
+    public void setAppRowIsPacked(String appRowIsPacked) {
+        AppRowIsPacked = appRowIsPacked;
+    }
+
+    public String getAppRowIsControled() {
+        return AppRowIsControled;
+    }
+
+    public void setAppRowIsControled(String appRowIsControled) {
+        AppRowIsControled = appRowIsControled;
+    }
+
+    public Integer getShortageAmount() {
+        return ShortageAmount;
+    }
+
+    public void setShortageAmount(Integer shortageAmount) {
+        ShortageAmount = shortageAmount;
+    }
+
+    public String getAppOCRFactorRowCode() {
+        return AppOCRFactorRowCode;
+    }
+
+    public void setAppOCRFactorRowCode(String appOCRFactorRowCode) {
+        AppOCRFactorRowCode = appOCRFactorRowCode;
+    }
+
+    public String getSumPrice() {
+        return SumPrice;
+    }
+
+    public void setSumPrice(String sumPrice) {
+        SumPrice = sumPrice;
+    }
+
+    public String getCachedBarCode() {
+        return CachedBarCode;
+    }
+
+    public void setCachedBarCode(String cachedBarCode) {
+        CachedBarCode = cachedBarCode;
+    }
+
+    public String getErrCode() {
+        return ErrCode;
+    }
+
+    public void setErrCode(String errCode) {
+        ErrCode = errCode;
+    }
+
+    public String getErrMessage() {
+        return ErrMessage;
+    }
+
+    public void setErrMessage(String errMessage) {
+        ErrMessage = errMessage;
+    }
+
+    public Integer getGoodCode() {
+        return GoodCode;
+    }
+
+    public void setGoodCode(Integer goodCode) {
+        GoodCode = goodCode;
+    }
+
+    public Integer getGoodMainCode() {
+        return GoodMainCode;
+    }
+
+    public void setGoodMainCode(Integer goodMainCode) {
+        GoodMainCode = goodMainCode;
+    }
+
+    public Integer getGoodSubCode() {
+        return GoodSubCode;
+    }
+
+    public void setGoodSubCode(Integer goodSubCode) {
+        GoodSubCode = goodSubCode;
+    }
+
+    public String getGoodName() {
+        return GoodName;
+    }
+
+    public void setGoodName(String goodName) {
+        GoodName = goodName;
+    }
+
+    public String getActiveStack() {
+        return ActiveStack;
+    }
+
+    public void setActiveStack(String activeStack) {
+        ActiveStack = activeStack;
+    }
+
+    public String getGoodExplain1() {
+        return GoodExplain1;
+    }
+
+    public void setGoodExplain1(String goodExplain1) {
+        GoodExplain1 = goodExplain1;
+    }
+
+    public String getGoodExplain2() {
+        return GoodExplain2;
+    }
+
+    public void setGoodExplain2(String goodExplain2) {
+        GoodExplain2 = goodExplain2;
+    }
+
+    public String getGoodExplain3() {
+        return GoodExplain3;
+    }
+
+    public void setGoodExplain3(String goodExplain3) {
+        GoodExplain3 = goodExplain3;
+    }
+
+    public String getGoodExplain4() {
+        return GoodExplain4;
+    }
+
+    public void setGoodExplain4(String goodExplain4) {
+        GoodExplain4 = goodExplain4;
+    }
+
+    public String getGoodExplain5() {
+        return GoodExplain5;
+    }
+
+    public void setGoodExplain5(String goodExplain5) {
+        GoodExplain5 = goodExplain5;
+    }
+
+    public String getGoodExplain6() {
+        return GoodExplain6;
+    }
+
+    public void setGoodExplain6(String goodExplain6) {
+        GoodExplain6 = goodExplain6;
+    }
+
+    public String getSellPriceType() {
+        return SellPriceType;
+    }
+
+    public void setSellPriceType(String sellPriceType) {
+        SellPriceType = sellPriceType;
+    }
+
+    public String getMaxSellPrice() {
+        return MaxSellPrice;
+    }
+
+    public void setMaxSellPrice(String maxSellPrice) {
+        MaxSellPrice = maxSellPrice;
+    }
+
+    public String getMinSellPrice() {
+        return MinSellPrice;
+    }
+
+    public void setMinSellPrice(String minSellPrice) {
+        MinSellPrice = minSellPrice;
+    }
+
+    public String getSellPrice() {
+        return SellPrice;
+    }
+
+    public void setSellPrice(String sellPrice) {
+        SellPrice = sellPrice;
+    }
+
+    public Float getSellPrice1() {
+        return SellPrice1;
+    }
+
+    public void setSellPrice1(Float sellPrice1) {
+        SellPrice1 = sellPrice1;
+    }
+
+    public Float getSellPrice2() {
+        return SellPrice2;
+    }
+
+    public void setSellPrice2(Float sellPrice2) {
+        SellPrice2 = sellPrice2;
+    }
+
+    public Float getSellPrice3() {
+        return SellPrice3;
+    }
+
+    public void setSellPrice3(Float sellPrice3) {
+        SellPrice3 = sellPrice3;
+    }
+
+    public Float getSellPrice4() {
+        return SellPrice4;
+    }
+
+    public void setSellPrice4(Float sellPrice4) {
+        SellPrice4 = sellPrice4;
+    }
+
+    public Float getSellPrice5() {
+        return SellPrice5;
+    }
+
+    public void setSellPrice5(Float sellPrice5) {
+        SellPrice5 = sellPrice5;
+    }
+
+    public Float getSellPrice6() {
+        return SellPrice6;
+    }
+
+    public void setSellPrice6(Float sellPrice6) {
+        SellPrice6 = sellPrice6;
+    }
+
+    public String getFirstBarCode() {
+        return FirstBarCode;
+    }
+
+    public void setFirstBarCode(String firstBarCode) {
+        FirstBarCode = firstBarCode;
+    }
+
+    public Integer getGoodUnitRef() {
+        return GoodUnitRef;
+    }
+
+    public void setGoodUnitRef(Integer goodUnitRef) {
+        GoodUnitRef = goodUnitRef;
+    }
+
+    public Integer getDefaultUnitValue() {
+        return DefaultUnitValue;
+    }
+
+    public void setDefaultUnitValue(Integer defaultUnitValue) {
+        DefaultUnitValue = defaultUnitValue;
+    }
+
+    public String getIsbn() {
+        return Isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        Isbn = isbn;
+    }
+
+    public String getExtera1() {
+        return Extera1;
+    }
+
+    public void setExtera1(String extera1) {
+        Extera1 = extera1;
+    }
+
+    public String getExtera2() {
+        return Extera2;
+    }
+
+    public void setExtera2(String extera2) {
+        Extera2 = extera2;
+    }
+
+    public String getExtera3() {
+        return Extera3;
+    }
+
+    public void setExtera3(String extera3) {
+        Extera3 = extera3;
+    }
+
+    public String getExtera4() {
+        return Extera4;
+    }
+
+    public void setExtera4(String extera4) {
+        Extera4 = extera4;
+    }
+
+    public String getExtera5() {
+        return Extera5;
+    }
+
+    public void setExtera5(String extera5) {
+        Extera5 = extera5;
+    }
+
+    public String getExtera6() {
+        return Extera6;
+    }
+
+    public void setExtera6(String extera6) {
+        Extera6 = extera6;
+    }
+
+    public String getExtera7() {
+        return Extera7;
+    }
+
+    public void setExtera7(String extera7) {
+        Extera7 = extera7;
+    }
+
+    public String getExtera8() {
+        return Extera8;
+    }
+
+    public void setExtera8(String extera8) {
+        Extera8 = extera8;
+    }
+
+    public String getExtera9() {
+        return Extera9;
+    }
+
+    public void setExtera9(String extera9) {
+        Extera9 = extera9;
+    }
+
+    public String getExtera10() {
+        return Extera10;
+    }
+
+    public void setExtera10(String extera10) {
+        Extera10 = extera10;
+    }
+
+    public String getNvarchar1() {
+        return Nvarchar1;
+    }
+
+    public void setNvarchar1(String nvarchar1) {
+        Nvarchar1 = nvarchar1;
+    }
+
+    public String getNvarchar2() {
+        return Nvarchar2;
+    }
+
+    public void setNvarchar2(String nvarchar2) {
+        Nvarchar2 = nvarchar2;
+    }
+
+    public String getNvarchar3() {
+        return Nvarchar3;
+    }
+
+    public void setNvarchar3(String nvarchar3) {
+        Nvarchar3 = nvarchar3;
+    }
+
+    public String getNvarchar4() {
+        return Nvarchar4;
+    }
+
+    public void setNvarchar4(String nvarchar4) {
+        Nvarchar4 = nvarchar4;
+    }
+
+    public String getNvarchar5() {
+        return Nvarchar5;
+    }
+
+    public void setNvarchar5(String nvarchar5) {
+        Nvarchar5 = nvarchar5;
+    }
+
+    public String getNvarchar6() {
+        return Nvarchar6;
+    }
+
+    public void setNvarchar6(String nvarchar6) {
+        Nvarchar6 = nvarchar6;
+    }
+
+    public String getNvarchar7() {
+        return Nvarchar7;
+    }
+
+    public void setNvarchar7(String nvarchar7) {
+        Nvarchar7 = nvarchar7;
+    }
+
+    public String getNvarchar8() {
+        return Nvarchar8;
+    }
+
+    public void setNvarchar8(String nvarchar8) {
+        Nvarchar8 = nvarchar8;
+    }
+
+    public String getNvarchar9() {
+        return Nvarchar9;
+    }
+
+    public void setNvarchar9(String nvarchar9) {
+        Nvarchar9 = nvarchar9;
+    }
+
+    public String getNvarchar10() {
+        return Nvarchar10;
+    }
+
+    public void setNvarchar10(String nvarchar10) {
+        Nvarchar10 = nvarchar10;
+    }
+
+    public String getNvarchar11() {
+        return Nvarchar11;
+    }
+
+    public void setNvarchar11(String nvarchar11) {
+        Nvarchar11 = nvarchar11;
+    }
+
+    public String getNvarchar12() {
+        return Nvarchar12;
+    }
+
+    public void setNvarchar12(String nvarchar12) {
+        Nvarchar12 = nvarchar12;
+    }
+
+    public String getNvarchar13() {
+        return Nvarchar13;
+    }
+
+    public void setNvarchar13(String nvarchar13) {
+        Nvarchar13 = nvarchar13;
+    }
+
+    public String getNvarchar14() {
+        return Nvarchar14;
+    }
+
+    public void setNvarchar14(String nvarchar14) {
+        Nvarchar14 = nvarchar14;
+    }
+
+    public String getNvarchar15() {
+        return Nvarchar15;
+    }
+
+    public void setNvarchar15(String nvarchar15) {
+        Nvarchar15 = nvarchar15;
+    }
+
+    public String getNvarchar16() {
+        return Nvarchar16;
+    }
+
+    public void setNvarchar16(String nvarchar16) {
+        Nvarchar16 = nvarchar16;
+    }
+
+    public String getNvarchar17() {
+        return Nvarchar17;
+    }
+
+    public void setNvarchar17(String nvarchar17) {
+        Nvarchar17 = nvarchar17;
+    }
+
+    public String getNvarchar18() {
+        return Nvarchar18;
+    }
+
+    public void setNvarchar18(String nvarchar18) {
+        Nvarchar18 = nvarchar18;
+    }
+
+    public String getNvarchar19() {
+        return Nvarchar19;
+    }
+
+    public void setNvarchar19(String nvarchar19) {
+        Nvarchar19 = nvarchar19;
+    }
+
+    public String getNvarchar20() {
+        return Nvarchar20;
+    }
+
+    public void setNvarchar20(String nvarchar20) {
+        Nvarchar20 = nvarchar20;
+    }
+
+    public Integer getInt1() {
+        return Int1;
+    }
+
+    public void setInt1(Integer int1) {
+        Int1 = int1;
+    }
+
+    public Integer getInt2() {
+        return Int2;
+    }
+
+    public void setInt2(Integer int2) {
+        Int2 = int2;
+    }
+
+    public Integer getInt3() {
+        return Int3;
+    }
+
+    public void setInt3(Integer int3) {
+        Int3 = int3;
+    }
+
+    public Integer getInt4() {
+        return Int4;
+    }
+
+    public void setInt4(Integer int4) {
+        Int4 = int4;
+    }
+
+    public Integer getInt5() {
+        return Int5;
+    }
+
+    public void setInt5(Integer int5) {
+        Int5 = int5;
+    }
+
+    public Integer getInt6() {
+        return Int6;
+    }
+
+    public void setInt6(Integer int6) {
+        Int6 = int6;
+    }
+
+    public Integer getInt7() {
+        return Int7;
+    }
+
+    public void setInt7(Integer int7) {
+        Int7 = int7;
+    }
+
+    public Integer getInt8() {
+        return Int8;
+    }
+
+    public void setInt8(Integer int8) {
+        Int8 = int8;
+    }
+
+    public Integer getInt9() {
+        return Int9;
+    }
+
+    public void setInt9(Integer int9) {
+        Int9 = int9;
+    }
+
+    public Integer getInt10() {
+        return Int10;
+    }
+
+    public void setInt10(Integer int10) {
+        Int10 = int10;
+    }
+
+    public Float getFloat1() {
+        return Float1;
+    }
+
+    public void setFloat1(Float float1) {
+        Float1 = float1;
+    }
+
+    public Float getFloat2() {
+        return Float2;
+    }
+
+    public void setFloat2(Float float2) {
+        Float2 = float2;
+    }
+
+    public Float getFloat3() {
+        return Float3;
+    }
+
+    public void setFloat3(Float float3) {
+        Float3 = float3;
+    }
+
+    public Float getFloat4() {
+        return Float4;
+    }
+
+    public void setFloat4(Float float4) {
+        Float4 = float4;
+    }
+
+    public Float getFloat5() {
+        return Float5;
+    }
+
+    public void setFloat5(Float float5) {
+        Float5 = float5;
+    }
+
+    public Float getFloat6() {
+        return Float6;
+    }
+
+    public void setFloat6(Float float6) {
+        Float6 = float6;
+    }
+
+    public Float getFloat7() {
+        return Float7;
+    }
+
+    public void setFloat7(Float float7) {
+        Float7 = float7;
+    }
+
+    public Float getFloat8() {
+        return Float8;
+    }
+
+    public void setFloat8(Float float8) {
+        Float8 = float8;
+    }
+
+    public Float getFloat9() {
+        return Float9;
+    }
+
+    public void setFloat9(Float float9) {
+        Float9 = float9;
+    }
+
+    public Float getFloat10() {
+        return Float10;
+    }
+
+    public void setFloat10(Float float10) {
+        Float10 = float10;
+    }
+
+    public String getDate1() {
+        return Date1;
+    }
+
+    public void setDate1(String date1) {
+        Date1 = date1;
+    }
+
+    public String getDate2() {
+        return Date2;
+    }
+
+    public void setDate2(String date2) {
+        Date2 = date2;
+    }
+
+    public String getDate3() {
+        return Date3;
+    }
+
+    public void setDate3(String date3) {
+        Date3 = date3;
+    }
+
+    public String getDate4() {
+        return Date4;
+    }
+
+    public void setDate4(String date4) {
+        Date4 = date4;
+    }
+
+    public String getDate5() {
+        return Date5;
+    }
+
+    public void setDate5(String date5) {
+        Date5 = date5;
+    }
+
+    public Float getBit1() {
+        return Bit1;
+    }
+
+    public void setBit1(Float bit1) {
+        Bit1 = bit1;
+    }
+
+    public Float getBit2() {
+        return Bit2;
+    }
+
+    public void setBit2(Float bit2) {
+        Bit2 = bit2;
+    }
+
+    public Float getBit3() {
+        return Bit3;
+    }
+
+    public void setBit3(Float bit3) {
+        Bit3 = bit3;
+    }
+
+    public Float getBit4() {
+        return Bit4;
+    }
+
+    public void setBit4(Float bit4) {
+        Bit4 = bit4;
+    }
+
+    public Float getBit5() {
+        return Bit5;
+    }
+
+    public void setBit5(Float bit5) {
+        Bit5 = bit5;
+    }
+
+    public Float getBit6() {
+        return Bit6;
+    }
+
+    public void setBit6(Float bit6) {
+        Bit6 = bit6;
+    }
+
+    public Float getBit7() {
+        return Bit7;
+    }
+
+    public void setBit7(Float bit7) {
+        Bit7 = bit7;
+    }
+
+    public String getText1() {
+        return Text1;
+    }
+
+    public void setText1(String text1) {
+        Text1 = text1;
+    }
+
+    public String getText2() {
+        return Text2;
+    }
+
+    public void setText2(String text2) {
+        Text2 = text2;
+    }
+
+    public String getText3() {
+        return Text3;
+    }
+
+    public void setText3(String text3) {
+        Text3 = text3;
+    }
+
+    public String getText4() {
+        return Text4;
+    }
+
+    public void setText4(String text4) {
+        Text4 = text4;
+    }
+
+    public String getText5() {
+        return Text5;
+    }
+
+    public void setText5(String text5) {
+        Text5 = text5;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Integer getStackAmount() {
+        return StackAmount;
+    }
+
+    public void setStackAmount(Integer stackAmount) {
+        StackAmount = stackAmount;
+    }
+
+    public Integer getStackAmount1() {
+        return StackAmount1;
+    }
+
+    public void setStackAmount1(Integer stackAmount1) {
+        StackAmount1 = stackAmount1;
+    }
+
+    public Integer getStackAmount2() {
+        return StackAmount2;
+    }
+
+    public void setStackAmount2(Integer stackAmount2) {
+        StackAmount2 = stackAmount2;
+    }
+
+    public Integer getReservedAmount() {
+        return ReservedAmount;
+    }
+
+    public void setReservedAmount(Integer reservedAmount) {
+        ReservedAmount = reservedAmount;
+    }
+
+    public Integer getFactorAmount() {
+        return FactorAmount;
+    }
+
+    public void setFactorAmount(Integer factorAmount) {
+        FactorAmount = factorAmount;
+    }
+
+    public Integer getShortage() {
+        return Shortage;
+    }
+
+    public void setShortage(Integer shortage) {
+        Shortage = shortage;
+    }
+
+    public Integer getPrice() {
+        return Price;
+    }
+
+    public void setPrice(Integer price) {
+        Price = price;
+    }
+
+    public String getImageName() {
+        return ImageName;
+    }
+
+    public void setImageName(String imageName) {
+        ImageName = imageName;
+    }
+
+    public String getUnitName() {
+        return UnitName;
+    }
+
+    public void setUnitName(String unitName) {
+        UnitName = unitName;
+    }
+
+    public Integer getPreFactorRowCode() {
+        return PreFactorRowCode;
+    }
+
+    public void setPreFactorRowCode(Integer preFactorRowCode) {
+        PreFactorRowCode = preFactorRowCode;
+    }
+
+    public String getGoodType() {
+        return GoodType;
+    }
+
+    public void setGoodType(String goodType) {
+        GoodType = goodType;
+    }
+
+    public String getItam_Show() {
+        return Itam_Show;
+    }
+
+    public void setItam_Show(String itam_Show) {
+        Itam_Show = itam_Show;
+    }
+
+    public String getGroupsWhitoutCode() {
+        return GroupsWhitoutCode;
+    }
+
+    public void setGroupsWhitoutCode(String groupsWhitoutCode) {
+        GroupsWhitoutCode = groupsWhitoutCode;
+    }
+
+    public Integer getKsrImageCode() {
+        return KsrImageCode;
+    }
+
+    public void setKsrImageCode(Integer ksrImageCode) {
+        KsrImageCode = ksrImageCode;
+    }
+
 //endregion
 
 }

@@ -53,9 +53,82 @@ public class RetrofitResponse {
     private ArrayList<SellBroker> SellBrokers;
 
 
+    @SerializedName("Goods")
+    private ArrayList<Good> goods;
+
+
+    @SerializedName("Factors")
+    private ArrayList<Factor> Factors;
+
+    @SerializedName("Jobs")
+    private ArrayList<Job> Jobs;
+
+    @SerializedName("JobPersons")
+    private ArrayList<JobPerson> JobPersons;
+
+
+    @SerializedName("Factor")
+    private Factor Factor;
+
+    @SerializedName("Job")
+    private Job Job;
+
+    @SerializedName("JobPerson")
+    private JobPerson JobPerson;
+
+
+
+
     //region $ getter setter
 
 
+    public ArrayList<com.kits.kowsarapp.model.Factor> getFactors() {
+        return Factors;
+    }
+
+    public void setFactors(ArrayList<com.kits.kowsarapp.model.Factor> factors) {
+        Factors = factors;
+    }
+
+    public ArrayList<com.kits.kowsarapp.model.Job> getJobs() {
+        return Jobs;
+    }
+
+    public void setJobs(ArrayList<com.kits.kowsarapp.model.Job> jobs) {
+        Jobs = jobs;
+    }
+
+    public ArrayList<com.kits.kowsarapp.model.JobPerson> getJobPersons() {
+        return JobPersons;
+    }
+
+    public void setJobPersons(ArrayList<com.kits.kowsarapp.model.JobPerson> jobPersons) {
+        JobPersons = jobPersons;
+    }
+
+    public com.kits.kowsarapp.model.Factor getFactor() {
+        return Factor;
+    }
+
+    public void setFactor(com.kits.kowsarapp.model.Factor factor) {
+        Factor = factor;
+    }
+
+    public com.kits.kowsarapp.model.Job getJob() {
+        return Job;
+    }
+
+    public void setJob(com.kits.kowsarapp.model.Job job) {
+        Job = job;
+    }
+
+    public com.kits.kowsarapp.model.JobPerson getJobPerson() {
+        return JobPerson;
+    }
+
+    public void setJobPerson(com.kits.kowsarapp.model.JobPerson jobPerson) {
+        JobPerson = jobPerson;
+    }
 
     public String getResponse() {
         return response;
