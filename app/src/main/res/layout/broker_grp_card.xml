@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
+    android:layout_margin="2dp"
+    android:layout_gravity="start"
+    android:background="@drawable/bg_round_blue"
+    android:id="@+id/broker_grp_card"
+    >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+                <ImageView
+                    android:id="@+id/b_grp_c_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layoutDirection="rtl"
+                    android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/b_grp_c_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_buy"
+                    android:textColor="@color/color_black"
+                    android:textSize="16sp"
+                    android:layout_margin="5dp"
+                    />
+
+        </LinearLayout>
+
+
+
+</FrameLayout>

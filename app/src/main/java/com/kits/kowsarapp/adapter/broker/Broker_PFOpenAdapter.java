@@ -31,7 +31,7 @@ public class Broker_PFOpenAdapter extends RecyclerView.Adapter<Broker_PFOpenView
     @NonNull
     @Override
     public Broker_PFOpenViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.prefactor_header_open, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_pfopenitem_card, parent, false);
         return new Broker_PFOpenViewHolder(view);
     }
 

@@ -7,6 +7,10 @@ public class SellBroker {
     @SerializedName("brokerCode") private String brokerCode;
     @SerializedName("BrokerNameWithoutType") private String BrokerNameWithoutType;
 
+
+    //region $ getter setter
+
+
     public String getBrokerCode() {
         return brokerCode;
     }
@@ -22,4 +26,5 @@ public class SellBroker {
     public void setBrokerNameWithoutType(String brokerNameWithoutType) {
         BrokerNameWithoutType = brokerNameWithoutType;
     }
+    //endregion
 }

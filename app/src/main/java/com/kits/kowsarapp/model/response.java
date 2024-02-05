@@ -7,6 +7,8 @@ public class response {
     @SerializedName("StatusCode") private String StatusCode;
     @SerializedName("Errormessage") private String Errormessage;
 
+
+    //region $ getter setter
     public String getStatusCode() {
         return StatusCode;
     }
@@ -22,4 +24,6 @@ public class response {
     public void setErrormessage(String errormessage) {
         Errormessage = errormessage;
     }
+    //endregion
+
 }

@@ -33,6 +33,8 @@ public class Column {
     private String IsDefault;
 
 
+
+    //region $ getter setter
     public String getColumnFieldValue(String AKey) {
         String iKey = AKey.toLowerCase();
         String Res = "";
@@ -183,4 +185,6 @@ public class Column {
     public void setColumnCode(String columnCode) {
         ColumnCode = columnCode;
     }
+    //endregion
+
 }

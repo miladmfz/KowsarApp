@@ -40,14 +40,14 @@ public class Broker_CustomerViewHolder extends RecyclerView.ViewHolder {
 
     public Broker_CustomerViewHolder(View itemView) {
         super(itemView);
-        cus_code = itemView.findViewById(R.id.customer_code);
-        cus_name = itemView.findViewById(R.id.customer_name);
-        cus_manage = itemView.findViewById(R.id.customer_manage);
-        cus_phone = itemView.findViewById(R.id.customer_phone);
-        cus_addres = itemView.findViewById(R.id.customer_addres);
-        cus_bes = itemView.findViewById(R.id.customer_bes);
-        cus_ll = itemView.findViewById(R.id.customer_credit_ll);
-        fac_rltv = itemView.findViewById(R.id.customer);
+        cus_code = itemView.findViewById(R.id.b_customer_c_code);
+        cus_name = itemView.findViewById(R.id.b_customer_c_name);
+        cus_manage = itemView.findViewById(R.id.b_customer_c_manage);
+        cus_phone = itemView.findViewById(R.id.b_customer_c_phone);
+        cus_addres = itemView.findViewById(R.id.b_customer_c_address);
+        cus_bes = itemView.findViewById(R.id.b_customer_c_bes);
+        cus_ll = itemView.findViewById(R.id.b_customer_c_credit_ll);
+        fac_rltv = itemView.findViewById(R.id.broker_customer_card);
     }
 
     public void bind(Customer customer) {

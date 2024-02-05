@@ -88,13 +88,13 @@ public class Broker_Action extends Base_Action {
                 Log.e("kowsar SellPriceType","true");
 
 
-                dialog.setContentView(R.layout.box_buy_absolute);
-                Button boxbuy = dialog.findViewById(R.id.boxbuy_absolute_btn);
-                final EditText amount = dialog.findViewById(R.id.boxbuy_absolute_amount);
-                final TextView factorname = dialog.findViewById(R.id.boxbuy_absolute_factorname);
-                final EditText price = dialog.findViewById(R.id.boxbuy_absolute_price);
-                final TextView sumprice = dialog.findViewById(R.id.boxbuy_absolute_sumprice);
-                final TextView factoramount = dialog.findViewById(R.id.boxbuy_absolute_facamount);
+                dialog.setContentView(R.layout.broker_buysabet_box);
+                Button boxbuy = dialog.findViewById(R.id.b_buysabet_btn);
+                final EditText amount = dialog.findViewById(R.id.b_buysabet_amount);
+                final TextView factorname = dialog.findViewById(R.id.b_buysabet_factorname);
+                final EditText price = dialog.findViewById(R.id.b_buysabet_price);
+                final TextView sumprice = dialog.findViewById(R.id.b_buysabet_sumprice);
+                final TextView factoramount = dialog.findViewById(R.id.b_buysabet_facamount);
 
                 if (Basketflag.equals("0")) {
                     amount.setHint(NumberFunctions.PerisanNumber(good.getGoodFieldValue("UnitName")));
@@ -218,15 +218,15 @@ public class Broker_Action extends Base_Action {
 
             } else { // nerkh forosh nesbi
                 Log.e("kowsar SellPriceType","false");
-                dialog.setContentView(R.layout.box_buy_percent);
-                Button boxbuy = dialog.findViewById(R.id.boxbuy_percent_btn);
-                final EditText amount = dialog.findViewById(R.id.boxbuy_percent_amount);
-                final TextView factorname = dialog.findViewById(R.id.boxbuy_percent_factorname);
-                final TextView maxPrice = dialog.findViewById(R.id.boxbuy_percent_maxprice);
-                final EditText percent = dialog.findViewById(R.id.boxbuy_percent_scale);
-                final EditText price = dialog.findViewById(R.id.boxbuy_percent_price);
-                final TextView sumprice = dialog.findViewById(R.id.boxbuy_percent_sumprice);
-                final TextView factoramount = dialog.findViewById(R.id.boxbuy_percent_facamount);
+                dialog.setContentView(R.layout.broker_buynesbi_box);
+                Button boxbuy = dialog.findViewById(R.id.b_buynesbi_btn);
+                final EditText amount = dialog.findViewById(R.id.b_buynesbi_amount);
+                final TextView factorname = dialog.findViewById(R.id.b_buynesbi_factorname);
+                final TextView maxPrice = dialog.findViewById(R.id.b_buynesbi_maxprice);
+                final EditText percent = dialog.findViewById(R.id.b_buynesbi_scale);
+                final EditText price = dialog.findViewById(R.id.b_buynesbi_price);
+                final TextView sumprice = dialog.findViewById(R.id.b_buynesbi_sumprice);
+                final TextView factoramount = dialog.findViewById(R.id.b_buynesbi_facamount);
 
                 if (Basketflag.equals("0")) {
                     amount.setHint(NumberFunctions.PerisanNumber(good.getGoodFieldValue("UnitName")));
@@ -417,13 +417,13 @@ public class Broker_Action extends Base_Action {
                 Log.e("kowsar SellPriceType","true");
 
 
-                dialog.setContentView(R.layout.box_buy_absolute);
-                Button boxbuy = dialog.findViewById(R.id.boxbuy_absolute_btn);
-                final EditText amount = dialog.findViewById(R.id.boxbuy_absolute_amount);
-                final TextView factorname = dialog.findViewById(R.id.boxbuy_absolute_factorname);
-                final EditText price = dialog.findViewById(R.id.boxbuy_absolute_price);
-                final TextView sumprice = dialog.findViewById(R.id.boxbuy_absolute_sumprice);
-                final TextView factoramount = dialog.findViewById(R.id.boxbuy_absolute_facamount);
+                dialog.setContentView(R.layout.broker_buysabet_box);
+                Button boxbuy = dialog.findViewById(R.id.b_buysabet_btn);
+                final EditText amount = dialog.findViewById(R.id.b_buysabet_amount);
+                final TextView factorname = dialog.findViewById(R.id.b_buysabet_factorname);
+                final EditText price = dialog.findViewById(R.id.b_buysabet_price);
+                final TextView sumprice = dialog.findViewById(R.id.b_buysabet_sumprice);
+                final TextView factoramount = dialog.findViewById(R.id.b_buysabet_facamount);
 
                 if (Basketflag.equals("0")) {
                     amount.setHint(NumberFunctions.PerisanNumber(good.getGoodFieldValue("UnitName")));
@@ -547,15 +547,15 @@ public class Broker_Action extends Base_Action {
 
             } else { // nerkh forosh nesbi
                 Log.e("kowsar SellPriceType","false");
-                dialog.setContentView(R.layout.box_buy_percent);
-                Button boxbuy = dialog.findViewById(R.id.boxbuy_percent_btn);
-                final EditText amount = dialog.findViewById(R.id.boxbuy_percent_amount);
-                final TextView factorname = dialog.findViewById(R.id.boxbuy_percent_factorname);
-                final TextView maxPrice = dialog.findViewById(R.id.boxbuy_percent_maxprice);
-                final EditText percent = dialog.findViewById(R.id.boxbuy_percent_scale);
-                final EditText price = dialog.findViewById(R.id.boxbuy_percent_price);
-                final TextView sumprice = dialog.findViewById(R.id.boxbuy_percent_sumprice);
-                final TextView factoramount = dialog.findViewById(R.id.boxbuy_percent_facamount);
+                dialog.setContentView(R.layout.broker_buynesbi_box);
+                Button boxbuy = dialog.findViewById(R.id.b_buynesbi_btn);
+                final EditText amount = dialog.findViewById(R.id.b_buynesbi_amount);
+                final TextView factorname = dialog.findViewById(R.id.b_buynesbi_factorname);
+                final TextView maxPrice = dialog.findViewById(R.id.b_buynesbi_maxprice);
+                final EditText percent = dialog.findViewById(R.id.b_buynesbi_scale);
+                final EditText price = dialog.findViewById(R.id.b_buynesbi_price);
+                final TextView sumprice = dialog.findViewById(R.id.b_buynesbi_sumprice);
+                final TextView factoramount = dialog.findViewById(R.id.b_buynesbi_facamount);
 
                 if (Basketflag.equals("0")) {
                     amount.setHint(NumberFunctions.PerisanNumber(good.getGoodFieldValue("UnitName")));
@@ -951,10 +951,10 @@ public class Broker_Action extends Base_Action {
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.pf_detail);
-        Button pf_detail_btn = dialog.findViewById(R.id.pf_detail_btn);
+        dialog.setContentView(R.layout.broker_pfexplain_card);
+        Button pf_detail_btn = dialog.findViewById(R.id.b_pfexplain_c_btn);
         pf_detail_btn.setText("ثبت توضیحات");
-        final EditText pf_detail_detail = dialog.findViewById(R.id.pf_detail_detail);
+        final EditText pf_detail_detail = dialog.findViewById(R.id.b_pfexplain_c_detail);
         dialog.show();
         pf_detail_detail.requestFocus();
         pf_detail_detail.postDelayed(() -> {
@@ -980,9 +980,9 @@ public class Broker_Action extends Base_Action {
     public void addfactordialog(String customer_code) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.pf_detail);
-        Button pf_detail_btn = dialog.findViewById(R.id.pf_detail_btn);
-        final EditText pf_detail_detail = dialog.findViewById(R.id.pf_detail_detail);
+        dialog.setContentView(R.layout.broker_pfexplain_card);
+        Button pf_detail_btn = dialog.findViewById(R.id.b_pfexplain_c_btn);
+        final EditText pf_detail_detail = dialog.findViewById(R.id.b_pfexplain_c_detail);
         dialog.show();
         pf_detail_detail.requestFocus();
         pf_detail_detail.postDelayed(() -> {

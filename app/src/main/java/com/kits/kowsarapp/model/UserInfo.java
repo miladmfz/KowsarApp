@@ -26,6 +26,11 @@ public class UserInfo {
     @SerializedName("BrokerCode")
     private String BrokerCode;
 
+
+    //region $ getter setter
+
+
+
     public String getBrokerCode() {
         return BrokerCode;
     }
@@ -69,4 +74,6 @@ public class UserInfo {
     public void setBrokerCode(String brokerCode) {
         BrokerCode = brokerCode;
     }
+    //endregion
+
 }

@@ -41,7 +41,7 @@ public class Broker_CustomerAdapter extends RecyclerView.Adapter<Broker_Customer
     @NonNull
     @Override
     public Broker_CustomerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customer, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_customer_card, parent, false);
         return new Broker_CustomerViewHolder(view);
     }
 

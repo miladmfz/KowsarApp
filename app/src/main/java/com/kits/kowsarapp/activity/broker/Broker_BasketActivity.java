@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.broker.Broker_GoodBasketAdapter;
+import com.kits.kowsarapp.adapter.broker.Broker_BasketItemAdapter;
 
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
@@ -30,7 +30,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
 
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
     ArrayList<Good> goods;
-    Broker_GoodBasketAdapter adapter;
+    Broker_BasketItemAdapter adapter;
     GridLayoutManager gridLayoutManager;
     CallMethod callMethod;
     BrokerActivityBasketBinding binding;
@@ -74,7 +74,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
 
 
         goods = dbh.getAllPreFactorRows("", PreFac);
-        adapter = new Broker_GoodBasketAdapter(goods, this);
+        adapter = new Broker_BasketItemAdapter(goods, this);
         if (adapter.getItemCount() == 0) {
             callMethod.showToast("سبد خرید خالی می باشد");
         }

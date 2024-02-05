@@ -28,6 +28,14 @@ public class Activation {
     @SerializedName("AppType")
     private String AppType;
 
+
+    //region $ getter setter
+
+
+
+
+
+
     public String getSecendServerURL() {
         return SecendServerURL;
     }
@@ -118,4 +126,6 @@ public class Activation {
     public void setMaxDevice(String maxDevice) {
         MaxDevice = maxDevice;
     }
+    //endregion
+
 }

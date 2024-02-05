@@ -146,8 +146,8 @@ public class Broker_PFActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-        BadgeCounter.hide(menu.findItem(R.id.bag_shop));
+        getMenuInflater().inflate(R.menu.broker_options_menu, menu);
+        BadgeCounter.hide(menu.findItem(R.id.b_bag_shop));
         return true;
     }
 
@@ -162,7 +162,7 @@ public class Broker_PFActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.bag_shop) {
+        if (item.getItemId() == R.id.b_bag_shop) {
             if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
                 intent = new Intent(this, Broker_BasketActivity.class);
                 intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));

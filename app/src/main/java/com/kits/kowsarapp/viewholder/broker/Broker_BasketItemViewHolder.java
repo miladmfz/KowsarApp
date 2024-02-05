@@ -17,9 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.BasketActivity;
 import com.kits.kowsarapp.activity.broker.Broker_BasketActivity;
-import com.kits.kowsarapp.application.Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.application.broker.Broker_Action;
@@ -32,7 +30,7 @@ import java.text.DecimalFormat;
 
 ;
 
-public class Broker_GoodBasketViewHolder extends RecyclerView.ViewHolder {
+public class Broker_BasketItemViewHolder extends RecyclerView.ViewHolder {
 
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
     private final TextView goodnameTextView;
@@ -48,21 +46,21 @@ public class Broker_GoodBasketViewHolder extends RecyclerView.ViewHolder {
     private long sum = 0;
 
 
-    public Broker_GoodBasketViewHolder(View itemView) {
+    public Broker_BasketItemViewHolder(View itemView) {
         super(itemView);
 
-        goodnameTextView = itemView.findViewById(R.id.good_buy_name);
-        maxsellpriceTextView = itemView.findViewById(R.id.good_buy_maxprice);
-        priceTextView = itemView.findViewById(R.id.good_buy_price);
-        amount = itemView.findViewById(R.id.good_buy_amount);
-        total = itemView.findViewById(R.id.good_buy_total);
-        maxtotal = itemView.findViewById(R.id.good_buy_maxtotal);
-        img = itemView.findViewById(R.id.good_buy_img);
-        btndlt = itemView.findViewById(R.id.good_buy_btndlt);
-        offer = itemView.findViewById(R.id.good_buy_offer);
+        goodnameTextView = itemView.findViewById(R.id.b_basket_c_name);
+        maxsellpriceTextView = itemView.findViewById(R.id.b_basket_c_maxprice);
+        priceTextView = itemView.findViewById(R.id.b_basket_c_price);
+        amount = itemView.findViewById(R.id.b_basket_c_amount);
+        total = itemView.findViewById(R.id.b_basket_c_total);
+        maxtotal = itemView.findViewById(R.id.b_basket_c_maxtotal);
+        img = itemView.findViewById(R.id.b_basket_c_img);
+        btndlt = itemView.findViewById(R.id.b_basket_c_btndlt);
+        offer = itemView.findViewById(R.id.b_basket_c_offer);
 
 
-        rltv = itemView.findViewById(R.id.good_buy);
+        rltv = itemView.findViewById(R.id.broker_basket_card);
     }
 
 

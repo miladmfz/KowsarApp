@@ -234,6 +234,8 @@ public class Good implements Serializable {
     private boolean Check;
 
 
+
+    //region $ getter setter
     public boolean isCheck() {
         return Check;
     }
@@ -1039,6 +1041,6 @@ public class Good implements Serializable {
                 break;
         }
     }
-
+//endregion
 
 }

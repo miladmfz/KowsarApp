@@ -80,9 +80,9 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         dbhbase.CreateActivationDb();
 
         dialog.setContentView(R.layout.broker_spinner_box);
-        tv_rep = dialog.findViewById(R.id.rep_prog_text);
-        tv_step = dialog.findViewById(R.id.rep_prog_step);
-        btn_prog = dialog.findViewById(R.id.rep_prog_btn);
+        tv_rep = dialog.findViewById(R.id.b_spinner_text);
+        tv_step = dialog.findViewById(R.id.b_spinner_step);
+        btn_prog = dialog.findViewById(R.id.b_spinner_btn);
 
     }
 

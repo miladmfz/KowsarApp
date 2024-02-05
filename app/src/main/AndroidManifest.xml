@@ -34,6 +34,7 @@
         tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+
     <application
         android:name=".application.base.App"
         android:icon="@drawable/logo"
@@ -44,41 +45,49 @@
         android:supportsRtl="true"
         android:theme="@style/GrayDefault"
         tools:ignore="AllowBackup"
-        tools:targetApi="n">
+        >
+
+
+
+
+
 
         <activity
-            android:name=".activity.broker.Broker_NavActivity"
+            android:name=".activity.broker.Broker_AllGrpActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="false" />
+        <activity android:name=".activity.broker.Broker_BasketActivity" />
+        <activity android:name=".activity.broker.Broker_BasketHistoryActivity" />
+        <activity android:name=".activity.broker.Broker_ByDateActivity" />
+        <activity android:name=".activity.broker.Broker_ConfigActivity" />
+        <activity android:name=".activity.broker.Broker_CustomerActivity" />
+        <activity android:name=".activity.broker.Broker_DetailActivity" />
+        <activity android:name=".activity.broker.Broker_NavActivity"
+            tools:ignore="DuplicateActivity" />
+        <activity android:name=".activity.broker.Broker_PFActivity" />
+        <activity android:name=".activity.broker.Broker_PFOpenActivity" />
+        <activity android:name=".activity.broker.Broker_PrinterActivity" />
+        <activity android:name=".activity.broker.Broker_RegistrationActivity" />
+        <activity android:name=".activity.broker.Broker_ScanCodeActivity" />
+        <activity android:name=".activity.broker.Broker_SearchActivity" />
+
+
+
+
+
+
+        <activity android:name=".activity.base.Base_AboutUsActivity" />
+        <activity android:name=".activity.base.Base_ChoiceDBActivity" />
         <activity
             android:name=".activity.base.Base_SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="DuplicateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

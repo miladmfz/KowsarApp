@@ -33,7 +33,7 @@ public class Broker_GroupLableAdapter extends RecyclerView.Adapter<Broker_GroupL
     @NonNull
     @Override
     public Broker_GroupLabelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grp_v_list_detail, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_grp_card, parent, false);
         return new Broker_GroupLabelViewHolder(view);
     }
 

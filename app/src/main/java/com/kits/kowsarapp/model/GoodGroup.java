@@ -25,6 +25,9 @@ public class GoodGroup {
     private Integer ChildNo;
 
 
+
+    //region $ getter setter
+
     public String getGoodGroupFieldValue(String AKey) {
 
         String iKey = AKey.toLowerCase();
@@ -109,4 +112,6 @@ public class GoodGroup {
     public void setChildNo(Integer childNo) {
         ChildNo = childNo;
     }
+    //endregion
+
 }

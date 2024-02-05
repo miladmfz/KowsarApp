@@ -36,6 +36,9 @@ public class PreFactor {
     private String LastFactor;
 
 
+
+
+    //region $ getter setter
     public String getPreFactorFieldValue(String AKey) {
 
         String iKey = AKey.toLowerCase();
@@ -165,4 +168,7 @@ public class PreFactor {
     public void setPreFactorRowCode(Integer preFactorRowCode) {
         PreFactorRowCode = preFactorRowCode;
     }
+
+    //endregion
+
 }

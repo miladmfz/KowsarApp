@@ -19,6 +19,9 @@ public class Category extends ExpandableGroup<Product> {
         this.childno = childno;
     }
 
+
+    //region $ getter setter
+
     public int getId() {
         return id;
     }
@@ -35,4 +38,6 @@ public class Category extends ExpandableGroup<Product> {
     public void setImagestr(String imagestr) {
         this.imagestr = imagestr;
     }
+    //endregion
+
 }

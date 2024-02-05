@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_multi"
+        android:id="@+id/b_menu_multi"
         android:icon="@drawable/ic_clear_24dp"
         android:title="Cart"
         app:showAsAction="always"
         android:visible="false" />
 
     <item
-        android:id="@+id/bag_shop"
+        android:id="@+id/b_bag_shop"
         android:icon="@drawable/ic_ww"
         app:showAsAction="always"
         android:title="@string/search_et" />

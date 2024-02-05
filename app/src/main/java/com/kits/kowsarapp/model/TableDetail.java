@@ -13,6 +13,11 @@ public class TableDetail {
     @SerializedName("Text")
     private String Text;
 
+
+
+    //region $ getter setter
+
+
     public int getCid() {
         return cid;
     }
@@ -44,4 +49,6 @@ public class TableDetail {
     public void setText(String text) {
         Text = text;
     }
+    //endregion
+
 }

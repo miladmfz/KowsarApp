@@ -14,13 +14,13 @@ import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.viewholder.broker.Broker_GoodBasketHistoryViewHolder;
+import com.kits.kowsarapp.viewholder.broker.Broker_BasketItemHistoryViewHolder;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.util.ArrayList;
 
-public class Broker_GoodBasketHistoryAdapter extends RecyclerView.Adapter<Broker_GoodBasketHistoryViewHolder> {
+public class Broker_BasketItemHistoryAdapter extends RecyclerView.Adapter<Broker_BasketItemHistoryViewHolder> {
     ArrayList<Good> goods;
     Context mContext;
     CallMethod callMethod;
@@ -31,7 +31,7 @@ public class Broker_GoodBasketHistoryAdapter extends RecyclerView.Adapter<Broker
     Broker_Action action;
     private String itemPosition;
 
-    public Broker_GoodBasketHistoryAdapter(ArrayList<Good> goods, String Itemposition, Context mContext) {
+    public Broker_BasketItemHistoryAdapter(ArrayList<Good> goods, String Itemposition, Context mContext) {
         this.mContext = mContext;
         this.goods = goods;
         this.itemposition = Itemposition;
@@ -45,19 +45,19 @@ public class Broker_GoodBasketHistoryAdapter extends RecyclerView.Adapter<Broker
 
     @NonNull
     @Override
-    public Broker_GoodBasketHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Broker_BasketItemHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (itemposition.equals("0")) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_buy_history_line, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_baskethistory_line_card, parent, false);
         } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_buy_history, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_baskethistory_grid_card, parent, false);
 
         }
-        return new Broker_GoodBasketHistoryViewHolder(view);
+        return new Broker_BasketItemHistoryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final Broker_GoodBasketHistoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final Broker_BasketItemHistoryViewHolder holder, int position) {
 
         holder.bind(goods.get(position), itemposition);
         holder.Conditionbind(goods.get(position), image_info, callMethod);

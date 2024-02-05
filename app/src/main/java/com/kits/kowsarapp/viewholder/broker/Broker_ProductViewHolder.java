@@ -20,8 +20,8 @@ public class Broker_ProductViewHolder extends ChildViewHolder {
 
     public Broker_ProductViewHolder(View itemView) {
         super(itemView);
-        mtextView = itemView.findViewById(R.id.item2_tv);
-        image = itemView.findViewById(R.id.item2_image);
+        mtextView = itemView.findViewById(R.id.b_childview_c_tv);
+        image = itemView.findViewById(R.id.b_childview_c_image);
     }
 
     public void bind(Product product) {

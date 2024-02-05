@@ -19,7 +19,7 @@ public class AppPrinter {
     @SerializedName("PrinterActive")
     private String PrinterActive;
 
-
+    //region $ getter setter
     public String getAppPrinterCode() {
         return AppPrinterCode;
     }
@@ -75,4 +75,7 @@ public class AppPrinter {
     public void setPrinterActive(String printerActive) {
         PrinterActive = printerActive;
     }
+    //endregion
+
+
 }

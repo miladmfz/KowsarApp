@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 
 ;
 
-public class Broker_GoodBasketHistoryViewHolder extends RecyclerView.ViewHolder {
+public class Broker_BasketItemHistoryViewHolder extends RecyclerView.ViewHolder {
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
 
@@ -34,16 +34,16 @@ public class Broker_GoodBasketHistoryViewHolder extends RecyclerView.ViewHolder 
     private final ImageView img;
 
 
-    public Broker_GoodBasketHistoryViewHolder(View itemView) {
+    public Broker_BasketItemHistoryViewHolder(View itemView) {
         super(itemView);
-        goodnameTextView = itemView.findViewById(R.id.good_buy_history_name);
-        maxsellpriceTextView = itemView.findViewById(R.id.good_buy_history_maxprice);
-        maxtotal = itemView.findViewById(R.id.good_buy_history_maxtotal);
-        priceTextView = itemView.findViewById(R.id.good_buy_history_price);
-        total = itemView.findViewById(R.id.good_buy_history_total);
-        amount = itemView.findViewById(R.id.good_buy_history_amount);
-        code = itemView.findViewById(R.id.good_buy_history_code);
-        img = itemView.findViewById(R.id.good_buy_history_img);
+        goodnameTextView = itemView.findViewById(R.id.b_baskethistory_c_name);
+        maxsellpriceTextView = itemView.findViewById(R.id.b_baskethistory_c_maxprice);
+        maxtotal = itemView.findViewById(R.id.b_baskethistory_c_maxtotal);
+        priceTextView = itemView.findViewById(R.id.b_baskethistory_c_price);
+        total = itemView.findViewById(R.id.b_baskethistory_c_total);
+        amount = itemView.findViewById(R.id.b_baskethistory_c_amount);
+        code = itemView.findViewById(R.id.b_baskethistory_c_code);
+        img = itemView.findViewById(R.id.b_baskethistory_c_img);
     }
 
     public void bind(Good good, String itemposition) {

@@ -26,9 +26,9 @@ public class Broker_CategoryViewHolder extends GroupViewHolder {
 
     public Broker_CategoryViewHolder(View itemView) {
         super(itemView);
-        textView = itemView.findViewById(R.id.item1_tv);
-        arrow = itemView.findViewById(R.id.item1_img);
-        image = itemView.findViewById(R.id.item1_image);
+        textView = itemView.findViewById(R.id.b_parentview_c_tv);
+        arrow = itemView.findViewById(R.id.b_parentview_c_img);
+        image = itemView.findViewById(R.id.b_parentview_c_image);
     }
 
     public void bind(Category company) {

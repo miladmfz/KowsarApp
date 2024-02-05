@@ -61,7 +61,7 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
 
     @Override
     public GoodViewHolder onCreateViewHolder(ViewGroup parent) {
-        @SuppressLint("InflateParams") View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_slider_layout_item, null);
+        @SuppressLint("InflateParams") View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_imageslider_card, null);
         return new GoodViewHolder(inflate);
     }
 
@@ -162,9 +162,8 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
         ImageView imageViewBackground;
 
         public GoodViewHolder(View itemView) {
-
             super(itemView);
-            imageViewBackground = itemView.findViewById(R.id.iv_auto_image_slider);
+            imageViewBackground = itemView.findViewById(R.id.b_imageslider_c_slider);
         }
     }
 
@@ -174,8 +173,8 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
 
         final Dialog dialog = new Dialog(mcontext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);//title laye nadashte bashim
-        dialog.setContentView(R.layout.image_zoom);
-        SliderView sliderView = dialog.findViewById(R.id.imageSlider_zoom_view);
+        dialog.setContentView(R.layout.broker_imagezoom_card);
+        SliderView sliderView = dialog.findViewById(R.id.b_imagezoom_c_view);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 
 

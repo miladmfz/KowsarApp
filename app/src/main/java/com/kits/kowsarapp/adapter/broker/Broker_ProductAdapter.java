@@ -53,13 +53,13 @@ public class Broker_ProductAdapter extends ExpandableRecyclerViewAdapter<Broker_
 
     @Override
     public Broker_CategoryViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_parentview_card, parent, false);
         return new Broker_CategoryViewHolder(v);
     }
 
     @Override
     public Broker_ProductViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item2, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_childview_card, parent, false);
         return new Broker_ProductViewHolder(v);
     }
 

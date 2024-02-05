@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/broker_basket_card"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/grey_1000"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="6dp"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:layout_width="321dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.80"
+
+                    android:text="@string/good_buy_name"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/b_basket_c_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="1dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="1dp"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:layout_weight="0.20"
+                    android:textStyle="bold"
+                    android:text="@string/good_buy_name" />
+
+
+            </LinearLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/grey_900" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:layout_width="155dp"
+                    android:layout_height="wrap_content"
+
+                    android:layout_weight="0.25"
+
+                    android:text="@string/good_buy_sellprice"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/b_basket_c_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+
+                    android:text="@string/good_buy_sellprice"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:layout_width="155dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+
+                    android:text="@string/good_buy_totalsellprice"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/b_basket_c_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="@string/good_buy_totalsellprice"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/grey_900" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/b_basket_c_maxprice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/good_buy_maxsellprice"
+                    android:textColor="@color/grey_800"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/b_basket_c_maxtotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="@string/good_buy_totalmaxsellprice"
+                    android:textColor="@color/grey_800"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/grey_900" />
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="1dp"
+                android:paddingBottom="5dp"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:layout_weight="1">
+
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:text="@string/good_buy_amount"
+                    android:textSize="20sp"
+
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/b_basket_c_amount"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:textColor="@color/red_900"
+                    android:text="@string/good_buy_amount"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.viewpager.widget.ViewPager
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/grey_900" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:layout_width="120dp"
+                android:layout_height="150dp"
+                >
+
+
+                <ImageView
+                    android:id="@+id/b_basket_c_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/good_buy_imaga_Description" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/b_basket_c_offer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/good_buy_offer"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/b_basket_c_btndlt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/good_buy_delete"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_margin="2dp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/red_800"
+
+                style="?attr/materialButtonOutlinedStyle" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

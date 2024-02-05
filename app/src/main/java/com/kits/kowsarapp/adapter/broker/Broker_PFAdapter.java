@@ -40,7 +40,7 @@ public class Broker_PFAdapter extends RecyclerView.Adapter<Broker_PFViewHolder> 
     @NonNull
     @Override
     public Broker_PFViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.prefactor_header, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_pfitem_card, parent, false);
         return new Broker_PFViewHolder(view);
     }
 

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.broker.Broker_GoodBasketHistoryAdapter;
+import com.kits.kowsarapp.adapter.broker.Broker_BasketItemHistoryAdapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.BrokerActivityBaskethistoryBinding;
@@ -35,7 +35,7 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
     private ArrayList<Good> goods = new ArrayList<>();
     private Broker_DBH dbh;
     private Handler handler;
-    private Broker_GoodBasketHistoryAdapter adapter;
+    private Broker_BasketItemHistoryAdapter adapter;
     
     private BrokerActivityBaskethistoryBinding binding;
 
@@ -111,7 +111,7 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
 
         goods = dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
 
-        adapter = new Broker_GoodBasketHistoryAdapter(goods, itemPosition, this);
+        adapter = new Broker_BasketItemHistoryAdapter(goods, itemPosition, this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         binding.bBaskethistoryAR1.setLayoutManager(gridLayoutManager);
         binding.bBaskethistoryAR1.setAdapter(adapter);

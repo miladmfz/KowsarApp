@@ -270,7 +270,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             });
         }
 
-        navigationView.inflateMenu(R.menu.activity_navigation_drawer);
+        navigationView.inflateMenu(R.menu.broker_navigation_drawer);
 
 
         if (callMethod.ReadString("PersianCompanyNameUse").equals("اصلی")) {
@@ -344,26 +344,26 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         final int id = item.getItemId();
 
 
-        if (id == R.id.nav_search) {
+        if (id == R.id.b_nav_search) {
             intent = new Intent(this, Broker_SearchActivity.class);
             intent.putExtra("scan", "");
             intent.putExtra("id", "0");
             intent.putExtra("title", "جستجوی کالا");
             startActivity(intent);
-        } else if (id == R.id.aboutus) {
+        } else if (id == R.id.b_aboutus) {
             intent = new Intent(this, Base_AboutUsActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_allview) {
+        } else if (id == R.id.b_nav_allview) {
             intent = new Intent(this, Broker_AllGrpActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_buy_history) {
+        } else if (id == R.id.b_nav_buy_history) {
             intent = new Intent(this, Broker_PFActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_open_fac) {
+        } else if (id == R.id.b_nav_open_fac) {
             intent = new Intent(this, Broker_PFOpenActivity.class);
             intent.putExtra("fac", "1");
             startActivity(intent);
-        } else if (id == R.id.nav_rep) {
+        } else if (id == R.id.b_nav_rep) {
 
             broker_replication.BrokerStack();
             base_action.app_info();
@@ -375,7 +375,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
             }
 
-        } else if (id == R.id.nav_buy) {
+        } else if (id == R.id.b_nav_buy) {
             if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) > 0) {
                 intent = new Intent(this, Broker_BasketActivity.class);
                 intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
@@ -384,11 +384,11 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             } else {
                 Toast.makeText(this, "سبد خرید خالی است.", Toast.LENGTH_SHORT).show();
             }
-        } else if (id == R.id.nav_search_date) {
+        } else if (id == R.id.b_nav_search_date) {
             intent = new Intent(this, Broker_ByDateActivity.class);
             intent.putExtra("date", "7");
             startActivity(intent);
-        } else if (id == R.id.nav_cfg) {
+        } else if (id == R.id.b_nav_cfg) {
             intent = new Intent(this, Broker_ConfigActivity.class);
             startActivity(intent);
         }
@@ -402,14 +402,14 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
+        getMenuInflater().inflate(R.menu.broker_options_menu, menu);
 
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.bag_shop) {
+        if (item.getItemId() == R.id.b_bag_shop) {
             if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
                 intent = new Intent(this, Broker_BasketActivity.class);
                 intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));

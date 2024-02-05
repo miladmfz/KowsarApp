@@ -247,11 +247,11 @@ public class Broker_SearchActivity extends AppCompatActivity {
         binding.bSearchAFab.setOnClickListener(v -> {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.broker_multibuy_box);
-            Button boxbuy = dialog.findViewById(R.id.broker_multibuy_btn);
-            final EditText amount_mlti = dialog.findViewById(R.id.broker_multibuy_amount);
-            final EditText unitratio_mlti = dialog.findViewById(R.id.broker_multibuy_unitratio);
-            final TextView tv = dialog.findViewById(R.id.broker_multibuy_factor);
+            dialog.setContentView(R.layout.broker_buymulti_box);
+            Button boxbuy = dialog.findViewById(R.id.b_buymulti_btn);
+            final EditText amount_mlti = dialog.findViewById(R.id.b_buymulti_amount);
+            final EditText unitratio_mlti = dialog.findViewById(R.id.b_buymulti_unitratio);
+            final TextView tv = dialog.findViewById(R.id.b_buymulti_factor);
             String tempvalue = "";
             defultenablesellprice = false;
             Good goodtempdata;
@@ -329,7 +329,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
                         callMethod.showToast("به سبد خرید اضافه شد");
 
                         dialog.dismiss();
-                        item_multi.findItem(R.id.menu_multi).setVisible(false);
+                        item_multi.findItem(R.id.b_menu_multi).setVisible(false);
                         for (Good good : goods) {
                             good.setCheck(false);
                         }
@@ -383,7 +383,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         item_multi = menu;
-        getMenuInflater().inflate(R.menu.options_menu, menu);
+        getMenuInflater().inflate(R.menu.broker_options_menu, menu);
         return true;
     }
 
@@ -391,7 +391,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.bag_shop) {
+        if (item.getItemId() == R.id.b_bag_shop) {
             if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
                 intent = new Intent(this, Broker_BasketActivity.class);
                 intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
@@ -401,8 +401,8 @@ public class Broker_SearchActivity extends AppCompatActivity {
             }
             return true;
         }
-        if (item.getItemId() == R.id.menu_multi) {
-            item_multi.findItem(R.id.menu_multi).setVisible(false);
+        if (item.getItemId() == R.id.b_menu_multi) {
+            item_multi.findItem(R.id.b_menu_multi).setVisible(false);
             for (Good good : goods) {
                 good.setCheck(false);
             }
@@ -427,7 +427,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
         PageMoreData = "0";
 
         binding.bSearchAFab.setVisibility(View.GONE);
-        item_multi.findItem(R.id.menu_multi).setVisible(false);
+        item_multi.findItem(R.id.b_menu_multi).setVisible(false);
 
         loading = true;
         Moregoods.clear();
@@ -495,13 +495,13 @@ public class Broker_SearchActivity extends AppCompatActivity {
         if (!Multi_Good.contains(good)) {
             Multi_Good.add(good);
             binding.bSearchAFab.setVisibility(View.VISIBLE);
-            item_multi.findItem(R.id.menu_multi).setVisible(true);
+            item_multi.findItem(R.id.b_menu_multi).setVisible(true);
         } else {
             Multi_Good.remove(good);
             if (Multi_Good.size() < 1) {
                 binding.bSearchAFab.setVisibility(View.GONE);
                 adapter.multi_select = false;
-                item_multi.findItem(R.id.menu_multi).setVisible(false);
+                item_multi.findItem(R.id.b_menu_multi).setVisible(false);
             }
         }
     }

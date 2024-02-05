@@ -12,6 +12,9 @@ public class Location {
     @SerializedName("GpsDate")private String GpsDate;
 
 
+
+    //region $ getter setter
+
     public String getGpsLocationCode() {
         return GpsLocationCode;
     }
@@ -51,4 +54,6 @@ public class Location {
     public void setGpsDate(String gpsDate) {
         GpsDate = gpsDate;
     }
+    //endregion
+
 }

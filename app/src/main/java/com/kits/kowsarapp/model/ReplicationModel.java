@@ -24,6 +24,9 @@ public class ReplicationModel {
     @SerializedName("LastRepLogCodeDelete")
     private int LastRepLogCodeDelete;
 
+
+
+    //region $ getter setter
     public int getReplicationCode() {
         return ReplicationCode;
     }
@@ -95,4 +98,7 @@ public class ReplicationModel {
     public void setLastRepLogCodeDelete(int lastRepLogCodeDelete) {
         LastRepLogCodeDelete = lastRepLogCodeDelete;
     }
+
+    //endregion
+
 }

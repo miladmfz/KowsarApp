@@ -19,9 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.PrefactoropenActivity;
 import com.kits.kowsarapp.activity.broker.Broker_PFOpenActivity;
-import com.kits.kowsarapp.application.Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.application.broker.Broker_Action;
@@ -31,7 +29,6 @@ import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.NumberFunctions;
 import com.kits.kowsarapp.model.RetrofitResponse;
 import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.APIInterface;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.io.File;
@@ -82,16 +79,16 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
         this.broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
         mainline = itemView.findViewById(R.id.prosearch_mainline);
-        img = itemView.findViewById(R.id.good_prosearch_img);
-        rltv = itemView.findViewById(R.id.good_prosearch);
-        btnadd = itemView.findViewById(R.id.good_prosearch_btn);
+        img = itemView.findViewById(R.id.b_good_c_img);
+        rltv = itemView.findViewById(R.id.broker_good_card);
+        btnadd = itemView.findViewById(R.id.b_good_c_btn);
 
         if (callMethod.ReadBoolan("LineView")) {
 
 
-            tv_line_name = itemView.findViewById(R.id.good_prosearch_name);
-            tv_line_maxsellprice = itemView.findViewById(R.id.good_prosearch_maxsellprice);
-            tv_line_amount = itemView.findViewById(R.id.good_prosearch_amount);
+            tv_line_name = itemView.findViewById(R.id.b_good_c_name);
+            tv_line_maxsellprice = itemView.findViewById(R.id.b_good_c_maxsellprice);
+            tv_line_amount = itemView.findViewById(R.id.b_good_c_amount);
 
         }
     }

@@ -24,9 +24,9 @@ public class Broker_GroupLabelViewHolder extends RecyclerView.ViewHolder {
     public Broker_GroupLabelViewHolder(View itemView) {
         super(itemView);
 
-        grpname = itemView.findViewById(R.id.grp_vlist_detail_name);
-        rltv = itemView.findViewById(R.id.grp_vlist_detail);
-        img = itemView.findViewById(R.id.grp_vlist_detail_image);
+        grpname = itemView.findViewById(R.id.b_grp_c_name);
+        rltv = itemView.findViewById(R.id.broker_grp_card);
+        img = itemView.findViewById(R.id.b_grp_c_image);
     }
 
 

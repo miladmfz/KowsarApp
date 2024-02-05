@@ -13,17 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.BasketActivity;
-import com.kits.kowsarapp.activity.BasketHistoryActivity;
-import com.kits.kowsarapp.activity.CustomerActivity;
-import com.kits.kowsarapp.activity.PrefactorActivity;
-import com.kits.kowsarapp.activity.SearchActivity;
 import com.kits.kowsarapp.activity.broker.Broker_BasketActivity;
 import com.kits.kowsarapp.activity.broker.Broker_BasketHistoryActivity;
 import com.kits.kowsarapp.activity.broker.Broker_CustomerActivity;
 import com.kits.kowsarapp.activity.broker.Broker_PFActivity;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
-import com.kits.kowsarapp.application.Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.Print;
 import com.kits.kowsarapp.application.broker.Broker_Action;
@@ -35,7 +29,6 @@ import com.kits.kowsarapp.model.PreFactor;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-;
 
 public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
@@ -64,27 +57,27 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
     public Broker_PFViewHolder(View itemView) {
         super(itemView);
 
-        fac_code = itemView.findViewById(R.id.pf_header_code);
-        fac_date = itemView.findViewById(R.id.pf_header_date);
-        fac_time = itemView.findViewById(R.id.pf_header_time);
-        fac_kowsardate = itemView.findViewById(R.id.pf_header_kowsardate);
-        fac_row = itemView.findViewById(R.id.pf_header_row);
-        fac_count = itemView.findViewById(R.id.pf_header_count);
-        fac_price = itemView.findViewById(R.id.pf_header_price);
-        fac_kowsarcode = itemView.findViewById(R.id.pf_header_kowsarcode);
-        fac_detail = itemView.findViewById(R.id.pf_header_detail);
-        fac_customer = itemView.findViewById(R.id.pf_header_customer);
-        fac_history_good = itemView.findViewById(R.id.pf_header_histoy_good);
-        fac_send = itemView.findViewById(R.id.pf_header_send);
-        fac_dlt = itemView.findViewById(R.id.pf_header_dlt);
-        fac_customer_edit = itemView.findViewById(R.id.pf_header_customer_edit);
-        fac_explain_edit = itemView.findViewById(R.id.pf_header_explain_edit);
-        fac_excel = itemView.findViewById(R.id.pf_header_print);
-        fac_select = itemView.findViewById(R.id.pf_header_select);
-        fac_status = itemView.findViewById(R.id.pf_header_status);
-        fac_good_edit = itemView.findViewById(R.id.pf_header_good_edit);
+        fac_code = itemView.findViewById(R.id.b_pfitem_c_code);
+        fac_date = itemView.findViewById(R.id.b_pfitem_c_date);
+        fac_time = itemView.findViewById(R.id.b_pfitem_c_time);
+        fac_kowsardate = itemView.findViewById(R.id.b_pfitem_c_kowsardate);
+        fac_row = itemView.findViewById(R.id.b_pfitem_c_row);
+        fac_count = itemView.findViewById(R.id.b_pfitem_c_count);
+        fac_price = itemView.findViewById(R.id.b_pfitem_c_price);
+        fac_kowsarcode = itemView.findViewById(R.id.b_pfitem_c_kowsarcode);
+        fac_detail = itemView.findViewById(R.id.b_pfitem_c_detail);
+        fac_customer = itemView.findViewById(R.id.b_pfitem_c_customer);
+        fac_history_good = itemView.findViewById(R.id.b_pfitem_c_histoy_good);
+        fac_send = itemView.findViewById(R.id.b_pfitem_c_send);
+        fac_dlt = itemView.findViewById(R.id.b_pfitem_c_dlt);
+        fac_customer_edit = itemView.findViewById(R.id.b_pfitem_c_customer_edit);
+        fac_explain_edit = itemView.findViewById(R.id.b_pfitem_c_explain_edit);
+        fac_excel = itemView.findViewById(R.id.b_pfitem_c_print);
+        fac_select = itemView.findViewById(R.id.b_pfitem_c_select);
+        fac_status = itemView.findViewById(R.id.b_pfitem_c_status);
+        fac_good_edit = itemView.findViewById(R.id.b_pfitem_c_good_edit);
 
-        fac_rltv = itemView.findViewById(R.id.pf_header);
+        fac_rltv = itemView.findViewById(R.id.broker_pfitem_card);
     }
 
 

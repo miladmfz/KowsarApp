@@ -5,13 +5,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:id="@+id/broker_multibuy_box"
+    android:id="@+id/b_buymulti_box"
     android:background="@drawable/bg_round_selected"
     android:layoutDirection="rtl">
 
 
     <TextView
-        android:id="@+id/broker_multibuy_factor"
+        android:id="@+id/b_buymulti_factor"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
@@ -43,7 +43,7 @@
                 android:layout_weight="0.8" />
 
             <EditText
-                android:id="@+id/broker_multibuy_amount"
+                android:id="@+id/b_buymulti_amount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -76,7 +76,7 @@
                 android:layout_weight="0.8" />
 
             <EditText
-                android:id="@+id/broker_multibuy_unitratio"
+                android:id="@+id/b_buymulti_unitratio"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -97,7 +97,7 @@
 
 
     <Button
-        android:id="@+id/broker_multibuy_btn"
+        android:id="@+id/b_buymulti_btn"
         android:layout_width="250dp"
         android:gravity="center"
         android:layout_gravity="center"

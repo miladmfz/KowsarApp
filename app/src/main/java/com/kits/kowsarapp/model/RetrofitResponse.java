@@ -44,6 +44,19 @@ public class RetrofitResponse {
     @SerializedName("response")
     private String response;
 
+
+    @SerializedName("ErrCode")
+    private String ErrCode;
+    @SerializedName("ErrDesc")
+    private String ErrDesc;
+    @SerializedName("SellBrokers")
+    private ArrayList<SellBroker> SellBrokers;
+
+
+    //region $ getter setter
+
+
+
     public String getResponse() {
         return response;
     }
@@ -52,12 +65,6 @@ public class RetrofitResponse {
         this.response = response;
     }
 
-    @SerializedName("ErrCode")
-    private String ErrCode;
-    @SerializedName("ErrDesc")
-    private String ErrDesc;
-    @SerializedName("SellBrokers")
-    private ArrayList<SellBroker> SellBrokers;
 
 
     public ArrayList<AppPrinter> getAppPrinters() {
@@ -203,4 +210,6 @@ public class RetrofitResponse {
     public void setLocation(com.kits.kowsarapp.model.Location location) {
         Location = location;
     }
+    //endregion
+
 }

@@ -55,7 +55,7 @@ public class Customer {
     @SerializedName("KodeMelli")
     private String KodeMelli;
 
-
+    //region $ getter setter
     public String getCustomerFieldValue(String AKey) {
         String iKey = AKey.toLowerCase();
         String Res = "";
@@ -267,4 +267,6 @@ public class Customer {
     public void setKodeMelli(String kodeMelli) {
         KodeMelli = kodeMelli;
     }
+    //endregion
+
 }

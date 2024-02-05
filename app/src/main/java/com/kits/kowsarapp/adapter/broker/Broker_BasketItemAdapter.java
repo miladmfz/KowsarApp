@@ -19,7 +19,7 @@ import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.Good;
 import com.kits.kowsarapp.model.RetrofitResponse;
-import com.kits.kowsarapp.viewholder.broker.Broker_GoodBasketViewHolder;
+import com.kits.kowsarapp.viewholder.broker.Broker_BasketItemViewHolder;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
@@ -30,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 
-public class Broker_GoodBasketAdapter extends RecyclerView.Adapter<Broker_GoodBasketViewHolder> {
+public class Broker_BasketItemAdapter extends RecyclerView.Adapter<Broker_BasketItemViewHolder> {
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
     private final Broker_APIInterface broker_apiInterface;
     private final ImageInfo image_info;
@@ -41,7 +41,7 @@ public class Broker_GoodBasketAdapter extends RecyclerView.Adapter<Broker_GoodBa
     Intent intent;
     Broker_Action action;
 
-    public Broker_GoodBasketAdapter(ArrayList<Good> goods, Context mContext) {
+    public Broker_BasketItemAdapter(ArrayList<Good> goods, Context mContext) {
         this.mContext = mContext;
         this.goods = goods;
         this.callMethod = new CallMethod(mContext);
@@ -53,14 +53,14 @@ public class Broker_GoodBasketAdapter extends RecyclerView.Adapter<Broker_GoodBa
 
     @NonNull
     @Override
-    public Broker_GoodBasketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_buy, parent, false);
-        return new Broker_GoodBasketViewHolder(view);
+    public Broker_BasketItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_basket_card, parent, false);
+        return new Broker_BasketItemViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull final Broker_GoodBasketViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull final Broker_BasketItemViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
 
         holder.bind(goods.get(position));

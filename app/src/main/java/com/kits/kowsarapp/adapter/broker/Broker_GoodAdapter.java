@@ -60,9 +60,9 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
         View view;
 
         if (callMethod.ReadBoolan("LineView")) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_item_line_cardview, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_good_line_card, parent, false);
         } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_item_cardview, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_good_grid_card, parent, false);
 
         }
 
