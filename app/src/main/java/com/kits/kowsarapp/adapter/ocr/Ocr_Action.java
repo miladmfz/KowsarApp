@@ -1,14 +1,12 @@
 package com.kits.kowsarapp.adapter.ocr;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,27 +27,25 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.activity.ConfigActivity;
-import com.kits.ocrkowsar.activity.LocalFactorListActivity;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.application.Print;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
-import com.kits.ocrkowsar.model.Good;
-import com.kits.ocrkowsar.model.Job;
-import com.kits.ocrkowsar.model.JobPerson;
-import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.model.Utilities;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
+import com.kits.kowsarapp.activity.ocr.Ocr_ConfigActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_LocalFactorListActivity;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.ocr.Ocr_Print;
+import com.kits.kowsarapp.model.Good;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.Job;
+import com.kits.kowsarapp.model.JobPerson;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -57,11 +53,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Action extends Activity implements DatePickerDialog.OnDateSetListener {
+public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetListener {
 
-    APIInterface apiInterface;
-    APIInterface secendApiInterface;
-    DatabaseHelper dbh;
+    Ocr_APIInterface apiInterface;
+    Ocr_APIInterface secendApiInterface;
+    Ocr_DBH dbh;
     private final Context mContext;
     CallMethod callMethod;
     String coltrol_s = "";
@@ -75,26 +71,21 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     Dialog dialog, dialogProg;
     ArrayList<String> sendtimearray = new ArrayList<>();
     TextView tv_rep;
-    Print print;
-    public Action(Context mcontxt) {
+    Ocr_Print print;
+    public Ocr_Action(Context mcontxt) {
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
-        dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
-
-        Log.e("kowsar",callMethod.ReadString("ServerURLUse"));
-        Log.e("kowsar",callMethod.ReadString("SecendServerURL"));
-        Log.e("kowsar","");
-        Log.e("kowsar","");
-        Log.e("kowsar","");
+        dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
 
 
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
 
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+
+        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
 
         dialog = new Dialog(mcontxt);
         dialogProg = new Dialog(mContext);
-        print = new Print(mContext);
+        print = new Ocr_Print(mContext);
 
     }
     public void dialogProg() {
@@ -196,7 +187,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
 
 
-            call1.enqueue(new Callback<>() {
+            call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
                     dialog.dismiss();
@@ -255,7 +246,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             call=secendApiInterface.GetJob("TestJob", "Ocr3");
         }
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -291,7 +282,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             call1=secendApiInterface.GetJobPerson("TestJobPerson", job.getTitle());
                         }
 
-                        call1.enqueue(new Callback<>() {
+                        call1.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 if (response.isSuccessful()) {
@@ -456,7 +447,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                     call3=secendApiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "3", "");
                 }
 
-                call3.enqueue(new Callback<>() {
+                call3.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         assert response.body() != null;
@@ -486,7 +477,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             );
                         }
 
-                        call2.enqueue(new Callback<>() {
+                        call2.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 dialog.dismiss();
@@ -537,7 +528,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         }else{
             call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
         }
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -569,7 +560,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             call2=secendApiInterface.GetImage("getImage", GoodCode, 0, 400);
         }
 
-        call2.enqueue(new Callback<>() {
+        call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -618,7 +609,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                     }
             }
             if (Currctgoods.size() > 0) {
-                GoodScan_Adapter goodscanadapter = new GoodScan_Adapter(Currctgoods, mContext, state, barcodescan);
+                Ocr_GoodScan_Adapter goodscanadapter = new Ocr_GoodScan_Adapter(Currctgoods, mContext, state, barcodescan);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 1);//grid
                 goodscan_recycler.setLayoutManager(gridLayoutManager);
                 goodscan_recycler.setAdapter(goodscanadapter);
@@ -645,7 +636,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         MaterialButton btn_login = dialog.findViewById(R.id.btnloginconfig);
         btn_login.setOnClickListener(v -> {
             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
-                Intent intent = new Intent(mContext, ConfigActivity.class);
+                Intent intent = new Intent(mContext, Ocr_ConfigActivity.class);
                 mContext.startActivity(intent);
             }else {
                 callMethod.showToast("رمز عبور صیحیح نیست");
@@ -669,7 +660,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             );
         }
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -697,14 +688,14 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         }else {
             call =secendApiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
         }
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 callMethod.showToast("فاکتور ارسال گردید");
 
                 dbh.Insert_IsSent(factor_code);
 
-                Intent bag = new Intent(mContext, LocalFactorListActivity.class);
+                Intent bag = new Intent(mContext, Ocr_LocalFactorListActivity.class);
                 bag.putExtra("IsSent", "0");
                 bag.putExtra("signature", "0");
                 dialogProg.dismiss();
@@ -725,30 +716,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     }
 
     public void app_info() {
-
-        @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(mContext
-                .getContentResolver(), Settings.Secure.ANDROID_ID);
-        String Date = Utilities.getCurrentShamsidate();
-        Calendar c = Calendar.getInstance();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        String strDate = sdf.format(c.getTime());
-
-
-        APIInterface apiInterface = APIClient.getCleint("http://87.107.78.234:60005/login/").create(APIInterface.class);
-        Call<String> cl = apiInterface.Kowsar_log("Log_report", android_id, mContext.getString(R.string.SERVERIP), mContext.getString(R.string.app_name), "", Date + "--" + strDate, callMethod.ReadString("Deliverer"), "");
-        cl.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                Log.e("ocrkowsar_onResponse", "" + response.body());
-                Log.e("1", "0");
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                Log.e("ocrkowsar_onFailure", "" + t);
-            }
-        });
 
     }
 

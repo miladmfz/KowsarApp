@@ -18,42 +18,42 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.activity.ConfirmActivity;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.Good;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
-
+import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.Good;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.model.RetrofitResponse;
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facViewHolder> {
-    APIInterface apiInterface ;
-    APIInterface secendApiInterface ;
+public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adapter.facViewHolder> {
+    Ocr_APIInterface apiInterface ;
+    Ocr_APIInterface secendApiInterface ;
 
     private final Context mContext;
     private final ArrayList<Good> goods;
-    private final Action action;
+    private final Ocr_Action ocrAction;
     CallMethod callMethod;
     String state;
     String barcodescan;
     Intent intent;
 
 
-    public GoodScan_Adapter(ArrayList<Good> goods, Context context,String state,String barcodescan) {
+    public Ocr_GoodScan_Adapter(ArrayList<Good> goods, Context context, String state, String barcodescan) {
         this.mContext = context;
         this.goods = goods;
         this.state = state;
         this.barcodescan = barcodescan;
-        this.action = new Action(context);
+        this.ocrAction = new Ocr_Action(context);
         this.callMethod = new CallMethod(context);
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        this.secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+        this.secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
 
 
     }
@@ -76,12 +76,12 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
 
         Call<RetrofitResponse> call2;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2=apiInterface.GetImage("getImage", goods.get(position).getGoodCode(),0,400);
+            call2=apiInterface.GetImage("getImage", goods.get(position).getGoodCode()+"",0,400);
         }else{
-            call2=secendApiInterface.GetImage("getImage", goods.get(position).getGoodCode(),0,400);
+            call2=secendApiInterface.GetImage("getImage", goods.get(position).getGoodCode()+"",0,400);
         }
 
-        call2.enqueue(new Callback<>() {
+        call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -108,12 +108,12 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
                     call=secendApiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "0", "");
                 }
 
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
 
-                            intent = new Intent(mContext, ConfirmActivity.class);
+                            intent = new Intent(mContext, Ocr_ConfirmActivity.class);
                             intent.putExtra("ScanResponse", barcodescan);
                             intent.putExtra("State", "0");
                             ((Activity) mContext).finish();
@@ -134,12 +134,12 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
                 }else{
                     call=secendApiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "2", "");
                 }
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
 
-                            intent = new Intent(mContext, ConfirmActivity.class);
+                            intent = new Intent(mContext, Ocr_ConfirmActivity.class);
                             intent.putExtra("ScanResponse", barcodescan);
                             intent.putExtra("State", "1");
                             ((Activity) mContext).finish();

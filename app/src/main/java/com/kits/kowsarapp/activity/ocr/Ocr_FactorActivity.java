@@ -23,16 +23,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
-import com.kits.ocrkowsar.model.Good;
-import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
-
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.Good;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.RetrofitResponse;
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -42,11 +42,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class  FactorActivity extends AppCompatActivity {
+public class Ocr_FactorActivity extends AppCompatActivity {
 
-    APIInterface apiInterface ;
-    APIInterface secendApiInterface ;
-    DatabaseHelper dbh ;
+    Ocr_APIInterface apiInterface ;
+    Ocr_APIInterface secendApiInterface ;
+    Ocr_DBH dbh ;
     LinearLayoutCompat main_layout;
     LinearLayoutCompat title_layout;
     LinearLayoutCompat boby_good_layout;
@@ -81,7 +81,7 @@ public class  FactorActivity extends AppCompatActivity {
             handler.postDelayed(this::init, 100);
             handler.postDelayed(dialog1::dismiss, 1000);
         }catch (Exception e){
-            callMethod.ErrorLog(e.getMessage());
+            callMethod.Log(e.getMessage());
         }
 
 
@@ -98,9 +98,9 @@ public class  FactorActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         main_layout = findViewById(R.id.factor_layout);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -122,7 +122,7 @@ public class  FactorActivity extends AppCompatActivity {
             }else {
                 call =secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
             }
-            call.enqueue(new Callback<>() {
+            call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()){
@@ -170,7 +170,7 @@ public class  FactorActivity extends AppCompatActivity {
             button.setTextColor(getColor(R.color.white));
             button.setOnClickListener(v -> {
 
-                intent = new Intent(FactorActivity.this, PaintActivity.class);
+                intent = new Intent(Ocr_FactorActivity.this, Ocr_PaintActivity.class);
                 intent.putExtra("ScanResponse", BarcodeScan);
                 intent.putExtra("FactorImage", "hasimage");
                 intent.putExtra("Width", String.valueOf(width));
@@ -446,7 +446,7 @@ public class  FactorActivity extends AppCompatActivity {
         button.setTextColor(getColor(R.color.white));
         button.setOnClickListener(v -> {
 
-            intent = new Intent(FactorActivity.this, PaintActivity.class);
+            intent = new Intent(Ocr_FactorActivity.this, Ocr_PaintActivity.class);
             intent.putExtra("ScanResponse", BarcodeScan);
             intent.putExtra("FactorImage", "hasimage");
             intent.putExtra("Width", String.valueOf(width));
@@ -473,7 +473,7 @@ public class  FactorActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(FactorActivity.this, FactorActivity.class);
+        intent = new Intent(Ocr_FactorActivity.this, Ocr_FactorActivity.class);
         intent.putExtra("ScanResponse", BarcodeScan);
         intent.putExtra("FactorImage", bitmap_factor_base64);
         startActivity(intent);

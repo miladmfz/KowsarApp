@@ -16,18 +16,19 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.kits.ocrkowsar.Fragment.CollectFragment;
-import com.kits.ocrkowsar.Fragment.PackFragment;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.Action;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
-import com.kits.ocrkowsar.model.Good;
-import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
+import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
+import com.kits.kowsarapp.fragment.ocr.Ocr_PackFragment;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.Good;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.RetrofitResponse;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -36,18 +37,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ConfirmActivity extends AppCompatActivity {
-    APIInterface apiInterface;
-    APIInterface secendApiInterface;
+public class Ocr_ConfirmActivity extends AppCompatActivity {
+    Ocr_APIInterface apiInterface;
+    Ocr_APIInterface secendApiInterface;
     EditText ed_barcode;
-    DatabaseHelper dbh ;
+    Ocr_DBH dbh ;
     ArrayList<String[]> arraygood_shortage = new ArrayList<>();
     LinearLayoutCompat ll_main;
     CallMethod callMethod;
     FragmentManager fragmentManager ;
     FragmentTransaction fragmentTransaction;
-    CollectFragment collectFragment;
-    PackFragment packFragment;
+    Ocr_CollectFragment collectFragment;
+    Ocr_PackFragment packFragment;
     ArrayList<Good> goods;
     ArrayList<Good> goods_scan=new ArrayList<>();
     Factor factor;
@@ -55,7 +56,7 @@ public class ConfirmActivity extends AppCompatActivity {
     String OrderBy;
     String State;
     int width=1;
-    Action action;
+    Ocr_Action action;
     Handler handler;
 
 
@@ -79,7 +80,7 @@ public class ConfirmActivity extends AppCompatActivity {
             handler.postDelayed(this::init, 100);
             handler.postDelayed(dialog1::dismiss, 1000);
         }catch (Exception e){
-            callMethod.ErrorLog(e.getMessage());
+            callMethod.Log(e.getMessage());
         }
 
 
@@ -99,10 +100,10 @@ public class ConfirmActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
-        action = new Action(this);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+        action = new Ocr_Action(this);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
 
         handler=new Handler();
         for (final String[] ignored : arraygood_shortage) {
@@ -118,8 +119,8 @@ public class ConfirmActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        collectFragment = new CollectFragment();
-        packFragment = new PackFragment();
+        collectFragment = new Ocr_CollectFragment();
+        packFragment = new Ocr_PackFragment();
         collectFragment.setBarcodeScan(BarcodeScan);
         packFragment.setBarcodeScan(BarcodeScan);
         goods_scan.clear();
@@ -188,7 +189,7 @@ public class ConfirmActivity extends AppCompatActivity {
             call=secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
         }
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {

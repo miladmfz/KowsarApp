@@ -22,20 +22,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.LocalFactorList_Adapter;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
-import com.kits.ocrkowsar.model.NumberFunctions;
+import com.kits.kowsarapp.adapter.ocr.Ocr_LocalFactorList_Adapter;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.model.NumberFunctions;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class LocalFactorListActivity extends AppCompatActivity {
-    private DatabaseHelper dbh;
-    LocalFactorList_Adapter adapter;
+public class Ocr_LocalFactorListActivity extends AppCompatActivity {
+    private Ocr_DBH dbh;
+    Ocr_LocalFactorList_Adapter adapter;
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_header_recycler;
     private EditText edtsearch;
@@ -74,7 +74,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
             handler.postDelayed(this::init, 100);
             handler.postDelayed(dialog1::dismiss, 1000);
         } catch (Exception e) {
-            callMethod.ErrorLog(e.getMessage());
+            callMethod.Log(e.getMessage());
         }
 
     }
@@ -91,7 +91,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
+        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
         factor_header_recycler = findViewById(R.id.factor_headerActivity_recyclerView);
         fab = findViewById(R.id.factor_headerActivity_fab);
@@ -122,7 +122,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
             for (String[] s : Multi_sign) {
                 Multi_barcode.add(s[0]);
             }
-            intent = new Intent(this, PaintActivity.class);
+            intent = new Intent(this, Ocr_PaintActivity.class);
             intent.putExtra("ScanResponse", "Multi_sign");
             intent.putExtra("FactorImage", "hasimage");
             intent.putExtra("Width", String.valueOf(width));
@@ -145,7 +145,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
 
             }
             factors = dbh.factorscan(IsSent, srch, signature);
-            adapter = new LocalFactorList_Adapter(factors, this, width);
+            adapter = new Ocr_LocalFactorList_Adapter(factors, this, width);
             if (adapter.getItemCount() == 0) {
                 callMethod.showToast("فاکتوری یافت نشد");
             }
@@ -177,7 +177,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
                             callMethod.EditString("Last_search", srch);
                             factors = dbh.factorscan(IsSent, srch, signature);
 
-                            adapter = new LocalFactorList_Adapter(factors, LocalFactorListActivity.this, width);
+                            adapter = new Ocr_LocalFactorList_Adapter(factors, Ocr_LocalFactorListActivity.this, width);
                             if (adapter.getItemCount() == 0) {
                                 callMethod.showToast("فاکتوری یافت نشد");
                             }
@@ -195,7 +195,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
                 });
 
 
-        adapter = new LocalFactorList_Adapter(factors, this, width);
+        adapter = new Ocr_LocalFactorList_Adapter(factors, this, width);
         if (adapter.getItemCount() == 0) {
             callMethod.showToast("فاکتوری یافت نشد");
         }
@@ -210,7 +210,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         item_multi = menu;
-        getMenuInflater().inflate(R.menu.options_menu, menu);
+        getMenuInflater().inflate(R.menu.ocr_options_menu, menu);
 
 
         return true;
@@ -219,15 +219,15 @@ public class LocalFactorListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.menu_multi) {
-            item_multi.findItem(R.id.menu_multi).setVisible(false);
+        if (item.getItemId() == R.id.ocr_menu_multi) {
+            item_multi.findItem(R.id.ocr_menu_multi).setVisible(false);
             for (Factor factor : factors) {
                 factor.setCheck(false);
             }
             Multi_sign.clear();
             adapter.multi_select = false;
 
-            adapter = new LocalFactorList_Adapter(factors, this, width);
+            adapter = new Ocr_LocalFactorList_Adapter(factors, this, width);
             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
             factor_header_recycler.setLayoutManager(gridLayoutManager);
             factor_header_recycler.setAdapter(adapter);
@@ -242,7 +242,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
         if (flag == 1) {
             fab.setVisibility(View.VISIBLE);
             Multi_sign.add(new String[]{Factor_barcode, Customer_code, ""});
-            item_multi.findItem(R.id.menu_multi).setVisible(true);
+            item_multi.findItem(R.id.ocr_menu_multi).setVisible(true);
 
         } else {
             int b = 0, c = 0;
@@ -256,7 +256,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
             if (Multi_sign.size() < 1) {
                 fab.setVisibility(View.GONE);
                 adapter.multi_select = false;
-                item_multi.findItem(R.id.menu_multi).setVisible(false);
+                item_multi.findItem(R.id.ocr_menu_multi).setVisible(false);
             }
         }
     }
@@ -264,7 +264,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(this, LocalFactorListActivity.class);
+        intent = new Intent(this, Ocr_LocalFactorListActivity.class);
         intent.putExtra("IsSent", IsSent);
         intent.putExtra("signature", signature);
         startActivity(intent);

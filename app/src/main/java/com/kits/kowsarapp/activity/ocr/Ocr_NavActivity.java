@@ -24,15 +24,16 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.kits.ocrkowsar.BuildConfig;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.Action;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
+import com.kits.kowsarapp.BuildConfig;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.activity.base.Base_SplashActivity;
+import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
 
-public class NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
+public class Ocr_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
     Integer state_category;
     private boolean doubleBackToExitPressedOnce = false;
@@ -40,10 +41,10 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
     Button btn1,btn2,btn3;
     Handler handler;
     CallMethod callMethod;
-    DatabaseHelper dbh;
+    Ocr_DBH dbh;
 
     Toolbar toolbar;
-    Action action;
+    Ocr_Action action;
     NavigationView navigationView;
     TextView tv_versionname;
     TextView tv_dbname;
@@ -63,8 +64,8 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
 public void Config() {
 
     callMethod = new CallMethod(this);
-    action = new Action(this);
-    dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
+    action = new Ocr_Action(this);
+    dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
     toolbar = findViewById(R.id.NavActivity_toolbar);
     setSupportActionBar(toolbar);
@@ -102,8 +103,9 @@ public void Config() {
             callMethod.EditString("ActivationCode", "");
             callMethod.EditString("SecendServerURL", "");
             callMethod.EditString("DbName", "");
+            callMethod.EditString("AppType", "");
             callMethod.EditString("FactorDbName", "");
-            intent = new Intent(this, SplashActivity.class);
+            intent = new Intent(this, Base_SplashActivity.class);
             finish();
             startActivity(intent);
         });
@@ -154,7 +156,7 @@ public void Config() {
         btn3.setText("فاکتور های ارسال نشده");
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(this, ScanCodeActivity.class);
+            intent = new Intent(this, Ocr_ScanCodeActivity.class);
             startActivity(intent);
         });
         btn2.setOnClickListener(view -> {
@@ -188,7 +190,7 @@ public void Config() {
                     handler.postDelayed(() -> {
 
                         if(s.length()>8) {
-                            intent = new Intent(NavActivity.this, FactorActivity.class);
+                            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorActivity.class);
                             intent.putExtra("ScanResponse", s.toString());
                             startActivity(intent);
                         }
@@ -198,7 +200,7 @@ public void Config() {
 
         });
         btn3.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -217,13 +219,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
             intent.putExtra("State", "0");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -242,13 +244,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
             intent.putExtra("State", "1");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
             intent.putExtra("State", "4");
 
             startActivity(intent);
@@ -256,7 +258,7 @@ public void Config() {
         });
         btn3.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
 
@@ -275,7 +277,7 @@ public void Config() {
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
         });
@@ -283,7 +285,7 @@ public void Config() {
 
         btn2.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(NavActivity.this, LocalFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_LocalFactorListActivity.class);
             intent.putExtra("IsSent", "0");
             intent.putExtra("signature", "1");
             startActivity(intent);
@@ -291,7 +293,7 @@ public void Config() {
 
         btn3.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(NavActivity.this, LocalFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_LocalFactorListActivity.class);
             intent.putExtra("IsSent", "1");
             intent.putExtra("signature", "1");
             startActivity(intent);
@@ -311,7 +313,7 @@ public void Config() {
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
         });
@@ -345,7 +347,7 @@ public void Config() {
 
         final int id = item.getItemId();
 
-        if (id == R.id.nav_cfg) {
+        if (id == R.id.ocr_nav_cfg) {
 
             action.LoginSetting();
         }
@@ -356,7 +358,7 @@ public void Config() {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
+        getMenuInflater().inflate(R.menu.ocr_options_menu, menu);
 
         return true;
     }

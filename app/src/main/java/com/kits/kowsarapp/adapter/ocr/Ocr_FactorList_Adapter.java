@@ -15,16 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.activity.ConfirmActivity;
-import com.kits.ocrkowsar.activity.FactorActivity;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
-import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_FactorActivity;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
+
 
 import java.util.ArrayList;
 
@@ -32,28 +34,28 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Adapter.facViewHolder> {
-    APIInterface apiInterface ;
-    APIInterface secendApiInterface ;
+public class Ocr_FactorList_Adapter extends RecyclerView.Adapter<Ocr_FactorList_Adapter.facViewHolder> {
+    Ocr_APIInterface apiInterface ;
+    Ocr_APIInterface secendApiInterface ;
 
     private final Context mContext;
     Intent intent;
     ArrayList<Factor> factors ;
 
-    Action action;
+    Ocr_Action ocrAction;
     String state ;
     CallMethod callMethod;
 
-    DatabaseHelper dbh;
-    public OcrFactorList_Adapter(ArrayList<Factor> retrofitFactors,String State, Context context) {
+    Ocr_DBH dbh;
+    public Ocr_FactorList_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
-        this.action=new Action(context);
-        this.dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
+        this.ocrAction =new Ocr_Action(context);
+        this.dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.state = State;
         this.factors = retrofitFactors;
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
 
     }
 
@@ -159,7 +161,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
                 if(callMethod.ReadString("Category").equals("5")) {
                     
-                    action.GetOcrFactorDetail(factors.get(position));
+                    ocrAction.GetOcrFactorDetail(factors.get(position));
                     
                 }else {
                     if (position < 5) {
@@ -175,13 +177,13 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                             }
 
 
-                            call.enqueue(new Callback<>() {
+                            call.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                     if (response.isSuccessful()) {
                                         assert response.body() != null;
                                         if (response.body().getFactors().get(0).getErrCode().equals("0")) {
-                                            intent = new Intent(mContext, FactorActivity.class);
+                                            intent = new Intent(mContext, Ocr_FactorActivity.class);
                                             intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                                             intent.putExtra("FactorImage", "");
                                             mContext.startActivity(intent);
@@ -200,7 +202,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
                             callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
 
-                            intent = new Intent(mContext, ConfirmActivity.class);
+                            intent = new Intent(mContext, Ocr_ConfirmActivity.class);
                             intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                             intent.putExtra("State", state);
                             mContext.startActivity(intent);

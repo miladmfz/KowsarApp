@@ -24,16 +24,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.activity.FactorActivity;
-import com.kits.ocrkowsar.activity.LocalFactorListActivity;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
-import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
+import com.kits.kowsarapp.R;
+
+import com.kits.kowsarapp.activity.ocr.Ocr_FactorActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_LocalFactorListActivity;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
+
 
 import java.util.ArrayList;
 
@@ -41,33 +44,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorList_Adapter.facViewHolder> {
-    APIInterface apiInterface ;
-    APIInterface secendApiInterface;
+public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalFactorList_Adapter.facViewHolder> {
+    Ocr_APIInterface apiInterface ;
+    Ocr_APIInterface secendApiInterface;
 
     private final Context mContext;
     Intent intent;
     private final ArrayList<Factor> factors;
-    private final Action action;
-    private final DatabaseHelper dbh;
+    private final Ocr_Action ocrAction;
+    private final Ocr_DBH dbh;
     Dialog dialog ;
     int width;
     public boolean multi_select;
     CallMethod callMethod;
 
 
-    public LocalFactorList_Adapter(ArrayList<Factor> factors, Context context,Integer metrics) {
+    public Ocr_LocalFactorList_Adapter(ArrayList<Factor> factors, Context context, Integer metrics) {
         this.mContext = context;
         this.factors = factors;
-        this.action = new Action(context);
+        this.ocrAction = new Ocr_Action(context);
         this.callMethod = new CallMethod(context);
-        dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
+        dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.signature);
         this.width =metrics;
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
 
 
     }
@@ -105,7 +108,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
 
         holder.fac_factor.setOnClickListener(v -> {
             callMethod.EditString("FactorDbName", factors.get(position).getDbname());
-            intent = new Intent(mContext, FactorActivity.class);
+            intent = new Intent(mContext, Ocr_FactorActivity.class);
             intent.putExtra("ScanResponse", factors.get(position).getFactorBarcode());
             intent.putExtra("FactorImage", "hasimage");
             mContext.startActivity(intent);
@@ -136,7 +139,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
 
         holder.fac_rltv.setOnClickListener(v -> {
             if (multi_select) {
-                LocalFactorListActivity activity = (LocalFactorListActivity) mContext;
+                Ocr_LocalFactorListActivity activity = (Ocr_LocalFactorListActivity) mContext;
 
                 holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());
                 factors.get(position).setCheck(!factors.get(position).isCheck());
@@ -187,12 +190,12 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
                         }
 
 
-                        call.enqueue(new Callback<>() {
+                        call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 if(response.isSuccessful()) {
                                     dbh.deletescan(factors.get(position).getFactorBarcode());
-                                    intent = new Intent(mContext, LocalFactorListActivity.class);
+                                    intent = new Intent(mContext, Ocr_LocalFactorListActivity.class);
                                     intent.putExtra("IsSent", "0");
                                     intent.putExtra("signature", "0");
                                     ((Activity) mContext).finish();
@@ -223,7 +226,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
                         .setMessage("آیا رسید ارسال گردد؟")
                         .setPositiveButton("بله", (dialogInterface, i) -> {
 
-                            action.sendfactor(factors.get(position).getFactorBarcode(),factors.get(position).getSignatureImage());
+                            ocrAction.sendfactor(factors.get(position).getFactorBarcode(),factors.get(position).getSignatureImage());
                         })
                         .setNegativeButton("خیر", (dialogInterface, i) -> {                   })
                         .show();
@@ -234,7 +237,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
         holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_baseline_attach_file_24));
         holder.fac_rltv.setChecked(factors.get(position).isCheck());
         holder.fac_rltv.setOnLongClickListener(view -> {
-            LocalFactorListActivity activity = (LocalFactorListActivity) mContext;
+            Ocr_LocalFactorListActivity activity = (Ocr_LocalFactorListActivity) mContext;
 
             multi_select = true;
             holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());

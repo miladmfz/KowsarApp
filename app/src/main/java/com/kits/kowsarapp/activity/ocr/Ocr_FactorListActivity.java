@@ -31,15 +31,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.OcrFactorList_Adapter;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
-import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.adapter.ocr.Ocr_FactorList_Adapter;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
 import java.util.ArrayList;
 
@@ -47,11 +48,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OcrFactorListActivity extends AppCompatActivity {
+public class Ocr_FactorListActivity extends AppCompatActivity {
 
-    APIInterface apiInterface;
-    APIInterface secendApiInterface;
-    OcrFactorList_Adapter adapter;
+    Ocr_APIInterface apiInterface;
+    Ocr_APIInterface secendApiInterface;
+    Ocr_FactorList_Adapter adapter;
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_list_recycler;
     AppCompatEditText edtsearch;
@@ -76,7 +77,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
     String channel_id = "Kowsarmobile";
     String channel_name = "home";
     CallMethod callMethod;
-    DatabaseHelper dbh;
+    Ocr_DBH dbh;
     int recallcount=0;
     int ShortageCount=0;
     int EditedCount=0;
@@ -105,7 +106,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
             Handler handler = new Handler();
             handler.postDelayed(this::init, 100);
         }catch (Exception e){
-            callMethod.ErrorLog(e.getMessage());
+            callMethod.Log(e.getMessage());
         }
 
 
@@ -129,9 +130,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
     public void Config() {
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         handler=new Handler();
         prog = findViewById(R.id.factor_listActivity_prog);
 
@@ -279,29 +280,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
 
         Call<RetrofitResponse> call;
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetOcrFactorList(
-//                    "GetFactorList",
-//                    state,
-//                    srch,
-//                    callMethod.ReadString("StackCategory"),
-//                    path,
-//                    StateShortage,
-//                    StateEdited,
-//                    Row,
-//                    String.valueOf(PageNo));
-//        }else{
-//            call=secendApiInterface.GetOcrFactorList(
-//                    "GetFactorList",
-//                    state,
-//                    srch,
-//                    callMethod.ReadString("StackCategory"),
-//                    path,
-//                    StateShortage,
-//                    StateEdited,
-//                    Row,
-//                    String.valueOf(PageNo));
-//        }
 
 
         call=apiInterface.GetOcrFactorList(
@@ -314,8 +292,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 String.valueOf(PageNo));
-        Log.e("kowsar",call.request().toString());
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -347,7 +324,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
     public void CallRecycle() {
 
-        adapter = new OcrFactorList_Adapter(factors,state,OcrFactorListActivity.this);
+        adapter = new Ocr_FactorList_Adapter(factors,state, Ocr_FactorListActivity.this);
         if (adapter.getItemCount()==0){
             callMethod.showToast("فاکتوری یافت نشد");
         }
@@ -384,8 +361,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         Call<RetrofitResponse> call;
 
         call=apiInterface.GetCustomerPath("GetCustomerPath");
-        Log.e("kowsar",call.request().toString());
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -396,7 +372,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         customerpath.add(factor.getCustomerPath());
                     }
 
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(OcrFactorListActivity.this,
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_FactorListActivity.this,
                             android.R.layout.simple_spinner_item, customerpath);
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerPath.setAdapter(spinner_adapter);
@@ -438,29 +414,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
         pastVisiblesItems=0;
 
         Call<RetrofitResponse> call;
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetOcrFactorList(
-//                    "GetFactorList",
-//                    state,
-//                    srch,
-//                    callMethod.ReadString("StackCategory"),
-//                    path,
-//                    StateShortage,
-//                    StateEdited,
-//                    Row,
-//                    "0");
-//        }else{
-//            call=secendApiInterface.GetOcrFactorList(
-//                    "GetFactorList",
-//                    state,
-//                    srch,
-//                    callMethod.ReadString("StackCategory"),
-//                    path,
-//                    StateShortage,
-//                    StateEdited,
-//                    Row,
-//                    "0");
-//        }
 
         call=apiInterface.GetOcrFactorList(
                 "GetFactorList",
@@ -472,7 +425,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 "0");
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
@@ -536,7 +489,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 "0");
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -567,7 +520,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 "0");
 
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -608,7 +561,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         }
 
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -628,7 +581,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
             NotificationChannel Channel = new NotificationChannel(channel_id, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(Channel);
         }
-        Intent notificationIntent = new Intent(this, OcrFactorListActivity.class);
+        Intent notificationIntent = new Intent(this, Ocr_FactorListActivity.class);
         notificationIntent.putExtra("State", "5");
         if(flag.equals("0")){
             notificationIntent.putExtra("StateEdited", "0");
@@ -656,7 +609,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(this, OcrFactorListActivity.class);
+        intent = new Intent(this, Ocr_FactorListActivity.class);
         intent.putExtra("State", state);
         startActivity(intent);
         finish();

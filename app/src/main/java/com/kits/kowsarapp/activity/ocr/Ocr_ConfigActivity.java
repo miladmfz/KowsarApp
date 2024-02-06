@@ -24,30 +24,30 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.application.ImageInfo;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Good;
-import com.kits.ocrkowsar.model.Job;
-import com.kits.ocrkowsar.model.JobPerson;
-import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
-
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ImageInfo;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.model.Good;
+import com.kits.kowsarapp.model.Job;
+import com.kits.kowsarapp.model.JobPerson;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.RetrofitResponse;
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ConfigActivity extends AppCompatActivity  {
+public class Ocr_ConfigActivity extends AppCompatActivity  {
 
-    APIInterface apiInterface;
-    APIInterface secendApiInterface;
+    Ocr_APIInterface apiInterface;
+    Ocr_APIInterface secendApiInterface;
     CallMethod callMethod;
-    DatabaseHelper dbh;
+    Ocr_DBH dbh;
     Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson;
     String stackcategory="همه";
     String workcategory="0";
@@ -79,10 +79,10 @@ public class ConfigActivity extends AppCompatActivity  {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
+        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
         imageInfo = new ImageInfo(this);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
 
         works.add("برای انتخاب کلیک کنید");
         works.add("اسکن بارکد");
@@ -142,7 +142,7 @@ public class ConfigActivity extends AppCompatActivity  {
             finish();
         });
 
-        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(ConfigActivity.this,
+        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
                 android.R.layout.simple_spinner_item, works);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnercategory.setAdapter(spinner_adapter);
@@ -151,7 +151,7 @@ public class ConfigActivity extends AppCompatActivity  {
 
 
         Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 stacks.add("همه");
@@ -160,7 +160,7 @@ public class ConfigActivity extends AppCompatActivity  {
                     for ( Good good : response.body().getGoods()) {
                         stacks.add(good.getGoodExplain4());
                     }
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(ConfigActivity.this,
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
                             android.R.layout.simple_spinner_item, stacks);
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerPath.setAdapter(spinner_adapter);
@@ -245,7 +245,7 @@ public class ConfigActivity extends AppCompatActivity  {
         spinnerjobperson.setAdapter(null);
 
         Call<RetrofitResponse> call =apiInterface.GetJob("TestJob",where);
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -256,7 +256,7 @@ public class ConfigActivity extends AppCompatActivity  {
                     for(Job job:jobs){
                         jobsstr.add(job.getTitle());
                     }
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(ConfigActivity.this,
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
                             android.R.layout.simple_spinner_item,jobsstr );
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerjob.setAdapter(spinner_adapter);
@@ -276,7 +276,7 @@ public class ConfigActivity extends AppCompatActivity  {
     public void GetDataIsPersian() {
 
         Call<RetrofitResponse> call =apiInterface.GetDataDbsetup("kowsar_info","DataIsPersian");
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -299,7 +299,7 @@ public class ConfigActivity extends AppCompatActivity  {
 
     public void GetJobPerson(String where) {
         Call<RetrofitResponse> call =apiInterface.GetJobPerson("TestJobPerson",where);
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -313,7 +313,7 @@ public class ConfigActivity extends AppCompatActivity  {
                         jobpersonsref_int.add(Integer.parseInt(jobPerson.getJobPersonCode()));
                     }
 
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(ConfigActivity.this,
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
                             android.R.layout.simple_spinner_item,jobpersonsstr);
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerjobperson.setAdapter(spinner_adapter);

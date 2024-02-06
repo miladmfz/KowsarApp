@@ -6,11 +6,11 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.zxing.Result;
-import com.kits.ocrkowsar.application.CallMethod;
+import com.kits.kowsarapp.application.base.CallMethod;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class Ocr_ScanCodeActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     CallMethod callMethod;
     Intent intent;
@@ -30,10 +30,10 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
         String scan_result = result.getText();
 
         if(callMethod.ReadString("Category").equals("1")){
-            intent = new Intent(ScanCodeActivity.this, ConfirmActivity.class);
+            intent = new Intent(Ocr_ScanCodeActivity.this, Ocr_ConfirmActivity.class);
             intent.putExtra("ScanResponse", scan_result);
         }else {
-            intent = new Intent(ScanCodeActivity.this, FactorActivity.class);
+            intent = new Intent(Ocr_ScanCodeActivity.this, Ocr_FactorActivity.class);
             intent.putExtra("ScanResponse", scan_result);
             intent.putExtra("FactorImage", "");
         }

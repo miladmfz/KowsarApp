@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
-public class PaintView extends View {
+public class Ocr_PaintView extends View {
     public static int BRUSH_SIZE = 20;
     public static final int DEFAULT_COLOR = Color.BLACK;
     public static final int DEFAULT_BG_COLOR = Color.WHITE;
@@ -35,11 +35,11 @@ public class PaintView extends View {
     private Canvas mCanvas;
     private final Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
-    public PaintView(Context context) {
+    public Ocr_PaintView(Context context) {
         this(context, null);
     }
 
-    public PaintView(Context context, AttributeSet attrs) {
+    public Ocr_PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mPaint = new Paint();

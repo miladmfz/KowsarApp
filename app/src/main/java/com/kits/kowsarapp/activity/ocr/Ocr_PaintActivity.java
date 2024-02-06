@@ -30,12 +30,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.FileProvider;
 
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.Action;
-import com.kits.ocrkowsar.adapter.PaintView;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.NumberFunctions;
+import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
+import com.kits.kowsarapp.adapter.ocr.Ocr_PaintView;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.model.NumberFunctions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,15 +45,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PaintActivity extends AppCompatActivity {
+public class Ocr_PaintActivity extends AppCompatActivity {
     static String strSDCardPathName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/kowsar" + "/";
 
-    private PaintView paintView;
+    private Ocr_PaintView paintView;
     String BarcodeScan;
     String bitmap_signature_base;
     Bitmap bitmap_signature;
-    DatabaseHelper dbh ;
-    Action action;
+    Ocr_DBH dbh ;
+    Ocr_Action action;
     LinearLayoutCompat main_layout;
     LinearLayoutCompat paint_layout;
     List<Uri> list_imageUri=new ArrayList<>();
@@ -88,7 +89,7 @@ public class PaintActivity extends AppCompatActivity {
             handler.postDelayed(this::init, 100);
             handler.postDelayed(dialog1::dismiss, 1000);
         }catch (Exception e){
-            callMethod.ErrorLog(e.getMessage());
+            callMethod.Log(e.getMessage());
         }
 
 
@@ -252,7 +253,7 @@ public class PaintActivity extends AppCompatActivity {
 
                     final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PaintActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Ocr_PaintActivity.this);
                     builder.setTitle("Choose your profile picture");
 
                     builder.setItems(options, (dialog, item) -> {
@@ -284,9 +285,9 @@ public class PaintActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
+        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
-        action =new Action(PaintActivity.this);
+        action =new Ocr_Action(Ocr_PaintActivity.this);
 
         main_layout= findViewById(R.id.signature_mainlayout);
         paint_layout= findViewById(R.id.layout_paint);
