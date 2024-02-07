@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.PreFactor;
+import com.kits.kowsarapp.model.base.PreFactor;
 import com.kits.kowsarapp.viewholder.broker.Broker_PFOpenViewHolder;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.model;
+package com.kits.kowsarapp.model.base;
 
 import java.util.Date;
 import java.util.Locale;

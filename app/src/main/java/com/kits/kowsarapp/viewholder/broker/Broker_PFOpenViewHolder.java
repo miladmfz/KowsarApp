@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.PreFactor;
+import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.base.PreFactor;
 
 import java.text.DecimalFormat;
 

@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
-import com.kits.kowsarapp.model.GoodGroup;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.GoodGroup;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 
 public class Broker_GroupLabelViewHolder extends RecyclerView.ViewHolder {
 

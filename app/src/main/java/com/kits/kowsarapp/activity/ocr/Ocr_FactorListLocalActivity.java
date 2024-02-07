@@ -24,10 +24,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.adapter.ocr.Ocr_FactorListLocal_Adapter;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 
 import java.util.ArrayList;
 import java.util.Objects;

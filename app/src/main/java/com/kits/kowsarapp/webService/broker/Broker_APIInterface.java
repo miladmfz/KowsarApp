@@ -1,13 +1,11 @@
 package com.kits.kowsarapp.webService.broker;
 
-import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface Broker_APIInterface {
 

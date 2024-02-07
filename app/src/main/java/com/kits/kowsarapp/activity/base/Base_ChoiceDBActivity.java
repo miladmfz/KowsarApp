@@ -23,10 +23,10 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
-import com.kits.kowsarapp.model.Activation;
+import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.webService.base.APIClient_kowsar;
 import com.kits.kowsarapp.webService.base.APIInterface_kowsar;
 

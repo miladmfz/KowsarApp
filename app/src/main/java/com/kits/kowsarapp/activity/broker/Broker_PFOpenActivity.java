@@ -17,8 +17,8 @@ import com.kits.kowsarapp.adapter.broker.Broker_PFOpenAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.BrokerActivityPfopenBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.PreFactor;
+import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.base.PreFactor;
 
 import java.util.ArrayList;
 import java.util.Objects;

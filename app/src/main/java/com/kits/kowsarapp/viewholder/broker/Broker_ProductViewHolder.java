@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.App;
-import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.Product;
+import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.base.Product;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
 public class Broker_ProductViewHolder extends ChildViewHolder {

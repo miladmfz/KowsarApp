@@ -13,10 +13,10 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_ProductAdapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.Category;
+import com.kits.kowsarapp.model.base.Category;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.GoodGroup;
-import com.kits.kowsarapp.model.Product;
+import com.kits.kowsarapp.model.base.GoodGroup;
+import com.kits.kowsarapp.model.base.Product;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 

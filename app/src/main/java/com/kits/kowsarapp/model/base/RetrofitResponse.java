@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.model;
+package com.kits.kowsarapp.model.base;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -82,51 +82,51 @@ public class RetrofitResponse {
     //region $ getter setter
 
 
-    public ArrayList<com.kits.kowsarapp.model.Factor> getFactors() {
+    public ArrayList<com.kits.kowsarapp.model.base.Factor> getFactors() {
         return Factors;
     }
 
-    public void setFactors(ArrayList<com.kits.kowsarapp.model.Factor> factors) {
+    public void setFactors(ArrayList<com.kits.kowsarapp.model.base.Factor> factors) {
         Factors = factors;
     }
 
-    public ArrayList<com.kits.kowsarapp.model.Job> getJobs() {
+    public ArrayList<com.kits.kowsarapp.model.base.Job> getJobs() {
         return Jobs;
     }
 
-    public void setJobs(ArrayList<com.kits.kowsarapp.model.Job> jobs) {
+    public void setJobs(ArrayList<com.kits.kowsarapp.model.base.Job> jobs) {
         Jobs = jobs;
     }
 
-    public ArrayList<com.kits.kowsarapp.model.JobPerson> getJobPersons() {
+    public ArrayList<com.kits.kowsarapp.model.base.JobPerson> getJobPersons() {
         return JobPersons;
     }
 
-    public void setJobPersons(ArrayList<com.kits.kowsarapp.model.JobPerson> jobPersons) {
+    public void setJobPersons(ArrayList<com.kits.kowsarapp.model.base.JobPerson> jobPersons) {
         JobPersons = jobPersons;
     }
 
-    public com.kits.kowsarapp.model.Factor getFactor() {
+    public com.kits.kowsarapp.model.base.Factor getFactor() {
         return Factor;
     }
 
-    public void setFactor(com.kits.kowsarapp.model.Factor factor) {
+    public void setFactor(com.kits.kowsarapp.model.base.Factor factor) {
         Factor = factor;
     }
 
-    public com.kits.kowsarapp.model.Job getJob() {
+    public com.kits.kowsarapp.model.base.Job getJob() {
         return Job;
     }
 
-    public void setJob(com.kits.kowsarapp.model.Job job) {
+    public void setJob(com.kits.kowsarapp.model.base.Job job) {
         Job = job;
     }
 
-    public com.kits.kowsarapp.model.JobPerson getJobPerson() {
+    public com.kits.kowsarapp.model.base.JobPerson getJobPerson() {
         return JobPerson;
     }
 
-    public void setJobPerson(com.kits.kowsarapp.model.JobPerson jobPerson) {
+    public void setJobPerson(com.kits.kowsarapp.model.base.JobPerson jobPerson) {
         JobPerson = jobPerson;
     }
 
@@ -268,19 +268,19 @@ public class RetrofitResponse {
         Activations = activations;
     }
 
-    public ArrayList<com.kits.kowsarapp.model.Location> getLocations() {
+    public ArrayList<com.kits.kowsarapp.model.base.Location> getLocations() {
         return Locations;
     }
 
-    public void setLocations(ArrayList<com.kits.kowsarapp.model.Location> locations) {
+    public void setLocations(ArrayList<com.kits.kowsarapp.model.base.Location> locations) {
         Locations = locations;
     }
 
-    public com.kits.kowsarapp.model.Location getLocation() {
+    public com.kits.kowsarapp.model.base.Location getLocation() {
         return Location;
     }
 
-    public void setLocation(com.kits.kowsarapp.model.Location location) {
+    public void setLocation(com.kits.kowsarapp.model.base.Location location) {
         Location = location;
     }
     //endregion

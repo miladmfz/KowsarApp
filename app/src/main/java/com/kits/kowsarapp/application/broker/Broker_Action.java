@@ -28,8 +28,8 @@ import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 

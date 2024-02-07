@@ -12,16 +12,16 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.location.LocationResult;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.Activation;
-import com.kits.kowsarapp.model.Column;
-import com.kits.kowsarapp.model.Customer;
-import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.model.GoodGroup;
-import com.kits.kowsarapp.model.PreFactor;
-import com.kits.kowsarapp.model.ReplicationModel;
-import com.kits.kowsarapp.model.TableDetail;
-import com.kits.kowsarapp.model.UserInfo;
-import com.kits.kowsarapp.model.Utilities;
+import com.kits.kowsarapp.model.base.Activation;
+import com.kits.kowsarapp.model.base.Column;
+import com.kits.kowsarapp.model.base.Customer;
+import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.model.base.GoodGroup;
+import com.kits.kowsarapp.model.base.PreFactor;
+import com.kits.kowsarapp.model.base.ReplicationModel;
+import com.kits.kowsarapp.model.base.TableDetail;
+import com.kits.kowsarapp.model.base.UserInfo;
+import com.kits.kowsarapp.model.base.Utilities;
 
 import org.jetbrains.annotations.NotNull;
 

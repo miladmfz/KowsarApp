@@ -8,10 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.Activation;
-import com.kits.kowsarapp.model.Factor;
-import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.model.Utilities;
+import com.kits.kowsarapp.model.base.Activation;
+import com.kits.kowsarapp.model.base.Factor;
+import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.model.base.Utilities;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -29,7 +29,7 @@ import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityAboutusBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 
 import java.io.File;
 

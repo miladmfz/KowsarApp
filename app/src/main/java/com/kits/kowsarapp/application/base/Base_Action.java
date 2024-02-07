@@ -16,7 +16,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_NavActivity;
-import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.base.APIClient_kowsar;

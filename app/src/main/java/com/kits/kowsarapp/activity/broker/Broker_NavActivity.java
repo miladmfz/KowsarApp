@@ -47,8 +47,8 @@ import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.WManager;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.GoodGroup;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.GoodGroup;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.webService.base.APIClient;
 
 

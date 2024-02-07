@@ -18,8 +18,8 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.databinding.BrokerActivityBasketBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 
 import org.jetbrains.annotations.NotNull;
 

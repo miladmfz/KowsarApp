@@ -25,10 +25,10 @@ import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.model.Factor;
-import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.base.Factor;
+import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 
 import java.util.ArrayList;
 import java.util.Objects;

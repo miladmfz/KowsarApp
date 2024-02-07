@@ -1,6 +1,6 @@
 package com.kits.kowsarapp.webService.ocr;//package com.kits.test.webService;
 
-import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;

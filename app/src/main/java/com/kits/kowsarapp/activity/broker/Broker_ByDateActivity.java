@@ -26,8 +26,8 @@ import com.kits.kowsarapp.adapter.broker.Broker_GoodAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.BrokerActivityBydateBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import java.text.DecimalFormat;

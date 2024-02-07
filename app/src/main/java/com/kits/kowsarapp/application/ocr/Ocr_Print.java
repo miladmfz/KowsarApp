@@ -24,15 +24,15 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
-import com.kits.kowsarapp.model.AppPrinter;
-import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.base.AppPrinter;
+import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.jetbrains.annotations.NotNull;

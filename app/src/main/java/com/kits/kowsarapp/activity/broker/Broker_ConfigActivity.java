@@ -15,7 +15,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.BrokerActivityConfigBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 
 
 public class Broker_ConfigActivity extends AppCompatActivity {

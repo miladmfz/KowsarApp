@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
-import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 
 import java.io.File;
 import java.text.DecimalFormat;

@@ -20,12 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.Good;
+import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import java.util.ArrayList;
 
 import retrofit2.Call;

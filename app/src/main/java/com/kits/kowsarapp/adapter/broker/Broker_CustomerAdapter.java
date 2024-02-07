@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
-import com.kits.kowsarapp.model.Customer;
+import com.kits.kowsarapp.model.base.Customer;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.viewholder.broker.Broker_CustomerViewHolder;
 

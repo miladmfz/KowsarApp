@@ -33,7 +33,7 @@ import androidx.core.content.FileProvider;
 import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
 import com.kits.kowsarapp.adapter.ocr.Ocr_PaintView;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.R;
 

@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
-import com.kits.kowsarapp.model.Category;
-import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.base.Category;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
 

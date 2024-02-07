@@ -22,9 +22,9 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.Print;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.Good;
-import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.PreFactor;
+import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.base.PreFactor;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

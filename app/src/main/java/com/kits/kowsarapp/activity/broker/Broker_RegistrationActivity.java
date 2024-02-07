@@ -18,10 +18,10 @@ import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
 import com.kits.kowsarapp.databinding.BrokerActivityRegistrBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.NumberFunctions;
-import com.kits.kowsarapp.model.RetrofitResponse;
-import com.kits.kowsarapp.model.SellBroker;
-import com.kits.kowsarapp.model.UserInfo;
+import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
+import com.kits.kowsarapp.model.base.SellBroker;
+import com.kits.kowsarapp.model.base.UserInfo;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
