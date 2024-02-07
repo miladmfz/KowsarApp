@@ -120,7 +120,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
         holder.fac_view.setOnClickListener(v -> {
             callMethod.EditString("FactorDbName", factors.get(position).getDbname());
             if (!factors.get(position).getSignatureImage().equals("")) {
-                ImageView imageView=dialog.findViewById(R.id.o_signature_fromfactor);
+                ImageView imageView=dialog.findViewById(R.id.ocr_signature_fromfactor);
                 byte[] imageByteArray1;
                 imageByteArray1 = Base64.decode(dbh.getimagefromfactor(factors.get(position).getFactorBarcode(),"SignatureImage"), Base64.DEFAULT);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth()/2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight()/3, false));
@@ -295,17 +295,17 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
         facViewHolder(View itemView) {
             super(itemView);
 
-            fac_customer = itemView.findViewById(R.id.o_factorlocal_c_customer);
-            fac_customercode = itemView.findViewById(R.id.o_factorlocal_c_customercode);
-            fac_code = itemView.findViewById(R.id.o_factorlocal_c_code);
-            fac_signature = itemView.findViewById(R.id.o_factorlocal_c_signature);
-            fac_kowsardate = itemView.findViewById(R.id.o_factorlocal_c_kowsardate);
-            fac_scandate = itemView.findViewById(R.id.o_factorlocal_c_scandate);
-            fac_status = itemView.findViewById(R.id.o_factorlocal_c_status);
-            fac_factor = itemView.findViewById(R.id.o_factorlocal_c_factor);
-            fac_view = itemView.findViewById(R.id.o_factorlocal_c_view);
-            fac_send = itemView.findViewById(R.id.o_factorlocal_c_send);
-            fac_dlt = itemView.findViewById(R.id.o_factorlocal_c_dlt);
+            fac_customer = itemView.findViewById(R.id.ocr_factorlocal_c_customer);
+            fac_customercode = itemView.findViewById(R.id.ocr_factorlocal_c_customercode);
+            fac_code = itemView.findViewById(R.id.ocr_factorlocal_c_code);
+            fac_signature = itemView.findViewById(R.id.ocr_factorlocal_c_signature);
+            fac_kowsardate = itemView.findViewById(R.id.ocr_factorlocal_c_kowsardate);
+            fac_scandate = itemView.findViewById(R.id.ocr_factorlocal_c_scandate);
+            fac_status = itemView.findViewById(R.id.ocr_factorlocal_c_status);
+            fac_factor = itemView.findViewById(R.id.ocr_factorlocal_c_factor);
+            fac_view = itemView.findViewById(R.id.ocr_factorlocal_c_view);
+            fac_send = itemView.findViewById(R.id.ocr_factorlocal_c_send);
+            fac_dlt = itemView.findViewById(R.id.ocr_factorlocal_c_dlt);
 
             fac_rltv = itemView.findViewById(R.id.ocr_factorlocal_card);
         }

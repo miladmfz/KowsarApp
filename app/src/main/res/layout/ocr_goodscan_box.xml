@@ -16,19 +16,19 @@
 
 
     <TextView
-        android:id="@+id/o_goodscan_b_status"
+        android:id="@+id/ocr_goodscan_b_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=" "
         android:layout_margin="10dp"
         android:textSize="18sp"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/o_goodscan_b_recyclerView"
+        android:id="@+id/ocr_goodscan_b_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"/>
     <Button
-        android:id="@+id/o_goodscan_b_btn"
+        android:id="@+id/ocr_goodscan_b_btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="22sp"

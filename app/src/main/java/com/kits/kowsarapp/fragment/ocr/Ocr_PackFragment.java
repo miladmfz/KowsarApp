@@ -90,7 +90,7 @@ public class Ocr_PackFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ocr_fragment_pack, container, false);
-        ll_main = view.findViewById(R.id.o_pack_f_layout);
+        ll_main = view.findViewById(R.id.ocr_pack_f_layout);
         return view;
     }
 

@@ -16,7 +16,7 @@
 
         
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/o_packdetail_b_linejob"
+            android:id="@+id/ocr_packdetail_b_linejob"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
@@ -45,7 +45,7 @@
                 tools:ignore="RtlSymmetry" />
 
             <EditText
-                android:id="@+id/o_packdetail_b_packamount"
+                android:id="@+id/ocr_packdetail_b_packamount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -82,7 +82,7 @@
                 android:layout_weight="0.3">
 
                 <TextView
-                    android:id="@+id/o_packdetail_b_senddate"
+                    android:id="@+id/ocr_packdetail_b_senddate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.4"
@@ -92,7 +92,7 @@
                     android:textSize="20sp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/o_packdetail_b_btn5"
+                    android:id="@+id/ocr_packdetail_b_btn5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="4dp"
@@ -108,7 +108,7 @@
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/o_packdetail_b_send"
+            android:id="@+id/ocr_packdetail_b_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

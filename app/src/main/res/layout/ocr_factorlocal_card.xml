@@ -44,7 +44,7 @@
 
 
             <TextView
-                android:id="@+id/o_factorlocal_c_customer"
+                android:id="@+id/ocr_factorlocal_c_customer"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
                 android:layout_gravity="center"
@@ -88,7 +88,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/o_factorlocal_c_customercode"
+                    android:id="@+id/ocr_factorlocal_c_customercode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -104,7 +104,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/o_factorlocal_c_status"
+                android:id="@+id/ocr_factorlocal_c_status"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -145,7 +145,7 @@
                     android:textSize="12sp"/>
 
                 <TextView
-                    android:id="@+id/o_factorlocal_c_code"
+                    android:id="@+id/ocr_factorlocal_c_code"
                     android:background="@drawable/bg_round_selected"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -177,7 +177,7 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/o_factorlocal_c_signature"
+                    android:id="@+id/ocr_factorlocal_c_signature"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -220,7 +220,7 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/o_factorlocal_c_kowsardate"
+                    android:id="@+id/ocr_factorlocal_c_kowsardate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -252,7 +252,7 @@
 
 
                 <TextView
-                    android:id="@+id/o_factorlocal_c_scandate"
+                    android:id="@+id/ocr_factorlocal_c_scandate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -276,7 +276,7 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/o_factorlocal_c_factor"
+                android:id="@+id/ocr_factorlocal_c_factor"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -294,7 +294,7 @@
                 style="?attr/materialButtonOutlinedStyle" />
 
             <Button
-                android:id="@+id/o_factorlocal_c_view"
+                android:id="@+id/ocr_factorlocal_c_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -324,7 +324,7 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/o_factorlocal_c_send"
+                android:id="@+id/ocr_factorlocal_c_send"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -342,7 +342,7 @@
                 style="?attr/materialButtonOutlinedStyle" />
 
             <Button
-                android:id="@+id/o_factorlocal_c_dlt"
+                android:id="@+id/ocr_factorlocal_c_dlt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

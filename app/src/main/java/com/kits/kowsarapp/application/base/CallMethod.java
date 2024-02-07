@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.kits.kowsarapp.model.base.NumberFunctions;
+
 
 public class CallMethod extends Application {
     private final SharedPreferences shPref;
@@ -18,6 +20,22 @@ public class CallMethod extends Application {
         this.context = mContext;
         this.shPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
     }
+
+
+    public String NumberRegion(String String) {
+
+        if (ReadString("LANG").equals("fa")) {
+            return NumberFunctions.PerisanNumber(String);
+        } else if (ReadString("LANG").equals("ar")) {
+            return NumberFunctions.PerisanNumber(String);
+        } else {
+            return NumberFunctions.EnglishNumber(String);
+        }
+
+    }
+
+
+
 
     public void EditString(String Key, String Value) {
         sEdit = shPref.edit();

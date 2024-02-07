@@ -53,7 +53,7 @@
                         android:textColor="@color/black"
                         android:layout_weight="0.7"/>
                     <TextView
-                        android:id="@+id/o_goodscan_c_goodname"
+                        android:id="@+id/ocr_goodscan_c_goodname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
@@ -75,7 +75,7 @@
                         android:textColor="@color/black"
                         android:layout_weight="0.7"/>
                     <TextView
-                        android:id="@+id/o_goodscan_c_factoramount"
+                        android:id="@+id/ocr_goodscan_c_factoramount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
@@ -97,7 +97,7 @@
                         android:textColor="@color/black"
                         android:layout_weight="0.7"/>
                     <TextView
-                        android:id="@+id/o_goodscan_c_goodsellprice"
+                        android:id="@+id/ocr_goodscan_c_goodsellprice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
@@ -107,7 +107,7 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
             <ImageView
-                android:id="@+id/o_goodscan_c_image"
+                android:id="@+id/ocr_goodscan_c_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/no_photo"
@@ -124,7 +124,7 @@
             android:weightSum="1"
             >
             <Button
-                android:id="@+id/o_goodscan_c_btn"
+                android:id="@+id/ocr_goodscan_c_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"

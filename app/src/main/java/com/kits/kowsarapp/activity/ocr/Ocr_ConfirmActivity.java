@@ -69,7 +69,7 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog1.setContentView(R.layout.ocr_spinner_box);
-        TextView repw = dialog1.findViewById(R.id.o_spinner_text);
+        TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
 
@@ -110,8 +110,8 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
             arraygood_shortage.add(new String[]{"goodcode","amount "});
         }
 
-        ll_main = findViewById(R.id.c_confirm_a_layout);
-        ed_barcode = findViewById(R.id.c_confirm_a_barcode);
+        ll_main = findViewById(R.id.ocr_confirm_a_layout);
+        ed_barcode = findViewById(R.id.ocr_confirm_a_barcode);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -204,12 +204,12 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
                         if (factor.getAppIsControled().equals("0")) {
                             collectFragment.setFactor(factor);
                             collectFragment.setGoods(goods);
-                            fragmentTransaction.replace(R.id.c_confirm_a_framelayout, collectFragment);
+                            fragmentTransaction.replace(R.id.ocr_confirm_a_framelayout, collectFragment);
                             fragmentTransaction.commit();
                         } else if (factor.getAppIsPacked().equals("0")) {
                             packFragment.setFactor(factor);
                             packFragment.setGoods(goods);
-                            fragmentTransaction.replace(R.id.c_confirm_a_framelayout, packFragment);
+                            fragmentTransaction.replace(R.id.ocr_confirm_a_framelayout, packFragment);
                             fragmentTransaction.commit();
                         } else {
                             finish();

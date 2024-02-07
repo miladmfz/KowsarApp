@@ -78,7 +78,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog1.setContentView(R.layout.ocr_spinner_box);
-        TextView repw = dialog1.findViewById(R.id.o_spinner_text);
+        TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
         intent();
@@ -288,15 +288,15 @@ public class Ocr_PaintActivity extends AppCompatActivity {
 
         action =new Ocr_Action(Ocr_PaintActivity.this);
 
-        main_layout= findViewById(R.id.o_paint_a_mainlayout);
-        paint_layout= findViewById(R.id.o_paint_a_paint);
+        main_layout= findViewById(R.id.ocr_paint_a_mainlayout);
+        paint_layout= findViewById(R.id.ocr_paint_a_paint);
         main_layout.setGravity(Gravity.CENTER);
         paint_layout.setGravity(Gravity.CENTER);
 
-        paintView = findViewById(R.id.o_paint_a_paintView);
-        button = findViewById(R.id.o_paint_a_send);
+        paintView = findViewById(R.id.ocr_paint_a_paintView);
+        button = findViewById(R.id.ocr_paint_a_send);
 
-        ed_signexplain = findViewById(R.id.o_paint_a_explain);
+        ed_signexplain = findViewById(R.id.ocr_paint_a_explain);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         paintView.init(metrics);

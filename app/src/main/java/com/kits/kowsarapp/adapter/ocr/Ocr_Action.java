@@ -90,7 +90,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     }
     public void dialogProg() {
         dialogProg.setContentView(R.layout.ocr_spinner_box);
-        tv_rep = dialogProg.findViewById(R.id.o_spinner_text);
+        tv_rep = dialogProg.findViewById(R.id.ocr_spinner_text);
         tv_rep.setVisibility(View.GONE);
         dialogProg.show();
     }
@@ -101,29 +101,29 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         dialog.setContentView(R.layout.ocr_dialog_factordetail);
 
 
-        TextView tv_AppOCRFactorCode = dialog.findViewById(R.id.c_factordialog_d_appocrfactorcode);
-        TextView tv_AppTcPrintRef = dialog.findViewById(R.id.c_factordialog_d_apptcprintref);
-        TextView tv_AppControlDate = dialog.findViewById(R.id.c_factordialog_d_appcontroldate);
-        TextView tv_AppPackDate = dialog.findViewById(R.id.c_factordialog_d_apppackdate);
-        TextView tv_AppReader = dialog.findViewById(R.id.c_factordialog_d_appreader);
-        TextView tv_AppControler = dialog.findViewById(R.id.c_factordialog_d_appcontroler);
-        TextView tv_AppPacker = dialog.findViewById(R.id.c_factordialog_d_apppacker);
-        TextView tv_AppPackDeliverDate = dialog.findViewById(R.id.c_factordialog_d_apppackdeliverdate);
-        TextView tv_AppPackCount = dialog.findViewById(R.id.c_factordialog_d_apppackcount);
-        TextView tv_AppDeliverer = dialog.findViewById(R.id.c_factordialog_d_appdeliverer);
-        TextView tv_IsEdited = dialog.findViewById(R.id.c_factordialog_d_isedited);
-        TextView tv_HasSignature = dialog.findViewById(R.id.c_factordialog_d_hassignature);
+        TextView tv_AppOCRFactorCode = dialog.findViewById(R.id.ocr_factordialog_d_appocrfactorcode);
+        TextView tv_AppTcPrintRef = dialog.findViewById(R.id.ocr_factordialog_d_apptcprintref);
+        TextView tv_AppControlDate = dialog.findViewById(R.id.ocr_factordialog_d_appcontroldate);
+        TextView tv_AppPackDate = dialog.findViewById(R.id.ocr_factordialog_d_apppackdate);
+        TextView tv_AppReader = dialog.findViewById(R.id.ocr_factordialog_d_appreader);
+        TextView tv_AppControler = dialog.findViewById(R.id.ocr_factordialog_d_appcontroler);
+        TextView tv_AppPacker = dialog.findViewById(R.id.ocr_factordialog_d_apppacker);
+        TextView tv_AppPackDeliverDate = dialog.findViewById(R.id.ocr_factordialog_d_apppackdeliverdate);
+        TextView tv_AppPackCount = dialog.findViewById(R.id.ocr_factordialog_d_apppackcount);
+        TextView tv_AppDeliverer = dialog.findViewById(R.id.ocr_factordialog_d_appdeliverer);
+        TextView tv_IsEdited = dialog.findViewById(R.id.ocr_factordialog_d_isedited);
+        TextView tv_HasSignature = dialog.findViewById(R.id.ocr_factordialog_d_hassignature);
 
 
-        TextView tv_FactorPrivateCode = dialog.findViewById(R.id.c_factordialog_d_factorprivatecode);
-        TextView tv_FactorDate = dialog.findViewById(R.id.c_factordialog_d_factordate);
-        TextView tv_CustName = dialog.findViewById(R.id.c_factordialog_d_custName);
-        TextView tv_customercode = dialog.findViewById(R.id.c_factordialog_d_customercode);
-        TextView tv_Ersall = dialog.findViewById(R.id.c_factordialog_d_ersall);
-        TextView tv_BrokerName = dialog.findViewById(R.id.c_factordialog_d_brokername);
-        TextView tv_AppFactorState = dialog.findViewById(R.id.c_factordialog_d_appfactorstate);
-        Button btn_1 = dialog.findViewById(R.id.c_factordialog_d_btn1);
-        Button btn_2 = dialog.findViewById(R.id.c_factordialog_d_btn2);
+        TextView tv_FactorPrivateCode = dialog.findViewById(R.id.ocr_factordialog_d_factorprivatecode);
+        TextView tv_FactorDate = dialog.findViewById(R.id.ocr_factordialog_d_factordate);
+        TextView tv_CustName = dialog.findViewById(R.id.ocr_factordialog_d_custName);
+        TextView tv_customercode = dialog.findViewById(R.id.ocr_factordialog_d_customercode);
+        TextView tv_Ersall = dialog.findViewById(R.id.ocr_factordialog_d_ersall);
+        TextView tv_BrokerName = dialog.findViewById(R.id.ocr_factordialog_d_brokername);
+        TextView tv_AppFactorState = dialog.findViewById(R.id.ocr_factordialog_d_appfactorstate);
+        Button btn_1 = dialog.findViewById(R.id.ocr_factordialog_d_btn1);
+        Button btn_2 = dialog.findViewById(R.id.ocr_factordialog_d_btn2);
 
         tv_AppOCRFactorCode.setText(NumberFunctions.PerisanNumber(factor.getAppOCRFactorCode()));
         tv_AppTcPrintRef.setText(NumberFunctions.PerisanNumber(factor.getAppTcPrintRef()));
@@ -221,11 +221,11 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         dialog.setContentView(R.layout.ocr_packdetail_box);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 
-        MaterialButton btn_pack_h_send = dialog.findViewById(R.id.o_packdetail_b_send);
-        MaterialButton btn_pack_h_5 = dialog.findViewById(R.id.o_packdetail_b_btn5);
-        EditText ed_pack_h_amount = dialog.findViewById(R.id.o_packdetail_b_packamount);
+        MaterialButton btn_pack_h_send = dialog.findViewById(R.id.ocr_packdetail_b_send);
+        MaterialButton btn_pack_h_5 = dialog.findViewById(R.id.ocr_packdetail_b_btn5);
+        EditText ed_pack_h_amount = dialog.findViewById(R.id.ocr_packdetail_b_packamount);
 
-        ed_pack_h_date = dialog.findViewById(R.id.o_packdetail_b_senddate);
+        ed_pack_h_date = dialog.findViewById(R.id.ocr_packdetail_b_senddate);
 
         PersianCalendar persianCalendar = new PersianCalendar();
         String tmonthOfYear, tdayOfMonth;
@@ -237,7 +237,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         ed_pack_h_date.setText(NumberFunctions.PerisanNumber(date));
 
-        LinearLayoutCompat ll_pack_h_main = dialog.findViewById(R.id.o_packdetail_b_linejob);
+        LinearLayoutCompat ll_pack_h_main = dialog.findViewById(R.id.ocr_packdetail_b_linejob);
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
@@ -516,11 +516,11 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.ocr_gooddetail_box);
-        ImageView iv_good = dialog.findViewById(R.id.o_gooddetail_b_img);
-        TextView tv_good_1 = dialog.findViewById(R.id.o_gooddetail_b_tv1);
-        TextView tv_good_2 = dialog.findViewById(R.id.o_gooddetail_b_tv2);
-        TextView tv_good_3 = dialog.findViewById(R.id.o_gooddetail_b_tv3);
-        TextView tv_good_4 = dialog.findViewById(R.id.o_gooddetail_b_tv4);
+        ImageView iv_good = dialog.findViewById(R.id.ocr_gooddetail_b_img);
+        TextView tv_good_1 = dialog.findViewById(R.id.ocr_gooddetail_b_tv1);
+        TextView tv_good_2 = dialog.findViewById(R.id.ocr_gooddetail_b_tv2);
+        TextView tv_good_3 = dialog.findViewById(R.id.ocr_gooddetail_b_tv3);
+        TextView tv_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_tv4);
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
@@ -592,9 +592,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.ocr_goodscan_box);
-        RecyclerView goodscan_recycler = dialog.findViewById(R.id.o_goodscan_b_recyclerView);
-        Button goodscan_btn = dialog.findViewById(R.id.o_goodscan_b_btn);
-        TextView goodscan_tvstatus = dialog.findViewById(R.id.o_goodscan_b_status);
+        RecyclerView goodscan_recycler = dialog.findViewById(R.id.ocr_goodscan_b_recyclerView);
+        Button goodscan_btn = dialog.findViewById(R.id.ocr_goodscan_b_btn);
+        TextView goodscan_tvstatus = dialog.findViewById(R.id.ocr_goodscan_b_status);
 
 
         if (goodspass.size() > 0) {

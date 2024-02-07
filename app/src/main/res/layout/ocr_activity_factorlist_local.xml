@@ -14,14 +14,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/o_localfactor_a_appbar"
+            android:id="@+id/ocr_localfactor_a_appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             >
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/o_localfactor_a_toolbar"
+                android:id="@+id/ocr_localfactor_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_weight="1"
@@ -30,7 +30,7 @@
                 android:layout_gravity="center"
                 app:title="انتخاب فاکتور">
                 <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/o_localfactor_a_switch"
+                    android:id="@+id/ocr_localfactor_a_switch"
                     android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/o_localfactor_a_edtsearch"
+                android:id="@+id/ocr_localfactor_a_edtsearch"
                 android:hint="جستجو"
                 android:background="@drawable/bg_round_selected"
                 android:singleLine="true"
@@ -61,7 +61,7 @@
                 android:layout_weight="0.2"/>
 
             <TextView
-                android:id="@+id/o_localfactor_a_count"
+                android:id="@+id/ocr_localfactor_a_count"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
@@ -74,14 +74,14 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/o_localfactor_a_recyclerView"
+            android:id="@+id/ocr_localfactor_a_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/o_localfactor_a_fab"
+        android:id="@+id/ocr_localfactor_a_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

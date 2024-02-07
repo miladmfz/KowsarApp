@@ -16,11 +16,11 @@
             <EditText
                 android:layout_width="1dp"
                 android:layout_height="25dp"
-                android:id="@+id/c_confirm_a_barcode"
+                android:id="@+id/ocr_confirm_a_barcode"
                 android:background="@color/white"
                 android:visibility="visible"/>
             <FrameLayout
-                android:id="@+id/c_confirm_a_framelayout"
+                android:id="@+id/ocr_confirm_a_framelayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <com.google.android.material.card.MaterialCardView
@@ -30,14 +30,14 @@
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/grey_1000">
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/c_confirm_a_layout"
+                    android:id="@+id/ocr_confirm_a_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="2dp"
                     android:orientation="vertical"
                     android:background="@color/white">
                     <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/c_confirm_a_viewforwidth"
+                        android:id="@+id/ocr_confirm_a_viewforwidth"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:background="@color/grey_1000"/>

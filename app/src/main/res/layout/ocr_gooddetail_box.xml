@@ -17,7 +17,7 @@
         android:layout_margin="10dp"
         >
         <ImageView
-            android:id="@+id/o_gooddetail_b_img"
+            android:id="@+id/ocr_gooddetail_b_img"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:background="@drawable/no_photo"
@@ -37,7 +37,7 @@
                 android:textColor="@color/black"
                 android:layout_weight="0.5"/>
             <TextView
-                android:id="@+id/o_gooddetail_b_tv1"
+                android:id="@+id/ocr_gooddetail_b_tv1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
@@ -59,7 +59,7 @@
                 android:textColor="@color/black"
                 android:layout_weight="0.5"/>
             <TextView
-                android:id="@+id/o_gooddetail_b_tv2"
+                android:id="@+id/ocr_gooddetail_b_tv2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
@@ -82,7 +82,7 @@
                 android:textColor="@color/black"
                 android:layout_weight="0.5"/>
             <TextView
-                android:id="@+id/o_gooddetail_b_tv3"
+                android:id="@+id/ocr_gooddetail_b_tv3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
@@ -105,7 +105,7 @@
                 android:textColor="@color/black"
                 android:layout_weight="0.5"/>
             <TextView
-                android:id="@+id/o_gooddetail_b_tv4"
+                android:id="@+id/ocr_gooddetail_b_tv4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#393939</color>
-    <color name="colorPrimaryDark">#090909</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF3030</color>
 
 
     <color name="white">#ffffff</color>
-    <color name="black">#FF000000</color>
+    <color name="black">#000000</color>
 
     <color name="overlay_dark_10">#1A000000</color>
     <color name="overlay_dark_20">#33000000</color>
@@ -319,38 +319,6 @@
     <color name="grey_900">#212121</color>
     <color name="grey_1000">#1a1a1a</color>
 
-
-    <color name="color_black">#000000</color>
-    <color name="color_white">#FFFFFF</color>
-    <color name="color_red">#D50000</color>
-    <color name="color_sky">#0091EA</color>
-    <color name="color_green">#00C853</color>
-    <color name="color_yellow">#FFD600</color>
-    <color name="color_pink">#C51162</color>
-    <color name="color_indigo">#283593</color>
-    <color name="color_brown">#3E2723</color>
-    <color name="color_purple">#AA00FF</color>
-    <color name="color_blue">#2962FF</color>
-    <color name="color_orange">#FF6D00</color>
-
-
-
-    <array name="color">
-        <item type="color">#e91e63</item>
-        <item type="color">#9c27b0</item>
-        <item type="color">#673ab7</item>
-        <item type="color">#E53935</item>
-        <item type="color">#5677fc</item>
-        <item type="color">#689F38</item>
-        <item type="color">#03a9f4</item>
-        <item type="color">#00bcd4</item>
-        <item type="color">#009688</item>
-        <item type="color">#259b24</item>
-        <item type="color">#ff5722</item>
-        <item type="color">#795548</item>
-        <item type="color">#607d8b</item>
-        <item type="color">#ff9800</item>
-    </array>
 </resources>
 
 

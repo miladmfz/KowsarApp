@@ -71,7 +71,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog1.setContentView(R.layout.ocr_spinner_box);
-        TextView repw = dialog1.findViewById(R.id.o_spinner_text);
+        TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
         intent();
@@ -101,7 +101,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
         dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
-        main_layout = findViewById(R.id.o_factordetail_a_layout);
+        main_layout = findViewById(R.id.ocr_factordetail_a_layout);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         width =metrics.widthPixels;

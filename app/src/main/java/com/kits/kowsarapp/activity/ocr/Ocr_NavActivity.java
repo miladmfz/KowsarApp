@@ -67,7 +67,7 @@ public void Config() {
     action = new Ocr_Action(this);
     dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
-    toolbar = findViewById(R.id.o_main_a_toolbar);
+    toolbar = findViewById(R.id.ocr_main_a_toolbar);
     setSupportActionBar(toolbar);
     DrawerLayout drawer = findViewById(R.id.ocr_nav_drawer_layout);
     ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -83,9 +83,9 @@ public void Config() {
 
 
 
-    btn1 = findViewById(R.id.o_main_a_btn1);
-    btn2 = findViewById(R.id.o_main_a_btn2);
-    btn3 = findViewById(R.id.o_main_a_btn3);
+    btn1 = findViewById(R.id.ocr_main_a_btn1);
+    btn2 = findViewById(R.id.ocr_main_a_btn2);
+    btn3 = findViewById(R.id.ocr_main_a_btn3);
 
 }
 
@@ -164,7 +164,7 @@ public void Config() {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.ocr_scanner_box);
 
-            final EditText tv_scanner = dialog.findViewById(R.id.o_scanner_b_tv);
+            final EditText tv_scanner = dialog.findViewById(R.id.ocr_scanner_b_tv);
             dialog.show();
             tv_scanner.requestFocus();
             tv_scanner.postDelayed(() -> {

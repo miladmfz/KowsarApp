@@ -179,11 +179,11 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
         facViewHolder(View itemView) {
             super(itemView);
 
-            goodscan_goodname = itemView.findViewById(R.id.o_goodscan_c_goodname);
-            goodscan_factoramount = itemView.findViewById(R.id.o_goodscan_c_factoramount);
-            goodscan_goodsellprice = itemView.findViewById(R.id.o_goodscan_c_goodsellprice);
-            goodscan_image = itemView.findViewById(R.id.o_goodscan_c_image);
-            goodscan_btn = itemView.findViewById(R.id.o_goodscan_c_btn);
+            goodscan_goodname = itemView.findViewById(R.id.ocr_goodscan_c_goodname);
+            goodscan_factoramount = itemView.findViewById(R.id.ocr_goodscan_c_factoramount);
+            goodscan_goodsellprice = itemView.findViewById(R.id.ocr_goodscan_c_goodsellprice);
+            goodscan_image = itemView.findViewById(R.id.ocr_goodscan_c_image);
+            goodscan_btn = itemView.findViewById(R.id.ocr_goodscan_c_btn);
 
         }
     }

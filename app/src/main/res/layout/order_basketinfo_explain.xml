@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/order_basketinfo_explain_box"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_round_selected"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:gravity="center"
+            android:text="@string/goodorder_explain"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/ord_basketexplain_b_spinnerexplain"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.3"
+            android:gravity="center" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <EditText
+        android:id="@+id/ord_basketexplain_b_explain_tv"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:background="@drawable/bg_round_selected"
+        android:focusable="true"
+        android:gravity="center"
+        android:hint="@string/basketinfo_edexplain"
+        android:inputType="text"
+        android:singleLine="true">
+
+
+    </EditText>
+
+
+    <Button
+        android:id="@+id/ord_basketexplain_b_explain_btn"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="@string/basketinfo_setexplain"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:backgroundTint="#D5BC9D"
+        app:strokeColor="#B96838" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

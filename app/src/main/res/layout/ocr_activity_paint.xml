@@ -35,7 +35,7 @@
 
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/o_paint_a_mainlayout"
+                android:id="@+id/ocr_paint_a_mainlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -43,13 +43,13 @@
 
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/o_paint_a_paint"
+                android:id="@+id/ocr_paint_a_paint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/white">
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/o_paint_a_send"
+                    android:id="@+id/ocr_paint_a_send"
                     android:layout_width="match_parent"
                     android:layout_height="100sp"
                     android:backgroundTint="@color/green_700"
@@ -69,7 +69,7 @@
                         android:layout_gravity="center"
                         android:gravity="center" />
                     <EditText
-                        android:id="@+id/o_paint_a_explain"
+                        android:id="@+id/ocr_paint_a_explain"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
@@ -79,7 +79,7 @@
 
                 <com.kits.kowsarapp.adapter.ocr.Ocr_PaintView
 
-                    android:id="@+id/o_paint_a_paintView"
+                    android:id="@+id/ocr_paint_a_paintView"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
                     android:background="@color/white"

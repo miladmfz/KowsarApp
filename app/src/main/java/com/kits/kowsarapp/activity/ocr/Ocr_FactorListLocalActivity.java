@@ -64,7 +64,7 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog1.setContentView(R.layout.ocr_spinner_box);
-        TextView repw = dialog1.findViewById(R.id.o_spinner_text);
+        TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
         intent();
@@ -93,14 +93,14 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
-        factor_header_recycler = findViewById(R.id.o_localfactor_a_recyclerView);
-        fab = findViewById(R.id.o_localfactor_a_fab);
+        factor_header_recycler = findViewById(R.id.ocr_localfactor_a_recyclerView);
+        fab = findViewById(R.id.ocr_localfactor_a_fab);
         //fab.setVisibility(View.VISIBLE);
 
-        textView_Count = findViewById(R.id.o_localfactor_a_count);
-        toolbar = findViewById(R.id.o_localfactor_a_toolbar);
-        edtsearch = findViewById(R.id.o_localfactor_a_edtsearch);
-        mySwitch_activestack = findViewById(R.id.o_localfactor_a_switch);
+        textView_Count = findViewById(R.id.ocr_localfactor_a_count);
+        toolbar = findViewById(R.id.ocr_localfactor_a_toolbar);
+        edtsearch = findViewById(R.id.ocr_localfactor_a_edtsearch);
+        mySwitch_activestack = findViewById(R.id.ocr_localfactor_a_switch);
 
         setSupportActionBar(toolbar);
         handler = new Handler();

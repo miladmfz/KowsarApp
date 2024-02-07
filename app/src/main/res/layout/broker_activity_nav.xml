@@ -24,6 +24,6 @@
         android:background="@color/white"
         app:itemTextColor="@color/grey_900"
         app:itemIconTint="@color/grey_900"
-        app:menu="@menu/broker_navigation_drawer"
+        app:menu="@menu/broker_navigation_drawer_menu"
         android:layout_gravity="start" />
 </androidx.drawerlayout.widget.DrawerLayout>

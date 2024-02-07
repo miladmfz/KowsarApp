@@ -96,7 +96,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog1.setContentView(R.layout.ocr_spinner_box);
-        TextView repw = dialog1.findViewById(R.id.o_spinner_text);
+        TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
 
 
@@ -134,18 +134,18 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         handler=new Handler();
-        prog = findViewById(R.id.o_onlinefactor_a_prog);
+        prog = findViewById(R.id.ocr_onlinefactor_a_prog);
 
-        Toolbar toolbar = findViewById(R.id.o_onlinefactor_a_toolbar);
+        Toolbar toolbar = findViewById(R.id.ocr_onlinefactor_a_toolbar);
         setSupportActionBar(toolbar);
 
-        factor_list_recycler=findViewById(R.id.o_onlinefactor_a_recyclerView);
-        textView_Count=findViewById(R.id.o_onlinefactor_a_count);
-        textView_status=findViewById(R.id.o_onlinefactor_a_Tvstatus);
-        edtsearch = findViewById(R.id.o_onlinefactor_a_edtsearch);
-        RadioEdited= findViewById(R.id.o_onlinefactor_a_edited);
-        RadioShortage= findViewById(R.id.o_onlinefactor_a_shortage);
-        spinnerPath= findViewById(R.id.o_onlinefactor_a_path);
+        factor_list_recycler=findViewById(R.id.ocr_onlinefactor_a_recyclerView);
+        textView_Count=findViewById(R.id.ocr_onlinefactor_a_count);
+        textView_status=findViewById(R.id.ocr_onlinefactor_a_Tvstatus);
+        edtsearch = findViewById(R.id.ocr_onlinefactor_a_edtsearch);
+        RadioEdited= findViewById(R.id.ocr_onlinefactor_a_edited);
+        RadioShortage= findViewById(R.id.ocr_onlinefactor_a_shortage);
+        spinnerPath= findViewById(R.id.ocr_onlinefactor_a_path);
 
     }
 

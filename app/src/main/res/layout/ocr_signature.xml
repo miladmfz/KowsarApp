@@ -12,7 +12,7 @@
 
     <ImageView
 
-        android:id="@+id/o_signature_fromfactor"
+        android:id="@+id/ocr_signature_fromfactor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

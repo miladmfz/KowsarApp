@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/c_factordialog_d_ll"
+            android:id="@+id/ocr_factordialog_d_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -42,7 +42,7 @@
 
                     <TextView
 
-                        android:id="@+id/c_factordialog_d_factorprivatecode"
+                        android:id="@+id/ocr_factordialog_d_factorprivatecode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
@@ -62,7 +62,7 @@
                         android:textSize="19sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_factordate"
+                        android:id="@+id/ocr_factordialog_d_factordate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -98,7 +98,7 @@
                         android:textSize="20sp" />
                     
                     <TextView
-                        android:id="@+id/c_factordialog_d_appocrfactorcode"
+                        android:id="@+id/ocr_factordialog_d_appocrfactorcode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -117,7 +117,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_apptcprintref"
+                        android:id="@+id/ocr_factordialog_d_apptcprintref"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -153,7 +153,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_ersall"
+                        android:id="@+id/ocr_factordialog_d_ersall"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -172,7 +172,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_customercode"
+                        android:id="@+id/ocr_factordialog_d_customercode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -208,7 +208,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_custName"
+                        android:id="@+id/ocr_factordialog_d_custName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -245,7 +245,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_brokername"
+                        android:id="@+id/ocr_factordialog_d_brokername"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -280,7 +280,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_appfactorstate"
+                        android:id="@+id/ocr_factordialog_d_appfactorstate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -316,7 +316,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_appcontroldate"
+                        android:id="@+id/ocr_factordialog_d_appcontroldate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -350,7 +350,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_apppackdate"
+                        android:id="@+id/ocr_factordialog_d_apppackdate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -385,7 +385,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_appreader"
+                        android:id="@+id/ocr_factordialog_d_appreader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -420,7 +420,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_appcontroler"
+                        android:id="@+id/ocr_factordialog_d_appcontroler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -455,7 +455,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_apppacker"
+                        android:id="@+id/ocr_factordialog_d_apppacker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -491,7 +491,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_appdeliverer"
+                        android:id="@+id/ocr_factordialog_d_appdeliverer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -526,7 +526,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_apppackcount"
+                        android:id="@+id/ocr_factordialog_d_apppackcount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -544,7 +544,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_apppackdeliverdate"
+                        android:id="@+id/ocr_factordialog_d_apppackdeliverdate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -583,7 +583,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_isedited"
+                        android:id="@+id/ocr_factordialog_d_isedited"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -601,7 +601,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/c_factordialog_d_hassignature"
+                        android:id="@+id/ocr_factordialog_d_hassignature"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
@@ -630,7 +630,7 @@
 
 
                     <Button
-                        android:id="@+id/c_factordialog_d_btn1"
+                        android:id="@+id/ocr_factordialog_d_btn1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="لغو تحویل"
@@ -642,7 +642,7 @@
                         android:layout_weight="0.5"/>
 
                     <Button
-                        android:id="@+id/c_factordialog_d_btn2"
+                        android:id="@+id/ocr_factordialog_d_btn2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="اصلاح اطلاعات"

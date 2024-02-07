@@ -282,9 +282,148 @@ public class Good implements Serializable {
     private String ErrMessage;
 
 
+    @SerializedName("GoodImageName")
+    private String GoodImageName;
+
+
+
+    @SerializedName("Amount")
+    private String Amount;
+
+    @SerializedName("RowCode")
+    private String RowCode;
+    @SerializedName("Explain")
+    private String Explain;
+
+
+    @SerializedName("ErrDesc")
+    private String ErrDesc;
+
+    @SerializedName("SumFacAmount")
+    private String SumFacAmount;
+
+    @SerializedName("CountGood")
+    private String CountGood;
+
+    @SerializedName("PreFactorCode")
+    private String PreFactorCode;
+
+    @SerializedName("FactorCode")
+    private String FactorCode;
+
+    @SerializedName("AppBasketInfoRef")
+    private String AppBasketInfoRef;
+
+
+    @SerializedName("AppBasketInfoCode")
+    private String AppBasketInfoCode;
+
+
+    @SerializedName("InfoState")
+    private String InfoState;
+
+
 
 
     //region $ getter setter
+
+
+    public String getGoodImageName() {
+        return GoodImageName;
+    }
+
+    public void setGoodImageName(String goodImageName) {
+        GoodImageName = goodImageName;
+    }
+
+    public String getAmount() {
+        return Amount;
+    }
+
+    public void setAmount(String amount) {
+        Amount = amount;
+    }
+
+    public String getRowCode() {
+        return RowCode;
+    }
+
+    public void setRowCode(String rowCode) {
+        RowCode = rowCode;
+    }
+
+    public String getExplain() {
+        return Explain;
+    }
+
+    public void setExplain(String explain) {
+        Explain = explain;
+    }
+
+    public String getErrDesc() {
+        return ErrDesc;
+    }
+
+    public void setErrDesc(String errDesc) {
+        ErrDesc = errDesc;
+    }
+
+    public String getSumFacAmount() {
+        return SumFacAmount;
+    }
+
+    public void setSumFacAmount(String sumFacAmount) {
+        SumFacAmount = sumFacAmount;
+    }
+
+    public String getCountGood() {
+        return CountGood;
+    }
+
+    public void setCountGood(String countGood) {
+        CountGood = countGood;
+    }
+
+    public String getPreFactorCode() {
+        return PreFactorCode;
+    }
+
+    public void setPreFactorCode(String preFactorCode) {
+        PreFactorCode = preFactorCode;
+    }
+
+    public String getFactorCode() {
+        return FactorCode;
+    }
+
+    public void setFactorCode(String factorCode) {
+        FactorCode = factorCode;
+    }
+
+    public String getAppBasketInfoRef() {
+        return AppBasketInfoRef;
+    }
+
+    public void setAppBasketInfoRef(String appBasketInfoRef) {
+        AppBasketInfoRef = appBasketInfoRef;
+    }
+
+    public String getAppBasketInfoCode() {
+        return AppBasketInfoCode;
+    }
+
+    public void setAppBasketInfoCode(String appBasketInfoCode) {
+        AppBasketInfoCode = appBasketInfoCode;
+    }
+
+    public String getInfoState() {
+        return InfoState;
+    }
+
+    public void setInfoState(String infoState) {
+        InfoState = infoState;
+    }
+
     public boolean isCheck() {
         return Check;
     }

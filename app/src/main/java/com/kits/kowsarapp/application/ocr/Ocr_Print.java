@@ -90,7 +90,7 @@ public class Ocr_Print {
     public void dialogProg() {
 
         dialogProg.setContentView(R.layout.ocr_spinner_box);
-        tv_rep = dialogProg.findViewById(R.id.o_spinner_text);
+        tv_rep = dialogProg.findViewById(R.id.ocr_spinner_text);
         dialogProg.show();
 
     }
@@ -171,7 +171,7 @@ public class Ocr_Print {
         dialogprint = new Dialog(mContext);
         dialogprint.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogprint.setContentView(R.layout.ocr_printview_box);
-        main_layout = dialogprint.findViewById(R.id.o_printview_b_ll);
+        main_layout = dialogprint.findViewById(R.id.ocr_printview_b_ll);
         main_layout.setGravity(Gravity.CENTER);
 
         if (callMethod.ReadString("Category").equals("2")){

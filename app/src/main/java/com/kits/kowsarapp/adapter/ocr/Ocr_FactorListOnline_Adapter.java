@@ -245,19 +245,19 @@ public class Ocr_FactorListOnline_Adapter extends RecyclerView.Adapter<Ocr_Facto
         facViewHolder(View itemView) {
             super(itemView);
 
-            fac_customer = itemView.findViewById(R.id.o_factoronline_c_customer);
-            fac_customercode = itemView.findViewById(R.id.o_factoronline_c_customercode);
-            fac_factor_explain_ll = itemView.findViewById(R.id.o_factoronline_c_ll_explain);
-            fac_factor_state_ll = itemView.findViewById(R.id.o_factoronline_c_ll_state);
-            fac_stackclass = itemView.findViewById(R.id.o_factoronline_c_stackclass);
+            fac_customer = itemView.findViewById(R.id.ocr_factoronline_c_customer);
+            fac_customercode = itemView.findViewById(R.id.ocr_factoronline_c_customercode);
+            fac_factor_explain_ll = itemView.findViewById(R.id.ocr_factoronline_c_ll_explain);
+            fac_factor_state_ll = itemView.findViewById(R.id.ocr_factoronline_c_ll_state);
+            fac_stackclass = itemView.findViewById(R.id.ocr_factoronline_c_stackclass);
 
-            fac_code = itemView.findViewById(R.id.o_factoronline_c_privatecode);
-            fac_hasedite = itemView.findViewById(R.id.o_factoronline_c_hasedited);
-            fac_hasshortage = itemView.findViewById(R.id.o_factoronline_c_hasshortage);
-            fac_kowsardate = itemView.findViewById(R.id.o_factoronline_c_kowsardate);
-            fac_state = itemView.findViewById(R.id.o_factoronline_c_state);
-            fac_factor_btn = itemView.findViewById(R.id.o_factoronline_c_btn);
-            fac_explain = itemView.findViewById(R.id.o_factoronline_c_explain);
+            fac_code = itemView.findViewById(R.id.ocr_factoronline_c_privatecode);
+            fac_hasedite = itemView.findViewById(R.id.ocr_factoronline_c_hasedited);
+            fac_hasshortage = itemView.findViewById(R.id.ocr_factoronline_c_hasshortage);
+            fac_kowsardate = itemView.findViewById(R.id.ocr_factoronline_c_kowsardate);
+            fac_state = itemView.findViewById(R.id.ocr_factoronline_c_state);
+            fac_factor_btn = itemView.findViewById(R.id.ocr_factoronline_c_btn);
+            fac_explain = itemView.findViewById(R.id.ocr_factoronline_c_explain);
 
             fac_rltv = itemView.findViewById(R.id.ocr_factoronline_card);
         }

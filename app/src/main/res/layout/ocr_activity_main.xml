@@ -13,12 +13,12 @@
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/o_main_a_appbar"
+            android:id="@+id/ocr_main_a_appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/o_main_a_toolbar"
+                android:id="@+id/ocr_main_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_weight="1"
@@ -41,7 +41,7 @@
 
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/o_main_a_btn1"
+                android:id="@+id/ocr_main_a_btn1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -54,7 +54,7 @@
 
             <com.google.android.material.button.MaterialButton
 
-                android:id="@+id/o_main_a_btn2"
+                android:id="@+id/ocr_main_a_btn2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -66,7 +66,7 @@
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/o_main_a_btn3"
+                android:id="@+id/ocr_main_a_btn3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"

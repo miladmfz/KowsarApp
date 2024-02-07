@@ -1,6 +1,8 @@
 package com.kits.kowsarapp.model.base;
 
 import com.google.gson.annotations.SerializedName;
+import com.kits.kowsarapp.model.order.Order_BasketInfo;
+import com.kits.kowsarapp.model.order.Order_RstMiz;
 
 import java.util.ArrayList;
 
@@ -77,10 +79,111 @@ public class RetrofitResponse {
     private JobPerson JobPerson;
 
 
+    @SerializedName("RstMiz")
+    private Order_RstMiz orderRstMiz;
+    @SerializedName("Group")
+    private GoodGroup group;
+    @SerializedName("BasketInfo")
+    private Order_BasketInfo orderBasketInfo;
+    @SerializedName("ObjectType")
+    private ObjectType objectType;
+
+
+    @SerializedName("RstMizs")
+    private ArrayList<Order_RstMiz> orderRstMizs;
+    @SerializedName("BasketInfos")
+    private ArrayList<Order_BasketInfo> orderBasketInfos;
+
+
+    @SerializedName("Values")
+    private ArrayList<DistinctValue> Values;
+
+
+    @SerializedName("Groups")
+    private ArrayList<GoodGroup> Groups;
+
+    @SerializedName("ObjectTypes")
+    private ArrayList<ObjectType> ObjectTypes;
+
+
+
+
 
 
     //region $ getter setter
 
+
+    public Order_RstMiz getRstMiz() {
+        return orderRstMiz;
+    }
+
+    public void setRstMiz(Order_RstMiz orderRstMiz) {
+        this.orderRstMiz = orderRstMiz;
+    }
+
+    public GoodGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(GoodGroup group) {
+        this.group = group;
+    }
+
+    public Order_BasketInfo getBasketInfo() {
+        return orderBasketInfo;
+    }
+
+    public void setBasketInfo(Order_BasketInfo orderBasketInfo) {
+        this.orderBasketInfo = orderBasketInfo;
+    }
+
+    public ObjectType getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(ObjectType objectType) {
+        this.objectType = objectType;
+    }
+
+    public ArrayList<Order_RstMiz> getRstMizs() {
+        return orderRstMizs;
+    }
+
+    public void setRstMizs(ArrayList<Order_RstMiz> orderRstMizs) {
+        this.orderRstMizs = orderRstMizs;
+    }
+
+    public ArrayList<Order_BasketInfo> getBasketInfos() {
+        return orderBasketInfos;
+    }
+
+    public void setBasketInfos(ArrayList<Order_BasketInfo> orderBasketInfos) {
+        this.orderBasketInfos = orderBasketInfos;
+    }
+
+    public ArrayList<DistinctValue> getValues() {
+        return Values;
+    }
+
+    public void setValues(ArrayList<DistinctValue> values) {
+        Values = values;
+    }
+
+    public ArrayList<GoodGroup> getGroups() {
+        return Groups;
+    }
+
+    public void setGroups(ArrayList<GoodGroup> groups) {
+        Groups = groups;
+    }
+
+    public ArrayList<ObjectType> getObjectTypes() {
+        return ObjectTypes;
+    }
+
+    public void setObjectTypes(ArrayList<ObjectType> objectTypes) {
+        ObjectTypes = objectTypes;
+    }
 
     public ArrayList<com.kits.kowsarapp.model.base.Factor> getFactors() {
         return Factors;

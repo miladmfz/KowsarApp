@@ -270,7 +270,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             });
         }
 
-        navigationView.inflateMenu(R.menu.broker_navigation_drawer);
+        navigationView.inflateMenu(R.menu.broker_navigation_drawer_menu);
 
 
         if (callMethod.ReadString("PersianCompanyNameUse").equals("اصلی")) {

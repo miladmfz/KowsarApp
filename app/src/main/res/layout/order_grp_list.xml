@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="start"
+    android:layout_margin="2dp"
+    android:background="@drawable/bg_round_blue"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
+
+    <LinearLayout
+
+
+        android:id="@+id/grp_list"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/grp_list_image"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layoutDirection="rtl"
+            tools:ignore="ContentDescription"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/grp_list_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="@string/grplist_name"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/grp_list_imgv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+
+</FrameLayout>

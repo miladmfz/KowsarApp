@@ -15,7 +15,7 @@
         >
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/c_config_a_toolbar"
+            android:id="@+id/ocr_config_a_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_weight="1"
@@ -35,7 +35,7 @@
         android:orientation="vertical"
         android:layout_margin="4dp">
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/c_config_a_btn"
+            android:id="@+id/ocr_config_a_btn"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:backgroundTint="@color/green_700"
@@ -43,7 +43,7 @@
             android:text="ثبت تغییرات"
             />
         <ImageView
-            android:id="@+id/c_config_a_logo"
+            android:id="@+id/ocr_config_a_logo"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"/>
@@ -63,7 +63,7 @@
                 android:textStyle="bold"
                 android:layout_weight="0.5"/>
             <TextView
-                android:id="@+id/c_config_a_deliverer"
+                android:id="@+id/ocr_config_a_deliverer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
@@ -90,7 +90,7 @@
                 android:layout_weight="0.5"/>
 
             <Spinner
-                android:id="@+id/c_config_a_spinnercategory"
+                android:id="@+id/ocr_config_a_spinnercategory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="30sp"
@@ -105,7 +105,7 @@
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/c_config_a_line_stack"
+            android:id="@+id/ocr_config_a_line_stack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -125,7 +125,7 @@
                     android:textStyle="bold"
                     android:layout_weight="0.5"/>
                 <TextView
-                    android:id="@+id/c_config_a_laststack"
+                    android:id="@+id/ocr_config_a_laststack"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="22sp"
@@ -151,7 +151,7 @@
                     android:textStyle="bold"
                     android:layout_weight="0.5"/>
                 <Spinner
-                    android:id="@+id/c_config_a_spinnerstacks"
+                    android:id="@+id/ocr_config_a_spinnerstacks"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="30sp"
@@ -178,7 +178,7 @@
                 android:textStyle="bold"
                 android:layout_weight="0.5"/>
             <Spinner
-                android:id="@+id/c_config_a_spinnerjob"
+                android:id="@+id/ocr_config_a_spinnerjob"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="30sp"
@@ -203,7 +203,7 @@
                 android:textStyle="bold"
                 android:layout_weight="0.5"/>
             <Spinner
-                android:id="@+id/c_config_a_spinnerjobperson"
+                android:id="@+id/ocr_config_a_spinnerjobperson"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="30sp"
@@ -233,7 +233,7 @@
                 />
 
             <EditText
-                android:id="@+id/c_config_a_titlesize"
+                android:id="@+id/ocr_config_a_titlesize"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/edittest1"
@@ -255,7 +255,7 @@
 
             <TextView
                 android:visibility="invisible"
-                android:id="@+id/c_config_a_bodysize"
+                android:id="@+id/ocr_config_a_bodysize"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="0.5"
@@ -279,7 +279,7 @@
                 android:layout_weight="0.5" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/c_config_a_arabictext"
+                android:id="@+id/ocr_config_a_arabictext"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.75" />

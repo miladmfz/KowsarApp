@@ -107,7 +107,7 @@ public class Ocr_CollectFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         view= inflater.inflate(R.layout.ocr_fragment_collect, container, false);
-        ll_main = view.findViewById(R.id.o_collect_f_layout);
+        ll_main = view.findViewById(R.id.ocr_collect_f_layout);
 
         return view;
     }
@@ -128,7 +128,7 @@ public class Ocr_CollectFragment extends Fragment {
         width =metrics.widthPixels;
         dialogProg = new Dialog(requireActivity());
         dialogProg.setContentView(R.layout.ocr_spinner_box);
-        dialogProg.findViewById(R.id.o_spinner_text).setVisibility(View.GONE);
+        dialogProg.findViewById(R.id.ocr_spinner_text).setVisibility(View.GONE);
         CreateView_Control();
 
     }

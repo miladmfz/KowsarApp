@@ -25,8 +25,55 @@ public class GoodGroup {
     private Integer ChildNo;
 
 
+    @SerializedName("GoodGroupImageName")
+    private String GoodGroupImageName;
+
 
     //region $ getter setter
+
+    public Integer getGoodGroupCode() {
+        return GoodGroupCode;
+    }
+
+    public Integer getGroupCode() {
+        return GroupCode;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public Integer getL1() {
+        return L1;
+    }
+
+    public Integer getL2() {
+        return L2;
+    }
+
+    public Integer getL3() {
+        return L3;
+    }
+
+    public Integer getL4() {
+        return L4;
+    }
+
+    public Integer getL5() {
+        return L5;
+    }
+
+    public Integer getChildNo() {
+        return ChildNo;
+    }
+
+    public String getGoodGroupImageName() {
+        return GoodGroupImageName;
+    }
+
+    public void setGoodGroupImageName(String goodGroupImageName) {
+        GoodGroupImageName = goodGroupImageName;
+    }
 
     public String getGoodGroupFieldValue(String AKey) {
 

@@ -91,17 +91,17 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         works.add("تحویل");
         works.add("مدیریت");
 
-        spinnerPath=findViewById(R.id.c_config_a_spinnerstacks);
-        spinnercategory =findViewById(R.id.c_config_a_spinnercategory);
-        spinnerjob =findViewById(R.id.c_config_a_spinnerjob);
-        spinnerjobperson =findViewById(R.id.c_config_a_spinnerjobperson);
-        ed_Deliverer =findViewById(R.id.c_config_a_deliverer);
-        tv_laststack =findViewById(R.id.c_config_a_laststack);
-        ll_Stack=findViewById(R.id.c_config_a_line_stack);
-        btn_config =findViewById(R.id.c_config_a_btn);
-        ed_titlesize = findViewById(R.id.c_config_a_titlesize);
-        sm_arabictext = findViewById(R.id.c_config_a_arabictext);
-        ImageView img_logo = findViewById(R.id.c_config_a_logo);
+        spinnerPath=findViewById(R.id.ocr_config_a_spinnerstacks);
+        spinnercategory =findViewById(R.id.ocr_config_a_spinnercategory);
+        spinnerjob =findViewById(R.id.ocr_config_a_spinnerjob);
+        spinnerjobperson =findViewById(R.id.ocr_config_a_spinnerjobperson);
+        ed_Deliverer =findViewById(R.id.ocr_config_a_deliverer);
+        tv_laststack =findViewById(R.id.ocr_config_a_laststack);
+        ll_Stack=findViewById(R.id.ocr_config_a_line_stack);
+        btn_config =findViewById(R.id.ocr_config_a_btn);
+        ed_titlesize = findViewById(R.id.ocr_config_a_titlesize);
+        sm_arabictext = findViewById(R.id.ocr_config_a_arabictext);
+        ImageView img_logo = findViewById(R.id.ocr_config_a_logo);
 
         Glide.with(img_logo)
                 .asBitmap()
