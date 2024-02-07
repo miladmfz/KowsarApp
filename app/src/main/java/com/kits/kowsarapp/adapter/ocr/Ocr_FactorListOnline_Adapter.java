@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
-import com.kits.kowsarapp.activity.ocr.Ocr_FactorActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_FactorDetailActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.Factor;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -34,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_FactorList_Adapter extends RecyclerView.Adapter<Ocr_FactorList_Adapter.facViewHolder> {
+public class Ocr_FactorListOnline_Adapter extends RecyclerView.Adapter<Ocr_FactorListOnline_Adapter.facViewHolder> {
     Ocr_APIInterface apiInterface ;
     Ocr_APIInterface secendApiInterface ;
 
@@ -47,7 +47,7 @@ public class Ocr_FactorList_Adapter extends RecyclerView.Adapter<Ocr_FactorList_
     CallMethod callMethod;
 
     Ocr_DBH dbh;
-    public Ocr_FactorList_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
+    public Ocr_FactorListOnline_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
         this.ocrAction =new Ocr_Action(context);
@@ -62,7 +62,7 @@ public class Ocr_FactorList_Adapter extends RecyclerView.Adapter<Ocr_FactorList_
     @NonNull
     @Override
     public facViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.factor_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ocr_factoronline_card, parent, false);
         return new facViewHolder(view);
     }
 
@@ -183,7 +183,7 @@ public class Ocr_FactorList_Adapter extends RecyclerView.Adapter<Ocr_FactorList_
                                     if (response.isSuccessful()) {
                                         assert response.body() != null;
                                         if (response.body().getFactors().get(0).getErrCode().equals("0")) {
-                                            intent = new Intent(mContext, Ocr_FactorActivity.class);
+                                            intent = new Intent(mContext, Ocr_FactorDetailActivity.class);
                                             intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                                             intent.putExtra("FactorImage", "");
                                             mContext.startActivity(intent);
@@ -245,21 +245,21 @@ public class Ocr_FactorList_Adapter extends RecyclerView.Adapter<Ocr_FactorList_
         facViewHolder(View itemView) {
             super(itemView);
 
-            fac_customer = itemView.findViewById(R.id.factor_list_customer);
-            fac_customercode = itemView.findViewById(R.id.factor_list_customercode);
-            fac_factor_explain_ll = itemView.findViewById(R.id.factor_list_ll_explain);
-            fac_factor_state_ll = itemView.findViewById(R.id.factor_list_ll_state);
-            fac_stackclass = itemView.findViewById(R.id.factor_list_stackclass);
+            fac_customer = itemView.findViewById(R.id.o_factoronline_c_customer);
+            fac_customercode = itemView.findViewById(R.id.o_factoronline_c_customercode);
+            fac_factor_explain_ll = itemView.findViewById(R.id.o_factoronline_c_ll_explain);
+            fac_factor_state_ll = itemView.findViewById(R.id.o_factoronline_c_ll_state);
+            fac_stackclass = itemView.findViewById(R.id.o_factoronline_c_stackclass);
 
-            fac_code = itemView.findViewById(R.id.factor_list_privatecode);
-            fac_hasedite = itemView.findViewById(R.id.factor_list_hasedited);
-            fac_hasshortage = itemView.findViewById(R.id.factor_list_hasshortage);
-            fac_kowsardate = itemView.findViewById(R.id.factor_list_kowsardate);
-            fac_state = itemView.findViewById(R.id.factor_list_state);
-            fac_factor_btn = itemView.findViewById(R.id.factor_list_btn);
-            fac_explain = itemView.findViewById(R.id.factor_list_explain);
+            fac_code = itemView.findViewById(R.id.o_factoronline_c_privatecode);
+            fac_hasedite = itemView.findViewById(R.id.o_factoronline_c_hasedited);
+            fac_hasshortage = itemView.findViewById(R.id.o_factoronline_c_hasshortage);
+            fac_kowsardate = itemView.findViewById(R.id.o_factoronline_c_kowsardate);
+            fac_state = itemView.findViewById(R.id.o_factoronline_c_state);
+            fac_factor_btn = itemView.findViewById(R.id.o_factoronline_c_btn);
+            fac_explain = itemView.findViewById(R.id.o_factoronline_c_explain);
 
-            fac_rltv = itemView.findViewById(R.id.factor_list);
+            fac_rltv = itemView.findViewById(R.id.ocr_factoronline_card);
         }
     }
 

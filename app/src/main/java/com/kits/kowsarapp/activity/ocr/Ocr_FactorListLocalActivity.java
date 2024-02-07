@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.kits.kowsarapp.adapter.ocr.Ocr_LocalFactorList_Adapter;
+import com.kits.kowsarapp.adapter.ocr.Ocr_FactorListLocal_Adapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.Factor;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
@@ -33,9 +33,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class Ocr_LocalFactorListActivity extends AppCompatActivity {
+public class Ocr_FactorListLocalActivity extends AppCompatActivity {
     private Ocr_DBH dbh;
-    Ocr_LocalFactorList_Adapter adapter;
+    Ocr_FactorListLocal_Adapter adapter;
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_header_recycler;
     private EditText edtsearch;
@@ -58,13 +58,13 @@ public class Ocr_LocalFactorListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_factor_list);
+        setContentView(R.layout.ocr_activity_factorlist_local);
 
         Dialog dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.rep_prog);
-        TextView repw = dialog1.findViewById(R.id.rep_prog_text);
+        dialog1.setContentView(R.layout.ocr_spinner_box);
+        TextView repw = dialog1.findViewById(R.id.o_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
         intent();
@@ -93,14 +93,14 @@ public class Ocr_LocalFactorListActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
-        factor_header_recycler = findViewById(R.id.factor_headerActivity_recyclerView);
-        fab = findViewById(R.id.factor_headerActivity_fab);
+        factor_header_recycler = findViewById(R.id.o_localfactor_a_recyclerView);
+        fab = findViewById(R.id.o_localfactor_a_fab);
         //fab.setVisibility(View.VISIBLE);
 
-        textView_Count = findViewById(R.id.factorheaderActivity_count);
-        toolbar = findViewById(R.id.factor_headerActivity_toolbar);
-        edtsearch = findViewById(R.id.factorheaderActivity_edtsearch);
-        mySwitch_activestack = findViewById(R.id.factorheaderActivityswitch);
+        textView_Count = findViewById(R.id.o_localfactor_a_count);
+        toolbar = findViewById(R.id.o_localfactor_a_toolbar);
+        edtsearch = findViewById(R.id.o_localfactor_a_edtsearch);
+        mySwitch_activestack = findViewById(R.id.o_localfactor_a_switch);
 
         setSupportActionBar(toolbar);
         handler = new Handler();
@@ -145,7 +145,7 @@ public class Ocr_LocalFactorListActivity extends AppCompatActivity {
 
             }
             factors = dbh.factorscan(IsSent, srch, signature);
-            adapter = new Ocr_LocalFactorList_Adapter(factors, this, width);
+            adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
             if (adapter.getItemCount() == 0) {
                 callMethod.showToast("فاکتوری یافت نشد");
             }
@@ -177,7 +177,7 @@ public class Ocr_LocalFactorListActivity extends AppCompatActivity {
                             callMethod.EditString("Last_search", srch);
                             factors = dbh.factorscan(IsSent, srch, signature);
 
-                            adapter = new Ocr_LocalFactorList_Adapter(factors, Ocr_LocalFactorListActivity.this, width);
+                            adapter = new Ocr_FactorListLocal_Adapter(factors, Ocr_FactorListLocalActivity.this, width);
                             if (adapter.getItemCount() == 0) {
                                 callMethod.showToast("فاکتوری یافت نشد");
                             }
@@ -195,7 +195,7 @@ public class Ocr_LocalFactorListActivity extends AppCompatActivity {
                 });
 
 
-        adapter = new Ocr_LocalFactorList_Adapter(factors, this, width);
+        adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
         if (adapter.getItemCount() == 0) {
             callMethod.showToast("فاکتوری یافت نشد");
         }
@@ -227,7 +227,7 @@ public class Ocr_LocalFactorListActivity extends AppCompatActivity {
             Multi_sign.clear();
             adapter.multi_select = false;
 
-            adapter = new Ocr_LocalFactorList_Adapter(factors, this, width);
+            adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
             factor_header_recycler.setLayoutManager(gridLayoutManager);
             factor_header_recycler.setAdapter(adapter);
@@ -264,7 +264,7 @@ public class Ocr_LocalFactorListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(this, Ocr_LocalFactorListActivity.class);
+        intent = new Intent(this, Ocr_FactorListLocalActivity.class);
         intent.putExtra("IsSent", IsSent);
         intent.putExtra("signature", signature);
         startActivity(intent);

@@ -23,6 +23,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
+import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Print;
 import com.kits.kowsarapp.model.Factor;
@@ -103,8 +106,8 @@ public class Ocr_CollectFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view= inflater.inflate(R.layout.fragment_collect, container, false);
-        ll_main = view.findViewById(R.id.collectfragment_layout);
+        view= inflater.inflate(R.layout.ocr_fragment_collect, container, false);
+        ll_main = view.findViewById(R.id.o_collect_f_layout);
 
         return view;
     }
@@ -124,8 +127,8 @@ public class Ocr_CollectFragment extends Fragment {
         view.getDisplay().getMetrics(metrics);
         width =metrics.widthPixels;
         dialogProg = new Dialog(requireActivity());
-        dialogProg.setContentView(R.layout.rep_prog);
-        dialogProg.findViewById(R.id.rep_prog_text).setVisibility(View.GONE);
+        dialogProg.setContentView(R.layout.ocr_spinner_box);
+        dialogProg.findViewById(R.id.o_spinner_text).setVisibility(View.GONE);
         CreateView_Control();
 
     }
@@ -222,7 +225,7 @@ public class Ocr_CollectFragment extends Fragment {
             }else{
                 call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
             }
-            call.enqueue(new Callback<>() {
+            call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
@@ -265,7 +268,7 @@ public class Ocr_CollectFragment extends Fragment {
 
 
 
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if(response.isSuccessful()) {
@@ -274,7 +277,7 @@ public class Ocr_CollectFragment extends Fragment {
                             if(conter[0]==b){
 
                                 assert response.body() != null;
-                                intent = new Intent(requireActivity(), ConfirmActivity.class);
+                                intent = new Intent(requireActivity(), Ocr_ConfirmActivity.class);
                                 intent.putExtra("ScanResponse", BarcodeScan);
                                 intent.putExtra("State", "0");
                                 intent.putExtra("FactorImage", "");
@@ -303,7 +306,7 @@ public class Ocr_CollectFragment extends Fragment {
             btn_send.setVisibility(View.GONE);
             btn_confirm.setText("بازگشت به صفحه اصلی");
             btn_confirm.setOnClickListener(v -> {
-                intent = new Intent(requireActivity(), NavActivity.class);
+                intent = new Intent(requireActivity(), Ocr_NavActivity.class);
                 startActivity(intent);
                 requireActivity().finish();
             });
@@ -421,7 +424,7 @@ public class Ocr_CollectFragment extends Fragment {
         tv_total_price.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         btn_confirm.setTextColor(requireActivity().getColor(R.color.white));
         btn_send.setTextColor(requireActivity().getColor(R.color.white));
-        btn_shortage.setTextColor(requireActivity().getColor(R.color.Black));
+        btn_shortage.setTextColor(requireActivity().getColor(R.color.black));
     }
 
     public void setPadding(){
@@ -491,10 +494,10 @@ public class Ocr_CollectFragment extends Fragment {
         ll_radif_check.setWeightSum(5);
         ll_name_price.setWeightSum(9);
 
-        vp_name_amount.setBackgroundResource(R.color.Black);
-        vp_amount_price.setBackgroundResource(R.color.Black);
-        vp_rows.setBackgroundResource(R.color.Black);
-        vp_radif_name.setBackgroundResource(R.color.Black);
+        vp_name_amount.setBackgroundResource(R.color.black);
+        vp_amount_price.setBackgroundResource(R.color.black);
+        vp_rows.setBackgroundResource(R.color.black);
+        vp_radif_name.setBackgroundResource(R.color.black);
 
         ll_radif_check.setGravity(Gravity.CENTER);
         checkBox.setGravity(Gravity.CENTER_VERTICAL);
@@ -579,7 +582,7 @@ public class Ocr_CollectFragment extends Fragment {
                 GoodCodeCheck.remove(b);
             }
         });
-        tv_goodname.setOnClickListener(v -> image_zome_view(goods_visible.get(fa).getGoodCode()));
+        tv_goodname.setOnClickListener(v -> image_zome_view((goods_visible.get(fa).getGoodCode()).toString()));
     }
 
 
@@ -603,7 +606,7 @@ public class Ocr_CollectFragment extends Fragment {
 
 
 
-            call.enqueue(new Callback<>() {
+            call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
@@ -621,12 +624,12 @@ public class Ocr_CollectFragment extends Fragment {
 
 
             btn_confirm.setBackgroundResource(R.color.grey_60);
-            btn_confirm.setTextColor(requireActivity().getColor(R.color.Black));
+            btn_confirm.setTextColor(requireActivity().getColor(R.color.black));
             btn_confirm.setEnabled(false);
             callMethod.showToast("اماده ارسال می باشد");
         }else{
             btn_send.setBackgroundResource(R.color.grey_60);
-            btn_send.setTextColor(requireActivity().getColor(R.color.Black));
+            btn_send.setTextColor(requireActivity().getColor(R.color.black));
             btn_send.setEnabled(false);
         }
     }
@@ -634,7 +637,7 @@ public class Ocr_CollectFragment extends Fragment {
 
     public void image_zome_view(String GoodCode) {
 
-        Action action=new Action(requireActivity());
+        Ocr_Action action=new Ocr_Action(requireActivity());
         action.good_detail(GoodCode);
 
     }

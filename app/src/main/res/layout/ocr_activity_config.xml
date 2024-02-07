@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ocr.Ocr_ConfigActivity"
+    android:orientation="vertical"
+    android:layoutDirection="rtl">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/factor_headerActivity_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/c_config_a_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_weight="1"
+            app:titleTextColor="@color/white"
+            android:background="?attr/colorPrimary"
+            android:layout_gravity="center"
+            app:title="انتخاب فاکتور">
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="4dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/c_config_a_btn"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:backgroundTint="@color/green_700"
+            android:textSize="22sp"
+            android:text="ثبت تغییرات"
+            />
+        <ImageView
+            android:id="@+id/c_config_a_logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"/>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="نام تحویل دهنده:"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+            <TextView
+                android:id="@+id/c_config_a_deliverer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textColor="@color/black"/>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="3dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="گروه کاری:"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+
+            <Spinner
+                android:id="@+id/c_config_a_spinnercategory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:scrollbarSize="25sp"
+
+                />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/c_config_a_line_stack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            android:weightSum="1">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="طبقه ی فعلی:"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_weight="0.5"/>
+                <TextView
+                    android:id="@+id/c_config_a_laststack"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_weight="0.5"
+                    android:inputType="numberDecimal"
+                    android:gravity="center"/>
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="انتخاب طبقه :"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_weight="0.5"/>
+                <Spinner
+                    android:id="@+id/c_config_a_spinnerstacks"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:layout_weight="0.5"
+                    android:scrollbarSize="25sp"
+                    />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="انتخاب سمت :"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+            <Spinner
+                android:id="@+id/c_config_a_spinnerjob"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:scrollbarSize="25sp"
+                />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="انتخاب شخص :"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+            <Spinner
+                android:id="@+id/c_config_a_spinnerjobperson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:scrollbarSize="25sp"
+                />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:visibility="invisible">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="سایز عنوان ها"
+                android:textColor="@color/grey_1000"
+                android:layout_weight="0.5"
+                />
+
+            <EditText
+                android:id="@+id/c_config_a_titlesize"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/edittest1"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:inputType="number"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="سایز اطلاعات"
+                android:textColor="@color/grey_1000"
+                android:layout_weight="0.5"
+                android:visibility="invisible"
+                />
+
+            <TextView
+                android:visibility="invisible"
+                android:id="@+id/c_config_a_bodysize"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="22sp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/ArabicText"
+                android:layout_weight="0.5" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/c_config_a_arabictext"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:visibility="invisible" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

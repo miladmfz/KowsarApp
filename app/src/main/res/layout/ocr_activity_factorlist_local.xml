@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    android:layoutDirection="rtl"
+    tools:context=".activity.ocr.Ocr_FactorListLocalActivity">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/o_localfactor_a_appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/o_localfactor_a_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_weight="1"
+                app:titleTextColor="@color/white"
+                android:background="?attr/colorPrimary"
+                android:layout_gravity="center"
+                app:title="انتخاب فاکتور">
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/o_localfactor_a_switch"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:text="بدون امضا"
+                    android:textColor="@color/white" />
+            </androidx.appcompat.widget.Toolbar>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/o_localfactor_a_edtsearch"
+                android:hint="جستجو"
+                android:background="@drawable/bg_round_selected"
+                android:singleLine="true"
+                android:selectAllOnFocus="true"
+                android:autofillHints=""
+                android:inputType="text"
+                android:layout_weight="0.2"/>
+
+            <TextView
+                android:id="@+id/o_localfactor_a_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/grey_1000"
+                />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/o_localfactor_a_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/o_localfactor_a_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/ic_baseline_attach_file_24"
+        android:visibility="gone"
+        app:backgroundTint="@color/red_800"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal" />
+
+</RelativeLayout>

@@ -42,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_FactorActivity extends AppCompatActivity {
+public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
     Ocr_APIInterface apiInterface ;
     Ocr_APIInterface secendApiInterface ;
@@ -66,12 +66,12 @@ public class Ocr_FactorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_factor);
+        setContentView(R.layout.ocr_activity_factordetail);
         Dialog dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.rep_prog);
-        TextView repw = dialog1.findViewById(R.id.rep_prog_text);
+        dialog1.setContentView(R.layout.ocr_spinner_box);
+        TextView repw = dialog1.findViewById(R.id.o_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
         intent();
@@ -101,7 +101,7 @@ public class Ocr_FactorActivity extends AppCompatActivity {
         dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
-        main_layout = findViewById(R.id.factor_layout);
+        main_layout = findViewById(R.id.o_factordetail_a_layout);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         width =metrics.widthPixels;
@@ -170,7 +170,7 @@ public class Ocr_FactorActivity extends AppCompatActivity {
             button.setTextColor(getColor(R.color.white));
             button.setOnClickListener(v -> {
 
-                intent = new Intent(Ocr_FactorActivity.this, Ocr_PaintActivity.class);
+                intent = new Intent(Ocr_FactorDetailActivity.this, Ocr_PaintActivity.class);
                 intent.putExtra("ScanResponse", BarcodeScan);
                 intent.putExtra("FactorImage", "hasimage");
                 intent.putExtra("Width", String.valueOf(width));
@@ -446,7 +446,7 @@ public class Ocr_FactorActivity extends AppCompatActivity {
         button.setTextColor(getColor(R.color.white));
         button.setOnClickListener(v -> {
 
-            intent = new Intent(Ocr_FactorActivity.this, Ocr_PaintActivity.class);
+            intent = new Intent(Ocr_FactorDetailActivity.this, Ocr_PaintActivity.class);
             intent.putExtra("ScanResponse", BarcodeScan);
             intent.putExtra("FactorImage", "hasimage");
             intent.putExtra("Width", String.valueOf(width));
@@ -473,7 +473,7 @@ public class Ocr_FactorActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(Ocr_FactorActivity.this, Ocr_FactorActivity.class);
+        intent = new Intent(Ocr_FactorDetailActivity.this, Ocr_FactorDetailActivity.class);
         intent.putExtra("ScanResponse", BarcodeScan);
         intent.putExtra("FactorImage", bitmap_factor_base64);
         startActivity(intent);

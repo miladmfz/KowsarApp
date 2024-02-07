@@ -26,8 +26,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 
-import com.kits.kowsarapp.activity.ocr.Ocr_FactorActivity;
-import com.kits.kowsarapp.activity.ocr.Ocr_LocalFactorListActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_FactorDetailActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.Factor;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -44,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalFactorList_Adapter.facViewHolder> {
+public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_FactorListLocal_Adapter.facViewHolder> {
     Ocr_APIInterface apiInterface ;
     Ocr_APIInterface secendApiInterface;
 
@@ -59,7 +59,7 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
     CallMethod callMethod;
 
 
-    public Ocr_LocalFactorList_Adapter(ArrayList<Factor> factors, Context context, Integer metrics) {
+    public Ocr_FactorListLocal_Adapter(ArrayList<Factor> factors, Context context, Integer metrics) {
         this.mContext = context;
         this.factors = factors;
         this.ocrAction = new Ocr_Action(context);
@@ -67,7 +67,7 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
         dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.signature);
+        dialog.setContentView(R.layout.ocr_signature);
         this.width =metrics;
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
@@ -78,7 +78,7 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
     @NonNull
     @Override
     public facViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.factor_header, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ocr_factorlocal_card, parent, false);
         return new facViewHolder(view);
     }
 
@@ -108,7 +108,7 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
 
         holder.fac_factor.setOnClickListener(v -> {
             callMethod.EditString("FactorDbName", factors.get(position).getDbname());
-            intent = new Intent(mContext, Ocr_FactorActivity.class);
+            intent = new Intent(mContext, Ocr_FactorDetailActivity.class);
             intent.putExtra("ScanResponse", factors.get(position).getFactorBarcode());
             intent.putExtra("FactorImage", "hasimage");
             mContext.startActivity(intent);
@@ -120,7 +120,7 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
         holder.fac_view.setOnClickListener(v -> {
             callMethod.EditString("FactorDbName", factors.get(position).getDbname());
             if (!factors.get(position).getSignatureImage().equals("")) {
-                ImageView imageView=dialog.findViewById(R.id.imageview_fromfactor);
+                ImageView imageView=dialog.findViewById(R.id.o_signature_fromfactor);
                 byte[] imageByteArray1;
                 imageByteArray1 = Base64.decode(dbh.getimagefromfactor(factors.get(position).getFactorBarcode(),"SignatureImage"), Base64.DEFAULT);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth()/2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight()/3, false));
@@ -139,7 +139,7 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
 
         holder.fac_rltv.setOnClickListener(v -> {
             if (multi_select) {
-                Ocr_LocalFactorListActivity activity = (Ocr_LocalFactorListActivity) mContext;
+                Ocr_FactorListLocalActivity activity = (Ocr_FactorListLocalActivity) mContext;
 
                 holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());
                 factors.get(position).setCheck(!factors.get(position).isCheck());
@@ -171,9 +171,9 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
 
             final Dialog dialog = new Dialog(mContext);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.loginconfig);
-            EditText ed_password =  dialog.findViewById(R.id.edloginconfig);
-            MaterialButton btn_login =  dialog.findViewById(R.id.btnloginconfig);
+            dialog.setContentView(R.layout.default_loginconfig);
+            EditText ed_password =  dialog.findViewById(R.id.d_loginconfig_ed);
+            MaterialButton btn_login =  dialog.findViewById(R.id.d_loginconfig_btn);
 
             btn_login.setOnClickListener(v -> {
                 if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode")))
@@ -195,7 +195,7 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 if(response.isSuccessful()) {
                                     dbh.deletescan(factors.get(position).getFactorBarcode());
-                                    intent = new Intent(mContext, Ocr_LocalFactorListActivity.class);
+                                    intent = new Intent(mContext, Ocr_FactorListLocalActivity.class);
                                     intent.putExtra("IsSent", "0");
                                     intent.putExtra("signature", "0");
                                     ((Activity) mContext).finish();
@@ -237,7 +237,7 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
         holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_baseline_attach_file_24));
         holder.fac_rltv.setChecked(factors.get(position).isCheck());
         holder.fac_rltv.setOnLongClickListener(view -> {
-            Ocr_LocalFactorListActivity activity = (Ocr_LocalFactorListActivity) mContext;
+            Ocr_FactorListLocalActivity activity = (Ocr_FactorListLocalActivity) mContext;
 
             multi_select = true;
             holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());
@@ -295,19 +295,19 @@ public class Ocr_LocalFactorList_Adapter extends RecyclerView.Adapter<Ocr_LocalF
         facViewHolder(View itemView) {
             super(itemView);
 
-            fac_customer = itemView.findViewById(R.id.factor_header_customer);
-            fac_customercode = itemView.findViewById(R.id.factor_header_customercode);
-            fac_code = itemView.findViewById(R.id.factor_header_code);
-            fac_signature = itemView.findViewById(R.id.factor_header_signature);
-            fac_kowsardate = itemView.findViewById(R.id.factor_header_kowsardate);
-            fac_scandate = itemView.findViewById(R.id.factor_header_scandate);
-            fac_status = itemView.findViewById(R.id.factor_header_status);
-            fac_factor = itemView.findViewById(R.id.factor_header_factor);
-            fac_view = itemView.findViewById(R.id.factor_header_view);
-            fac_send = itemView.findViewById(R.id.factor_header_send);
-            fac_dlt = itemView.findViewById(R.id.factor_header_dlt);
+            fac_customer = itemView.findViewById(R.id.o_factorlocal_c_customer);
+            fac_customercode = itemView.findViewById(R.id.o_factorlocal_c_customercode);
+            fac_code = itemView.findViewById(R.id.o_factorlocal_c_code);
+            fac_signature = itemView.findViewById(R.id.o_factorlocal_c_signature);
+            fac_kowsardate = itemView.findViewById(R.id.o_factorlocal_c_kowsardate);
+            fac_scandate = itemView.findViewById(R.id.o_factorlocal_c_scandate);
+            fac_status = itemView.findViewById(R.id.o_factorlocal_c_status);
+            fac_factor = itemView.findViewById(R.id.o_factorlocal_c_factor);
+            fac_view = itemView.findViewById(R.id.o_factorlocal_c_view);
+            fac_send = itemView.findViewById(R.id.o_factorlocal_c_send);
+            fac_dlt = itemView.findViewById(R.id.o_factorlocal_c_dlt);
 
-            fac_rltv = itemView.findViewById(R.id.factor_header);
+            fac_rltv = itemView.findViewById(R.id.ocr_factorlocal_card);
         }
     }
 

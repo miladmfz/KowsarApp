@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ocr_factordetail_dialog"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/c_factordialog_d_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="کد فاکتور : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+
+                        android:id="@+id/c_factordialog_d_factorprivatecode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="تاریخ : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_factordate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="19sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="کد بایگانی: "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+                    
+                    <TextView
+                        android:id="@+id/c_factordialog_d_appocrfactorcode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="کد پرینت : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_apptcprintref"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="منطقه : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_ersall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="کد مشتری : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_customercode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="نام مشتری : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_custName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="بازایاب : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_brokername"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="وضعیت فاکتور : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_appfactorstate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="تاریخ اتمام انبار : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_appcontroldate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="تاریخ اتمام بسته بندی : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_apppackdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="اعلام کننده : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_appreader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="کنترل کننده : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_appcontroler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="بسته بند  : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_apppacker"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="تحویل دهنده: "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_appdeliverer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="تعداد : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_apppackcount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="خروج : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_apppackdeliverdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="19sp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="اصلاحی : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_isedited"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="امضا : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/c_factordialog_d_hassignature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+
+                    <Button
+                        android:id="@+id/c_factordialog_d_btn1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="لغو تحویل"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:layout_margin="4dp"
+                        app:backgroundTint="@null"
+                        android:background="@drawable/bg_round_selected"
+                        android:layout_weight="0.5"/>
+
+                    <Button
+                        android:id="@+id/c_factordialog_d_btn2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="اصلاح اطلاعات"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:layout_margin="4dp"
+                        app:backgroundTint="@null"
+                        android:background="@drawable/bg_round_selected"
+                        android:layout_weight="0.5"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
+
+</LinearLayout>

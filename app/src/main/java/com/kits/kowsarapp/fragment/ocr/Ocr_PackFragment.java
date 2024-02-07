@@ -27,18 +27,19 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
-import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.activity.ConfirmActivity;
-import com.kits.ocrkowsar.activity.NavActivity;
-import com.kits.ocrkowsar.adapter.Action;
-import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
-import com.kits.ocrkowsar.model.Good;
-import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
+import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
+import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.Factor;
+import com.kits.kowsarapp.model.Good;
+import com.kits.kowsarapp.model.NumberFunctions;
+import com.kits.kowsarapp.model.RetrofitResponse;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.webService.base.APIClient;
+import com.kits.kowsarapp.webService.ocr.APIClientSecond;
+import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -50,10 +51,10 @@ import retrofit2.Response;
 public class Ocr_PackFragment extends Fragment{
 
 
-    APIInterface apiInterface;
-    APIInterface secendApiInterface;
-    DatabaseHelper dbh;
-    Action action;
+    Ocr_APIInterface apiInterface;
+    Ocr_APIInterface secendApiInterface;
+    Ocr_DBH dbh;
+    Ocr_Action action;
     ArrayList<String> GoodCodeCheck = new ArrayList<>();
     ArrayList<String[]> arraygood_shortage = new ArrayList<>();
     LinearLayoutCompat ll_main;
@@ -88,8 +89,8 @@ public class Ocr_PackFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_pack, container, false);
-        ll_main = view.findViewById(R.id.packfragment_layout);
+        view = inflater.inflate(R.layout.ocr_fragment_pack, container, false);
+        ll_main = view.findViewById(R.id.o_pack_f_layout);
         return view;
     }
 
@@ -99,10 +100,10 @@ public class Ocr_PackFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         callMethod = new CallMethod(requireActivity());
-        dbh = new DatabaseHelper(requireActivity(), callMethod.ReadString("DatabaseName"));
-        action=new Action(requireActivity());
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        dbh = new Ocr_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
+        action=new Ocr_Action(requireActivity());
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         handler = new Handler();
         for (final String[] ignored : arraygood_shortage) {
             arraygood_shortage.add(new String[]{"goodcode", "amount "});
@@ -215,13 +216,13 @@ public class Ocr_PackFragment extends Fragment{
 
 
 
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
                             conter[0] = conter[0] + 1;
                             if (conter[0] == b) {
-                                intent = new Intent(requireActivity(), ConfirmActivity.class);
+                                intent = new Intent(requireActivity(), Ocr_ConfirmActivity.class);
 
                                 intent.putExtra("ScanResponse", BarcodeScan);
                                 intent.putExtra("State", "1");
@@ -247,7 +248,7 @@ public class Ocr_PackFragment extends Fragment{
             btn_send.setVisibility(View.GONE);
             btn_confirm.setText("بازگشت به صفحه اصلی");
             btn_confirm.setOnClickListener(v -> {
-                intent = new Intent(requireActivity(), NavActivity.class);
+                intent = new Intent(requireActivity(), Ocr_NavActivity.class);
                 startActivity(intent);
                 requireActivity().finish();
             });
@@ -303,10 +304,10 @@ public class Ocr_PackFragment extends Fragment{
         ll_radif_check.setWeightSum(5);
         ll_name_price.setWeightSum(9);
 
-        vp_name_amount.setBackgroundResource(R.color.Black);
-        vp_amount_price.setBackgroundResource(R.color.Black);
-        vp_rows.setBackgroundResource(R.color.Black);
-        vp_radif_name.setBackgroundResource(R.color.Black);
+        vp_name_amount.setBackgroundResource(R.color.black);
+        vp_amount_price.setBackgroundResource(R.color.black);
+        vp_rows.setBackgroundResource(R.color.black);
+        vp_radif_name.setBackgroundResource(R.color.black);
 
         ll_radif_check.setGravity(Gravity.CENTER);
         checkBox.setGravity(Gravity.CENTER_VERTICAL);
@@ -384,7 +385,7 @@ public class Ocr_PackFragment extends Fragment{
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view(goods.get(fa).getGoodCode()));
+        tv_goodname.setOnClickListener(v -> image_zome_view((goods.get(fa).getGoodCode()).toString()));
 
 
         return ll_factor_row;
@@ -472,7 +473,7 @@ public class Ocr_PackFragment extends Fragment{
                 }
 
 
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
@@ -499,7 +500,7 @@ public class Ocr_PackFragment extends Fragment{
             btn_send.setVisibility(View.GONE);
             btn_confirm.setText("بازگشت به صفحه اصلی");
             btn_confirm.setOnClickListener(v -> {
-                intent = new Intent(requireActivity(), NavActivity.class);
+                intent = new Intent(requireActivity(), Ocr_NavActivity.class);
                 startActivity(intent);
                 requireActivity().finish();
             });
@@ -553,10 +554,10 @@ public class Ocr_PackFragment extends Fragment{
         ll_radif_check.setWeightSum(5);
         ll_name_price.setWeightSum(9);
 
-        vp_name_amount.setBackgroundResource(R.color.Black);
-        vp_amount_price.setBackgroundResource(R.color.Black);
-        vp_rows.setBackgroundResource(R.color.Black);
-        vp_radif_name.setBackgroundResource(R.color.Black);
+        vp_name_amount.setBackgroundResource(R.color.black);
+        vp_amount_price.setBackgroundResource(R.color.black);
+        vp_rows.setBackgroundResource(R.color.black);
+        vp_radif_name.setBackgroundResource(R.color.black);
 
         ll_radif_check.setGravity(Gravity.CENTER);
         checkBox.setGravity(Gravity.CENTER_VERTICAL);
@@ -633,7 +634,7 @@ public class Ocr_PackFragment extends Fragment{
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view(goods.get(fa).getGoodCode()));
+        tv_goodname.setOnClickListener(v -> image_zome_view((goods.get(fa).getGoodCode()).toString()));
 
         arraygood_shortage.clear();
         et_amountshortage.addTextChangedListener(new TextWatcher() {
@@ -717,7 +718,7 @@ public class Ocr_PackFragment extends Fragment{
         tv_total_price.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         btn_confirm.setTextColor(requireActivity().getColor(R.color.white));
         btn_send.setTextColor(requireActivity().getColor(R.color.white));
-        btn_shortage.setTextColor(requireActivity().getColor(R.color.Black));
+        btn_shortage.setTextColor(requireActivity().getColor(R.color.black));
 
     }
 
@@ -807,12 +808,12 @@ public class Ocr_PackFragment extends Fragment{
         }
         if (goods.size() == ConfirmCounter) {
             btn_confirm.setBackgroundResource(R.color.grey_60);
-            btn_confirm.setTextColor(requireActivity().getColor(R.color.Black));
+            btn_confirm.setTextColor(requireActivity().getColor(R.color.black));
             btn_confirm.setEnabled(false);
             callMethod.showToast("اماده ارسال می باشد");
         } else {
             btn_send.setBackgroundResource(R.color.grey_60);
-            btn_send.setTextColor(requireActivity().getColor(R.color.Black));
+            btn_send.setTextColor(requireActivity().getColor(R.color.black));
             btn_send.setEnabled(false);
         }
     }
@@ -820,7 +821,7 @@ public class Ocr_PackFragment extends Fragment{
 
     public void image_zome_view(String GoodCode) {
 
-        Action action = new Action(requireActivity());
+        Ocr_Action action = new Ocr_Action(requireActivity());
         action.good_detail(GoodCode);
 
     }

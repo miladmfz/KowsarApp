@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.ocr.Ocr_FactorList_Adapter;
+import com.kits.kowsarapp.adapter.ocr.Ocr_FactorListOnline_Adapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.Factor;
 import com.kits.kowsarapp.model.NumberFunctions;
@@ -48,11 +48,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_FactorListActivity extends AppCompatActivity {
+public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
-    Ocr_FactorList_Adapter adapter;
+    Ocr_FactorListOnline_Adapter adapter;
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_list_recycler;
     AppCompatEditText edtsearch;
@@ -91,12 +91,12 @@ public class Ocr_FactorListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ocr_factor_list);
+        setContentView(R.layout.ocr_activity_factorlist_online);
 
         dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog1.setContentView(R.layout.rep_prog);
-        TextView repw = dialog1.findViewById(R.id.rep_prog_text);
+        dialog1.setContentView(R.layout.ocr_spinner_box);
+        TextView repw = dialog1.findViewById(R.id.o_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
 
 
@@ -134,18 +134,18 @@ public class Ocr_FactorListActivity extends AppCompatActivity {
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         handler=new Handler();
-        prog = findViewById(R.id.factor_listActivity_prog);
+        prog = findViewById(R.id.o_onlinefactor_a_prog);
 
-        Toolbar toolbar = findViewById(R.id.factor_listActivity_toolbar);
+        Toolbar toolbar = findViewById(R.id.o_onlinefactor_a_toolbar);
         setSupportActionBar(toolbar);
 
-        factor_list_recycler=findViewById(R.id.factor_listActivity_recyclerView);
-        textView_Count=findViewById(R.id.factorlistActivity_count);
-        textView_status=findViewById(R.id.factor_listActivity_Tvstatus);
-        edtsearch = findViewById(R.id.factorlistActivity_edtsearch);
-        RadioEdited= findViewById(R.id.factorlistActivity_edited);
-        RadioShortage= findViewById(R.id.factorlistActivity_shortage);
-        spinnerPath= findViewById(R.id.factorlistActivity_path);
+        factor_list_recycler=findViewById(R.id.o_onlinefactor_a_recyclerView);
+        textView_Count=findViewById(R.id.o_onlinefactor_a_count);
+        textView_status=findViewById(R.id.o_onlinefactor_a_Tvstatus);
+        edtsearch = findViewById(R.id.o_onlinefactor_a_edtsearch);
+        RadioEdited= findViewById(R.id.o_onlinefactor_a_edited);
+        RadioShortage= findViewById(R.id.o_onlinefactor_a_shortage);
+        spinnerPath= findViewById(R.id.o_onlinefactor_a_path);
 
     }
 
@@ -324,7 +324,7 @@ public class Ocr_FactorListActivity extends AppCompatActivity {
 
     public void CallRecycle() {
 
-        adapter = new Ocr_FactorList_Adapter(factors,state, Ocr_FactorListActivity.this);
+        adapter = new Ocr_FactorListOnline_Adapter(factors,state, Ocr_FactorListOnlineActivity.this);
         if (adapter.getItemCount()==0){
             callMethod.showToast("فاکتوری یافت نشد");
         }
@@ -372,7 +372,7 @@ public class Ocr_FactorListActivity extends AppCompatActivity {
                         customerpath.add(factor.getCustomerPath());
                     }
 
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_FactorListActivity.this,
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_FactorListOnlineActivity.this,
                             android.R.layout.simple_spinner_item, customerpath);
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerPath.setAdapter(spinner_adapter);
@@ -581,7 +581,7 @@ public class Ocr_FactorListActivity extends AppCompatActivity {
             NotificationChannel Channel = new NotificationChannel(channel_id, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(Channel);
         }
-        Intent notificationIntent = new Intent(this, Ocr_FactorListActivity.class);
+        Intent notificationIntent = new Intent(this, Ocr_FactorListOnlineActivity.class);
         notificationIntent.putExtra("State", "5");
         if(flag.equals("0")){
             notificationIntent.putExtra("StateEdited", "0");
@@ -609,7 +609,7 @@ public class Ocr_FactorListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(this, Ocr_FactorListActivity.class);
+        intent = new Intent(this, Ocr_FactorListOnlineActivity.class);
         intent.putExtra("State", state);
         startActivity(intent);
         finish();

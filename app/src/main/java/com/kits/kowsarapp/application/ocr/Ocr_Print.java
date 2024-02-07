@@ -170,8 +170,8 @@ public class Ocr_Print {
 
         dialogprint = new Dialog(mContext);
         dialogprint.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogprint.setContentView(R.layout.print_layout_view);
-        main_layout = dialogprint.findViewById(R.id.print_layout_view_ll);
+        dialogprint.setContentView(R.layout.ocr_printview_box);
+        main_layout = dialogprint.findViewById(R.id.o_printview_b_ll);
         main_layout.setGravity(Gravity.CENTER);
 
         if (callMethod.ReadString("Category").equals("2")){

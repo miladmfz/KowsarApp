@@ -12,7 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.kits.ocrkowsar.model.FingerPath;
+import com.kits.kowsarapp.model.ocr.Ocr_FingerPath;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +26,7 @@ public class Ocr_PaintView extends View {
     private float mX, mY;
     private Path mPath;
     private final Paint mPaint;
-    private final ArrayList<FingerPath> paths = new ArrayList<>();
+    private final ArrayList<Ocr_FingerPath> paths = new ArrayList<>();
     private int currentColor;
     private int backgroundColor = DEFAULT_BG_COLOR;
     private int strokeWidth;
@@ -84,7 +84,7 @@ public class Ocr_PaintView extends View {
         canvas.save();
         mCanvas.drawColor(backgroundColor);
 
-        for (FingerPath fp : paths) {
+        for (Ocr_FingerPath fp : paths) {
             mPaint.setColor(fp.color);
             mPaint.setStrokeWidth(fp.strokeWidth);
             mPaint.setMaskFilter(null);
@@ -97,7 +97,7 @@ public class Ocr_PaintView extends View {
     }
     private void touchStart(float x, float y) {
         mPath = new Path();
-        FingerPath fp = new FingerPath(currentColor, strokeWidth, mPath);
+        Ocr_FingerPath fp = new Ocr_FingerPath(currentColor, strokeWidth, mPath);
         paths.add(fp);
 
         mPath.reset();

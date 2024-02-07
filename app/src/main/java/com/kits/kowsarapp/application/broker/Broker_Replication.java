@@ -120,13 +120,13 @@ public class Broker_Replication {
         Call<RetrofitResponse> call1 = broker_apiInterface.MaxRepLogCode("MaxRepLogCode");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 dbh.SaveConfig("MaxRepLogCode", response.body().getText());
                 RetrofitReplicateAuto(0);
             }
 
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
             }
         });

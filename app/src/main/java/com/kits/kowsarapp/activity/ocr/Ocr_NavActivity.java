@@ -53,7 +53,7 @@ public class Ocr_NavActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nav);
+        setContentView(R.layout.ocr_activity_nav);
 
         Config();
         init();
@@ -67,13 +67,13 @@ public void Config() {
     action = new Ocr_Action(this);
     dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
-    toolbar = findViewById(R.id.NavActivity_toolbar);
+    toolbar = findViewById(R.id.o_main_a_toolbar);
     setSupportActionBar(toolbar);
-    DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+    DrawerLayout drawer = findViewById(R.id.ocr_nav_drawer_layout);
     ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
     drawer.addDrawerListener(toggle);
     toggle.syncState();
-    navigationView = findViewById(R.id.NavActivity_nav);
+    navigationView = findViewById(R.id.ocr_a_nav);
     navigationView.setNavigationItemSelectedListener(this);
     View hView = navigationView.getHeaderView(0);
     tv_versionname = hView.findViewById(R.id.header_versionname);
@@ -83,9 +83,9 @@ public void Config() {
 
 
 
-    btn1 = findViewById(R.id.mainactivity_btn1);
-    btn2 = findViewById(R.id.mainactivity_btn2);
-    btn3 = findViewById(R.id.mainactivity_btn3);
+    btn1 = findViewById(R.id.o_main_a_btn1);
+    btn2 = findViewById(R.id.o_main_a_btn2);
+    btn3 = findViewById(R.id.o_main_a_btn3);
 
 }
 
@@ -162,9 +162,9 @@ public void Config() {
         btn2.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.scanner);
+            dialog.setContentView(R.layout.ocr_scanner_box);
 
-            final EditText tv_scanner = dialog.findViewById(R.id.scanner_tv);
+            final EditText tv_scanner = dialog.findViewById(R.id.o_scanner_b_tv);
             dialog.show();
             tv_scanner.requestFocus();
             tv_scanner.postDelayed(() -> {
@@ -190,7 +190,7 @@ public void Config() {
                     handler.postDelayed(() -> {
 
                         if(s.length()>8) {
-                            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorActivity.class);
+                            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorDetailActivity.class);
                             intent.putExtra("ScanResponse", s.toString());
                             startActivity(intent);
                         }
@@ -200,7 +200,7 @@ public void Config() {
 
         });
         btn3.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -219,13 +219,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
             intent.putExtra("State", "0");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -244,13 +244,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
             intent.putExtra("State", "1");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
             intent.putExtra("State", "4");
 
             startActivity(intent);
@@ -258,7 +258,7 @@ public void Config() {
         });
         btn3.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
 
@@ -277,7 +277,7 @@ public void Config() {
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
         });
@@ -285,7 +285,7 @@ public void Config() {
 
         btn2.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_LocalFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListLocalActivity.class);
             intent.putExtra("IsSent", "0");
             intent.putExtra("signature", "1");
             startActivity(intent);
@@ -293,7 +293,7 @@ public void Config() {
 
         btn3.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_LocalFactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListLocalActivity.class);
             intent.putExtra("IsSent", "1");
             intent.putExtra("signature", "1");
             startActivity(intent);
@@ -313,7 +313,7 @@ public void Config() {
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
         });
@@ -329,7 +329,7 @@ public void Config() {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.ocr_nav_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (doubleBackToExitPressedOnce) {
@@ -351,7 +351,7 @@ public void Config() {
 
             action.LoginSetting();
         }
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.ocr_nav_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

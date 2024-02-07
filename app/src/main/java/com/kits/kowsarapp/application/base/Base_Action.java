@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.provider.Settings;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
@@ -156,7 +158,7 @@ public class Base_Action {
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     // Handle successful response
                 } else {
@@ -166,7 +168,7 @@ public class Base_Action {
 
 
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 // Handle failure
             }
         });

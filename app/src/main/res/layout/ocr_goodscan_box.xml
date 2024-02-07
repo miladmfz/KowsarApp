@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:layout_gravity="center"
+    android:id="@+id/ocr_goodscan_box"
+    app:layout_constraintCircleRadius="10dp"
+    android:background="@drawable/bg_prog"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+
+    >
+
+
+    <TextView
+        android:id="@+id/o_goodscan_b_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:layout_margin="10dp"
+        android:textSize="18sp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/o_goodscan_b_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"/>
+    <Button
+        android:id="@+id/o_goodscan_b_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="22sp"
+        android:text="بازگشت"
+        app:backgroundTint="@color/red_400"
+        app:strokeColor="@color/grey_1000"
+        app:strokeWidth="1dp"
+        style="?attr/materialButtonOutlinedStyle"
+        android:textColor="@color/white"
+        />
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

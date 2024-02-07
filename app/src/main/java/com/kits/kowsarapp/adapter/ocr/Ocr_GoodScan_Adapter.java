@@ -61,7 +61,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
     @NonNull
     @Override
     public facViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.goods_scan_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ocr_goodscan_card, parent, false);
         return new facViewHolder(view);
     }
 
@@ -179,11 +179,11 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
         facViewHolder(View itemView) {
             super(itemView);
 
-            goodscan_goodname = itemView.findViewById(R.id.goodscan_item_goodname);
-            goodscan_factoramount = itemView.findViewById(R.id.goodscan_item_factoramount);
-            goodscan_goodsellprice = itemView.findViewById(R.id.goodscan_item_goodsellprice);
-            goodscan_image = itemView.findViewById(R.id.goodscan_item_image);
-            goodscan_btn = itemView.findViewById(R.id.goodscan_item_btn);
+            goodscan_goodname = itemView.findViewById(R.id.o_goodscan_c_goodname);
+            goodscan_factoramount = itemView.findViewById(R.id.o_goodscan_c_factoramount);
+            goodscan_goodsellprice = itemView.findViewById(R.id.o_goodscan_c_goodsellprice);
+            goodscan_image = itemView.findViewById(R.id.o_goodscan_c_image);
+            goodscan_btn = itemView.findViewById(R.id.o_goodscan_c_btn);
 
         }
     }
