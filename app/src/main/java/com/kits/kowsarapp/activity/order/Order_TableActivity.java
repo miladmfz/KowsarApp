@@ -101,7 +101,7 @@ public class Order_TableActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_table);
+        setContentView(R.layout.order_activity_table);
         intent();
         Config();
 
@@ -128,7 +128,7 @@ public class Order_TableActivity extends AppCompatActivity {
         callMethod = new CallMethod(App.getContext());
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
-        CoordinatorLayout ll_activity = findViewById(R.id.tableactivity);
+        CoordinatorLayout ll_activity = findViewById(R.id.order_table_activity);
         if (callMethod.ReadString("LANG").equals("fa")) {
             ll_activity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {
@@ -138,16 +138,16 @@ public class Order_TableActivity extends AppCompatActivity {
         }
 
 
-        spinner = findViewById(R.id.tableactivity_spinner);
+        spinner = findViewById(R.id.ord_table_a_spinner);
 
-        init_ll = findViewById(R.id.tableactivity_miztype_ll);
+        init_ll = findViewById(R.id.ord_table_a_miztype_ll);
 
-        progressBar = findViewById(R.id.tableactivity_prog);
-        img_lottiestatus = findViewById(R.id.tableactivity_lottie);
-        tv_lottiestatus = findViewById(R.id.tableactivity_tvstatus);
+        progressBar = findViewById(R.id.ord_table_a_prog);
+        img_lottiestatus = findViewById(R.id.ord_table_a_lottie);
+        tv_lottiestatus = findViewById(R.id.ord_table_a_tvstatus);
 
-        recyclerView_Table = findViewById(R.id.tableactivity_mizlist_recy);
-        recyclerView_object = findViewById(R.id.tableactivity_miztype_recy);
+        recyclerView_Table = findViewById(R.id.ord_table_a_mizlist_recy);
+        recyclerView_object = findViewById(R.id.ord_table_a_miztype_recy);
 
         InfoState_array.add(getString(R.string.infostatearray_0));
         InfoState_array.add(getString(R.string.infostatearray_1));

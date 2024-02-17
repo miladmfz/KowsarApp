@@ -84,9 +84,9 @@ public class Order_PrintChangeTable {
     }
 
     public void dialogProg() {
-        dialogProg.setContentView(R.layout.rep_prog);
-        tv_rep = dialogProg.findViewById(R.id.rep_prog_text);
-        LottieAnimationView animationView = dialogProg.findViewById(R.id.lottie_raw);
+        dialogProg.setContentView(R.layout.order_spinner_box);
+        tv_rep = dialogProg.findViewById(R.id.ord_spinner_text);
+        LottieAnimationView animationView = dialogProg.findViewById(R.id.ord_spinner_lottie_raw);
         animationView.setAnimation(R.raw.receipt);
         dialogProg.show();
 
@@ -287,7 +287,7 @@ public class Order_PrintChangeTable {
 
         dialogprint = new Dialog(mContext);
         dialogprint.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogprint.setContentView(R.layout.print_layout_view);
+        dialogprint.setContentView(R.layout.order_print_layout_view);
         main_layout = dialogprint.findViewById(R.id.print_layout_view_ll);
         CreateView();
 

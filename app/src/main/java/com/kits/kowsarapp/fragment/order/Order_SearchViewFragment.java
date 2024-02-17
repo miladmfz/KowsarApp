@@ -78,16 +78,16 @@ public class Order_SearchViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_goodview, container, false);
+        view = inflater.inflate(R.layout.order_fragment_goodview, container, false);
 
-        rc_grp = view.findViewById(R.id.fragment_grp_recy);
-        rc_good = view.findViewById(R.id.fragment_good_recy);
-        ed_search = view.findViewById(R.id.fragment_good_search);
-        Btn_GoodToOrder = view.findViewById(R.id.fragment_good_to_order);
+        rc_grp = view.findViewById(R.id.ord_fragment_grp_recy);
+        rc_good = view.findViewById(R.id.ord_fragment_good_recy);
+        ed_search = view.findViewById(R.id.ord_fragment_good_search);
+        Btn_GoodToOrder = view.findViewById(R.id.ord_fragment_good_to_order);
 
-        progressBar = view.findViewById(R.id.fragment_good_prog);
-        img_lottiestatus = view.findViewById(R.id.fragment_good_lottie);
-        tv_lottiestatus = view.findViewById(R.id.fragment_good_tvstatus);
+        progressBar = view.findViewById(R.id.ord_fragment_good_prog);
+        img_lottiestatus = view.findViewById(R.id.ord_fragment_good_lottie);
+        tv_lottiestatus = view.findViewById(R.id.ord_fragment_good_tvstatus);
 
 
         return view;

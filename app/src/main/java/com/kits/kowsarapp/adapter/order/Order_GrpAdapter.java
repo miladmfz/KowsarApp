@@ -56,7 +56,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
     @NonNull
     @Override
     public GoodGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grp_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_grp_card, parent, false);
         if (callMethod.ReadString("LANG").equals("fa")) {
             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {
@@ -119,7 +119,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
             Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
             searchViewFragment.setParent_GourpCode(Parent_GourpCode);
             searchViewFragment.setGood_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
-            fragmentTransaction.replace(R.id.searchactivity_framelayout, searchViewFragment);
+            fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
             fragmentTransaction.commit();
         });
 
@@ -127,7 +127,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
             Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
             searchViewFragment.setParent_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
             searchViewFragment.setGood_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
-            fragmentTransaction.replace(R.id.searchactivity_framelayout, searchViewFragment);
+            fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         });
@@ -154,10 +154,10 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
         GoodGroupViewHolder(View itemView) {
             super(itemView);
-            img = itemView.findViewById(R.id.grp_list_image);
-            extraimg = itemView.findViewById(R.id.grp_list_imgv);
-            grpname = itemView.findViewById(R.id.grp_list_name);
-            rltv = itemView.findViewById(R.id.grp_list);
+            img = itemView.findViewById(R.id.ord_grp_c_image);
+            extraimg = itemView.findViewById(R.id.ord_grp_c_imgv);
+            grpname = itemView.findViewById(R.id.ord_grp_c_name);
+            rltv = itemView.findViewById(R.id.ord_grp_c_list);
         }
     }
 }

@@ -24,6 +24,9 @@ import androidx.core.content.ContextCompat;
 import androidx.work.WorkManager;
 
 import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.activity.broker.Broker_NavActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
+import com.kits.kowsarapp.activity.order.Order_NavActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
@@ -204,18 +207,21 @@ public class Base_SplashActivity extends AppCompatActivity {
                     handler.postDelayed(() -> {
 
 
-//                        intent = new Intent(this, NavActivity.class);
-//                        startActivity(intent);
-//                        finish();
-
-                        if (callMethod.ReadString("AppType").equals("0")){
-                            callMethod.Log("company");
-                        }else if (callMethod.ReadString("AppType").equals("1")){
+                        if (callMethod.ReadString("AppType").equals("1")){
                             callMethod.Log("broker");
+                            intent = new Intent(this, Broker_NavActivity.class);
+                            startActivity(intent);
+                            finish();
                         }else if (callMethod.ReadString("AppType").equals("2")){
                             callMethod.Log("ocr");
+                            intent = new Intent(this, Ocr_NavActivity.class);
+                            startActivity(intent);
+                            finish();
                         }else if (callMethod.ReadString("AppType").equals("3")){
                             callMethod.Log("order");
+                            intent = new Intent(this, Order_NavActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
 
 

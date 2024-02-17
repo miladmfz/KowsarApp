@@ -11,7 +11,7 @@ import com.kits.kowsarapp.R;
 import java.text.DecimalFormat;
 
 
-public class Order_ObjectTypeViewHolder extends RecyclerView.ViewHolder {
+public class Order_MizTypeViewHolder extends RecyclerView.ViewHolder {
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
 
@@ -19,10 +19,10 @@ public class Order_ObjectTypeViewHolder extends RecyclerView.ViewHolder {
     public TextView tv_name;
 
 
-    public Order_ObjectTypeViewHolder(View itemView) {
+    public Order_MizTypeViewHolder(View itemView) {
         super(itemView);
-        tv_name = itemView.findViewById(R.id.objecttype_item_itype);
-        rltv = itemView.findViewById(R.id.objecttype_item);
+        tv_name = itemView.findViewById(R.id.ord_miztype_c_itype);
+        rltv = itemView.findViewById(R.id.order_miztype_card);
     }
 
 

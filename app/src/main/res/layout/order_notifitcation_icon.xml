@@ -16,7 +16,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/cart_badge"
+        android:id="@+id/order_cart_badge"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="right|start|top"

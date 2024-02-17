@@ -35,7 +35,7 @@ public class Order_GoodItemViewHolder extends RecyclerView.ViewHolder {
     public TextView tv_name;
     public TextView tv_price;
     public Call<RetrofitResponse> call;
-    public Order_APIInterface apiInterface;
+    public Order_APIInterface order_apiInterface;
     Context mContex;
     CallMethod callMethod;
     boolean multi_select1;
@@ -44,11 +44,11 @@ public class Order_GoodItemViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         this.mContex = context;
         this.callMethod = new CallMethod(context);
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        img = itemView.findViewById(R.id.good_item_img);
-        tv_name = itemView.findViewById(R.id.good_item_name);
-        tv_price = itemView.findViewById(R.id.good_item_price);
-        rltv = itemView.findViewById(R.id.good_item);
+        this.order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        img = itemView.findViewById(R.id.ord_gooditem_c_img);
+        tv_name = itemView.findViewById(R.id.ord_gooditem_c_name);
+        tv_price = itemView.findViewById(R.id.ord_gooditem_c_price);
+        rltv = itemView.findViewById(R.id.order_gooditem_card);
 
     }
 
@@ -68,7 +68,7 @@ public class Order_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
         } else {
 
-            call = apiInterface.GetImage(
+            call = order_apiInterface.GetImage(
                     "getImage",
                     String.valueOf(good.getGoodCode()),
                     "TGood",

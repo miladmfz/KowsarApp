@@ -91,9 +91,9 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
     public Order_RstMizViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (changeTable.equals("0")) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.table_item_cardview, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_table_card, parent, false);
         } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tableempty_item_cardview, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_tableempty_card, parent, false);
         }
         if (callMethod.ReadString("LANG").equals("fa")) {
             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);

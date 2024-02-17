@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/table_item"
+    android:id="@+id/order_table_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
@@ -13,6 +13,7 @@
     app:cardElevation="6dp"
     app:strokeColor="#B96838"
     app:strokeWidth="1dp">
+
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -47,7 +48,7 @@
                     tools:ignore="NestedWeights" />
 
                 <TextView
-                    android:id="@+id/table_item_name"
+                    android:id="@+id/ord_table_c_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -68,7 +69,7 @@
 
 
                 <TextView
-                    android:id="@+id/table_item_placecount"
+                    android:id="@+id/ord_table_c_placecount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -79,7 +80,7 @@
                     tools:ignore="NestedWeights" />
 
                 <Button
-                    android:id="@+id/table_item_cleartable"
+                    android:id="@+id/ord_table_c_cleartable"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -99,7 +100,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/table_item_ll_mizexplain"
+            android:id="@+id/ord_table_c_ll_mizexplain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -119,7 +120,7 @@
 
 
             <TextView
-                android:id="@+id/table_item_mizexplain"
+                android:id="@+id/ord_table_c_mizexplain"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
                 android:layout_gravity="center"
@@ -131,7 +132,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/table_item_ll_infoexplain"
+            android:id="@+id/ord_table_c_ll_infoexplain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -151,7 +152,7 @@
 
 
             <TextView
-                android:id="@+id/table_item_infoexplain"
+                android:id="@+id/ord_table_c_infoexplain"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
                 android:layout_gravity="center"
@@ -165,7 +166,7 @@
         <LinearLayout
 
             android:background="@color/red_200"
-            android:id="@+id/table_item_ll_timebroker"
+            android:id="@+id/ord_table_c_ll_timebroker"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
@@ -192,7 +193,7 @@
                     tools:ignore="NestedWeights" />
 
                 <TextView
-                    android:id="@+id/table_item_time"
+                    android:id="@+id/ord_table_c_time"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -221,7 +222,7 @@
                     tools:ignore="NestedWeights" />
 
                 <TextView
-                    android:id="@+id/table_item_brokername"
+                    android:id="@+id/ord_table_c_brokername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -237,7 +238,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/table_item_ll_reserve"
+            android:id="@+id/ord_table_c_ll_reserve"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
@@ -279,7 +280,7 @@
                             tools:ignore="NestedWeights" />
 
                         <TextView
-                            android:id="@+id/table_item_reservestart"
+                            android:id="@+id/ord_table_c_reservestart"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
@@ -292,7 +293,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/table_item_reservebrokername"
+                        android:id="@+id/ord_table_c_reservebrokername"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -303,7 +304,7 @@
 
 
                     <TextView
-                        android:id="@+id/table_item_reservemobileno"
+                        android:id="@+id/ord_table_c_reservemobileno"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -325,7 +326,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/table_item_select"
+                android:id="@+id/ord_table_c_select"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -341,7 +342,7 @@
                 app:strokeWidth="1dp" />
 
             <Button
-                android:id="@+id/table_item_reserve"
+                android:id="@+id/ord_table_c_reserve"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -373,14 +374,14 @@
 
 
         <LinearLayout
-            android:id="@+id/table_item_ll_print_change"
+            android:id="@+id/ord_table_c_ll_print_change"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/table_item_changemiz"
+                android:id="@+id/ord_table_c_changemiz"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -396,7 +397,7 @@
                 app:strokeWidth="1dp" />
 
             <Button
-                android:id="@+id/table_item_explainedit"
+                android:id="@+id/ord_table_c_explainedit"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -413,7 +414,7 @@
                 app:strokeWidth="1dp" />
 
             <Button
-                android:id="@+id/table_item_print"
+                android:id="@+id/ord_table_c_print"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

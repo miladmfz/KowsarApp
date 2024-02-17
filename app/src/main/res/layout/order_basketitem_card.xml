@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/good_basket_item"
+    android:id="@+id/order_basketitem_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -45,7 +45,7 @@
                     tools:ignore="NestedWeights" />
 
                 <TextView
-                    android:id="@+id/good_basket_item_goodname"
+                    android:id="@+id/ord_basketitem_c_goodname"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
@@ -65,7 +65,7 @@
 
             <LinearLayout
 
-                android:id="@+id/good_basket_item_ll_amount"
+                android:id="@+id/ord_basketitem_c_ll_amount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
@@ -84,7 +84,7 @@
                     tools:ignore="NestedWeights" />
 
                 <TextView
-                    android:id="@+id/good_basket_item_amount"
+                    android:id="@+id/ord_basketitem_c_amount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.7"
@@ -109,7 +109,7 @@
             android:weightSum="1">
 
             <LinearLayout
-                android:id="@+id/good_basket_item_ll_explain"
+                android:id="@+id/ord_basketitem_c_ll_explain"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_weight="0.1"
@@ -128,7 +128,7 @@
                     tools:ignore="NestedWeights" />
 
                 <TextView
-                    android:id="@+id/good_basket_item_explain"
+                    android:id="@+id/ord_basketitem_c_explain"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
@@ -141,7 +141,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/good_basket_item_dlt"
+                android:id="@+id/ord_basketitem_c_dlt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="2dp"

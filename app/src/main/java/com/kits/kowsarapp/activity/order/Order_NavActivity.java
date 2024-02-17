@@ -96,7 +96,7 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nav);
+        setContentView(R.layout.order_activity_nav);
 
         init();
 
@@ -112,9 +112,9 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
 
-        LinearLayoutCompat ll_activity_main = findViewById(R.id.mainactivity);
+        LinearLayoutCompat ll_activity_main = findViewById(R.id.ord_main_a_layout);
 
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.order_nav_drawer_layout);
 
         if (callMethod.ReadString("LANG").equals("fa")) {
             ll_activity_main.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -128,13 +128,13 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
         }
 
 
-        toolbar = findViewById(R.id.MainActivity_toolbar);
+        toolbar = findViewById(R.id.ord_main_a_toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
 
         toggle.syncState();
-        navigationView = findViewById(R.id.NavActivity_nav);
+        navigationView = findViewById(R.id.order_activity_navigation);
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);
         tv_versionname = hView.findViewById(R.id.header_versionname);
@@ -143,11 +143,11 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
         btn_changedb = hView.findViewById(R.id.header_changedb);
 
 
-        Getmizlist_btn0 = findViewById(R.id.mainactivity_btn0);
-        Getmizlist_btn1 = findViewById(R.id.mainactivity_btn1);
-        Getmizlist_btn2 = findViewById(R.id.mainactivity_btn2);
-        Getmizlist_btn3 = findViewById(R.id.mainactivity_btn3);
-        Getmizlist_btn4 = findViewById(R.id.mainactivity_btn4);
+        Getmizlist_btn0 = findViewById(R.id.ord_main_a_btn0);
+        Getmizlist_btn1 = findViewById(R.id.ord_main_a_btn1);
+        Getmizlist_btn2 = findViewById(R.id.ord_main_a_btn2);
+        Getmizlist_btn3 = findViewById(R.id.ord_main_a_btn3);
+        Getmizlist_btn4 = findViewById(R.id.ord_main_a_btn4);
 
     }
 
@@ -210,6 +210,10 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("DatabaseName", "");
+            callMethod.EditString("ActivationCode", "");
+
+            callMethod.EditString("AppType", "");
+
             intent = new Intent(this, Base_SplashActivity.class);
             finish();
             startActivity(intent);
@@ -219,7 +223,7 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.order_nav_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (doubleBackToExitPressedOnce) {
@@ -237,15 +241,15 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
 
         final int id = item.getItemId();
 
-        if (id == R.id.aboutus) {
+        if (id == R.id.order_aboutus) {
             intent = new Intent(this, Base_AboutUsActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_cfg) {
+        } else if (id == R.id.order_nav_cfg) {
             intent = new Intent(this, Order_RegistrationActivity.class);
             startActivity(intent);
         }
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.order_nav_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;

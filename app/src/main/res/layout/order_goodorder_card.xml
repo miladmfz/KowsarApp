@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/good_box_item"
+    android:id="@+id/order_goodorder_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="3dp"
@@ -38,7 +38,7 @@
                 tools:ignore="InefficientWeight,NestedWeights">
 
                 <TextView
-                    android:id="@+id/good_box_item_goodname"
+                    android:id="@+id/ord_goodorder_c_goodname"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -48,7 +48,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/good_box_item_amount"
+                    android:id="@+id/ord_goodorder_c_amount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -61,7 +61,7 @@
 
 
             <TextView
-                android:id="@+id/good_box_item_explain"
+                android:id="@+id/ord_goodorder_c_explain"
                 android:layout_width="match_parent"
                 android:layout_height="31dp"
                 android:gravity="center"
@@ -78,7 +78,7 @@
             android:weightSum="1">
 
             <ImageView
-                android:id="@+id/good_box_item_delete"
+                android:id="@+id/ord_goodorder_c_delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -22,12 +22,12 @@ public class Order_GoodBasketViewHolder extends RecyclerView.ViewHolder {
     public Order_GoodBasketViewHolder(View itemView) {
         super(itemView);
 
-        ll_explain = itemView.findViewById(R.id.good_basket_item_ll_explain);
-        ll_amount = itemView.findViewById(R.id.good_basket_item_ll_amount);
-        tv_goodname = itemView.findViewById(R.id.good_basket_item_goodname);
-        tv_amount = itemView.findViewById(R.id.good_basket_item_amount);
-        tv_explain = itemView.findViewById(R.id.good_basket_item_explain);
-        btn_dlt = itemView.findViewById(R.id.good_basket_item_dlt);
+        ll_explain = itemView.findViewById(R.id.ord_basketitem_c_ll_explain);
+        ll_amount = itemView.findViewById(R.id.ord_basketitem_c_ll_amount);
+        tv_goodname = itemView.findViewById(R.id.ord_basketitem_c_goodname);
+        tv_amount = itemView.findViewById(R.id.ord_basketitem_c_amount);
+        tv_explain = itemView.findViewById(R.id.ord_basketitem_c_explain);
+        btn_dlt = itemView.findViewById(R.id.ord_basketitem_c_dlt);
     }
 
 

@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
     android:orientation="vertical"
+    android:id="@+id/order_search_activity"
+
     tools:context=".activity.order.Order_SearchActivity">
 
 

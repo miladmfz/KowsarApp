@@ -99,8 +99,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     }
 
     public void dialogProg() {
-        dialogProg.setContentView(R.layout.rep_prog);
-        tv_rep = dialogProg.findViewById(R.id.rep_prog_text);
+        dialogProg.setContentView(R.layout.order_spinner_box);
+        tv_rep = dialogProg.findViewById(R.id.ord_spinner_text);
         dialogProg.show();
     }
 
@@ -136,8 +136,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.reserve_box);
-        LinearLayout ll_reservebox = dialog.findViewById(R.id.reserve_box);
+        dialog.setContentView(R.layout.order_reserve_box);
+        LinearLayout ll_reservebox = dialog.findViewById(R.id.order_reserve_box);
         if (callMethod.ReadString("LANG").equals("fa")) {
             ll_reservebox.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {
@@ -145,18 +145,18 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         } else {
             ll_reservebox.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
-        EditText ed_personname = dialog.findViewById(R.id.reserve_box_personname);
-        EditText ed_mobileno = dialog.findViewById(R.id.reserve_box_mobileno);
-        EditText ed_explain = dialog.findViewById(R.id.reserve_box_explain);
-        tv_reservestart = dialog.findViewById(R.id.reserve_box_reservestart);
-        tv_reserveend = dialog.findViewById(R.id.reserve_box_reserveend);
-        tv_date = dialog.findViewById(R.id.reserve_box_date);
+        EditText ed_personname = dialog.findViewById(R.id.ord_reserve_b_personname);
+        EditText ed_mobileno = dialog.findViewById(R.id.ord_reserve_b_mobileno);
+        EditText ed_explain = dialog.findViewById(R.id.ord_reserve_b_explain);
+        tv_reservestart = dialog.findViewById(R.id.ord_reserve_b_reservestart);
+        tv_reserveend = dialog.findViewById(R.id.ord_reserve_b_reserveend);
+        tv_date = dialog.findViewById(R.id.ord_reserve_b_date);
 
-        TextView tv_rstmizname = dialog.findViewById(R.id.reserve_box_rstmiz);
-        TextView tv_showrecycler = dialog.findViewById(R.id.reserve_box_show_recycler);
-        RecyclerView recycler = dialog.findViewById(R.id.reserve_box_recycler);
+        TextView tv_rstmizname = dialog.findViewById(R.id.ord_reserve_b_rstmiz);
+        TextView tv_showrecycler = dialog.findViewById(R.id.ord_reserve_b_statetv);
+        RecyclerView recycler = dialog.findViewById(R.id.ord_reserve_b_recycler);
 
-        Button btn_reserve = dialog.findViewById(R.id.reserve_box_btn_send);
+        Button btn_reserve = dialog.findViewById(R.id.ord_reserve_b_btnsend);
 
 
         tv_showrecycler.setText(callMethod.NumberRegion(mContext.getString(R.string.textvalue_tvlistoftable) + basketInfo.getRstMizName()));
@@ -353,8 +353,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.order_box_good);
-        LinearLayoutCompat ll_orderboxgood = dialog.findViewById(R.id.orderboxgood);
+        dialog.setContentView(R.layout.order_goodorder_box);
+        LinearLayoutCompat ll_orderboxgood = dialog.findViewById(R.id.order_goodorder_box);
         if (callMethod.ReadString("LANG").equals("fa")) {
             ll_orderboxgood.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {
@@ -363,12 +363,12 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             ll_orderboxgood.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
 
-        TextView ed_orderbox_goodname = dialog.findViewById(R.id.orderboxgood_goodname);
-        EditText ed_orderbox_amount = dialog.findViewById(R.id.orderboxgood_amount);
-        EditText ed_orderbox_explain = dialog.findViewById(R.id.orderboxgood_explain);
-        Spinner spinner_orderbox = dialog.findViewById(R.id.orderboxgood_spinnerexplain);
-        RecyclerView rc_orderbox = dialog.findViewById(R.id.orderboxgood_rc);
-        Button btn_orderbox = dialog.findViewById(R.id.orderboxgood_btn);
+        TextView ed_orderbox_goodname = dialog.findViewById(R.id.ord_goodorder_b_goodname);
+        EditText ed_orderbox_amount = dialog.findViewById(R.id.ord_goodorder_b_amount);
+        EditText ed_orderbox_explain = dialog.findViewById(R.id.ord_goodorder_b_explain);
+        Spinner spinner_orderbox = dialog.findViewById(R.id.ord_goodorder_b_spinnerxplain);
+        RecyclerView rc_orderbox = dialog.findViewById(R.id.ord_goodorder_b_rc);
+        Button btn_orderbox = dialog.findViewById(R.id.ord_goodorder_b_btn);
 
         if (Flag.equals("1")) {
             ed_orderbox_amount.setText(callMethod.NumberRegion(good.getAmount()));
@@ -593,11 +593,11 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.basketinfo_explain);
-        Button explain_btn = dialog.findViewById(R.id.basketinfo_explain_btn);
+        dialog.setContentView(R.layout.order_basketinfo_explain);
+        Button explain_btn = dialog.findViewById(R.id.ord_basketexplain_b_explain_btn);
         explain_btn.setText(R.string.textvalue_setexplain);
-        final EditText explain_tv = dialog.findViewById(R.id.basketinfo_explain_tv);
-        Spinner spinner_orderbox = dialog.findViewById(R.id.basketinfo_spinnerexplain);
+        final EditText explain_tv = dialog.findViewById(R.id.ord_basketexplain_b_explain_tv);
+        Spinner spinner_orderbox = dialog.findViewById(R.id.ord_basketexplain_b_spinnerexplain);
         String explainvalue="";
 
         if (basketInfo.getInfoExplain().contains("*")) {
@@ -721,11 +721,11 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.basketinfo_explain);
-        Button explain_btn = dialog.findViewById(R.id.basketinfo_explain_btn);
+        dialog.setContentView(R.layout.order_basketinfo_explain);
+        Button explain_btn = dialog.findViewById(R.id.ord_basketexplain_b_explain_btn);
         explain_btn.setText(R.string.textvalue_setexplain);
-        final EditText explain_tv = dialog.findViewById(R.id.basketinfo_explain_tv);
-        Spinner spinner_orderbox = dialog.findViewById(R.id.basketinfo_spinnerexplain);
+        final EditText explain_tv = dialog.findViewById(R.id.ord_basketexplain_b_explain_tv);
+        Spinner spinner_orderbox = dialog.findViewById(R.id.ord_basketexplain_b_spinnerexplain);
 
         dialog.show();
         explain_tv.requestFocus();
@@ -832,8 +832,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         Dialog dialog1 = new Dialog(mContext);
         dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.lottie);
-        LottieAnimationView animationView = dialog1.findViewById(R.id.lottie_name);
+        dialog1.setContentView(R.layout.order_lottie);
+        LottieAnimationView animationView = dialog1.findViewById(R.id.ord_lottie_name);
         animationView.setAnimation(R.raw.oklottie);
         dialog1.show();
         animationView.setRepeatCount(0);

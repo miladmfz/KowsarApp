@@ -30,15 +30,15 @@ public class Order_ReserveViewHolder extends RecyclerView.ViewHolder {
     public Order_ReserveViewHolder(View itemView) {
         super(itemView);
 
-        rltv = itemView.findViewById(R.id.reserve_item);
+        rltv = itemView.findViewById(R.id.order_reserve_card);
 
-        tv_reservestart = itemView.findViewById(R.id.reserve_item_reservestart);
-        tv_reserveend = itemView.findViewById(R.id.reserve_item_reserveend);
-        tv_reservebrokername = itemView.findViewById(R.id.reserve_item_reservebrokername);
-        tv_reservepersonname = itemView.findViewById(R.id.reserve_item_reservepersonname);
-        tv_reserveeplain = itemView.findViewById(R.id.reserve_item_reserveeplain);
-        tv_reservemobileno = itemView.findViewById(R.id.reserve_item_reservemobileno);
-        tv_reservedate = itemView.findViewById(R.id.reserve_item_reservedate);
+        tv_reservestart = itemView.findViewById(R.id.ord_reserve_c_reservestart);
+        tv_reserveend = itemView.findViewById(R.id.ord_reserve_c_reserveend);
+        tv_reservebrokername = itemView.findViewById(R.id.ord_reserve_c_reservebrokername);
+        tv_reservepersonname = itemView.findViewById(R.id.ord_reserve_c_reservepersonname);
+        tv_reserveeplain = itemView.findViewById(R.id.ord_reserve_c_reserveeplain);
+        tv_reservemobileno = itemView.findViewById(R.id.ord_reserve_c_reservemobileno);
+        tv_reservedate = itemView.findViewById(R.id.ord_reserve_c_reservedate);
 
     }
 

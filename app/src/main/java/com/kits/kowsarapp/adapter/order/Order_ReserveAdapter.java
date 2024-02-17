@@ -45,7 +45,7 @@ public class Order_ReserveAdapter extends RecyclerView.Adapter<Order_ReserveView
     @NonNull
     @Override
     public Order_ReserveViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reserve_item_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_reserve_card, parent, false);
         if (callMethod.ReadString("LANG").equals("fa")) {
             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {

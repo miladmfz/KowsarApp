@@ -10,10 +10,6 @@ import retrofit2.http.POST;
 
 public interface Order_APIInterface {
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> Activation(@Field("tag") String tag, @Field("ActivationCode") String ActivationCode);
-
 
     @POST("index.php")
     @FormUrlEncoded

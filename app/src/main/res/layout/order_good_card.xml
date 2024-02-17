@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/good_item"
+    android:id="@+id/order_gooditem_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="3dp"
@@ -21,7 +21,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/good_item_img"
+            android:id="@+id/ord_gooditem_c_img"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
@@ -30,14 +30,14 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/good_item_name"
+            android:id="@+id/ord_gooditem_c_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/good_item_price"
+            android:id="@+id/ord_gooditem_c_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

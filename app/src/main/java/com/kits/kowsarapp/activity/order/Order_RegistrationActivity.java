@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
+import com.kits.kowsarapp.databinding.OrderActivityRegistrationBinding;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.base.SellBroker;
@@ -41,7 +42,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
     Order_DBH dbh;
     CallMethod callMethod;
    Order_Action action;
-    ActivityRegistrationBinding binding;
+    OrderActivityRegistrationBinding binding;
     Order_APIInterface apiInterface;
     ArrayList<String> lang_array = new ArrayList<>();
     ArrayList<String> SellBroker_Names = new ArrayList<>();
@@ -86,7 +87,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
+        binding = OrderActivityRegistrationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Config();
@@ -107,11 +108,11 @@ public class Order_RegistrationActivity extends AppCompatActivity {
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
         SellBroker_Names.clear();
         if (callMethod.ReadString("LANG").equals("fa")) {
-            binding.registractivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            binding.orderRegistrActivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {
-            binding.registractivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            binding.orderRegistrActivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else {
-            binding.registractivity.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            binding.orderRegistrActivity.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
 
         Call<RetrofitResponse> call1 = apiInterface.GetSellBroker("GetSellBroker");
@@ -170,7 +171,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
     public void brokerViewConfig() {
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, SellBroker_Names);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.registrSpinnerbroker.setAdapter(spinner_adapter);
+        binding.ordRegistrASpinnerbroker.setAdapter(spinner_adapter);
         int possellbroker=0;
         for (SellBroker sellBroker:SellBrokers){
             if (sellBroker.getBrokerCode().equals(dbh.ReadConfig("BrokerCode"))){
@@ -178,13 +179,13 @@ public class Order_RegistrationActivity extends AppCompatActivity {
             }
         }
 
-        binding.registrSpinnerbroker.setSelection(possellbroker);
-        binding.registrSpinnerbroker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.ordRegistrASpinnerbroker.setSelection(possellbroker);
+        binding.ordRegistrASpinnerbroker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 dbh.SaveConfig("BrokerCode",SellBrokers.get(position).getBrokerCode());
-                binding.registrBroker.setText(callMethod.NumberRegion(dbh.ReadConfig("BrokerCode")));
+                binding.ordRegistrABroker.setText(callMethod.NumberRegion(dbh.ReadConfig("BrokerCode")));
 
             }
 
@@ -198,19 +199,19 @@ public class Order_RegistrationActivity extends AppCompatActivity {
     public void init() {
 
 
-        binding.registrBroker.setText(callMethod.NumberRegion(dbh.ReadConfig("BrokerCode")));
-        binding.registrGroupcode.setText(callMethod.NumberRegion(dbh.ReadConfig("GroupCodeDefult")));
-        binding.registrDelay.setText(callMethod.NumberRegion(callMethod.ReadString("Delay")));
-        binding.registrDbname.setText(callMethod.NumberRegion(callMethod.ReadString("PersianCompanyNameUse")));
-        binding.registrTitlesize.setText(callMethod.NumberRegion(callMethod.ReadString("TitleSize")));
+        binding.ordRegistrABroker.setText(callMethod.NumberRegion(dbh.ReadConfig("BrokerCode")));
+        binding.ordRegistrAGroupcode.setText(callMethod.NumberRegion(dbh.ReadConfig("GroupCodeDefult")));
+        binding.ordRegistrADelay.setText(callMethod.NumberRegion(callMethod.ReadString("Delay")));
+        binding.ordRegistrADbname.setText(callMethod.NumberRegion(callMethod.ReadString("PersianCompanyNameUse")));
+        binding.ordRegistrATitlesize.setText(callMethod.NumberRegion(callMethod.ReadString("TitleSize")));
 
 
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lang_array);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.registrSpinnerlang.setAdapter(spinner_adapter);
+        binding.ordRegistrASpinnerlang.setAdapter(spinner_adapter);
 
-        binding.registrSpinnerlang.setSelection(lang_position);
-        binding.registrSpinnerlang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.ordRegistrASpinnerlang.setSelection(lang_position);
+        binding.ordRegistrASpinnerlang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
@@ -248,10 +249,10 @@ public class Order_RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        binding.registrGroupcodeRefresh.setOnClickListener(v -> {
+        binding.ordRegistrAGroupcodeRefresh.setOnClickListener(v -> {
             Dialog dialogProg = new Dialog(this);
-            dialogProg.setContentView(R.layout.rep_prog);
-            TextView tv_rep = dialogProg.findViewById(R.id.rep_prog_text);
+            dialogProg.setContentView(R.layout.order_spinner_box);
+            TextView tv_rep = dialogProg.findViewById(R.id.ord_spinner_text);
             tv_rep.setText(R.string.textvalue_receiveinformation);
             dialogProg.show();
             Call<RetrofitResponse> call1 = apiInterface.kowsar_info("kowsar_info", "AppOrder_DefaultGroupCode");
@@ -263,7 +264,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
 
                         if (!response.body().getText().equals(dbh.ReadConfig("GroupCodeDefult"))) {
                             dbh.SaveConfig("GroupCodeDefult", response.body().getText());
-                            binding.registrGroupcode.setText(callMethod.NumberRegion(dbh.ReadConfig("GroupCodeDefult")));
+                            binding.ordRegistrAGroupcode.setText(callMethod.NumberRegion(dbh.ReadConfig("GroupCodeDefult")));
                             callMethod.showToast(getString(R.string.textvalue_resived));
                         }
                         dialogProg.dismiss();
@@ -277,17 +278,17 @@ public class Order_RegistrationActivity extends AppCompatActivity {
         });
 
 
-        binding.registrBtn.setOnClickListener(view -> {
+        binding.ordRegistrABtn.setOnClickListener(view -> {
 
-            callMethod.EditString("TitleSize", NumberFunctions.EnglishNumber(binding.registrTitlesize.getText().toString()));
-            callMethod.EditString("BodySize", NumberFunctions.EnglishNumber(binding.registrBodysize.getText().toString()));
-            callMethod.EditString("Delay", NumberFunctions.EnglishNumber(binding.registrDelay.getText().toString()));
+            callMethod.EditString("TitleSize", NumberFunctions.EnglishNumber(binding.ordRegistrATitlesize.getText().toString()));
+            callMethod.EditString("BodySize", NumberFunctions.EnglishNumber(binding.ordRegistrABodysize.getText().toString()));
+            callMethod.EditString("Delay", NumberFunctions.EnglishNumber(binding.ordRegistrADelay.getText().toString()));
 
-            if (!dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.registrBroker.getText().toString()))) {
-                dbh.SaveConfig("BrokerCode", NumberFunctions.EnglishNumber(binding.registrBroker.getText().toString()));
+            if (!dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.ordRegistrABroker.getText().toString()))) {
+                dbh.SaveConfig("BrokerCode", NumberFunctions.EnglishNumber(binding.ordRegistrABroker.getText().toString()));
             }
-            if (!dbh.ReadConfig("GroupCodeDefult").equals(NumberFunctions.EnglishNumber(binding.registrGroupcode.getText().toString()))) {
-                dbh.SaveConfig("GroupCodeDefult", NumberFunctions.EnglishNumber(binding.registrGroupcode.getText().toString()));
+            if (!dbh.ReadConfig("GroupCodeDefult").equals(NumberFunctions.EnglishNumber(binding.ordRegistrAGroupcode.getText().toString()))) {
+                dbh.SaveConfig("GroupCodeDefult", NumberFunctions.EnglishNumber(binding.ordRegistrAGroupcode.getText().toString()));
             }
             finish();
 

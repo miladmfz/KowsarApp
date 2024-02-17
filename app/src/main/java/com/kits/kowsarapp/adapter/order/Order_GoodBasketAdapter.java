@@ -48,7 +48,7 @@ public class Order_GoodBasketAdapter extends RecyclerView.Adapter<Order_GoodBask
     @NonNull
     @Override
     public Order_GoodBasketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_basket_item_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_basketitem_card, parent, false);
         if (callMethod.ReadString("LANG").equals("fa")) {
             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {

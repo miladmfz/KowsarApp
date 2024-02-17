@@ -26,6 +26,7 @@ import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.databinding.OrderActivitySearchBinding;
 import com.kits.kowsarapp.fragment.order.Order_SearchViewFragment;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.order.Order_DBH;
@@ -58,7 +59,7 @@ public class Order_SearchActivity extends AppCompatActivity {
     int width = 1;
 
 
-    ActivitySearchBinding binding;
+    OrderActivitySearchBinding binding;
 
     @SuppressLint("ObsoleteSdkInt")
     public static ContextWrapper changeLanguage(Context context, String lang) {
@@ -99,7 +100,7 @@ public class Order_SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivitySearchBinding.inflate(getLayoutInflater());
+        binding = OrderActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
 
@@ -125,17 +126,17 @@ public class Order_SearchActivity extends AppCompatActivity {
         dbh = new Order_DBH(this, callMethod.ReadString("DatabaseName"));
 
         if (callMethod.ReadString("LANG").equals("fa")) {
-            binding.searchactivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            binding.orderSearchActivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {
-            binding.searchactivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            binding.orderSearchActivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else {
-            binding.searchactivity.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            binding.orderSearchActivity.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         width = metrics.widthPixels;
 
-        toolbar = findViewById(R.id.SearchActivity_toolbar);
+        toolbar = findViewById(R.id.ord_search_a_toolbar);
         toolbar.setTitle(callMethod.NumberRegion(getString(R.string.textvalue_tablelable) + callMethod.ReadString("RstMizName")));
         setSupportActionBar(toolbar);
 
@@ -144,7 +145,7 @@ public class Order_SearchActivity extends AppCompatActivity {
         grp_Fragment = new Order_SearchViewFragment();
 
 
-        grp_framelayout = findViewById(R.id.searchactivity_framelayout);
+        grp_framelayout = findViewById(R.id.ord_search_a_framelayout);
 
 
     }
@@ -164,7 +165,7 @@ public class Order_SearchActivity extends AppCompatActivity {
 
         grp_Fragment.setParent_GourpCode(GroupCode);
         grp_Fragment.setGood_GourpCode(GroupCode);
-        fragmentTransaction.replace(R.id.searchactivity_framelayout, grp_Fragment);
+        fragmentTransaction.replace(R.id.ord_search_a_framelayout, grp_Fragment);
         fragmentTransaction.commit();
 
 
@@ -216,7 +217,7 @@ public class Order_SearchActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.order_options_menu, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.basket_menu);
+        MenuItem menuItem = menu.findItem(R.id.order_basket_menu);
         View actionView = menuItem.getActionView();
         textCartItemCount = actionView.findViewById(R.id.cart_badge);
         RefreshState();
@@ -230,7 +231,7 @@ public class Order_SearchActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.basket_menu) {
+        if (item.getItemId() == R.id.order_basket_menu) {
             intent = new Intent(this, Order_BasketActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

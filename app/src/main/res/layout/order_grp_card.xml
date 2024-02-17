@@ -12,7 +12,7 @@
     <LinearLayout
 
 
-        android:id="@+id/grp_list"
+        android:id="@+id/ord_grp_c_list"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         tools:ignore="UselessParent">
 
         <ImageView
-            android:id="@+id/grp_list_image"
+            android:id="@+id/ord_grp_c_image"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_gravity="center"
@@ -29,7 +29,7 @@
             android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/grp_list_name"
+            android:id="@+id/ord_grp_c_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -39,7 +39,7 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/grp_list_imgv"
+            android:id="@+id/ord_grp_c_imgv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

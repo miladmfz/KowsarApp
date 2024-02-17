@@ -51,7 +51,7 @@ public class Order_GoodAdapter extends RecyclerView.Adapter<Order_GoodItemViewHo
     @NonNull
     @Override
     public Order_GoodItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.good_item_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_good_card, parent, false);
         if (callMethod.ReadString("LANG").equals("fa")) {
             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {

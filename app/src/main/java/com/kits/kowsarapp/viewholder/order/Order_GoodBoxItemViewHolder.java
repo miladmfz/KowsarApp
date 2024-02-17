@@ -23,10 +23,10 @@ public class Order_GoodBoxItemViewHolder extends RecyclerView.ViewHolder {
     public Order_GoodBoxItemViewHolder(View itemView) {
         super(itemView);
 
-        tv_name = itemView.findViewById(R.id.good_box_item_goodname);
-        tv_amount = itemView.findViewById(R.id.good_box_item_amount);
-        tv_explain = itemView.findViewById(R.id.good_box_item_explain);
-        img_dlt = itemView.findViewById(R.id.good_box_item_delete);
+        tv_name = itemView.findViewById(R.id.ord_goodorder_c_goodname);
+        tv_amount = itemView.findViewById(R.id.ord_goodorder_c_amount);
+        tv_explain = itemView.findViewById(R.id.ord_goodorder_c_explain);
+        img_dlt = itemView.findViewById(R.id.ord_goodorder_c_delete);
     }
 
 

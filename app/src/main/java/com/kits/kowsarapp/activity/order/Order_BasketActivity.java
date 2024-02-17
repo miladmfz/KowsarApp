@@ -101,7 +101,7 @@ public class Order_BasketActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_buy);
+        setContentView(R.layout.order_activity_basket);
 
 
         Order_InternetConnection ic = new Order_InternetConnection(this);
@@ -128,7 +128,7 @@ public class Order_BasketActivity extends AppCompatActivity {
         print = new Order_Print(Order_BasketActivity.this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
-        CoordinatorLayout ll_activity = findViewById(R.id.buyactivity);
+        CoordinatorLayout ll_activity = findViewById(R.id.order_basket_activity);
         if (callMethod.ReadString("LANG").equals("fa")) {
             ll_activity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else if (callMethod.ReadString("LANG").equals("ar")) {
@@ -138,17 +138,17 @@ public class Order_BasketActivity extends AppCompatActivity {
         }
 
 
-        Buy_row = findViewById(R.id.BuyActivity_total_row_buy);
-        Buy_amount = findViewById(R.id.BuyActivity_total_amount_buy);
-        total_delete = findViewById(R.id.BuyActivity_total_delete);
-        final_buy_test = findViewById(R.id.BuyActivity_test);
-        recyclerView = findViewById(R.id.BuyActivity_R1);
+        Buy_row = findViewById(R.id.ord_basket_a_total_row_buy);
+        Buy_amount = findViewById(R.id.ord_basket_a_total_amount_buy);
+        total_delete = findViewById(R.id.ord_basket_a_total_delete);
+        final_buy_test = findViewById(R.id.ord_basket_a_test);
+        recyclerView = findViewById(R.id.ord_basket_a_R1);
 
-        prog = findViewById(R.id.BuyActivity_prog);
-        img_lottiestatus = findViewById(R.id.BuyActivity_lottie);
-        tv_lottiestatus = findViewById(R.id.BuyActivity_tvstatus);
+        prog = findViewById(R.id.ord_basket_a_prog);
+        img_lottiestatus = findViewById(R.id.ord_basket_a_lottie);
+        tv_lottiestatus = findViewById(R.id.ord_basket_a_tvstatus);
 
-        Toolbar toolbar = findViewById(R.id.BuyActivity_toolbar);
+        Toolbar toolbar = findViewById(R.id.ord_basket_a_toolbar);
 
         toolbar.setTitle(callMethod.NumberRegion(getString(R.string.textvalue_order) + callMethod.ReadString("RstMizName")));
 
