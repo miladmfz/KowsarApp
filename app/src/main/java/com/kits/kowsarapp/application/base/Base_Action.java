@@ -148,7 +148,7 @@ public class Base_Action {
 
 
         APIInterface_kowsar apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface_kowsar.class);
-        Call<RetrofitResponse> call = apiInterface.Kowsar_log("Kowsar_log", android_id
+        Call<RetrofitResponse> call = apiInterface.LogReport("LogReport", android_id
                 , url
                 , callMethod.ReadString("PersianCompanyNameUse")
                 , callMethod.ReadString("PreFactorCode")

@@ -442,9 +442,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
                 Call<RetrofitResponse> call3;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call3=apiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "3", "");
+                    call3=apiInterface.OcrControlled("OcrControlled", factor.getAppOCRFactorCode(), "3", callMethod.ReadString("Deliverer"));
                 }else{
-                    call3=secendApiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "3", "");
+                    call3=secendApiInterface.OcrControlled("OcrControlled", factor.getAppOCRFactorCode(), "3", callMethod.ReadString("Deliverer"));
                 }
 
                 call3.enqueue(new Callback<RetrofitResponse>() {
@@ -524,9 +524,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
+            call=apiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
         }else{
-            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
+            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
         }
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -684,9 +684,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         Call<String> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call =apiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
+            call =apiInterface.SaveOcrImage("SaveOcrImage", signatureimage, factor_code);
         }else {
-            call =secendApiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
+            call =secendApiInterface.SaveOcrImage("SaveOcrImage", signatureimage, factor_code);
         }
         call.enqueue(new Callback<String>() {
             @Override

@@ -283,7 +283,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
 
         call=apiInterface.GetOcrFactorList(
-                "GetFactorList",
+                "GetOcrFactorList",
                 state,
                 srch,
                 callMethod.ReadString("StackCategory"),

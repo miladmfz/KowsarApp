@@ -221,9 +221,9 @@ public class Ocr_CollectFragment extends Fragment {
 
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call=apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
+                call=apiInterface.OcrControlled("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
             }else{
-                call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
+                call=secendApiInterface.OcrControlled("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
             }
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
@@ -598,9 +598,9 @@ public class Ocr_CollectFragment extends Fragment {
 
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call=apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                call=apiInterface.OcrControlled("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
             }else{
-                call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                call=secendApiInterface.OcrControlled("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
             }
 
 

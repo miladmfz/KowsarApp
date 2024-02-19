@@ -140,7 +140,7 @@ public class Order_SearchViewFragment extends Fragment {
 
 
     void allgrp() {
-        Call<RetrofitResponse> call = apiInterface.Getgrp("GoodGroupInfo", Parent_GourpCode);
+        Call<RetrofitResponse> call = apiInterface.GetOrdergroupList("GetOrdergroupList", Parent_GourpCode);
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -168,7 +168,7 @@ public class Order_SearchViewFragment extends Fragment {
         tv_lottiestatus.setVisibility(View.GONE);
 
 
-        call = apiInterface.GetGoodFromGroup("GetOrderGoodList",
+        call = apiInterface.GetOrderGoodList("GetOrderGoodList",
                 Where,
                 good_GourpCode,
                 callMethod.ReadString("AppBasketInfoCode"));

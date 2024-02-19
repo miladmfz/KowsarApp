@@ -213,8 +213,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                         + tminute.substring(tminute.length() - 2);
 
                 tv_reservestart.setText(callMethod.NumberRegion(Time));
-                call = apiInterface.kowsar_info(
-                        "kowsar_info",
+                call = apiInterface.DbSetupvalue(
+                        "DbSetupvalue",
                         "AppOrder_ValidReserveTime"
                 );
                 call.enqueue(new Callback<RetrofitResponse>() {

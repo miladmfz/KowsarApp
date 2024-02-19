@@ -255,7 +255,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
             TextView tv_rep = dialogProg.findViewById(R.id.ord_spinner_text);
             tv_rep.setText(R.string.textvalue_receiveinformation);
             dialogProg.show();
-            Call<RetrofitResponse> call1 = apiInterface.kowsar_info("kowsar_info", "AppOrder_DefaultGroupCode");
+            Call<RetrofitResponse> call1 = apiInterface.DbSetupvalue("DbSetupvalue", "AppOrder_DefaultGroupCode");
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {

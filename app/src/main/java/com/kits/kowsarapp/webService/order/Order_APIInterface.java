@@ -6,119 +6,214 @@ import com.kits.kowsarapp.model.base.RetrofitResponse;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface Order_APIInterface {
 
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> kowsar_info(@Field("tag") String tag, @Field("Where") String Where);
+    String Order_Url = "Order/";
+    String Kowsar_Url = "Kowsar/";
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> Getgrp(@Field("tag") String tag, @Field("GroupCode") String GroupCode);
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetGoodFromGroup(@Field("tag") String tag, @Field("Where") String Where, @Field("GroupCode") String GroupCode, @Field("AppBasketInfoRef") String AppBasketInfoRef);
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> DeleteGoodFromBasket(@Field("tag") String tag, @Field("RowCode") String RowCode, @Field("AppBasketInfoRef") String AppBasketInfoRef);
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetImage(@Field("tag") String tag, @Field("ObjectRef") String ObjectRef, @Field("ClassName") String ClassName, @Field("IX") String IX, @Field("Scale") String Scale);
+    @GET(Kowsar_Url+"DbSetupvalue")
+    Call<RetrofitResponse> DbSetupvalue(
+            @Query("tag") String tag,
+            @Query("Where") String Where
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderInfoInsert(@Field("tag") String tag, @Field("Broker") String Broker, @Field("Miz") String Miz, @Field("PersonName") String PersonName, @Field("Mobile") String Mobile, @Field("InfoExplain") String InfoExplain, @Field("Prepayed") String Prepayed, @Field("ReserveStartTime") String ReserveStartTime, @Field("ReserveEndTime") String ReserveEndTime, @Field("Date") String Date, @Field("State") String State, @Field("InfoCode") String InfoCode);
+    @GET(Order_Url+"GetOrdergroupList")
+    Call<RetrofitResponse> GetOrdergroupList(
+            @Query("tag") String tag,
+            @Query("GroupCode") String GroupCode
+    );
+
+    @GET(Order_Url+"GetOrderGoodList")
+    Call<RetrofitResponse> GetOrderGoodList(
+            @Query("tag") String tag,
+            @Query("Where") String Where,
+            @Query("GroupCode") String GroupCode,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
+
+    @GET(Order_Url+"DeleteGoodFromBasket")
+    Call<RetrofitResponse> DeleteGoodFromBasket(
+            @Query("tag") String tag,
+            @Query("RowCode") String RowCode,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderReserveList(@Field("tag") String tag, @Field("MizRef") String Broker);
+    @GET(Kowsar_Url+"GetImage")
+    Call<RetrofitResponse> GetImage(
+            @Query("tag") String tag,
+            @Query("ObjectRef") String ObjectRef,
+            @Query("ClassName") String ClassName,
+            @Query("IX") String IX,
+            @Query("Scale") String Scale
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetDistinctValues(@Field("tag") String tag, @Field("TableName") String TableName, @Field("FieldNames") String FieldNames, @Field("WhereClause") String WhereClause);
+    @GET(Order_Url+"OrderInfoInsert")
+    Call<RetrofitResponse> OrderInfoInsert(
+            @Query("tag") String tag,
+            @Query("Broker") String Broker,
+            @Query("Miz") String Miz,
+            @Query("PersonName") String PersonName,
+            @Query("Mobile") String Mobile,
+            @Query("InfoExplain") String InfoExplain,
+            @Query("Prepayed") String Prepayed,
+            @Query("ReserveStartTime") String ReserveStartTime,
+            @Query("ReserveEndTime") String ReserveEndTime,
+            @Query("Date") String Date,
+            @Query("State") String State,
+            @Query("InfoCode") String InfoCode
+
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetTodeyFromServer(@Field("tag") String tag);
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetObjectTypeFromDbSetup(@Field("tag") String tag, @Field("ObjectType") String ObjectType);
+    @GET(Order_Url+"OrderReserveList")
+    Call<RetrofitResponse> OrderReserveList(
+            @Query("tag") String tag,
+            @Query("MizRef") String Broker
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderMizList(@Field("tag") String tag, @Field("InfoState") String InfoState, @Field("MizType") String MizType);
+    @GET(Kowsar_Url+"GetDistinctValues")
+    Call<RetrofitResponse> GetDistinctValues(
+            @Query("tag") String tag,
+            @Query("TableName") String TableName,
+            @Query("FieldNames") String FieldNames,
+            @Query("WhereClause") String WhereClause
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderRowInsert(@Field("tag") String tag, @Field("GoodRef") String GoodRef, @Field("FacAmount") String FacAmount, @Field("Price") String Price, @Field("bUnitRef") String bUnitRef, @Field("bRatio") String bRatio, @Field("Explain") String Explain, @Field("InfoRef") String InfoRef, @Field("RowCode") String RowCode);
+    @GET(Order_Url+"GetTodeyFromServer")
+    Call<RetrofitResponse> GetTodeyFromServer(
+            @Query("tag") String tag
+    );
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetbasketSum(@Field("tag") String tag, @Field("AppBasketInfoRef") String AppBasketInfoRef);
-
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderGet(@Field("tag") String tag, @Field("AppBasketInfoRef") String AppBasketInfoRef, @Field("AppType") String AppType);
-
-    @FormUrlEncoded
-    @POST("index.php")
-    Call<RetrofitResponse> OrderSendImage(@Field("tag") String tag, @Field("Image") String image, @Field("Code") String barcode, @Field("PrinterName") String PrinterName, @Field("PrintCount") String PrintCount);
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderGetFactor(@Field("tag") String tag, @Field("AppBasketInfoRef") String AppBasketInfoRef);
+    @GET(Order_Url+"GetObjectTypeFromDbSetup")
+    Call<RetrofitResponse> GetObjectTypeFromDbSetup(
+            @Query("tag") String tag,
+            @Query("ObjectType") String ObjectType
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderGetFactorRow(@Field("tag") String tag, @Field("AppBasketInfoRef") String AppBasketInfoRef, @Field("GoodGroups") String GoodGroups, @Field("Where") String Where);
+    @GET(Order_Url+"OrderMizList")
+    Call<RetrofitResponse> OrderMizList(
+            @Query("tag") String tag,
+            @Query("InfoState") String InfoState,
+            @Query("MizType") String MizType
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderToFactor(@Field("tag") String tag, @Field("AppBasketInfoRef") String AppBasketInfoRef);
+    @GET(Order_Url+"OrderRowInsert")
+    Call<RetrofitResponse> OrderRowInsert(
+            @Query("tag") String tag,
+            @Query("GoodRef") String GoodRef,
+            @Query("FacAmount") String FacAmount,
+            @Query("Price") String Price,
+            @Query("bUnitRef") String bUnitRef,
+            @Query("bRatio") String bRatio,
+            @Query("Explain") String Explain,
+            @Query("InfoRef") String InfoRef,
+            @Query("RowCode") String RowCode
+    );
+
+    @GET(Order_Url+"GetOrderSum")
+    Call<RetrofitResponse> GetOrderSum(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderGetAppPrinter(@Field("tag") String tag);
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> Order_CanPrint(@Field("tag") String tag, @Field("AppBasketInfoRef") String AppBasketInfoRef, @Field("CanPrint") String CanPrint);
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderDeleteAll(@Field("tag") String tag, @Field("AppBasketInfoRef") String AppBasketInfoRef);
+    @GET(Order_Url+"OrderGet")
+    Call<RetrofitResponse> OrderGet(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef,
+            @Query("AppType") String AppType
+    );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderInfoReserveDelete(@Field("tag") String tag, @Field("AppBasketInfoRef") String AppBasketInfoRef);
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetSellBroker(@Field("tag") String tag);
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderEditInfoExplain(@Field("tag") String tag, @Field("AppBasketInfoCode") String AppBasketInfoCode, @Field("Explain") String Explain);
+    @GET(Order_Url+"OrderGetFactor")
+    Call<RetrofitResponse> OrderGetFactor(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
+
+
+    @GET(Order_Url+"OrderGetFactorRow")
+    Call<RetrofitResponse> OrderGetFactorRow(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef,
+            @Query("GoodGroups") String GoodGroups,
+            @Query("Where") String Where
+    );
+
+
+    @GET(Order_Url+"OrderToFactor")
+    Call<RetrofitResponse> OrderToFactor(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
+
+
+    @GET(Order_Url+"OrderGetAppPrinter")
+    Call<RetrofitResponse> OrderGetAppPrinter(
+            @Query("tag") String tag
+    );
+
+    @GET(Order_Url+"Order_CanPrint")
+    Call<RetrofitResponse> Order_CanPrint(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef,
+            @Query("CanPrint") String CanPrint
+    );
+
+    @GET(Order_Url+"OrderDeleteAll")
+    Call<RetrofitResponse> OrderDeleteAll(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
+
+
+    @GET(Order_Url+"OrderInfoReserveDelete")
+    Call<RetrofitResponse> OrderInfoReserveDelete(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
+
+    @GET(Order_Url+"GetSellBroker")
+    Call<RetrofitResponse> GetSellBroker(
+            @Query("tag") String tag
+    );
+    @GET(Order_Url+"OrderEditInfoExplain")
+    Call<RetrofitResponse> OrderEditInfoExplain(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoCode") String AppBasketInfoCode,
+            @Query("Explain") String Explain
+    );
+
+
+
+    /*
+    @GET(Kowsar_Url+"DbSetupvalue")
+    Call<RetrofitResponse> OrderSendImage(
+            @Query("tag") String tag,
+            @Query("Image") String image,
+            @Query("Code") String barcode,
+            @Query("PrinterName") String PrinterName,
+            @Query("PrintCount") String PrintCount
+    );
+    */
+
+
 
 
 }

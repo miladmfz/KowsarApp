@@ -184,9 +184,9 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
+            call=apiInterface.GetOcrFactor("GetOcrFactor",BarcodeScan,OrderBy);
         }else{
-            call=secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
+            call=secendApiInterface.GetOcrFactor("GetOcrFactor",BarcodeScan,OrderBy);
         }
 
         call.enqueue(new Callback<RetrofitResponse>() {

@@ -15,35 +15,35 @@ public interface APIInterface_kowsar {
 
     String Kits_Url="kits/";
 
+
+
     @GET(Kits_Url+"Activation")
     Call<RetrofitResponse> Activation(
             @Query("ActivationCode") String ActivationCode
     );
 
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> Kowsar_log(
-            @Field("tag") String tag
-            , @Field("Device_Id") String Device_Id
-            , @Field("Address_Ip") String Address_Ip
-            , @Field("Server_Name") String Server_Name
-            , @Field("Factor_Code") String Factor_Code
-            , @Field("StrDate") String StrDate
-            , @Field("Broker") String Broker
-            , @Field("Explain") String Explain
+    @GET(Kits_Url+"LogReport")
+    Call<RetrofitResponse> LogReport(
+              @Query("tag") String tag
+            , @Query("Device_Id") String Device_Id
+            , @Query("Address_Ip") String Address_Ip
+            , @Query("Server_Name") String Server_Name
+            , @Query("Factor_Code") String Factor_Code
+            , @Query("StrDate") String StrDate
+            , @Query("Broker") String Broker
+            , @Query("Explain") String Explain
     );
 
-    @POST("index.php")
-    @FormUrlEncoded
+    @GET(Kits_Url+"Errorlog")
     Call<RetrofitResponse> Errorlog(
-            @Field("tag") String tag
-            , @Field("ErrorLog") String ErrorLog
-            , @Field("Broker") String Broker
-            , @Field("DeviceId") String DeviceId
-            , @Field("ServerName") String ServerName
-            , @Field("StrDate") String StrDate
-            , @Field("VersionName") String VersionName
+              @Query("tag") String tag
+            , @Query("ErrorLog") String ErrorLog
+            , @Query("Broker") String Broker
+            , @Query("DeviceId") String DeviceId
+            , @Query("ServerName") String ServerName
+            , @Query("StrDate") String StrDate
+            , @Query("VersionName") String VersionName
     );
 
 

@@ -118,9 +118,9 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
+                call =apiInterface.GetOcrFactor("Getocrfactor",BarcodeScan,"GoodName");
             }else {
-                call =secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
+                call =secendApiInterface.GetOcrFactor("Getocrfactor",BarcodeScan,"GoodName");
             }
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override

@@ -184,9 +184,9 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                         Call<RetrofitResponse> call;
 
                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                            call =apiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+                            call =apiInterface.OcrDeliverd("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
                         }else {
-                            call =secendApiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+                            call =secendApiInterface.OcrDeliverd("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
                         }
 
 

@@ -285,7 +285,7 @@ public class Ocr_Print {
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=ocr_apiInterface.OcrSendImage("OrderSendImage",
+            call=ocr_apiInterface.OcrSendImage("OcrSendImage",
                     bitmap_factor_base64,
                     factorData.getFactorPrivateCode(),
                     targetprinter.getPrinterName(),
@@ -293,7 +293,7 @@ public class Ocr_Print {
 
             );
         }else{
-            call=ocr_secend_apiInterface.OcrSendImage("OrderSendImage",
+            call=ocr_secend_apiInterface.OcrSendImage("OcrSendImage",
                     bitmap_factor_base64,
                     factorData.getFactorPrivateCode(),
                     targetprinter.getPrinterName(),

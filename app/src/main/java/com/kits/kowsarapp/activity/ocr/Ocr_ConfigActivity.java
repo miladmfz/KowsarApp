@@ -244,7 +244,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         spinnerjob.setAdapter(null);
         spinnerjobperson.setAdapter(null);
 
-        Call<RetrofitResponse> call =apiInterface.GetJob("TestJob",where);
+        Call<RetrofitResponse> call =apiInterface.GetJob("GetJob",where);
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -275,7 +275,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
     public void GetDataIsPersian() {
 
-        Call<RetrofitResponse> call =apiInterface.GetDataDbsetup("kowsar_info","DataIsPersian");
+        Call<RetrofitResponse> call =apiInterface.DbSetupvalue("DbSetupvalue","DataIsPersian");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

@@ -206,9 +206,9 @@ public class Ocr_PackFragment extends Fragment{
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.CheckState("OcrControlled", goodchecks, "2", "");
+                    call=apiInterface.OcrControlled("OcrControlled", goodchecks, "2", callMethod.ReadString("Deliverer"));
                 }else{
-                    call=secendApiInterface.CheckState("OcrControlled", goodchecks, "2", "");
+                    call=secendApiInterface.OcrControlled("OcrControlled", goodchecks, "2", callMethod.ReadString("Deliverer"));
                 }
 
 
@@ -467,9 +467,9 @@ public class Ocr_PackFragment extends Fragment{
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.GoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
+                    call=apiInterface.SetGoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
                 }else{
-                    call=secendApiInterface.GoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
+                    call=secendApiInterface.SetGoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
                 }
 
 

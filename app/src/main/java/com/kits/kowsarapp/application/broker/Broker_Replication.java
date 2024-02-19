@@ -161,7 +161,7 @@ public class Broker_Replication {
             LastRepCode = String.valueOf(replicatedetail.getLastRepLogCode());
             UserInfo userInfo = dbh.LoadPersonalInfo();
 
-            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
+            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
                     String.valueOf(replicatedetail.getLastRepLogCode()),
                     replicatedetail.getServerTable(),
                     "",
@@ -377,7 +377,7 @@ public class Broker_Replication {
             String where = replicatedetail.getCondition().replace("BrokerCondition", dbh.ReadConfig("BrokerCode"));
 
             Log.e("kowsar_LastRepCode",LastRepCode);
-            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
+            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
                     LastRepCode,
                     replicatedetail.getServerTable(),
                     "",
@@ -562,7 +562,7 @@ public class Broker_Replication {
         LastRepCode = cursor.getString(0);
         cursor.close();
 
-        Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
+        Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
                  LastRepCode
                 , RepTable
                 ,""
@@ -696,7 +696,7 @@ public class Broker_Replication {
 
     public void GroupCodeDefult() {
 
-        Call<RetrofitResponse> call1 = broker_apiInterface.info("kowsar_info", "AppBroker_DefaultGroupCode");
+        Call<RetrofitResponse> call1 = broker_apiInterface.DbSetupvalue("DbSetupvalue", "AppBroker_DefaultGroupCode");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -720,7 +720,7 @@ public class Broker_Replication {
     }
 
     public void MenuBroker() {
-        Call<RetrofitResponse> call1 = broker_apiInterface.MenuBroker("GetMenuBroker");
+        Call<RetrofitResponse> call1 = broker_apiInterface.GetMenuBroker("GetMenuBroker");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
