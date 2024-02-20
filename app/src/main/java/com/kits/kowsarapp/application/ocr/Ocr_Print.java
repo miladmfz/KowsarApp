@@ -93,6 +93,7 @@ public class Ocr_Print {
         tv_rep = dialogProg.findViewById(R.id.ocr_spinner_text);
         dialogProg.show();
 
+
     }
 
     public void Printing(Factor factor ,String packCount) {
