@@ -130,6 +130,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
 
         broker_action = new Broker_Action(this);
+        base_action= new Base_Action(this);
         callMethod = new CallMethod(this);
         workManager = WorkManager.getInstance(Broker_NavActivity.this);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));

@@ -19,11 +19,11 @@ import com.kits.kowsarapp.activity.broker.Broker_NavActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.model.base.Column;
+import com.kits.kowsarapp.model.base.KowsarLocation;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
-import com.kits.kowsarapp.model.base.Location;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.ReplicationModel;
-import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.base.TableDetail;
 import com.kits.kowsarapp.model.base.UserInfo;
 import com.kits.kowsarapp.webService.base.APIClient;
@@ -47,8 +47,8 @@ public class Broker_Replication {
     private final SQLiteDatabase database;
     private final Integer RepRowCount = 100;
     private final Broker_DBH dbh;
-    ArrayList<Location> locations = new ArrayList<>();
-    Location location;
+    ArrayList<KowsarLocation> locations = new ArrayList<>();
+    KowsarLocation location;
 
     CallMethod callMethod;
     Broker_APIInterface broker_apiInterface;
@@ -93,7 +93,7 @@ public class Broker_Replication {
             tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی تنظیم جدول"));
             GoodTypeReplication();
         } else {
-            Call<RetrofitResponse> call1 = broker_apiInterface.MaxRepLogCode("MaxRepLogCode");
+            Call<RetrofitResponse> call1 = broker_apiInterface.GetMaxRepLog("MaxRepLogCode");
             callMethod.Log(call1.request().toString()+"");
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
@@ -117,7 +117,7 @@ public class Broker_Replication {
 
     public void DoingReplicateAuto() {
 
-        Call<RetrofitResponse> call1 = broker_apiInterface.MaxRepLogCode("MaxRepLogCode");
+        Call<RetrofitResponse> call1 = broker_apiInterface.GetMaxRepLog("MaxRepLogCode");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -812,7 +812,7 @@ callMethod.Log(""+i);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                location = new Location();
+                location = new KowsarLocation();
                 location.setGpsLocationCode(String.valueOf(cursor.getInt(cursor.getColumnIndex("GpsLocationCode"))));
                 locations.add(location);
             }

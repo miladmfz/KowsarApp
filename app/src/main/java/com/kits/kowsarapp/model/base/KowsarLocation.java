@@ -2,7 +2,7 @@ package com.kits.kowsarapp.model.base;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Location {
+public class KowsarLocation {
 
 
     @SerializedName("GpsLocationCode")private String GpsLocationCode;
@@ -55,5 +55,6 @@ public class Location {
         GpsDate = gpsDate;
     }
     //endregion
+
 
 }

@@ -149,7 +149,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
                     builder.setMessage("آیا فاکتور ارسال گردد؟");
 
                     builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                        action.sendfactor(PreFac);
+                        action.sendfactor11(PreFac);
                     });
 
                     builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {

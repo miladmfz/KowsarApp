@@ -2,8 +2,12 @@ package com.kits.kowsarapp.webService.broker;
 
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface Broker_APIInterface {
@@ -14,12 +18,6 @@ public interface Broker_APIInterface {
 
 
 
-
-
-    @GET(Broker_Url+"Activation")
-    Call<RetrofitResponse> Activation(
-            @Query("ActivationCode") String ActivationCode
-    );
 
 
     @GET(Broker_Url+"BrokerStack")
@@ -37,9 +35,9 @@ public interface Broker_APIInterface {
 
 
 
-    @GET(Broker_Url+"MaxRepLogCode")
+    @GET(Broker_Url+"GetMaxRepLog")
 
-    Call<RetrofitResponse> MaxRepLogCode(
+    Call<RetrofitResponse> GetMaxRepLog(
             @Query("tag") String tag
     );
 
@@ -71,6 +69,8 @@ public interface Broker_APIInterface {
     );
 
 
+    @POST(Broker_Url+"BrokerOrder") // Replace with your actual API endpoint
+    Call<ResponseBody> sendData(@Body RequestBody requestBody);
 
 
 

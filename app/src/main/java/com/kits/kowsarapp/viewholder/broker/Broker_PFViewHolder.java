@@ -228,7 +228,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                     builder.setMessage("آیا فاکتور ارسال گردد؟");
 
                     builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                        action.sendfactor(String.valueOf(preFactor.getPreFactorFieldValue("PreFactorCode")));
+                        action.sendfactor11(String.valueOf(preFactor.getPreFactorFieldValue("PreFactorCode")));
                     });
 
                     builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {

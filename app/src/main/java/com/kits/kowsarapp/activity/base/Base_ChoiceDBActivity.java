@@ -24,9 +24,9 @@ import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
 import com.kits.kowsarapp.model.base.Activation;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
-import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.webService.base.APIClient_kowsar;
 import com.kits.kowsarapp.webService.base.APIInterface_kowsar;
 
@@ -39,7 +39,7 @@ import retrofit2.Response;
 
 public class Base_ChoiceDBActivity extends AppCompatActivity {
 
-    APIInterface_kowsar apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface_kowsar.class);
+    APIInterface_kowsar apiInterface ;
     CallMethod callMethod;
     Activation activation;
     Broker_DBH dbh;
@@ -75,7 +75,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dialog = new Dialog(this);
         activation = new Activation();
-
+        apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface_kowsar.class);
         dbhbase = new Broker_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
         dbhbase.CreateActivationDb();
 
@@ -103,7 +103,11 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
 
         binding.activitionBtn.setOnClickListener(v -> {
+
+
             Call<RetrofitResponse> call1 = apiInterface.Activation(binding.activitionEdittext.getText().toString());
+
+
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

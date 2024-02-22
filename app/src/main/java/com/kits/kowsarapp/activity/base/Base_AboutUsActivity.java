@@ -165,7 +165,7 @@ public class Base_AboutUsActivity extends AppCompatActivity {
     public void Config() {
         callMethod = new CallMethod(this);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        setSupportActionBar(binding.AboutusActivityToolbar);
+        setSupportActionBar(binding.bAboutusToolbar);
 
     }
 

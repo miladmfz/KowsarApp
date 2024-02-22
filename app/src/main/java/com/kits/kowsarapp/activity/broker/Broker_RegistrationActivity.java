@@ -17,9 +17,9 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
 import com.kits.kowsarapp.databinding.BrokerActivityRegistrBinding;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
-import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.base.SellBroker;
 import com.kits.kowsarapp.model.base.UserInfo;
 import com.kits.kowsarapp.webService.base.APIClient;
@@ -78,9 +78,13 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
         Call<RetrofitResponse> call1 = broker_apiInterface.GetSellBroker("GetSellBroker");
+        callMethod.Log(call1.toString());
+        callMethod.Log(call1.request().toString());
+        callMethod.Log(call1.request().url().toString());
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                callMethod.Log(response.body().toString());
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     SellBrokers.clear();

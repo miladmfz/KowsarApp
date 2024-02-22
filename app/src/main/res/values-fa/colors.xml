@@ -319,6 +319,20 @@
     <color name="grey_900">#212121</color>
     <color name="grey_1000">#1a1a1a</color>
 
+
+    <color name="color_black">#000000</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_red">#D50000</color>
+    <color name="color_sky">#0091EA</color>
+    <color name="color_green">#00C853</color>
+    <color name="color_yellow">#FFD600</color>
+    <color name="color_pink">#C51162</color>
+    <color name="color_indigo">#283593</color>
+    <color name="color_brown">#3E2723</color>
+    <color name="color_purple">#AA00FF</color>
+    <color name="color_blue">#2962FF</color>
+    <color name="color_orange">#FF6D00</color>
+
 </resources>
 
 

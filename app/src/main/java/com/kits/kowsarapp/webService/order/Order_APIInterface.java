@@ -4,10 +4,7 @@ package com.kits.kowsarapp.webService.order;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface Order_APIInterface {
@@ -202,7 +199,7 @@ public interface Order_APIInterface {
 
 
 
-    /*
+
     @GET(Kowsar_Url+"DbSetupvalue")
     Call<RetrofitResponse> OrderSendImage(
             @Query("tag") String tag,
@@ -211,7 +208,7 @@ public interface Order_APIInterface {
             @Query("PrinterName") String PrinterName,
             @Query("PrintCount") String PrintCount
     );
-    */
+
 
 
 

@@ -26,6 +26,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
@@ -35,7 +36,7 @@ import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.Job;
 import com.kits.kowsarapp.model.base.JobPerson;
 import com.kits.kowsarapp.model.base.NumberFunctions;
-import com.kits.kowsarapp.model.base.RetrofitResponse;
+
 import java.util.ArrayList;
 
 import retrofit2.Call;

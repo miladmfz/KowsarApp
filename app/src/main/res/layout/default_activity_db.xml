@@ -22,7 +22,7 @@
             android:id="@+id/activition_Version"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/color_black"
+            android:textColor="@color/black"
             android:textSize="30dp"
             android:gravity="center"/>
 

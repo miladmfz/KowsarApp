@@ -48,7 +48,7 @@ public class Order_Print {
 
 
     private final Context mContext;
-    public Order_APIInterface apiInterface;
+    public Order_APIInterface order_apiInterface;
     public Call<RetrofitResponse> call;
     CallMethod callMethod;
     Order_DBH dbh;
@@ -74,7 +74,7 @@ public class Order_Print {
         this.il = 0;
         this.callMethod = new CallMethod(mContext);
         this.dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        this.order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
         this.persianCalendar = new PersianCalendar();
         this.dialog = new Dialog(mContext);
         this.dialogProg = new Dialog(mContext);
@@ -97,7 +97,7 @@ public class Order_Print {
         Filter_print = Filter;
         dialogProg();
         tv_rep.setText(R.string.textvalue_printing);
-        call = apiInterface.OrderGetFactor(
+        call = order_apiInterface.OrderGetFactor(
                 "OrderGetFactor",
                 callMethod.ReadString("AppBasketInfoCode")
         );
@@ -125,7 +125,7 @@ public class Order_Print {
 
     public void GetAppPrinterList() {
         Log.e("test","2");
-        call = apiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
+        call = order_apiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -151,7 +151,7 @@ public class Order_Print {
     public void GetRow_Data() {
         Log.e("test","5");
         if (printerconter < (AppPrinters.size())) {
-            call = apiInterface.OrderGetFactorRow(
+            call = order_apiInterface.OrderGetFactorRow(
                     "OrderGetFactorRow",
                     callMethod.ReadString("AppBasketInfoCode"),
                     AppPrinters.get(printerconter).getGoodGroups(),
@@ -216,7 +216,7 @@ public class Order_Print {
 
         } else {
             Log.e("test","6 not size");
-            call = apiInterface.Order_CanPrint(
+            call = order_apiInterface.Order_CanPrint(
                     "Order_CanPrint",
                     callMethod.ReadString("AppBasketInfoCode"),
                     "0"
@@ -534,7 +534,7 @@ public class Order_Print {
 
 
         bitmap_factor_base64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        Call<RetrofitResponse> call = apiInterface.OrderSendImage("OrderSendImage",
+        Call<RetrofitResponse> call = order_apiInterface.OrderSendImage("OrderSendImage",
                 bitmap_factor_base64,
                 callMethod.ReadString("AppBasketInfoCode"),
                 AppPrinters.get(printerconter).getPrinterName(),
