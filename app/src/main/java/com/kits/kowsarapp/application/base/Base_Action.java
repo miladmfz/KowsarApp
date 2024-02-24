@@ -181,56 +181,8 @@ public class Base_Action {
     }
 
 
-    public String CursorToJson(Cursor cursor) {
-        JSONArray resultSet = new JSONArray();
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    JSONObject rowObject = new JSONObject();
-                    for (int i = 0; i < cursor.getColumnCount(); i++) {
-                        String columnName = cursor.getColumnName(i);
-                        if (columnName != null) {
-                            rowObject.put(columnName, cursor.getString(i));
-                        }
-                    }
-                    resultSet.put(rowObject);
-                } while (cursor.moveToNext());
-            }
-        } catch (Exception e) {
-            Log.e("CursorToJson", "Error while converting cursor to JSON: " + e.getMessage());
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return resultSet.toString();
-    }
 
 
-    public String cursorToJson(Cursor cursor) {
-        JSONArray resultSet = new JSONArray();
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    JSONObject rowObject = new JSONObject();
-                    for (int i = 0; i < cursor.getColumnCount(); i++) {
-                        String columnName = cursor.getColumnName(i);
-                        if (columnName != null) {
-                            rowObject.put(columnName, cursor.getString(i));
-                        }
-                    }
-                    resultSet.put(rowObject);
-                } while (cursor.moveToNext());
-            }
-        } catch (JSONException e) {
-            Log.e("CursorToJson", "Error while converting cursor to JSON: " + e.getMessage());
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return resultSet.toString();
-    }
 
 
 

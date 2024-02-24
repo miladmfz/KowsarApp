@@ -15,8 +15,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_BasketActivity;
@@ -25,8 +25,7 @@ import com.kits.kowsarapp.activity.broker.Broker_PFActivity;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.base.PFheader;
-import com.kits.kowsarapp.model.base.PFrow;
+
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -762,41 +761,34 @@ public class Broker_Action extends Base_Action {
         cursor = dtb.rawQuery("Select PreFactorCode, PreFactorDate, PreFactorExplain, CustomerRef, BrokerRef, " +
                 "(Select sum(FactorAmount) From PreFactorRow r Where r.PrefactorRef=h.PrefactorCode) As rwCount " +
                 "From PreFactor h Where PreFactorCode = " + factor_code, null);
-        String pr1 = CursorToJson(cursor);
+        JsonElement pr1 = broker_cursorToJson_El(cursor);
+        String pr1_str = broker_cursorToJson(cursor);
         cursor.close();
 
         cursor = dtb.rawQuery("Select GoodRef, FactorAmount, Price From PreFactorRow Where  GoodRef > 0 and  Prefactorref = " + factor_code, null);
-        String pr2 = CursorToJson(cursor);
+        JsonElement pr2 = broker_cursorToJson_El(cursor);
+        String pr2_str = broker_cursorToJson(cursor);
         cursor.close();
 
 
-        Log.e("kowsar_pfrow", pr1);
-        Log.e("kowsar_pfrow", pr2);
-
-
-
-
-        Gson gson = new Gson();
-        PFheader pfHeader = gson.fromJson(pr1, PFheader.class);
-        PFrow pfRow = gson.fromJson(pr2, PFrow.class);
-
-
-
-
-// Create a JSON object to hold both header and row data
         JsonObject jsonPayload = new JsonObject();
-        jsonPayload.add("kowsar_pfheader", gson.toJsonTree(pfHeader));
-        jsonPayload.add("kowsar_pfrow", gson.toJsonTree(pfRow));
+        jsonPayload.add("kowsar_pfheader", pr1);
+        jsonPayload.add("kowsar_pfrow", pr2);
+
+
+
+
+        callMethod.Log(jsonPayload.toString());
 
 // Convert the JSON object to a request body
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonPayload.toString());
 
-
+callMethod.Log(requestBody.toString());
 
 
 
 // Make the API call
-        Call<ResponseBody> call = broker_apiInterface.sendData(requestBody);
+        Call<ResponseBody> call = broker_apiInterface.sendData(pr1_str,pr2_str);
 
 // Execute the call
         call.enqueue(new Callback<ResponseBody>() {
@@ -1009,7 +1001,8 @@ public class Broker_Action extends Base_Action {
 
 
 
-    public String CursorToJson(Cursor cursor) {
+
+    public String broker_cursorToJson(Cursor cursor) {
         JSONArray resultSet = new JSONArray();
         try {
             if (cursor != null && cursor.moveToFirst()) {
@@ -1024,32 +1017,8 @@ public class Broker_Action extends Base_Action {
                     resultSet.put(rowObject);
                 } while (cursor.moveToNext());
             }
-        } catch (Exception e) {
-            Log.e("CursorToJson", "Error while converting cursor to JSON: " + e.getMessage());
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return resultSet.toString();
-    }
 
 
-    public String cursorToJson(Cursor cursor) {
-        JSONArray resultSet = new JSONArray();
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    JSONObject rowObject = new JSONObject();
-                    for (int i = 0; i < cursor.getColumnCount(); i++) {
-                        String columnName = cursor.getColumnName(i);
-                        if (columnName != null) {
-                            rowObject.put(columnName, cursor.getString(i));
-                        }
-                    }
-                    resultSet.put(rowObject);
-                } while (cursor.moveToNext());
-            }
         } catch (JSONException e) {
             Log.e("CursorToJson", "Error while converting cursor to JSON: " + e.getMessage());
         } finally {
@@ -1059,6 +1028,41 @@ public class Broker_Action extends Base_Action {
         }
         return resultSet.toString();
     }
+
+
+
+
+    // تابعی برای تبدیل Cursor به JsonElement
+    public JsonElement broker_cursorToJson_El(Cursor cursor) {
+        JSONArray jsonArray = new JSONArray();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int columnsCount = cursor.getColumnCount();
+            JSONObject jsonObject = new JSONObject();
+            for (int i = 0; i < columnsCount; i++) {
+                String columnName = cursor.getColumnName(i);
+                try {
+                    // اضافه کردن هر ستون به JSON
+                    jsonObject.put(columnName, cursor.getString(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            jsonArray.put(jsonObject);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        // تبدیل آرایه JSON به رشته JSON
+        String jsonString = jsonArray.toString();
+
+        // تبدیل رشته JSON به JsonElement
+        JsonElement jsonElement = JsonParser.parseString(jsonString);
+
+        return jsonElement;
+    }
+
+
 
 
 
