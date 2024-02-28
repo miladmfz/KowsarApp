@@ -26,6 +26,7 @@ import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 
+import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -753,7 +754,7 @@ public class Broker_Action extends Base_Action {
 
     public void sendfactor11(String factor_code) {
 
-
+callMethod.Log(factor_code);
 
 
         SQLiteDatabase dtb = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
@@ -762,41 +763,38 @@ public class Broker_Action extends Base_Action {
                 "(Select sum(FactorAmount) From PreFactorRow r Where r.PrefactorRef=h.PrefactorCode) As rwCount " +
                 "From PreFactor h Where PreFactorCode = " + factor_code, null);
         JsonElement pr1 = broker_cursorToJson_El(cursor);
-        String pr1_str = broker_cursorToJson(cursor);
         cursor.close();
 
         cursor = dtb.rawQuery("Select GoodRef, FactorAmount, Price From PreFactorRow Where  GoodRef > 0 and  Prefactorref = " + factor_code, null);
         JsonElement pr2 = broker_cursorToJson_El(cursor);
-        String pr2_str = broker_cursorToJson(cursor);
         cursor.close();
 
 
+
         JsonObject jsonPayload = new JsonObject();
-        jsonPayload.add("kowsar_pfheader", pr1);
-        jsonPayload.add("kowsar_pfrow", pr2);
+        jsonPayload.add("HeaderDetails", pr1);
+        jsonPayload.add("RowDetails", pr2);
 
 
-
-
-        callMethod.Log(jsonPayload.toString());
-
-// Convert the JSON object to a request body
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonPayload.toString());
 
-callMethod.Log(requestBody.toString());
+        Call<RetrofitResponse> call1 = broker_apiInterface.sendData_Body(requestBody);
+        callMethod.Log(jsonPayload.toString());
+
+        callMethod.Log(call1.request().url().toString());
 
 
 
-// Make the API call
-        Call<ResponseBody> call = broker_apiInterface.sendData(pr1_str,pr2_str);
 
-// Execute the call
-        call.enqueue(new Callback<ResponseBody>() {
+
+        call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+                callMethod.Log(response.body().getText());
                 if (response.isSuccessful()) {
                     try {
-                        JSONArray object = new JSONArray(response.body());
+                        callMethod.Log("0");
+                        JSONArray object = new JSONArray(response.body().getText());
                         JSONObject jo = object.getJSONObject(0);
                         il = object.length();
                         int code = jo.getInt("GoodCode");
@@ -810,6 +808,7 @@ callMethod.Log(requestBody.toString());
 
 
                             } else {
+                                callMethod.Log("4");
                                 callMethod.showToast("خطا در ارتباط با سرور");
                             }
 
@@ -820,6 +819,7 @@ callMethod.Log(requestBody.toString());
                                 code = jo.getInt("GoodCode");
                                 int flag = jo.getInt("Flag");
                                 dtb.execSQL("Update PreFactorRow set Shortage = " + flag + " Where IfNull(PreFactorRef,0)=" + factor_code + " And GoodRef = " + code);
+                                dtb.close();
                             }
                             callMethod.showToast("کالاهای مورد نظر کسر موجودی دارند!");
                             intent = new Intent(mContext, Broker_BasketActivity.class);
@@ -830,7 +830,8 @@ callMethod.Log(requestBody.toString());
                             ((Activity) mContext).overridePendingTransition(0, 0);
                         }
                     } catch (JSONException e) {
-                        callMethod.Log(e.getMessage());
+                        callMethod.Log("5");
+                        callMethod.Log("error= "+e.getMessage());
                         callMethod.showToast("بروز خطا در اطلاعات");
                     }
                 } else {
@@ -839,7 +840,7 @@ callMethod.Log(requestBody.toString());
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
                 callMethod.Log(t.getMessage());            }
         });
 

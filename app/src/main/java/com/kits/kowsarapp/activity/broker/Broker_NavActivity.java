@@ -109,7 +109,11 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
 
     public void test_fun(View v) {
-        dbh.SaveConfig("LastGpsLocationCode","0");
+
+        //dbh.SaveConfig("LastGpsLocationCode","0");
+        Broker_Action btest =new Broker_Action(this);
+        btest.sendfactor11("1");
+
     }
 
 
@@ -274,7 +278,8 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         navigationView.inflateMenu(R.menu.broker_navigation_drawer_menu);
 
 
-        if (callMethod.ReadString("PersianCompanyNameUse").equals("اصلی")) {
+
+        if (callMethod.ReadString("EnglishCompanyNameUse").equals("asli")) {
             btn_test.setVisibility(View.VISIBLE);
             tv_test.setVisibility(View.VISIBLE);
             //dbh.SaveConfig("BrokerStack","1");

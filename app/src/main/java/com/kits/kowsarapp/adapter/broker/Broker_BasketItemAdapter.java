@@ -62,7 +62,7 @@ public class Broker_BasketItemAdapter extends RecyclerView.Adapter<Broker_Basket
     @Override
     public void onBindViewHolder(@NonNull final Broker_BasketItemViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-
+callMethod.Log(goods.get(position).getGoodFieldValue("Shortage"));
         holder.bind(goods.get(position));
         holder.Action(goods.get(position), mContext, dbh, callMethod, action, image_info);
 

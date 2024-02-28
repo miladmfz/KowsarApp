@@ -78,6 +78,7 @@ public class Broker_BasketItemViewHolder extends RecyclerView.ViewHolder {
         int ws = Integer.parseInt(good.getGoodFieldValue("Shortage"));
 
 
+
         goodnameTextView.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue("GoodName")));
         amount.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue("FactorAmount")));
 
@@ -98,7 +99,7 @@ public class Broker_BasketItemViewHolder extends RecyclerView.ViewHolder {
         }
 
 
-        if (ws == 1 || ws == 2) {
+        if (ws == 1 || ws == 2||ws == -1 || ws == -2) {
             rltv.setBackgroundResource(R.drawable.bg_round_red);
         } else {
             rltv.setBackgroundResource(R.drawable.bg_round_green);
