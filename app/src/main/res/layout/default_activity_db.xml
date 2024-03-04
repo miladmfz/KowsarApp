@@ -19,7 +19,7 @@
 
 
         <TextView
-            android:id="@+id/activition_Version"
+            android:id="@+id/base_app_version"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@color/black"
@@ -35,7 +35,7 @@
             android:weightSum="1">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/activition_edittext"
+                android:id="@+id/base_app_tv_getcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="کد فعال سازی"
@@ -54,7 +54,7 @@
                 style="?attr/editTextBackground" />
 
             <Button
-                android:id="@+id/activition_btn"
+                android:id="@+id/base_app_registercode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ثبت"
@@ -79,7 +79,7 @@
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:background="@color/orange_800"
-                android:id="@+id/activition_line"
+                android:id="@+id/base_app_line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

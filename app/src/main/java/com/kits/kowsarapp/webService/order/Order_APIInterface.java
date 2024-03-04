@@ -3,8 +3,11 @@ package com.kits.kowsarapp.webService.order;
 
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface Order_APIInterface {
@@ -14,13 +17,19 @@ public interface Order_APIInterface {
 
 
 
-
+    @GET(Order_Url+"GetObjectTypeFromDbSetup")
+    Call<RetrofitResponse> GetObjectTypeFromDbSetup(
+            @Query("tag") String tag,
+            @Query("ObjectType") String ObjectType
+    );
     @GET(Kowsar_Url+"DbSetupvalue")
     Call<RetrofitResponse> DbSetupvalue(
             @Query("tag") String tag,
             @Query("Where") String Where
     );
 
+    @POST(Order_Url+"OrderMizList")
+    Call<RetrofitResponse> OrderMizList(@Body RequestBody requestBody );
 
     @GET(Order_Url+"GetOrdergroupList")
     Call<RetrofitResponse> GetOrdergroupList(
@@ -28,13 +37,9 @@ public interface Order_APIInterface {
             @Query("GroupCode") String GroupCode
     );
 
-    @GET(Order_Url+"GetOrderGoodList")
-    Call<RetrofitResponse> GetOrderGoodList(
-            @Query("tag") String tag,
-            @Query("Where") String Where,
-            @Query("GroupCode") String GroupCode,
-            @Query("AppBasketInfoRef") String AppBasketInfoRef
-    );
+
+    @POST(Order_Url+"GetOrderGoodList")
+    Call<RetrofitResponse> GetOrderGoodList(@Body RequestBody requestBody );
 
     @GET(Order_Url+"DeleteGoodFromBasket")
     Call<RetrofitResponse> DeleteGoodFromBasket(
@@ -53,23 +58,8 @@ public interface Order_APIInterface {
             @Query("Scale") String Scale
     );
 
-
-    @GET(Order_Url+"OrderInfoInsert")
-    Call<RetrofitResponse> OrderInfoInsert(
-            @Query("tag") String tag,
-            @Query("Broker") String Broker,
-            @Query("Miz") String Miz,
-            @Query("PersonName") String PersonName,
-            @Query("Mobile") String Mobile,
-            @Query("InfoExplain") String InfoExplain,
-            @Query("Prepayed") String Prepayed,
-            @Query("ReserveStartTime") String ReserveStartTime,
-            @Query("ReserveEndTime") String ReserveEndTime,
-            @Query("Date") String Date,
-            @Query("State") String State,
-            @Query("InfoCode") String InfoCode
-
-    );
+    @POST(Order_Url+"OrderInfoInsert")
+    Call<RetrofitResponse> OrderInfoInsert(@Body RequestBody requestBody );
 
 
     @GET(Order_Url+"OrderReserveList")
@@ -87,39 +77,14 @@ public interface Order_APIInterface {
             @Query("WhereClause") String WhereClause
     );
 
-
     @GET(Order_Url+"GetTodeyFromServer")
     Call<RetrofitResponse> GetTodeyFromServer(
             @Query("tag") String tag
     );
 
-    @GET(Order_Url+"GetObjectTypeFromDbSetup")
-    Call<RetrofitResponse> GetObjectTypeFromDbSetup(
-            @Query("tag") String tag,
-            @Query("ObjectType") String ObjectType
-    );
+    @POST(Order_Url+"OrderRowInsert")
+    Call<RetrofitResponse> OrderRowInsert(@Body RequestBody requestBody );
 
-
-    @GET(Order_Url+"OrderMizList")
-    Call<RetrofitResponse> OrderMizList(
-            @Query("tag") String tag,
-            @Query("InfoState") String InfoState,
-            @Query("MizType") String MizType
-    );
-
-
-    @GET(Order_Url+"OrderRowInsert")
-    Call<RetrofitResponse> OrderRowInsert(
-            @Query("tag") String tag,
-            @Query("GoodRef") String GoodRef,
-            @Query("FacAmount") String FacAmount,
-            @Query("Price") String Price,
-            @Query("bUnitRef") String bUnitRef,
-            @Query("bRatio") String bRatio,
-            @Query("Explain") String Explain,
-            @Query("InfoRef") String InfoRef,
-            @Query("RowCode") String RowCode
-    );
 
     @GET(Order_Url+"GetOrderSum")
     Call<RetrofitResponse> GetOrderSum(
@@ -134,25 +99,11 @@ public interface Order_APIInterface {
             @Query("AppBasketInfoRef") String AppBasketInfoRef,
             @Query("AppType") String AppType
     );
-
-
-
-
     @GET(Order_Url+"OrderGetFactor")
     Call<RetrofitResponse> OrderGetFactor(
             @Query("tag") String tag,
             @Query("AppBasketInfoRef") String AppBasketInfoRef
     );
-
-
-    @GET(Order_Url+"OrderGetFactorRow")
-    Call<RetrofitResponse> OrderGetFactorRow(
-            @Query("tag") String tag,
-            @Query("AppBasketInfoRef") String AppBasketInfoRef,
-            @Query("GoodGroups") String GoodGroups,
-            @Query("Where") String Where
-    );
-
 
     @GET(Order_Url+"OrderToFactor")
     Call<RetrofitResponse> OrderToFactor(
@@ -160,11 +111,11 @@ public interface Order_APIInterface {
             @Query("AppBasketInfoRef") String AppBasketInfoRef
     );
 
-
     @GET(Order_Url+"OrderGetAppPrinter")
     Call<RetrofitResponse> OrderGetAppPrinter(
             @Query("tag") String tag
     );
+
 
     @GET(Order_Url+"Order_CanPrint")
     Call<RetrofitResponse> Order_CanPrint(
@@ -186,18 +137,26 @@ public interface Order_APIInterface {
             @Query("AppBasketInfoRef") String AppBasketInfoRef
     );
 
-    @GET(Order_Url+"GetSellBroker")
+    @GET(Kowsar_Url+"GetSellBroker")
     Call<RetrofitResponse> GetSellBroker(
             @Query("tag") String tag
     );
+
     @GET(Order_Url+"OrderEditInfoExplain")
-    Call<RetrofitResponse> OrderEditInfoExplain(
+    Call<RetrofitResponse> OrderEditInfoExplain(@Body RequestBody requestBody );
+
+
+
+//**********************************************************************************
+
+
+    @GET(Order_Url+"OrderGetFactorRow")
+    Call<RetrofitResponse> OrderGetFactorRow(
             @Query("tag") String tag,
-            @Query("AppBasketInfoCode") String AppBasketInfoCode,
-            @Query("Explain") String Explain
+            @Query("AppBasketInfoRef") String AppBasketInfoRef,
+            @Query("GoodGroups") String GoodGroups,
+            @Query("Where") String Where
     );
-
-
 
 
     @GET(Kowsar_Url+"DbSetupvalue")
@@ -208,7 +167,6 @@ public interface Order_APIInterface {
             @Query("PrinterName") String PrinterName,
             @Query("PrintCount") String PrintCount
     );
-
 
 
 

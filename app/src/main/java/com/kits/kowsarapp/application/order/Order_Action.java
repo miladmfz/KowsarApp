@@ -306,20 +306,25 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         btn_reserve.setOnClickListener(v -> {
             dialogProg();
             tv_rep.setText(R.string.textvalue_sendinformation);
-            call = apiInterface.OrderInfoInsert(
-                    "OrderInfoInsert",
-                    dbh.ReadConfig("BrokerCode"),
-                    basketInfo.getRstmizCode(),
-                    NumberFunctions.EnglishNumber(ed_personname.getText().toString()),
-                    NumberFunctions.EnglishNumber(ed_mobileno.getText().toString()),
-                    NumberFunctions.EnglishNumber(ed_explain.getText().toString()) + mContext.getString(R.string.textvalue_tagreserve),
-                    "0",
-                    NumberFunctions.EnglishNumber(tv_reservestart.getText().toString()),
-                    NumberFunctions.EnglishNumber(tv_reserveend.getText().toString()),
-                    NumberFunctions.EnglishNumber(tv_date.getText().toString()),
-                    "4",
-                    "0"
-            );
+
+
+            String Body_str  = "";
+
+            Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+            Body_str =callMethod.CreateJson("Miz", basketInfo.getRstmizCode(), Body_str);
+            Body_str =callMethod.CreateJson("PersonName", NumberFunctions.EnglishNumber(ed_personname.getText().toString()), Body_str);
+            Body_str =callMethod.CreateJson("Mobile", NumberFunctions.EnglishNumber(ed_mobileno.getText().toString()), Body_str);
+            Body_str =callMethod.CreateJson("InfoExplain", NumberFunctions.EnglishNumber(ed_explain.getText().toString()) + mContext.getString(R.string.textvalue_tagreserve), Body_str);
+            Body_str =callMethod.CreateJson("Prepayed", "0", Body_str);
+            Body_str =callMethod.CreateJson("ReserveStartTime", NumberFunctions.EnglishNumber(tv_reservestart.getText().toString()), Body_str);
+            Body_str =callMethod.CreateJson("ReserveEndTime", NumberFunctions.EnglishNumber(tv_reserveend.getText().toString()), Body_str);
+            Body_str =callMethod.CreateJson("Date", NumberFunctions.EnglishNumber(tv_date.getText().toString()), Body_str);
+            Body_str =callMethod.CreateJson("State", "4", Body_str);
+            Body_str =callMethod.CreateJson("InfoCode", "0", Body_str);
+
+
+            Call<RetrofitResponse> call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+
 
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
@@ -493,16 +498,25 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                     dialogProg();
                     tv_rep.setText(R.string.textvalue_sendinformation);
-                    Call<RetrofitResponse> call = apiInterface.OrderRowInsert("OrderRowInsert",
-                            String.valueOf(good.getGoodCode()),
-                            good.getAmount(),
-                            good.getMaxSellPrice(),
-                            String.valueOf(good.getGoodUnitRef()),
-                            String.valueOf(good.getDefaultUnitValue()),
-                            good.getExplain(),
-                            callMethod.ReadString("AppBasketInfoCode"),
-                            good.getRowCode()
-                    );
+
+
+
+                    String Body_str  = "";
+
+                    Body_str =callMethod.CreateJson("GoodRef", String.valueOf(good.getGoodCode()), Body_str);
+                    Body_str =callMethod.CreateJson("FacAmount", good.getAmount(), Body_str);
+                    Body_str =callMethod.CreateJson("Price", good.getMaxSellPrice(), Body_str);
+                    Body_str =callMethod.CreateJson("bUnitRef", String.valueOf(good.getGoodUnitRef()), Body_str);
+                    Body_str =callMethod.CreateJson("bRatio", String.valueOf(good.getDefaultUnitValue()), Body_str);
+                    Body_str =callMethod.CreateJson("Explain", good.getExplain(), Body_str);
+                    Body_str =callMethod.CreateJson("UserId", "-2000", Body_str);
+                    Body_str =callMethod.CreateJson("InfoRef", callMethod.ReadString("AppBasketInfoCode"), Body_str);
+                    Body_str =callMethod.CreateJson("RowCode", good.getRowCode(), Body_str);
+
+
+                    call = apiInterface.OrderRowInsert(callMethod.RetrofitBody(Body_str));
+
+
                     call.enqueue(new Callback<RetrofitResponse>() {
                         @Override
                         public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -670,20 +684,26 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             dialogProg();
             tv_rep.setText(R.string.textvalue_sendinformation);
-            call = apiInterface.OrderInfoInsert(
-                    "OrderInfoInsert",
-                    dbh.ReadConfig("BrokerCode"),
-                    basketInfo.getRstmizCode(),
-                    basketInfo.getPersonName(),
-                    basketInfo.getMobileNo(),
-                    NumberFunctions.EnglishNumber( " * "+explain_tv.getText().toString())+" * ",
-                    basketInfo.getPrepayed(),
-                    basketInfo.getReserveStart(),
-                    basketInfo.getReserveEnd(),
-                    basketInfo.getToday(),
-                    basketInfo.getInfoState(),
-                    basketInfo.getAppBasketInfoCode()
-            );
+
+
+            String Body_str  = "";
+
+            Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+            Body_str =callMethod.CreateJson("Miz", basketInfo.getRstmizCode(), Body_str);
+            Body_str =callMethod.CreateJson("PersonName", basketInfo.getPersonName(), Body_str);
+            Body_str =callMethod.CreateJson("Mobile", basketInfo.getMobileNo(), Body_str);
+            Body_str =callMethod.CreateJson("InfoExplain", NumberFunctions.EnglishNumber( " * "+explain_tv.getText().toString())+" * ", Body_str);
+            Body_str =callMethod.CreateJson("Prepayed", basketInfo.getPrepayed(), Body_str);
+            Body_str =callMethod.CreateJson("ReserveStartTime", basketInfo.getReserveStart(), Body_str);
+            Body_str =callMethod.CreateJson("ReserveEndTime", basketInfo.getReserveEnd(), Body_str);
+            Body_str =callMethod.CreateJson("Date", basketInfo.getToday(), Body_str);
+            Body_str =callMethod.CreateJson("State", basketInfo.getInfoState(), Body_str);
+            Body_str =callMethod.CreateJson("InfoCode", basketInfo.getAppBasketInfoCode(), Body_str);
+
+
+
+             call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+
 
             if (!basketInfo.getInfoExplain().equals(NumberFunctions.EnglishNumber(explain_tv.getText().toString()))) {
                 call.enqueue(new Callback<RetrofitResponse>() {
@@ -791,11 +811,17 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             if(explain_tv.getText().toString().length()>0) {
                 dialogProg();
                 tv_rep.setText(R.string.textvalue_sendinformation);
-                call = apiInterface.OrderEditInfoExplain(
-                        "OrderEditInfoExplain",
-                        callMethod.ReadString("AppBasketInfoCode"),
-                        NumberFunctions.EnglishNumber(explain_tv.getText().toString())
-                );
+
+
+
+
+                String Body_str  = "";
+
+                Body_str =callMethod.CreateJson("AppBasketInfoCode", callMethod.ReadString("AppBasketInfoCode"), Body_str);
+                Body_str =callMethod.CreateJson("Explain", NumberFunctions.EnglishNumber(explain_tv.getText().toString()), Body_str);
+
+
+                call = apiInterface.OrderEditInfoExplain(callMethod.RetrofitBody(Body_str));
 
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override

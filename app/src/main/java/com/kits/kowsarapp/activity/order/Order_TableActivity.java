@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.gson.JsonObject;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
@@ -37,10 +38,13 @@ import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -193,7 +197,17 @@ public class Order_TableActivity extends AppCompatActivity {
         img_lottiestatus.setVisibility(View.GONE);
         tv_lottiestatus.setVisibility(View.GONE);
 
-        Call<RetrofitResponse> call1 = apiInterface.OrderMizList("OrderMizList", State,callMethod.ReadString("ObjectType"));
+
+
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("MizType", callMethod.ReadString("ObjectType"), Body_str);
+        Body_str =callMethod.CreateJson("InfoState", State, Body_str);
+
+
+        Call<RetrofitResponse> call1 = apiInterface.OrderMizList(callMethod.RetrofitBody(Body_str));
+
+
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -224,9 +238,11 @@ public class Order_TableActivity extends AppCompatActivity {
     public void init() {
 
         Call<RetrofitResponse> call1 = apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "RstMiz_MizType");
+        callMethod.Log(call1.request().url().toString());
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                callMethod.Log("size = "+response.body().getObjectTypes().size());
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     objectTypes.clear();
@@ -250,6 +266,7 @@ public class Order_TableActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                callMethod.Log("notsize = "+t.getMessage());
                 progressBar.setVisibility(View.GONE);
             }
         });

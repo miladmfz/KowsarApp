@@ -24,9 +24,12 @@ import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
 import com.kits.kowsarapp.model.base.Activation;
+import com.kits.kowsarapp.model.base.Base_DBH;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.order.Order_DBH;
 import com.kits.kowsarapp.webService.base.APIClient_kowsar;
 import com.kits.kowsarapp.webService.base.APIInterface_kowsar;
 
@@ -42,8 +45,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     APIInterface_kowsar apiInterface ;
     CallMethod callMethod;
     Activation activation;
-    Broker_DBH dbh;
-    Broker_DBH dbhbase;
+    Base_DBH base_dbh;
     TextView tv_rep;
     TextView tv_step;
     Dialog dialog;
@@ -76,8 +78,8 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         dialog = new Dialog(this);
         activation = new Activation();
         apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface_kowsar.class);
-        dbhbase = new Broker_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
-        dbhbase.CreateActivationDb();
+        base_dbh = new Base_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
+        base_dbh.CreateActivationDb();
 
         dialog.setContentView(R.layout.broker_spinner_box);
         tv_rep = dialog.findViewById(R.id.b_spinner_text);
@@ -89,9 +91,9 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     @SuppressLint("SdCardPath")
     public void init() {
 
-        activations = dbhbase.getActivation();
+        activations = base_dbh.getActivation();
 
-        binding.activitionVersion.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : " + BuildConfig.VERSION_NAME));
+        binding.baseAppVersion.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : " + BuildConfig.VERSION_NAME));
         for (Activation singleactive : activations) {
             try {
                 CreateView(singleactive);
@@ -102,10 +104,10 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         }
 
 
-        binding.activitionBtn.setOnClickListener(v -> {
+        binding.baseAppRegistercode.setOnClickListener(v -> {
 
 
-            Call<RetrofitResponse> call1 = apiInterface.Activation(binding.activitionEdittext.getText().toString());
+            Call<RetrofitResponse> call1 = apiInterface.Activation(binding.baseAppTvGetcode.getText().toString());
 
 
             call1.enqueue(new Callback<RetrofitResponse>() {
@@ -114,7 +116,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
                         activation = response.body().getActivations().get(0);
-                        dbhbase.InsertActivation(activation);
+                        base_dbh.InsertActivation(activation);
                         finish();
 
                         startActivity(getIntent());
@@ -182,32 +184,54 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                     @Override
 
                     public void onDownloadComplete() {
-                        File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
-                        File CompletefILE = new File(activation.getDatabaseFolderPath() + "/KowsarDb.sqlite");
-                        DownloadTemp.renameTo(CompletefILE);
-                        callMethod.EditString("DatabaseName", activation.getDatabaseFilePath());
-                        dbh = new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                        dbh.DatabaseCreate();
-                        File tempdb = new File(activation.getDatabaseFolderPath() + "/tempDb");
 
-                        if (tempdb.exists()) {
-                            dbh.GetLastDataFromOldDataBase(activation.getDatabaseFolderPath() + "/tempDb");
-                            dbh.InitialConfigInsert();
-                            tempdb.delete();
-                        } else {
-                            dbh.InitialConfigInsert();
+                        callMethod.EditString("DatabaseName", activation.getDatabaseFilePath());
+
+
+
+                        if (activation.getAppType().equals("1")) {
+                            Broker_DBH broker_dbh=new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
+                            File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
+                            File CompletefILE = new File(activation.getDatabaseFolderPath() + "/KowsarDb.sqlite");
+                            DownloadTemp.renameTo(CompletefILE);
+
+                            broker_dbh.DatabaseCreate();
+                            File tempdb = new File(activation.getDatabaseFolderPath() + "/tempDb");
+
+                            if (tempdb.exists()) {
+                                broker_dbh.GetLastDataFromOldDataBase(activation.getDatabaseFolderPath() + "/tempDb");
+                                broker_dbh.InitialConfigInsert();
+                                tempdb.delete();
+                            } else {
+                                broker_dbh.InitialConfigInsert();
+                            }
+
+                        } else if (activation.getAppType().equals("2")) {
+
+                            Ocr_DBH ocr_dbh= new Ocr_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
+                            ocr_dbh.DatabaseCreate();
+
+                        } else if (activation.getAppType().equals("3")) {
+
+                            Order_DBH order_dbh= new Order_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
+                            order_dbh.DatabaseCreate();
+
                         }
+
+
 
                         callMethod.EditString("PersianCompanyNameUse", activation.getPersianCompanyName());
                         callMethod.EditString("EnglishCompanyNameUse", activation.getEnglishCompanyName());
                         callMethod.EditString("ServerURLUse", activation.getServerURL());
+                        callMethod.EditString("SecendServerURL", activation.getSecendServerURL());
                         callMethod.EditString("ActivationCode", activation.getActivationCode());
                         callMethod.EditString("AppType", activation.getAppType());
-
+                        dialog.dismiss();
                         intent = new Intent(App.getContext(), Base_SplashActivity.class);
                         startActivity(intent);
                         finish();
                         dialog.dismiss();
+
                     }
 
 
@@ -302,6 +326,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                 callMethod.EditString("PersianCompanyNameUse", singleactive.getPersianCompanyName());
                 callMethod.EditString("EnglishCompanyNameUse", singleactive.getEnglishCompanyName());
                 callMethod.EditString("ServerURLUse", singleactive.getServerURL());
+                callMethod.EditString("SecendServerURL", singleactive.getSecendServerURL());
                 callMethod.EditString("DatabaseName", singleactive.getDatabaseFilePath());
                 callMethod.EditString("ActivationCode", singleactive.getActivationCode());
                 callMethod.EditString("AppType", singleactive.getAppType());
@@ -325,7 +350,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
                         activation = response.body().getActivations().get(0);
-                        dbhbase.InsertActivation(activation);
+                        base_dbh.InsertActivation(activation);
                         finish();
                         startActivity(getIntent());
 
@@ -353,7 +378,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
         ll_main.addView(ll_tv);
 
-        binding.activitionLine.addView(ll_main, margin_10);
+        binding.baseAppLine.addView(ll_main, margin_10);
     }
 
 

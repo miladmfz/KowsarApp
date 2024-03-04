@@ -142,7 +142,7 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditString("ActivationCode", "");
             callMethod.EditString("AppType", "");
 
-            dbhbase = new Broker_DBH(App.getContext(), "/data/data/com.kits.brokerkowsar/databases/KowsarDb.sqlite");
+            dbhbase = new Broker_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
             dbhbase.CreateActivationDb();
             //endregion
 
@@ -179,11 +179,12 @@ public class Base_SplashActivity extends AppCompatActivity {
         callMethod.EditString("MizType", "");
         callMethod.EditString("InfoState", "");
         callMethod.EditString("RstMizName", "");
+        callMethod.EditBoolan("ReserveActive", false);
         //endregion
 
 
 
-
+        callMethod.Log("0");
         requestPermission();
 
 
@@ -253,18 +254,11 @@ public class Base_SplashActivity extends AppCompatActivity {
 
     //region $ permissions
 
-    private void runtimePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
-        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
-        } else {
-            Startapplication();
-        }
-    }
 
     private void requestPermission() {
+        callMethod.Log("1");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            callMethod.Log("2");
             if (!Environment.isExternalStorageManager()) {
                 try {
                     intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
@@ -287,12 +281,25 @@ public class Base_SplashActivity extends AppCompatActivity {
                 Startapplication();
             }
         } else {
+            callMethod.Log("3");
             runtimePermission();
+        }
+    }
+
+    private void runtimePermission() {
+        callMethod.Log("4");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
+        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
+        } else {
+            Startapplication();
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        callMethod.Log("5");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2296 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager()) {
@@ -314,7 +321,7 @@ public class Base_SplashActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+        callMethod.Log("6");
 
         if (requestCode == PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

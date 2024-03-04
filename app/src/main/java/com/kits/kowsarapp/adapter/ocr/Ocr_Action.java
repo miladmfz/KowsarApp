@@ -78,7 +78,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
 
 
-
+callMethod.Log(callMethod.ReadString("ServerURLUse"));
+callMethod.Log(callMethod.ReadString("SecendServerURL"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
 
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
@@ -453,28 +454,25 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         assert response.body() != null;
 
                         Call<RetrofitResponse> call2;
+
+
+                        String Body_str  = "";
+
+                        Body_str =callMethod.CreateJson("OcrFactorCode", factor.getAppOCRFactorCode(), Body_str);
+                        Body_str =callMethod.CreateJson("Reader", reader_s, Body_str);
+                        Body_str =callMethod.CreateJson("Controler", coltrol_s, Body_str);
+                        Body_str =callMethod.CreateJson("Packer", pack_s, Body_str);
+                        Body_str =callMethod.CreateJson("PackDeliverDate", NumberFunctions.EnglishNumber(date), Body_str);
+                        Body_str =callMethod.CreateJson("PackCount", packCount, Body_str);
+                        Body_str =callMethod.CreateJson("AppDeliverDate", sendtime, Body_str);
+
+
                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                            call2=apiInterface.SetPackDetail(
-                                    "SetPackDetail",
-                                    factor.getAppOCRFactorCode(),
-                                    reader_s,
-                                    coltrol_s,
-                                    pack_s,
-                                    NumberFunctions.EnglishNumber(date),
-                                    packCount,
-                                    sendtime
-                            );
+                            call2 = apiInterface.SetPackDetail(callMethod.RetrofitBody(Body_str));
+
                         }else{
-                            call2=secendApiInterface.SetPackDetail(
-                                    "SetPackDetail",
-                                    factor.getAppOCRFactorCode(),
-                                    reader_s,
-                                    coltrol_s,
-                                    pack_s,
-                                    NumberFunctions.EnglishNumber(date),
-                                    packCount,
-                                    sendtime
-                            );
+                            call2 = secendApiInterface.SetPackDetail(callMethod.RetrofitBody(Body_str));
+
                         }
 
                         call2.enqueue(new Callback<RetrofitResponse>() {

@@ -183,10 +183,19 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
 
 
         Call<RetrofitResponse> call;
+
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("barcode", BarcodeScan, Body_str);
+        Body_str =callMethod.CreateJson("Step", "0", Body_str);
+        Body_str =callMethod.CreateJson("orderby", OrderBy, Body_str);
+
+
+
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetOcrFactor("GetOcrFactor",BarcodeScan,OrderBy);
+            call = apiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
         }else{
-            call=secendApiInterface.GetOcrFactor("GetOcrFactor",BarcodeScan,OrderBy);
+            call = secendApiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
         }
 
         call.enqueue(new Callback<RetrofitResponse>() {

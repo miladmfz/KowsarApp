@@ -204,6 +204,18 @@ public class Order_RegistrationActivity extends AppCompatActivity {
         binding.ordRegistrADelay.setText(callMethod.NumberRegion(callMethod.ReadString("Delay")));
         binding.ordRegistrADbname.setText(callMethod.NumberRegion(callMethod.ReadString("PersianCompanyNameUse")));
         binding.ordRegistrATitlesize.setText(callMethod.NumberRegion(callMethod.ReadString("TitleSize")));
+        binding.ordRegistrAActivereserv.setChecked(callMethod.ReadBoolan("ReserveActive"));
+
+
+        binding.ordRegistrAActivereserv.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ReserveActive")) {
+                callMethod.EditBoolan("ReserveActive", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("ReserveActive", true);
+                callMethod.showToast("بله");
+            }
+        });
 
 
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lang_array);

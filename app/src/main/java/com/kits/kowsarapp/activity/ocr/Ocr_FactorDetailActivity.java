@@ -117,12 +117,25 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
         if(bitmap_factor_base64.equals("")){
 
 
+
             Call<RetrofitResponse> call;
+
+
+            String Body_str  = "";
+
+            Body_str =callMethod.CreateJson("barcode", BarcodeScan, Body_str);
+            Body_str =callMethod.CreateJson("Step", "0", Body_str);
+            Body_str =callMethod.CreateJson("orderby", "GoodName", Body_str);
+
+
+
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call =apiInterface.GetOcrFactor("Getocrfactor",BarcodeScan,"GoodName");
-            }else {
-                call =secendApiInterface.GetOcrFactor("Getocrfactor",BarcodeScan,"GoodName");
+                call = apiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
+            }else{
+                call = secendApiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
             }
+
+
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

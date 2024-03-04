@@ -49,9 +49,6 @@
 
 
 
-
-
-
         <activity
             android:name=".activity.broker.Broker_AllGrpActivity"
             android:configChanges="orientation|screenSize"
@@ -71,6 +68,25 @@
         <activity android:name=".activity.broker.Broker_ScanCodeActivity" />
         <activity android:name=".activity.broker.Broker_SearchActivity" />
 
+
+
+
+        <activity android:name=".activity.order.Order_NavActivity" />
+        <activity android:name=".activity.order.Order_BasketActivity" />
+        <activity android:name=".activity.order.Order_RegistrationActivity" />
+        <activity android:name=".activity.order.Order_TableActivity" />
+        <activity android:name=".activity.order.Order_SearchActivity" />
+
+
+
+        <activity android:name=".activity.ocr.Ocr_ConfigActivity" />
+        <activity android:name=".activity.ocr.Ocr_ConfirmActivity" />
+        <activity android:name=".activity.ocr.Ocr_FactorDetailActivity" />
+        <activity android:name=".activity.ocr.Ocr_FactorListLocalActivity" />
+        <activity android:name=".activity.ocr.Ocr_FactorListOnlineActivity" />
+        <activity android:name=".activity.ocr.Ocr_NavActivity" />
+        <activity android:name=".activity.ocr.Ocr_PaintActivity" />
+        <activity android:name=".activity.ocr.Ocr_ScanCodeActivity" />
 
 
 

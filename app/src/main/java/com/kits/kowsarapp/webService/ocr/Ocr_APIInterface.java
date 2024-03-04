@@ -2,7 +2,9 @@ package com.kits.kowsarapp.webService.ocr;//package com.kits.test.webService;
 
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -18,15 +20,8 @@ public interface Ocr_APIInterface {
 
 
 
-
-
-    @GET(Ocr_Url+"GetOcrFactor")
-    Call<RetrofitResponse> GetOcrFactor(
-            @Query("tag") String tag
-            , @Query("barcode") String barcode
-            , @Query("orderby") String orderby
-    );
-
+    @POST(Ocr_Url+"GetOcrFactor")
+    Call<RetrofitResponse> GetOcrFactor(@Body RequestBody requestBody );
 
     @GET(Ocr_Url+"OcrDeliverd")
     Call<RetrofitResponse> OcrDeliverd(
@@ -35,7 +30,6 @@ public interface Ocr_APIInterface {
             , @Query("State") String State
             , @Query("Deliverer") String Deliverer
     );
-
     @GET(Ocr_Url+"OcrControlled")
     Call<RetrofitResponse> OcrControlled(
             @Query("tag") String tag
@@ -51,33 +45,10 @@ public interface Ocr_APIInterface {
             @Query("Shortage") String Shortage
     );
 
-
-    @GET(Ocr_Url+"GetOcrFactorList")
-    Call<RetrofitResponse> GetOcrFactorList(
-            @Query("tag") String tag,
-            @Query("State") String State,
-            @Query("SearchTarget") String SearchTarget,
-            @Query("Stack") String Stack,
-            @Query("path") String path,
-            @Query("HasShortage") String HasShortage,
-            @Query("IsEdited") String IsEdited,
-            @Query("Row") String Row,
-            @Query("PageNo") String PageNo
-    );
-
-
-    @GET(Ocr_Url+"SetPackDetail")
-    Call<RetrofitResponse> SetPackDetail(
-            @Query("tag") String tag,
-            @Query("OcrFactorCode") String OcrFactorCode,
-            @Query("Reader") String Reader,
-            @Query("Controler") String Controler,
-            @Query("Packer") String Packer,
-            @Query("PackDeliverDate") String PackDeliverDate,
-            @Query("PackCount") String PackCount,
-            @Query("AppDeliverDate") String AppDeliverDate
-    );
-
+    @POST(Ocr_Url+"GetOcrFactorList")
+    Call<RetrofitResponse> GetOcrFactorList(@Body RequestBody requestBody );
+    @POST(Ocr_Url+"GetOcrFactorList")
+    Call<RetrofitResponse> SetPackDetail(@Body RequestBody requestBody );
 
     @GET(Ocr_Url+"GetOcrGoodDetail")
     Call<RetrofitResponse> GetOcrGoodDetail(
@@ -118,22 +89,6 @@ public interface Ocr_APIInterface {
             @Query("tag") String tag,
             @Query("Where") String where
     );
-
-
-
-
-
-    @GET(Ocr_Url+"SaveOcrImage")
-    Call<String> SaveOcrImage(
-            @Query("tag") String tag,
-            @Query("image") String image,
-            @Query("barcode") String barcode
-    );
-
-
-
-
-
     @GET(Kowsar_Url+"GetImage")
 
     Call<RetrofitResponse> GetImage(
@@ -150,6 +105,77 @@ public interface Ocr_APIInterface {
 
     );
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @GET(Ocr_Url+"SaveOcrImage")
+    Call<String> SaveOcrImage(
+            @Query("tag") String tag,
+            @Query("image") String image,
+            @Query("barcode") String barcode
+    );
+
+
+
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> OrderGetAppPrinter(@Field("tag") String tag);
@@ -162,6 +188,8 @@ public interface Ocr_APIInterface {
             , @Field("PrinterName") String PrinterName
             , @Field("PrintCount") String PrintCount
     );
+
+
 
 }
 

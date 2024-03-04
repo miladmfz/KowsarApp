@@ -54,7 +54,7 @@ public class Order_RstMizViewHolder extends RecyclerView.ViewHolder {
         tv_reservebrokername = itemView.findViewById(R.id.ord_table_c_reservebrokername);
         tv_reservemobileno = itemView.findViewById(R.id.ord_table_c_reservemobileno);
         btn_select = itemView.findViewById(R.id.ord_table_c_select);
-        btn_reserve = itemView.findViewById(R.id.ord_table_c_reserve);
+        btn_reserve = itemView.findViewById(R.id.ord_table_c_btnreserve);
         btn_print = itemView.findViewById(R.id.ord_table_c_print);
         btn_changemiz = itemView.findViewById(R.id.ord_table_c_changemiz);
         btn_explainedit = itemView.findViewById(R.id.ord_table_c_explainedit);

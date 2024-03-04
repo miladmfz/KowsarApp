@@ -94,19 +94,25 @@ public class Order_PrintChangeTable {
 
     public void DoPrint() {
 
-        call = apiInterface.OrderInfoInsert("OrderInfoInsert",
-                dbh.ReadConfig("BrokerCode"),
-                basketInfo_New.getRstmizCode(),
-                callMethod.ReadString("PersonName"),
-                callMethod.ReadString("MobileNo"),
-                callMethod.ReadString("InfoExplain"),
-                "0",
-                callMethod.ReadString("ReserveStart"),
-                callMethod.ReadString("ReserveEnd"),
-                callMethod.ReadString("Today"),
-                callMethod.ReadString("InfoState"),
-                callMethod.ReadString("AppBasketInfoCode")
-        );
+
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+        Body_str =callMethod.CreateJson("Miz",basketInfo_New.getRstmizCode(), Body_str);
+        Body_str =callMethod.CreateJson("PersonName",callMethod.ReadString("PersonName"), Body_str);
+        Body_str =callMethod.CreateJson("Mobile",callMethod.ReadString("MobileNo"), Body_str);
+        Body_str =callMethod.CreateJson("InfoExplain", callMethod.ReadString("InfoExplain"), Body_str);
+        Body_str =callMethod.CreateJson("Prepayed",  "0", Body_str);
+        Body_str =callMethod.CreateJson("ReserveStartTime", callMethod.ReadString("ReserveStart"), Body_str);
+        Body_str =callMethod.CreateJson("ReserveEndTime", callMethod.ReadString("ReserveEnd"), Body_str);
+        Body_str =callMethod.CreateJson("Date", callMethod.ReadString("Today"), Body_str);
+        Body_str =callMethod.CreateJson("State", callMethod.ReadString("InfoState"), Body_str);
+        Body_str =callMethod.CreateJson("InfoCode", callMethod.ReadString("AppBasketInfoCode"), Body_str);
+
+
+
+        call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override

@@ -754,7 +754,7 @@ public class Broker_Action extends Base_Action {
 
     public void sendfactor11(String factor_code) {
 
-callMethod.Log(factor_code);
+        callMethod.Log(factor_code);
 
 
         SQLiteDatabase dtb = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
@@ -774,17 +774,9 @@ callMethod.Log(factor_code);
         JsonObject jsonPayload = new JsonObject();
         jsonPayload.add("HeaderDetails", pr1);
         jsonPayload.add("RowDetails", pr2);
-
-
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonPayload.toString());
 
         Call<RetrofitResponse> call1 = broker_apiInterface.sendData_Body(requestBody);
-        callMethod.Log(jsonPayload.toString());
-
-        callMethod.Log(call1.request().url().toString());
-
-
-
 
 
         call1.enqueue(new Callback<RetrofitResponse>() {

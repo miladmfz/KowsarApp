@@ -27,6 +27,7 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
 import com.kits.kowsarapp.application.order.Order_Print;
 import com.kits.kowsarapp.application.order.Order_PrintChangeTable;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.model.order.Order_DBH;
@@ -114,7 +115,11 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
         holder.tv_name.setText(callMethod.NumberRegion(basketInfos.get(position).getRstMizName()));
 
-
+        if (callMethod.ReadBoolan("ReserveActive")) {
+            holder.btn_reserve.setVisibility(View.GONE);
+        }else{
+            holder.btn_reserve.setVisibility(View.VISIBLE);
+        }
 
         if (changeTable.equals("0")) {
             holder.btn_reserve.setVisibility(View.GONE);
@@ -203,7 +208,29 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                 if (basketInfos.get(position).getInfoState().equals("0") || basketInfos.get(position).getInfoState().equals("3")) {
 
                     if (basketInfos.get(position).getIsReserved().equals("1")) {
-                        call = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "1", basketInfos.get(position).getReserve_AppBasketInfoCode());
+
+
+
+                        String Body_str  = "";
+
+                        Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+                        Body_str =callMethod.CreateJson("Miz", basketInfos.get(position).getRstmizCode(), Body_str);
+                        Body_str =callMethod.CreateJson("PersonName", basketInfos.get(position).getPersonName(), Body_str);
+                        Body_str =callMethod.CreateJson("Mobile", basketInfos.get(position).getMobileNo(), Body_str);
+                        Body_str =callMethod.CreateJson("InfoExplain", basketInfos.get(position).getExplain(), Body_str);
+                        Body_str =callMethod.CreateJson("Prepayed",  "0", Body_str);
+                        Body_str =callMethod.CreateJson("ReserveStartTime", basketInfos.get(position).getReserveStart(), Body_str);
+                        Body_str =callMethod.CreateJson("ReserveEndTime", basketInfos.get(position).getReserveEnd(), Body_str);
+                        Body_str =callMethod.CreateJson("Date", basketInfos.get(position).getToday(), Body_str);
+                        Body_str =callMethod.CreateJson("State", "1", Body_str);
+                        Body_str =callMethod.CreateJson("InfoCode", basketInfos.get(position).getReserve_AppBasketInfoCode(), Body_str);
+
+
+
+                        call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+
+
+
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -240,7 +267,26 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                             }
                         });
                     } else {
-                        call = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), "", "", "", "0", "", "", basketInfos.get(position).getToday(), "1", "0");
+
+                        String Body_str  = "";
+
+                        Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+                        Body_str =callMethod.CreateJson("Miz", basketInfos.get(position).getRstmizCode(), Body_str);
+                        Body_str =callMethod.CreateJson("PersonName", "", Body_str);
+                        Body_str =callMethod.CreateJson("Mobile", "", Body_str);
+                        Body_str =callMethod.CreateJson("InfoExplain", "", Body_str);
+                        Body_str =callMethod.CreateJson("Prepayed",  "0", Body_str);
+                        Body_str =callMethod.CreateJson("ReserveStartTime", "", Body_str);
+                        Body_str =callMethod.CreateJson("ReserveEndTime", "", Body_str);
+                        Body_str =callMethod.CreateJson("Date", basketInfos.get(position).getToday(), Body_str);
+                        Body_str =callMethod.CreateJson("State", "1", Body_str);
+                        Body_str =callMethod.CreateJson("InfoCode", "0", Body_str);
+
+
+
+                        call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+
+
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -304,11 +350,34 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     call.cancel();
                 }
 
+                String Body_str  = "";
+
+                Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+                Body_str =callMethod.CreateJson("Miz", basketInfos.get(position).getRstmizCode(), Body_str);
+                Body_str =callMethod.CreateJson("PersonName",basketInfos.get(position).getRstmizCode(), Body_str);
+                Body_str =callMethod.CreateJson("Mobile",basketInfos.get(position).getPersonName(), Body_str);
+                Body_str =callMethod.CreateJson("InfoExplain",basketInfos.get(position).getMobileNo(), Body_str);
+                Body_str =callMethod.CreateJson("Prepayed",  "0", Body_str);
+                Body_str =callMethod.CreateJson("ReserveStartTime",basketInfos.get(position).getReserveStart(), Body_str);
+                Body_str =callMethod.CreateJson("ReserveEndTime",basketInfos.get(position).getReserveEnd(), Body_str);
+                Body_str =callMethod.CreateJson("State", "3", Body_str);
+
+
+
+
                 if (basketInfos.get(position).getIsReserved().equals("1")) {
-                    call = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
+
+                    Body_str =callMethod.CreateJson("Date", date, Body_str);
+                    Body_str =callMethod.CreateJson("InfoCode", basketInfos.get(position).getReserve_AppBasketInfoCode(), Body_str);
+
+
                 } else {
-                    call = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
+                    Body_str =callMethod.CreateJson("Date", basketInfos.get(position).getToday(), Body_str);
+                    Body_str =callMethod.CreateJson("InfoCode", basketInfos.get(position).getAppBasketInfoCode(), Body_str);
+
+
                 }
+                call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.AlertDialogCustom);
@@ -461,19 +530,26 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                 String extraexplain = mContext.getString(R.string.textvalue_transfertext) + callMethod.ReadString("RstMizName") + mContext.getString(R.string.textvalue_transfer_to) + basketInfos.get(position).getRstMizName() + ") ";
 
-                call = apiInterface.OrderInfoInsert("OrderInfoInsert",
-                        dbh.ReadConfig("BrokerCode"),
-                        callMethod.ReadString("RstmizCode"),
-                        callMethod.ReadString("PersonName"),
-                        callMethod.ReadString("MobileNo"),
-                        explainvalue + extraexplain,
-                        "0",
-                        callMethod.ReadString("ReserveStart"),
-                        callMethod.ReadString("ReserveEnd"),
-                        callMethod.ReadString("Today"),
-                        callMethod.ReadString("InfoState"),
-                        callMethod.ReadString("AppBasketInfoCode")
-                );
+
+                String Body_str  = "";
+
+                Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+                Body_str =callMethod.CreateJson("Miz",callMethod.ReadString("RstmizCode"), Body_str);
+                Body_str =callMethod.CreateJson("PersonName",callMethod.ReadString("PersonName"), Body_str);
+                Body_str =callMethod.CreateJson("Mobile",callMethod.ReadString("MobileNo"), Body_str);
+                Body_str =callMethod.CreateJson("InfoExplain", explainvalue + extraexplain, Body_str);
+                Body_str =callMethod.CreateJson("Prepayed",  "0", Body_str);
+                Body_str =callMethod.CreateJson("ReserveStartTime", callMethod.ReadString("ReserveStart"), Body_str);
+                Body_str =callMethod.CreateJson("ReserveEndTime", callMethod.ReadString("ReserveEnd"), Body_str);
+                Body_str =callMethod.CreateJson("Date", callMethod.ReadString("Today"), Body_str);
+                Body_str =callMethod.CreateJson("State", callMethod.ReadString("InfoState"), Body_str);
+                Body_str =callMethod.CreateJson("InfoCode", callMethod.ReadString("AppBasketInfoCode"), Body_str);
+
+
+
+                call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+
+
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {

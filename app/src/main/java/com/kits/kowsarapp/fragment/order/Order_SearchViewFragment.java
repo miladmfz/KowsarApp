@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 
 public class Order_SearchViewFragment extends Fragment {
@@ -168,10 +170,17 @@ public class Order_SearchViewFragment extends Fragment {
         tv_lottiestatus.setVisibility(View.GONE);
 
 
-        call = apiInterface.GetOrderGoodList("GetOrderGoodList",
-                Where,
-                good_GourpCode,
-                callMethod.ReadString("AppBasketInfoCode"));
+
+        String RequestBody_str  = "";
+
+        RequestBody_str =callMethod.CreateJson("Where", Where, "");
+        RequestBody_str =callMethod.CreateJson("GroupCode", good_GourpCode, RequestBody_str);
+        RequestBody_str =callMethod.CreateJson("AppBasketInfoRef", callMethod.ReadString("AppBasketInfoCode"), RequestBody_str);
+
+
+        Call<RetrofitResponse> call = apiInterface.GetOrderGoodList(callMethod.RetrofitBody(RequestBody_str));
+
+
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {

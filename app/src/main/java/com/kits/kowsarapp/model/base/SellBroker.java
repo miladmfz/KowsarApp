@@ -6,6 +6,9 @@ public class SellBroker {
 
     @SerializedName("brokerCode") private String brokerCode;
     @SerializedName("BrokerNameWithoutType") private String BrokerNameWithoutType;
+    @SerializedName("CentralRef") private String CentralRef;
+    @SerializedName("Active") private String Active;
+
 
 
     //region $ getter setter
@@ -25,6 +28,22 @@ public class SellBroker {
 
     public void setBrokerNameWithoutType(String brokerNameWithoutType) {
         BrokerNameWithoutType = brokerNameWithoutType;
+    }
+
+    public String getCentralRef() {
+        return CentralRef;
+    }
+
+    public void setCentralRef(String centralRef) {
+        CentralRef = centralRef;
+    }
+
+    public String getActive() {
+        return Active;
+    }
+
+    public void setActive(String active) {
+        Active = active;
     }
     //endregion
 }

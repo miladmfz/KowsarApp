@@ -9,6 +9,11 @@ import android.widget.Toast;
 
 import com.kits.kowsarapp.model.base.NumberFunctions;
 
+import org.json.JSONObject;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
 
 public class CallMethod extends Application {
     private final SharedPreferences shPref;
@@ -73,6 +78,34 @@ public class CallMethod extends Application {
     public void Log(String message) {
         Log.e("KowsarApp",message);
     }
+
+
+    public String CreateJson(String key, String value, String existingJson) {
+
+        JSONObject jsonObject = null;
+        try {
+            if (existingJson != null && !existingJson.isEmpty()) {
+                jsonObject = new JSONObject(existingJson);
+            } else {
+                jsonObject = new JSONObject();
+            }
+            jsonObject.put(key, value);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject.toString()+"";
+    }
+    public RequestBody RetrofitBody(String jsonRequestBody) {
+
+        Log(jsonRequestBody);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonRequestBody);
+
+        return requestBody;
+    }
+
 
 
 

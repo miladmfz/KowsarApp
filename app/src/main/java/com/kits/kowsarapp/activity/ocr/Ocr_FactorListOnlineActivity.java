@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Query;
 
 public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
@@ -276,22 +277,21 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
         prog.setVisibility(View.VISIBLE);
 
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("State", state, Body_str);
+        Body_str =callMethod.CreateJson("SearchTarget", srch, Body_str);
+        Body_str =callMethod.CreateJson("Stack",  callMethod.ReadString("StackCategory"), Body_str);
+        Body_str =callMethod.CreateJson("path", path, Body_str);
+        Body_str =callMethod.CreateJson("HasShortage", StateShortage, Body_str);
+        Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
+        Body_str =callMethod.CreateJson("Row", Row, Body_str);
+        Body_str =callMethod.CreateJson("PageNo", String.valueOf(PageNo), Body_str);
 
 
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
-        Call<RetrofitResponse> call;
 
-
-        call=apiInterface.GetOcrFactorList(
-                "GetOcrFactorList",
-                state,
-                srch,
-                callMethod.ReadString("StackCategory"),
-                path,
-                StateShortage,
-                StateEdited,
-                Row,
-                String.valueOf(PageNo));
         call.enqueue(new Callback<RetrofitResponse>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -413,18 +413,22 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         RetrofitRequset_ListCount();
         pastVisiblesItems=0;
 
-        Call<RetrofitResponse> call;
 
-        call=apiInterface.GetOcrFactorList(
-                "GetFactorList",
-                state,
-                srch,
-                callMethod.ReadString("StackCategory"),
-                path,
-                StateShortage,
-                StateEdited,
-                Row,
-                "0");
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("State", state, Body_str);
+        Body_str =callMethod.CreateJson("SearchTarget", srch, Body_str);
+        Body_str =callMethod.CreateJson("Stack",  callMethod.ReadString("StackCategory"), Body_str);
+        Body_str =callMethod.CreateJson("path", path, Body_str);
+        Body_str =callMethod.CreateJson("HasShortage", StateShortage, Body_str);
+        Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
+        Body_str =callMethod.CreateJson("Row", Row, Body_str);
+        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+
+
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+
+
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -475,20 +479,21 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
     public void RetrofitRequset_ListCount() {
 
+        String Body_str  = "";
 
-        Call<RetrofitResponse> call;
+        Body_str =callMethod.CreateJson("State", state, Body_str);
+        Body_str =callMethod.CreateJson("SearchTarget", srch, Body_str);
+        Body_str =callMethod.CreateJson("Stack",  callMethod.ReadString("StackCategory"), Body_str);
+        Body_str =callMethod.CreateJson("path", path, Body_str);
+        Body_str =callMethod.CreateJson("HasShortage", StateShortage, Body_str);
+        Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
+        Body_str =callMethod.CreateJson("Row", Row, Body_str);
+        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
 
 
-        call=apiInterface.GetOcrFactorList(
-                "GetFactorListCount",
-                state,
-                srch,
-                callMethod.ReadString("StackCategory"),
-                path,
-                StateShortage,
-                StateEdited,
-                Row,
-                "0");
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+
+
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -506,18 +511,19 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
     public void RetrofitRequset_EditeCount() {
 
-        Call<RetrofitResponse> call;
+        String Body_str  = "";
 
-        call=apiInterface.GetOcrFactorList(
-                "GetFactorListCount",
-                state,
-                "0",
-                "همه",
-                "همه",
-                "0",
-                "1",
-                "10000",
-                "0");
+        Body_str =callMethod.CreateJson("State", state, Body_str);
+        Body_str =callMethod.CreateJson("SearchTarget", "0", Body_str);
+        Body_str =callMethod.CreateJson("Stack",  "همه", Body_str);
+        Body_str =callMethod.CreateJson("path", "همه", Body_str);
+        Body_str =callMethod.CreateJson("HasShortage", "0", Body_str);
+        Body_str =callMethod.CreateJson("IsEdited", "1", Body_str);
+        Body_str =callMethod.CreateJson("Row", "10000", Body_str);
+        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+
+
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
 
         call.enqueue(new Callback<RetrofitResponse>() {
@@ -535,29 +541,25 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
     public void RetrofitRequset_shortageCount() {
 
-        Call<RetrofitResponse> call;
+
+        Call<RetrofitResponse> call ;
+
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("State", state, Body_str);
+        Body_str =callMethod.CreateJson("SearchTarget", "", Body_str);
+        Body_str =callMethod.CreateJson("Stack",  "همه", Body_str);
+        Body_str =callMethod.CreateJson("path", "همه", Body_str);
+        Body_str =callMethod.CreateJson("HasShortage", "1", Body_str);
+        Body_str =callMethod.CreateJson("IsEdited", "0", Body_str);
+        Body_str =callMethod.CreateJson("Row", "10000", Body_str);
+        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetOcrFactorList(
-                    "GetFactorListCount",
-                    state,
-                    "",
-                    "همه",
-                    "همه",
-                    "1",
-                    "0",
-                    "10000",
-                    "0");
+            call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+
         }else{
-            call=secendApiInterface.GetOcrFactorList(
-                    "GetFactorListCount",
-                    state,
-                    "",
-                    "همه",
-                    "همه",
-                    "1",
-                    "0",
-                    "10000",
-                    "0");
+            call = secendApiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
         }
 
 
