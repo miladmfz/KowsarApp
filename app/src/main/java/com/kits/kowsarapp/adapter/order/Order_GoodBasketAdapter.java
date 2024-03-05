@@ -73,13 +73,12 @@ public class Order_GoodBasketAdapter extends RecyclerView.Adapter<Order_GoodBask
         } else {
             holder.ll_explain.setVisibility(View.INVISIBLE);
         }
-
         holder.ll_amount.setOnClickListener(v -> action.GoodBoxDialog(goods.get(position), "1"));
         holder.tv_explain.setOnClickListener(v -> action.GoodBoxDialog(goods.get(position), "1"));
         holder.tv_goodname.setOnClickListener(v -> action.GoodBoxDialog(goods.get(position), "1"));
 
 
-        if (goods.get(position).getFactorCode() == null) {
+        if (goods.get(position).getFactorCode().equals("0")) {
             holder.btn_dlt.setVisibility(View.VISIBLE);
         } else if (Integer.parseInt(goods.get(position).getFactorCode()) > 0) {
             holder.btn_dlt.setVisibility(View.INVISIBLE);

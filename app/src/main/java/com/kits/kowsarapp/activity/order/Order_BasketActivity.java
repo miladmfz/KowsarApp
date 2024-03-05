@@ -160,27 +160,8 @@ public class Order_BasketActivity extends AppCompatActivity {
         img_lottiestatus.setVisibility(View.GONE);
         tv_lottiestatus.setVisibility(View.GONE);
 
-        Call<RetrofitResponse> call = apiInterface.OrderGet("OrderGet", callMethod.ReadString("AppBasketInfoCode"), "3");
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    goods = response.body().getGoods();
-                    callrecycler();
-                    prog.setVisibility(View.GONE);
 
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                prog.setVisibility(View.GONE);
-                goods.clear();
-                callrecycler();
-            }
-        });
-
+        GetOrder();
 
         final_buy_test.setOnClickListener(view -> {
 
@@ -239,7 +220,28 @@ public class Order_BasketActivity extends AppCompatActivity {
         });
     }
 
+    private void GetOrder() {
+        Call<RetrofitResponse> call = apiInterface.OrderGet("OrderGet", callMethod.ReadString("AppBasketInfoCode"), "3");
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    goods = response.body().getGoods();
+                    callrecycler();
+                    prog.setVisibility(View.GONE);
 
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                prog.setVisibility(View.GONE);
+                goods.clear();
+                callrecycler();
+            }
+        });
+    }
 
 
     private void callrecycler() {
@@ -252,7 +254,7 @@ public class Order_BasketActivity extends AppCompatActivity {
             tv_lottiestatus.setVisibility(View.VISIBLE);
         } else {
             for (Good good : goods) {
-                if (good.getFactorCode() == null) {
+                if (good.getFactorCode().equals("0")) {
                     final_buy_test.setVisibility(View.VISIBLE);
                     total_delete.setVisibility(View.VISIBLE);
                 }
@@ -267,7 +269,7 @@ public class Order_BasketActivity extends AppCompatActivity {
     }
 
     public void RefreshState() {
-
+        GetOrder();
         Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override

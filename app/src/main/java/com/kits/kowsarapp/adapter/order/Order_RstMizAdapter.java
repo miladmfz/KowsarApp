@@ -115,14 +115,15 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
         holder.tv_name.setText(callMethod.NumberRegion(basketInfos.get(position).getRstMizName()));
 
-        if (callMethod.ReadBoolan("ReserveActive")) {
-            holder.btn_reserve.setVisibility(View.GONE);
-        }else{
-            holder.btn_reserve.setVisibility(View.VISIBLE);
-        }
+
 
         if (changeTable.equals("0")) {
-            holder.btn_reserve.setVisibility(View.GONE);
+            if (callMethod.ReadBoolan("ReserveActive")) {
+                holder.btn_reserve.setVisibility(View.VISIBLE);
+
+            }else{
+                holder.btn_reserve.setVisibility(View.GONE);
+            }
             holder.tv_placecount.setText(callMethod.NumberRegion(basketInfos.get(position).getPlaceCount()));
 
             if (basketInfos.get(position).getExplain().length() > 0) {
@@ -567,6 +568,20 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                                             assert response.body() != null;
                                             if (response.body().getText().equals("Done")) {
                                                 printchange.GetHeader_Data("MizType", basketInfos.get(position));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                                             }
 

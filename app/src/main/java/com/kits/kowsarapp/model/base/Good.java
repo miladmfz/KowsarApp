@@ -329,6 +329,9 @@ public class Good implements Serializable {
 
 
     public String getGoodImageName() {
+        if (GoodImageName==null){
+            GoodImageName="";
+        }
         return GoodImageName;
     }
 
@@ -393,6 +396,9 @@ public class Good implements Serializable {
     }
 
     public String getFactorCode() {
+        if (FactorCode == null) {FactorCode = "0";}
+        else if (FactorCode.equals("")) {FactorCode = "0";}
+
         return FactorCode;
     }
 
@@ -1447,6 +1453,9 @@ public class Good implements Serializable {
     }
 
     public String getMaxSellPrice() {
+        if (MaxSellPrice.indexOf(".")>0){
+            MaxSellPrice=MaxSellPrice.substring(0,MaxSellPrice.indexOf("."));
+        }
         return MaxSellPrice;
     }
 

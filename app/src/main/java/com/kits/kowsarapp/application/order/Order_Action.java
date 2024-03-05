@@ -355,7 +355,6 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
 
     public void GoodBoxDialog(Good good, String Flag) {
-
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.order_goodorder_box);
@@ -476,12 +475,18 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                     good.setAmount(amo);
                     good.setExplain(explain);
+                    callMethod.Log("start3= "+good.getRowCode());
 
                     for (Good goodlikeorder : good_box_items) {
+                        callMethod.Log("-----------------------");
+
+                        callMethod.Log("start00= "+goodlikeorder.getRowCode());
+                        callMethod.Log("start00= "+explain);
+                        callMethod.Log("start00= "+goodlikeorder.getExplain());
 
                         if (goodlikeorder.getExplain().equals(explain)) {
 
-                            if (goodlikeorder.getFactorCode() == null) {
+                            if (goodlikeorder.getFactorCode() == "0") {
                                 good.setRowCode(goodlikeorder.getRowCode());
                                 if (Flag.equals("0")) {
                                     good.setAmount(String.valueOf(Integer.parseInt(goodlikeorder.getAmount()) + Integer.parseInt(amo)));
@@ -498,10 +503,12 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                     dialogProg();
                     tv_rep.setText(R.string.textvalue_sendinformation);
+                    callMethod.Log("start4= "+good.getRowCode());
 
 
 
                     String Body_str  = "";
+
 
                     Body_str =callMethod.CreateJson("GoodRef", String.valueOf(good.getGoodCode()), Body_str);
                     Body_str =callMethod.CreateJson("FacAmount", good.getAmount(), Body_str);

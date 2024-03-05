@@ -74,7 +74,7 @@ public class Order_GoodBoxItemAdapter extends RecyclerView.Adapter<Order_GoodBox
         holder.tv_amount.setText(callMethod.NumberRegion(goods.get(position).getAmount()));
         holder.tv_explain.setText(callMethod.NumberRegion(goods.get(position).getExplain()));
 
-        if (goods.get(position).getFactorCode() == null) {
+        if (goods.get(position).getFactorCode().equals("0")) {
             holder.img_dlt.setVisibility(View.VISIBLE);
             holder.img_dlt.setOnClickListener(v ->{
 

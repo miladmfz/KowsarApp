@@ -143,10 +143,12 @@ public class Order_SearchViewFragment extends Fragment {
 
     void allgrp() {
         Call<RetrofitResponse> call = apiInterface.GetOrdergroupList("GetOrdergroupList", Parent_GourpCode);
+        callMethod.Log(call.request().url().toString());
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
+                    callMethod.Log(response.body().getGroups().size()+"");
                     assert response.body() != null;
 
                     Order_GrpAdapter adapter = new Order_GrpAdapter(response.body().getGroups(), Parent_GourpCode, fragmentTransaction, requireActivity());

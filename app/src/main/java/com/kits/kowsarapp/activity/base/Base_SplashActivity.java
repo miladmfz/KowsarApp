@@ -121,6 +121,8 @@ public class Base_SplashActivity extends AppCompatActivity {
             //region $ order
             callMethod.EditString("AppBasketInfoCode", "0");
             callMethod.EditString("ObjectType", "");
+            callMethod.EditBoolan("ReserveActive", false);
+
             //endregion
 
             //region $ AllApp
@@ -179,7 +181,6 @@ public class Base_SplashActivity extends AppCompatActivity {
         callMethod.EditString("MizType", "");
         callMethod.EditString("InfoState", "");
         callMethod.EditString("RstMizName", "");
-        callMethod.EditBoolan("ReserveActive", false);
         //endregion
 
 
