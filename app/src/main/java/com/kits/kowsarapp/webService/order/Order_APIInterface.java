@@ -111,10 +111,6 @@ public interface Order_APIInterface {
             @Query("AppBasketInfoRef") String AppBasketInfoRef
     );
 
-    @GET(Order_Url+"OrderGetAppPrinter")
-    Call<RetrofitResponse> OrderGetAppPrinter(
-            @Query("tag") String tag
-    );
 
 
     @GET(Order_Url+"Order_CanPrint")
@@ -146,27 +142,18 @@ public interface Order_APIInterface {
     Call<RetrofitResponse> OrderEditInfoExplain(@Body RequestBody requestBody );
 
 
-
+    @GET(Order_Url+"OrderChangeTable")
+    Call<RetrofitResponse> OrderChangeTable(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
+    @GET(Order_Url+"OrderPrintFactor")
+    Call<RetrofitResponse> OrderPrintFactor(
+            @Query("tag") String tag,
+            @Query("AppBasketInfoRef") String AppBasketInfoRef
+    );
 //**********************************************************************************
 
-
-    @GET(Order_Url+"OrderGetFactorRow")
-    Call<RetrofitResponse> OrderGetFactorRow(
-            @Query("tag") String tag,
-            @Query("AppBasketInfoRef") String AppBasketInfoRef,
-            @Query("GoodGroups") String GoodGroups,
-            @Query("Where") String Where
-    );
-
-
-    @GET(Kowsar_Url+"DbSetupvalue")
-    Call<RetrofitResponse> OrderSendImage(
-            @Query("tag") String tag,
-            @Query("Image") String image,
-            @Query("Code") String barcode,
-            @Query("PrinterName") String PrinterName,
-            @Query("PrintCount") String PrintCount
-    );
 
 
 

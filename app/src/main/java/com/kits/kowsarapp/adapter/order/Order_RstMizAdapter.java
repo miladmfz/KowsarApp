@@ -25,9 +25,6 @@ import com.kits.kowsarapp.activity.order.Order_SearchActivity;
 import com.kits.kowsarapp.activity.order.Order_TableActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
-import com.kits.kowsarapp.application.order.Order_Print;
-import com.kits.kowsarapp.application.order.Order_PrintChangeTable;
-import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.model.order.Order_DBH;
@@ -54,9 +51,8 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
     Order_DBH dbh;
     String date;
     Call<RetrofitResponse> call;
-    Order_Action action;
-    Order_Print print;
-    Order_PrintChangeTable printchange;
+    Order_Action order_action;
+
     NotificationManager notificationManager;
     String channel_id = "Kowsarmobile";
     String channel_name = "home";
@@ -66,9 +62,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
         this.mContext = context;
         this.basketInfos = BasketInfos;
         this.callMethod = new CallMethod(mContext);
-        this.action = new Order_Action(mContext);
-        this.print = new Order_Print(mContext);
-        this.printchange = new Order_PrintChangeTable(mContext);
+        this.order_action = new Order_Action(mContext);
         this.dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
         call = apiInterface.GetTodeyFromServer("GetTodeyFromServer");
@@ -418,7 +412,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
             });
 
-            holder.btn_reserve.setOnClickListener(v -> action.ReserveBoxDialog(basketInfos.get(position)));
+            holder.btn_reserve.setOnClickListener(v -> order_action.ReserveBoxDialog(basketInfos.get(position)));
 
 
             holder.btn_print.setOnClickListener(v -> {
@@ -443,7 +437,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                                 if (response.isSuccessful()) {
                                     assert response.body() != null;
                                     if (response.body().getText().equals("Done")) {
-                                        print.GetHeader_Data("");
+                                        order_action.OrderPrintFactor();
                                     }
 
                                 }
@@ -513,8 +507,9 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
             });
 
-            holder.btn_explainedit.setOnClickListener(v -> action.EditBasketInfoExplain(basketInfos.get(position)));
+            holder.btn_explainedit.setOnClickListener(v -> order_action.EditBasketInfoExplain(basketInfos.get(position)));
         } else {
+
             holder.tv_name.setTextColor(R.color.black);
 
             holder.btn_select.setOnClickListener(v -> {
@@ -559,41 +554,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                             if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
                                 callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                             } else {
-                                callMethod.EditString("InfoExplain", callMethod.ReadString("InfoExplain") + extraexplain);
-                                call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
-                                call.enqueue(new Callback<RetrofitResponse>() {
-                                    @Override
-                                    public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                                        if (response.isSuccessful()) {
-                                            assert response.body() != null;
-                                            if (response.body().getText().equals("Done")) {
-                                                printchange.GetHeader_Data("MizType", basketInfos.get(position));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                            }
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
-                                    }
-                                });
-
+                                order_action.ChangeTable(basketInfos.get(position));
 
                             }
                         }

@@ -29,7 +29,6 @@ import com.kits.kowsarapp.adapter.order.Order_GoodBasketAdapter;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
-import com.kits.kowsarapp.application.order.Order_Print;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.webService.base.APIClient;
@@ -53,8 +52,7 @@ public class Order_BasketActivity extends AppCompatActivity {
     TextView Buy_row, Buy_amount;
     Intent intent;
     Order_GoodBasketAdapter adapter;
-    Order_Action action;
-    Order_Print print;
+    Order_Action order_action;
     ArrayList<Good> goods = new ArrayList<>();
     Button total_delete;
     Button final_buy_test;
@@ -124,8 +122,7 @@ public class Order_BasketActivity extends AppCompatActivity {
 
 
         callMethod = new CallMethod(Order_BasketActivity.this);
-        action = new Order_Action(Order_BasketActivity.this);
-        print = new Order_Print(Order_BasketActivity.this);
+        order_action = new Order_Action(Order_BasketActivity.this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
         CoordinatorLayout ll_activity = findViewById(R.id.order_basket_activity);
@@ -167,12 +164,12 @@ public class Order_BasketActivity extends AppCompatActivity {
 
             if (State.equals("4")) {
 
-                print.GetHeader_Data("");
+               // print.GetHeader_Data("");
 
             } else {
 
 
-                action.BasketInfoExplainBeforOrder();
+                order_action.BasketInfoExplainBeforOrder();
 
 
 
