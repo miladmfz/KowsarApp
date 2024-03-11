@@ -138,7 +138,7 @@ public interface Order_APIInterface {
             @Query("tag") String tag
     );
 
-    @GET(Order_Url+"OrderEditInfoExplain")
+    @POST(Order_Url+"OrderEditInfoExplain")
     Call<RetrofitResponse> OrderEditInfoExplain(@Body RequestBody requestBody );
 
 

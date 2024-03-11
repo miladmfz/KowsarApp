@@ -660,17 +660,35 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                 dialogProg.dismiss();
-                if (response.body().getText().equals("Done")) {
-                    callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
-                    dialogProg.dismiss();
-                    intent = new Intent(mContext, Order_TableActivity.class);
-                    intent.putExtra("State", "0");
-                    intent.putExtra("EditTable", "0");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    mContext.startActivity(intent);
-                    ((Activity) mContext).finish();
 
-                }
+                    call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "0");
+                    call.enqueue(new Callback<RetrofitResponse>() {
+                        @Override
+                        public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                            if (response.isSuccessful()) {
+                                assert response.body() != null;
+                                if (response.body().getText().equals("Done")) {
+                                    callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
+                                    dialogProg.dismiss();
+                                    intent = new Intent(mContext, Order_TableActivity.class);
+                                    intent.putExtra("State", "0");
+                                    intent.putExtra("EditTable", "0");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    mContext.startActivity(intent);
+                                    ((Activity) mContext).finish();
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+
+                        }
+                    });
+
+
+
             }
 
             @Override
@@ -687,36 +705,59 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     public void OrderChangeTable() {
         dialogProg();
         tv_rep.setText(R.string.textvalue_sendinformation);
-        Call<RetrofitResponse> call = apiInterface.OrderChangeTable(
-                "OrderChangeTable",
-                callMethod.ReadString("AppBasketInfoCode")
-        );
 
+
+        call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                dialogProg.dismiss();
-                if (response.body().getText().equals("Done")) {
-                    callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
-                    dialogProg.dismiss();
-                    intent = new Intent(mContext, Order_TableActivity.class);
-                    intent.putExtra("State", "0");
-                    intent.putExtra("EditTable", "0");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    mContext.startActivity(intent);
-                    ((Activity) mContext).finish();
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    if (response.body().getText().equals("Done")) {
+
+                        Call<RetrofitResponse> call_Change = apiInterface.OrderChangeTable(
+                                "OrderChangeTable",
+                                callMethod.ReadString("AppBasketInfoCode")
+                        );
+
+                        call_Change.enqueue(new Callback<RetrofitResponse>() {
+                            @Override
+                            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                                dialogProg.dismiss();
+                                if (response.body().getText().equals("Done")) {
+                                    callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
+                                    dialogProg.dismiss();
+                                    intent = new Intent(mContext, Order_TableActivity.class);
+                                    intent.putExtra("State", "0");
+                                    intent.putExtra("EditTable", "0");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    mContext.startActivity(intent);
+                                    ((Activity) mContext).finish();
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                                intent = new Intent(mContext, Order_BasketActivity.class);
+                                ((Activity) mContext).finish();
+                                ((Activity) mContext).overridePendingTransition(0, 0);
+                                mContext.startActivity(intent);
+                            }
+                        });
+                    }
 
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                intent = new Intent(mContext, Order_BasketActivity.class);
-                ((Activity) mContext).finish();
-                ((Activity) mContext).overridePendingTransition(0, 0);
-                mContext.startActivity(intent);
+
             }
         });
+
+
+
 
     }
 
