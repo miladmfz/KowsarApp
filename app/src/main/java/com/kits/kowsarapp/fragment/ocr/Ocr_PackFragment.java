@@ -37,6 +37,7 @@ import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
@@ -69,7 +70,7 @@ public class Ocr_PackFragment extends Fragment{
     Button btn_confirm;
     Button btn_shortage;
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    ArrayList<Good> goods;
+    ArrayList<Ocr_Good> ocr_goods;
     Factor factor;
     String BarcodeScan;
     Integer lastCunter = 0;
@@ -158,7 +159,7 @@ public class Ocr_PackFragment extends Fragment{
         }
 
         int countergood = 0;
-        for (Good Singlegood : goods) {
+        for (Ocr_Good Singlegood : ocr_goods) {
             countergood++;
             ll_good_body_detail.addView(CreateGoodViewForPack(Singlegood, countergood));
 
@@ -258,7 +259,7 @@ public class Ocr_PackFragment extends Fragment{
     }
 
     @SuppressLint("RtlHardcoded")
-    public View CreateGoodViewForPack(Good good, int j) {
+    public View CreateGoodViewForPack(Ocr_Good good, int j) {
         LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_details = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_radif_check = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -356,24 +357,24 @@ public class Ocr_PackFragment extends Fragment{
 
 
         int fa = j - 1;
-        if (goods.get(fa).getAppRowIsPacked().equals("1")) {
+        if (ocr_goods.get(fa).getAppRowIsPacked().equals("True")) {
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
         } else {
             checkBox.setEnabled(true);
         }
-        if (callMethod.ReadString("Category").equals("1")) {
+        if (callMethod.ReadString("Category").equals("True")) {
             checkBox.setVisibility(View.GONE);
         }
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                goods.get(fa).setAppRowIsPacked("1");
-                GoodCodeCheck.add(goods.get(fa).getAppOCRFactorRowCode());
+                ocr_goods.get(fa).setAppRowIsPacked("True");
+                GoodCodeCheck.add(ocr_goods.get(fa).getAppOCRFactorRowCode());
             } else {
-                goods.get(fa).setAppRowIsPacked("0");
+                ocr_goods.get(fa).setAppRowIsPacked("False");
                 int b = 0, c = 0;
                 for (String s : GoodCodeCheck) {
-                    if (s.equals(goods.get(fa).getAppOCRFactorRowCode()))
+                    if (s.equals(ocr_goods.get(fa).getAppOCRFactorRowCode()))
                         b = c;
                     c++;
                 }
@@ -385,7 +386,7 @@ public class Ocr_PackFragment extends Fragment{
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view((goods.get(fa).getGoodCode()).toString()));
+        tv_goodname.setOnClickListener(v -> image_zome_view((ocr_goods.get(fa).getGoodCode())));
 
 
         return ll_factor_row;
@@ -421,7 +422,7 @@ public class Ocr_PackFragment extends Fragment{
 
 
         int countergood = 0;
-        for (Good singlegood : goods) {
+        for (Ocr_Good singlegood : ocr_goods) {
             countergood++;
 
             if (singlegood.getAppRowIsPacked().equals("0")) {
@@ -510,7 +511,7 @@ public class Ocr_PackFragment extends Fragment{
     }
 
     @SuppressLint("RtlHardcoded")
-    public View CreateGoodViewForshortage(@NonNull Good good, int j) {
+    public View CreateGoodViewForshortage(@NonNull Ocr_Good good, int j) {
         LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_details = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_radif_check = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -554,10 +555,6 @@ public class Ocr_PackFragment extends Fragment{
         ll_radif_check.setWeightSum(5);
         ll_name_price.setWeightSum(9);
 
-        vp_name_amount.setBackgroundResource(R.color.black);
-        vp_amount_price.setBackgroundResource(R.color.black);
-        vp_rows.setBackgroundResource(R.color.black);
-        vp_radif_name.setBackgroundResource(R.color.black);
 
         ll_radif_check.setGravity(Gravity.CENTER);
         checkBox.setGravity(Gravity.CENTER_VERTICAL);
@@ -577,11 +574,7 @@ public class Ocr_PackFragment extends Fragment{
         et_amountshortage.setHint(good.getFacAmount());
         et_amountshortage.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-        tv_gap.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        checkBox.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_goodname.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_amount.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        et_amountshortage.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
+
 
         et_amountshortage.setPadding(0, 10, 0, 10);
         tv_goodname.setPadding(0, 10, 5, 10);
@@ -605,24 +598,24 @@ public class Ocr_PackFragment extends Fragment{
 
 
         int fa = j - 1;
-        if (goods.get(fa).getAppRowIsPacked().equals("1")) {
+        if (ocr_goods.get(fa).getAppRowIsPacked().equals("True")) {
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
         } else {
             checkBox.setEnabled(true);
         }
-        if (callMethod.ReadString("Category").equals("1")) {
+        if (callMethod.ReadString("Category").equals("True")) {
             checkBox.setVisibility(View.GONE);
         }
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                goods.get(fa).setAppRowIsPacked("1");
-                GoodCodeCheck.add(goods.get(fa).getAppOCRFactorRowCode());
+                ocr_goods.get(fa).setAppRowIsPacked("True");
+                GoodCodeCheck.add(ocr_goods.get(fa).getAppOCRFactorRowCode());
             } else {
-                goods.get(fa).setAppRowIsPacked("0");
+                ocr_goods.get(fa).setAppRowIsPacked("False");
                 int b = 0, c = 0;
                 for (String s : GoodCodeCheck) {
-                    if (s.equals(goods.get(fa).getAppOCRFactorRowCode()))
+                    if (s.equals(ocr_goods.get(fa).getAppOCRFactorRowCode()))
                         b = c;
                     c++;
                 }
@@ -634,7 +627,7 @@ public class Ocr_PackFragment extends Fragment{
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view((goods.get(fa).getGoodCode()).toString()));
+        tv_goodname.setOnClickListener(v -> image_zome_view((ocr_goods.get(fa).getGoodCode())));
 
         arraygood_shortage.clear();
         et_amountshortage.addTextChangedListener(new TextWatcher() {
@@ -801,12 +794,12 @@ public class Ocr_PackFragment extends Fragment{
 
     public void ConfirmCount_Pack() {
         int ConfirmCounter = 0;
-        for (Good g : goods) {
+        for (Ocr_Good g : ocr_goods) {
             if (g.getAppRowIsPacked().equals("1")) {
                 ConfirmCounter++;
             }
         }
-        if (goods.size() == ConfirmCounter) {
+        if (ocr_goods.size() == ConfirmCounter) {
             btn_confirm.setBackgroundResource(R.color.grey_60);
             btn_confirm.setTextColor(requireActivity().getColor(R.color.black));
             btn_confirm.setEnabled(false);
@@ -834,12 +827,12 @@ public class Ocr_PackFragment extends Fragment{
         this.factor = factor;
     }
 
-    public ArrayList<Good> getGoods() {
-        return goods;
+    public ArrayList<Ocr_Good> getGoods() {
+        return ocr_goods;
     }
 
-    public void setGoods(ArrayList<Good> goods) {
-        this.goods = goods;
+    public void setocr_Goods(ArrayList<Ocr_Good> ocr_goods) {
+        this.ocr_goods = ocr_goods;
     }
 
     public String getBarcodeScan() {

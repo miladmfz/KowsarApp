@@ -1,27 +1,18 @@
 package com.kits.kowsarapp.activity.ocr;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.application.base.CallMethod;
@@ -102,28 +93,6 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         btn_config =findViewById(R.id.ocr_config_a_btn);
         ed_titlesize = findViewById(R.id.ocr_config_a_titlesize);
         sm_arabictext = findViewById(R.id.ocr_config_a_arabictext);
-        ImageView img_logo = findViewById(R.id.ocr_config_a_logo);
-
-        Glide.with(img_logo)
-                .asBitmap()
-                .load(callMethod.ReadString("ServerURLUse")+"SlideImage/logo.jpg")
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .fitCenter()
-                .listener(new RequestListener<Bitmap>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                        Log.e("test","Failed");
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        Log.e("test","Ready");
-                        imageInfo.SaveLogo(resource);
-                        return false;
-                    }
-                })
-                .into(img_logo);
 
 
 
@@ -151,7 +120,8 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
 
 
-        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
+        Call<RetrofitResponse> call =apiInterface.GetStackCategory("GetStackCategory");
+
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

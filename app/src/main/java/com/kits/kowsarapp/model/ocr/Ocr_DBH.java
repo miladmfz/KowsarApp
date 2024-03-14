@@ -24,29 +24,11 @@ public class Ocr_DBH extends SQLiteOpenHelper {
     ArrayList<Good> goods;
     Context context;
     Cursor cursor;
-    Good gooddetail;
 
-    int limitcolumn;
     String query = "";
-    String result = "";
-    String SH_selloff;
-    String SH_grid;
-    String SH_delay;
-    String SH_brokerstack;
-    String SH_prefactor_code;
-    String SH_prefactor_good;
-    String SH_itemamount;
-    String SH_MenuBroker;
-    boolean SH_activestack;
-    boolean SH_real_amount;
-    boolean SH_goodamount;
+
     boolean SH_ArabicText;
-    int k = 0;
-    String sc;
-    String st;
-    String stack_Condition;
-    String joinDetail;
-    String joinbasket;
+
 
 
     public Ocr_DBH(Context context, String DATABASE_NAME) {

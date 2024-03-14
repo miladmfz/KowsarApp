@@ -70,7 +70,7 @@
                 android:textStyle="bold"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:textColor="@color/black"/>
+                />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -228,7 +228,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="سایز عنوان ها"
-                android:textColor="@color/grey_1000"
+
                 android:layout_weight="0.5"
                 />
 
@@ -248,7 +248,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="سایز اطلاعات"
-                android:textColor="@color/grey_1000"
+
                 android:layout_weight="0.5"
                 android:visibility="invisible"
                 />

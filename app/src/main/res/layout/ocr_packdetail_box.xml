@@ -40,7 +40,6 @@
                 android:gravity="center_vertical"
                 android:paddingStart="20sp"
                 android:text="تعداد بسته :"
-                android:textColor="@color/black"
                 android:textSize="22sp"
                 tools:ignore="RtlSymmetry" />
 
@@ -51,7 +50,6 @@
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:hint="1"
-                android:textColor="@color/black"
                 android:textSize="20sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -73,7 +71,6 @@
                 android:layout_weight="0.7"
                 android:gravity="center_vertical"
                 android:text="تاریخ تحویل :"
-                android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -88,7 +85,6 @@
                     android:layout_weight="0.4"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -99,7 +95,6 @@
                     android:layout_weight="0.6"
                     android:background="@drawable/bg_round_selected"
                     android:text="تغییر"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     app:backgroundTint="@null" />
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -114,7 +109,6 @@
             android:layout_margin="5dp"
             android:background="@drawable/bg_round_red"
             android:text="ارسال بسته بندی فاکتور"
-            android:textColor="@color/black"
             android:textSize="30sp"
             app:backgroundTint="@null" />
     </androidx.appcompat.widget.LinearLayoutCompat>

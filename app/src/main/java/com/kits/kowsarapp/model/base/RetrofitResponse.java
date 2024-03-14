@@ -1,6 +1,7 @@
 package com.kits.kowsarapp.model.base;
 
 import com.google.gson.annotations.SerializedName;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.model.order.Order_RstMiz;
 
@@ -10,6 +11,9 @@ public class RetrofitResponse {
 
     @SerializedName("Goods")
     private ArrayList<Good> Goods;
+
+    @SerializedName("OcrGoods")
+    private ArrayList<Ocr_Good> Ocr_Goods;
     @SerializedName("Customers")
     private ArrayList<Customer> Customers;
     @SerializedName("Columns")
@@ -44,9 +48,11 @@ public class RetrofitResponse {
 
 
 
-
     @SerializedName("Good")
     private Good good;
+
+    @SerializedName("OcrGood")
+    private Ocr_Good ocr_good;
     @SerializedName("Group")
     private GoodGroup group;
 
@@ -91,6 +97,22 @@ public class RetrofitResponse {
     @SerializedName("ErrDesc")
     private String ErrDesc;
 
+
+    public ArrayList<Ocr_Good> getOcr_Goods() {
+        return Ocr_Goods;
+    }
+
+    public void setOcr_Goods(ArrayList<Ocr_Good> ocr_Goods) {
+        Ocr_Goods = ocr_Goods;
+    }
+
+    public Ocr_Good getOcr_good() {
+        return ocr_good;
+    }
+
+    public void setOcr_good(Ocr_Good ocr_good) {
+        this.ocr_good = ocr_good;
+    }
 
     public ArrayList<Good> getGoods() {
         return Goods;
@@ -150,11 +172,11 @@ public class RetrofitResponse {
 
 
 
-    public ArrayList<com.kits.kowsarapp.model.base.Factor> getFactors() {
+    public ArrayList<Factor> getFactors() {
         return Factors;
     }
 
-    public void setFactors(ArrayList<com.kits.kowsarapp.model.base.Factor> factors) {
+    public void setFactors(ArrayList<Factor> factors) {
         Factors = factors;
     }
 

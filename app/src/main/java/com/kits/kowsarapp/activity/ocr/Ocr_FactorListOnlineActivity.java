@@ -287,10 +287,10 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
         Body_str =callMethod.CreateJson("Row", Row, Body_str);
         Body_str =callMethod.CreateJson("PageNo", String.valueOf(PageNo), Body_str);
-
+        Body_str =callMethod.CreateJson("CountFlag", "0", Body_str);
+        Body_str =callMethod.CreateJson("DbName", "", Body_str);
 
         Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
-
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -355,12 +355,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
     public void RetrofitRequset_Path() {
 
 
-        Log.e("kowsar",callMethod.ReadString("FactorDbName"));
-        Log.e("kowsar",callMethod.ReadString("DbName"));
-
-        Call<RetrofitResponse> call;
-
-        call=apiInterface.GetCustomerPath("GetCustomerPath");
+        Call<RetrofitResponse> call=apiInterface.GetCustomerPath("GetCustomerPath");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -424,11 +419,14 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
         Body_str =callMethod.CreateJson("Row", Row, Body_str);
         Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+        Body_str =callMethod.CreateJson("CountFlag", "0", Body_str);
+        Body_str =callMethod.CreateJson("DbName", "", Body_str);
 
 
         Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
-
+        callMethod.Log(call.request().url()+"");
+        callMethod.Log(""+call.request().body());
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -489,7 +487,8 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
         Body_str =callMethod.CreateJson("Row", Row, Body_str);
         Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
-
+        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
+        Body_str =callMethod.CreateJson("DbName", "", Body_str);
 
         Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
@@ -521,7 +520,8 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("IsEdited", "1", Body_str);
         Body_str =callMethod.CreateJson("Row", "10000", Body_str);
         Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
-
+        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
+        Body_str =callMethod.CreateJson("DbName", "", Body_str);
 
         Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
@@ -554,6 +554,8 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("IsEdited", "0", Body_str);
         Body_str =callMethod.CreateJson("Row", "10000", Body_str);
         Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
+        Body_str =callMethod.CreateJson("DbName", "", Body_str);
 
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
             call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));

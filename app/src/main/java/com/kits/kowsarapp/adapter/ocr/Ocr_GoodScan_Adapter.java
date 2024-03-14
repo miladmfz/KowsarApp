@@ -22,6 +22,7 @@ import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
@@ -38,7 +39,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
     Ocr_APIInterface secendApiInterface ;
 
     private final Context mContext;
-    private final ArrayList<Good> goods;
+    private final ArrayList<Ocr_Good> ocr_goods;
     private final Ocr_Action ocrAction;
     CallMethod callMethod;
     String state;
@@ -46,9 +47,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
     Intent intent;
 
 
-    public Ocr_GoodScan_Adapter(ArrayList<Good> goods, Context context, String state, String barcodescan) {
+    public Ocr_GoodScan_Adapter(ArrayList<Ocr_Good> goods, Context context, String state, String barcodescan) {
         this.mContext = context;
-        this.goods = goods;
+        this.ocr_goods = goods;
         this.state = state;
         this.barcodescan = barcodescan;
         this.ocrAction = new Ocr_Action(context);
@@ -71,15 +72,15 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
     public void onBindViewHolder(@NonNull final facViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
 
-        holder.goodscan_goodname.setText(goods.get(position).getGoodName());
-        holder.goodscan_factoramount.setText(goods.get(position).getFacAmount());
-        holder.goodscan_goodsellprice.setText(goods.get(position).getGoodMaxSellPrice());
+        holder.goodscan_goodname.setText(ocr_goods.get(position).getGoodName());
+        holder.goodscan_factoramount.setText(ocr_goods.get(position).getFacAmount());
+        holder.goodscan_goodsellprice.setText(ocr_goods.get(position).getGoodMaxSellPrice());
 
         Call<RetrofitResponse> call2;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2=apiInterface.GetImage("getImage", goods.get(position).getGoodCode()+"",0,400);
+            call2=apiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode()+"",0,400);
         }else{
-            call2=secendApiInterface.GetImage("getImage", goods.get(position).getGoodCode()+"",0,400);
+            call2=secendApiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode()+"",0,400);
         }
 
         call2.enqueue(new Callback<RetrofitResponse>() {
@@ -104,9 +105,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.OcrControlled("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("Deliverer"));
+                    call=apiInterface.OcrControlled("OcrControlled", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("Deliverer"));
                 }else{
-                    call=secendApiInterface.OcrControlled("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("Deliverer"));
+                    call=secendApiInterface.OcrControlled("OcrControlled", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("Deliverer"));
                 }
 
                 call.enqueue(new Callback<RetrofitResponse>() {
@@ -131,9 +132,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.OcrControlled("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("Deliverer"));
+                    call=apiInterface.OcrControlled("OcrControlled", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("Deliverer"));
                 }else{
-                    call=secendApiInterface.OcrControlled("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("Deliverer"));
+                    call=secendApiInterface.OcrControlled("OcrControlled", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("Deliverer"));
                 }
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
@@ -166,7 +167,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
     @Override
     public int getItemCount() {
-        return goods.size();
+        return ocr_goods.size();
     }
 
     static class facViewHolder extends RecyclerView.ViewHolder {

@@ -38,7 +38,6 @@
                 android:layout_weight="0.3"
                 android:gravity="center"
                 android:text="نام مشتری :"
-                android:textColor="#000000"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -49,7 +48,6 @@
                 android:layout_height="34dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.7"
-                android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -82,7 +80,6 @@
                     android:layout_height="31dp"
                     android:gravity="center"
                     android:text="کد مشتری:"
-                    android:textColor="#000000"
                     android:textSize="12sp"
                     android:layout_weight="0.25"
                     />
@@ -94,7 +91,6 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:background="@drawable/bg_round_selected"
-                    android:textColor="#000000"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_weight="0.25"
@@ -141,7 +137,6 @@
                     android:layout_weight="0.25"
                     android:gravity="center"
                     android:text="کد فاکتور:"
-                    android:textColor="#000000"
                     android:textSize="12sp"/>
 
                 <TextView
@@ -152,7 +147,6 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:textColor="#000000"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -173,7 +167,6 @@
                     android:layout_weight="0.25"
                     android:gravity="center"
                     android:text="تایید مشتری:"
-                    android:textColor="#000000"
                     android:textSize="12sp" />
 
                 <TextView
@@ -184,7 +177,6 @@
                     android:layout_weight="0.25"
                     android:gravity="center"
                     android:background="@drawable/bg_round_selected"
-                    android:textColor="#000000"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -216,7 +208,6 @@
                     android:layout_weight="0.25"
                     android:gravity="center"
                     android:text=" تاریخ سفارش:"
-                    android:textColor="#000000"
                     android:textSize="12sp" />
 
                 <TextView
@@ -227,7 +218,6 @@
                     android:layout_weight="0.25"
                     android:gravity="center"
                     android:background="@drawable/bg_round_selected"
-                    android:textColor="#000000"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -247,7 +237,6 @@
                     android:layout_weight="0.25"
                     android:gravity="center"
                     android:text="تاریخ تحویل : "
-                    android:textColor="#000000"
                     android:textSize="12sp"/>
 
 
@@ -258,7 +247,6 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:textColor="#000000"
                     android:background="@drawable/bg_round_selected"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -285,7 +273,6 @@
                 android:layout_margin="3dp"
                 android:text="نمایش فاکتور"
 
-                android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/white"
@@ -303,7 +290,6 @@
                 android:layout_margin="3dp"
                 android:text="چک کردن رسید"
 
-                android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/white"

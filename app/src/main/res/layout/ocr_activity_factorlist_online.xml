@@ -96,7 +96,6 @@
                     android:textSize="26sp"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="@color/grey_1000"
                     />
             </LinearLayout>
 
@@ -108,8 +107,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_weight="0.6"
-                android:background="@color/grey_5"
-                android:textColor="@color/overlay_dark_90"
                 android:scrollbarSize="20sp" />
 
 
@@ -129,7 +126,6 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_margin="10dp"
-            android:textColor="@color/black"
             />
 
         <androidx.core.widget.ContentLoadingProgressBar

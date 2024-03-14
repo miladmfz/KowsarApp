@@ -170,11 +170,14 @@ public class Ocr_FactorListOnline_Adapter extends RecyclerView.Adapter<Ocr_Facto
                             callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
 
                             Call<RetrofitResponse> call;
+
+
                             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                                 call =apiInterface.OcrDeliverd("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
                             }else {
                                 call =secendApiInterface.OcrDeliverd("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
                             }
+
 
 
                             call.enqueue(new Callback<RetrofitResponse>() {
@@ -201,6 +204,7 @@ public class Ocr_FactorListOnline_Adapter extends RecyclerView.Adapter<Ocr_Facto
                         } else {
 
                             callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
+                            callMethod.EditString("DbName", factors.get(position).getDbname());
 
                             intent = new Intent(mContext, Ocr_ConfirmActivity.class);
                             intent.putExtra("ScanResponse", factor.getAppTcPrintRef());

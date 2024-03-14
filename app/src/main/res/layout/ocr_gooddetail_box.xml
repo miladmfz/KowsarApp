@@ -34,14 +34,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:text="موجودی کل "
-                android:textColor="@color/black"
                 android:layout_weight="0.5"/>
             <TextView
                 android:id="@+id/ocr_gooddetail_b_tv1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
-                android:textColor="@color/black"
                 android:layout_weight="0.5"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -56,14 +54,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:text="قطع"
-                android:textColor="@color/black"
                 android:layout_weight="0.5"/>
             <TextView
                 android:id="@+id/ocr_gooddetail_b_tv2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
-                android:textColor="@color/black"
                 android:layout_weight="0.5"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -79,14 +75,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:text="نوع جلد"
-                android:textColor="@color/black"
                 android:layout_weight="0.5"/>
             <TextView
                 android:id="@+id/ocr_gooddetail_b_tv3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
-                android:textColor="@color/black"
                 android:layout_weight="0.5"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -102,14 +96,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:text="تعداد صفحه"
-                android:textColor="@color/black"
                 android:layout_weight="0.5"/>
             <TextView
                 android:id="@+id/ocr_gooddetail_b_tv4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
-                android:textColor="@color/black"
                 android:layout_weight="0.5"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 

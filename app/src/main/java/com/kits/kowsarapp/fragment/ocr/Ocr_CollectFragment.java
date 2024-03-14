@@ -32,6 +32,7 @@ import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
@@ -65,8 +66,8 @@ public class Ocr_CollectFragment extends Fragment {
     Button btn_confirm;
     Button btn_shortage;
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    ArrayList<Good> goods;
-    ArrayList<Good> goods_visible=new ArrayList<>();
+    ArrayList<Ocr_Good> ocr_goods;
+    ArrayList<Ocr_Good> ocr_goods_visible=new ArrayList<>();
     Factor factor;
     String BarcodeScan;
 
@@ -94,12 +95,12 @@ public class Ocr_CollectFragment extends Fragment {
         this.factor = factor;
     }
 
-    public ArrayList<Good> getGoods() {
-        return goods;
+    public ArrayList<Ocr_Good> getGoods() {
+        return ocr_goods;
     }
 
-    public void setGoods(ArrayList<Good> goods) {
-        this.goods = goods;
+    public void setocr_Goods(ArrayList<Ocr_Good> ocr_goods) {
+        this.ocr_goods = ocr_goods;
     }
 
     @Override
@@ -177,12 +178,13 @@ public class Ocr_CollectFragment extends Fragment {
         }
 
         j= 0;
-        for (Good g : goods) {
+
+        for (Ocr_Good g : ocr_goods) {
             if(callMethod.ReadString("StackCategory").equals("همه")) {
-                goods_visible.add(g);
+                ocr_goods_visible.add(g);
                 goodshow(g);
             }else if(g.getGoodExplain4().equals(callMethod.ReadString("StackCategory"))){
-                goods_visible.add(g);
+                ocr_goods_visible.add(g);
                 goodshow(g);
             }
         }
@@ -448,7 +450,7 @@ public class Ocr_CollectFragment extends Fragment {
 
 
     @SuppressLint("RtlHardcoded")
-    public void goodshow(Good g){
+    public void goodshow(Ocr_Good g){
         j++;
 
         LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -531,7 +533,7 @@ public class Ocr_CollectFragment extends Fragment {
         if(g.getShortageAmount()==null){
             Log.e("","1");
         }else {
-            if(g.getShortageAmount()>0) {
+            if(Integer.parseInt(g.getShortageAmount())>0) {
                 tv_amount.setText(NumberFunctions.PerisanNumber(g.getShortageAmount() + ""));
                 tv_amount.setTextColor(requireActivity().getColor(R.color.red_800));
             }
@@ -558,7 +560,7 @@ public class Ocr_CollectFragment extends Fragment {
         ll_good_body_detail.addView(ll_factor_row);
 
         int fa=j-1;
-        if(goods_visible.get(fa).getAppRowIsControled().equals("1")){
+        if(ocr_goods_visible.get(fa).getAppRowIsControled().equals("True")){
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
         }else {
@@ -569,31 +571,31 @@ public class Ocr_CollectFragment extends Fragment {
         }
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
-                goods_visible.get(fa).setAppRowIsControled("1");
-                GoodCodeCheck.add(goods_visible.get(fa).getAppOCRFactorRowCode());
+                ocr_goods_visible.get(fa).setAppRowIsControled("True");
+                GoodCodeCheck.add(ocr_goods_visible.get(fa).getAppOCRFactorRowCode());
             }else {
-                goods_visible.get(fa).setAppRowIsControled("0");
+                ocr_goods_visible.get(fa).setAppRowIsControled("False");
                 int b = 0, c = 0;
                 for (String s : GoodCodeCheck) {
-                    if (s.equals(goods_visible.get(fa).getAppOCRFactorRowCode()))
+                    if (s.equals(ocr_goods_visible.get(fa).getAppOCRFactorRowCode()))
                         b = c;
                     c++;
                 }
                 GoodCodeCheck.remove(b);
             }
         });
-        tv_goodname.setOnClickListener(v -> image_zome_view((goods_visible.get(fa).getGoodCode()).toString()));
+        tv_goodname.setOnClickListener(v -> image_zome_view((ocr_goods_visible.get(fa).getGoodCode())));
     }
 
 
     public void ConfirmCount_Control(){
         int ConfirmCounter = 0;
-        for (Good g : goods) {
-            if(g.getAppRowIsControled().equals("1")){
+        for (Ocr_Good g : ocr_goods) {
+            if(g.getAppRowIsControled().equals("True")){
                 ConfirmCounter++;
             }
         }
-        if(goods.size() == ConfirmCounter){
+        if(ocr_goods.size() == ConfirmCounter){
             dialogProg.show();
 
             Call<RetrofitResponse> call;

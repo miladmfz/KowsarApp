@@ -21,7 +21,7 @@ public interface Ocr_APIInterface {
 
 
     @POST(Ocr_Url+"GetOcrFactor")
-    Call<RetrofitResponse> GetOcrFactor(@Body RequestBody requestBody );
+    Call<RetrofitResponse> GetOcrFactor(@Body RequestBody requestBody);
 
     @GET(Ocr_Url+"OcrDeliverd")
     Call<RetrofitResponse> OcrDeliverd(
@@ -66,6 +66,11 @@ public interface Ocr_APIInterface {
 
     @GET(Ocr_Url+"GetCustomerPath")
     Call<RetrofitResponse> GetCustomerPath(
+            @Query("tag") String tag
+    );
+
+    @GET(Ocr_Url+"GetStackCategory")
+    Call<RetrofitResponse> GetStackCategory(
             @Query("tag") String tag
     );
 

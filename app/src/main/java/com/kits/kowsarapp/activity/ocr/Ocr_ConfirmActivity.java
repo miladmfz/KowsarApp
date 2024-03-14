@@ -22,6 +22,7 @@ import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
 import com.kits.kowsarapp.fragment.ocr.Ocr_PackFragment;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
@@ -37,6 +38,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public class Ocr_ConfirmActivity extends AppCompatActivity {
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
@@ -49,8 +64,8 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
     FragmentTransaction fragmentTransaction;
     Ocr_CollectFragment collectFragment;
     Ocr_PackFragment packFragment;
-    ArrayList<Good> goods;
-    ArrayList<Good> goods_scan=new ArrayList<>();
+    ArrayList<Ocr_Good> ocr_goods;
+    ArrayList<Ocr_Good> ocr_goods_scan=new ArrayList<>();
     Factor factor;
     String BarcodeScan;
     String OrderBy;
@@ -123,7 +138,7 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
         packFragment = new Ocr_PackFragment();
         collectFragment.setBarcodeScan(BarcodeScan);
         packFragment.setBarcodeScan(BarcodeScan);
-        goods_scan.clear();
+        ocr_goods_scan.clear();
     }
 
 
@@ -148,23 +163,23 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
                     @Override
                     public void afterTextChanged( Editable editable) {
                         //String barcode1 = editable.toString().substring(2).replace("\n", "");
-                        if (goods.size() > 0) {
+                        if (ocr_goods.size() > 0) {
 
-                            goods_scan.clear();
+                            ocr_goods_scan.clear();
                             handler.removeCallbacksAndMessages(null);
                             handler.postDelayed(() -> {
                                 String barcode = NumberFunctions.EnglishNumber(editable.toString().substring(2,editable.toString().length()-2).replace("\n", ""));
 
                                 ed_barcode.selectAll();
 
-                                for (Good singlegood : goods) {
+                                for (Ocr_Good singlegood : ocr_goods) {
                                     if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
-                                        goods_scan.add(singlegood);
+                                        ocr_goods_scan.add(singlegood);
                                     }
 
                                 }
 
-                                action.GoodScanDetail(goods_scan,State,BarcodeScan);
+                                action.GoodScanDetail(ocr_goods_scan,State,BarcodeScan);
                             }, 200);
                         }
                     }
@@ -190,6 +205,8 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("Step", "0", Body_str);
         Body_str =callMethod.CreateJson("orderby", OrderBy, Body_str);
 
+        callMethod.Log("FactorDbName="+callMethod.ReadString("FactorDbName"));
+        callMethod.Log("DbName="+callMethod.ReadString("DbName"));
 
 
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
@@ -197,27 +214,28 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
         }else{
             call = secendApiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
         }
+        callMethod.Log("call="+call.request().url().toString());
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
-
                     assert response.body() != null;
-                    factor = response.body().getFactor();
+
+                    factor = response.body().getFactors().get(0);
                     if (factor.getFactorCode().equals("0")) {
                         callMethod.showToast("لطفا مجددا اسکن کنید");
                         finish();
                     } else {
-                        goods = response.body().getGoods();
-                        if (factor.getAppIsControled().equals("0")) {
+                        ocr_goods=response.body().getOcr_Goods();
+                        if (factor.getAppIsControled().equals("False")) {
                             collectFragment.setFactor(factor);
-                            collectFragment.setGoods(goods);
+                            collectFragment.setocr_Goods(ocr_goods);
                             fragmentTransaction.replace(R.id.ocr_confirm_a_framelayout, collectFragment);
                             fragmentTransaction.commit();
-                        } else if (factor.getAppIsPacked().equals("0")) {
+                        } else if (factor.getAppIsPacked().equals("False")) {
                             packFragment.setFactor(factor);
-                            packFragment.setGoods(goods);
+                            packFragment.setocr_Goods(ocr_goods);
                             fragmentTransaction.replace(R.id.ocr_confirm_a_framelayout, packFragment);
                             fragmentTransaction.commit();
                         } else {
@@ -225,12 +243,15 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
                         }
 
                     }
+
+
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 callMethod.showToast("Connection fail ...!!!");
+                callMethod.Log(t.getMessage());
             }
         });
 

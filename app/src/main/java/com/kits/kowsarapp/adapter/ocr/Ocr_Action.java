@@ -39,6 +39,7 @@ import com.kits.kowsarapp.model.base.JobPerson;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
@@ -77,9 +78,6 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         callMethod = new CallMethod(mContext);
         dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
 
-
-callMethod.Log(callMethod.ReadString("ServerURLUse"));
-callMethod.Log(callMethod.ReadString("SecendServerURL"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
 
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
@@ -526,17 +524,19 @@ callMethod.Log(callMethod.ReadString("SecendServerURL"));
         }else{
             call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
         }
+        callMethod.Log(GoodCode);
         call.enqueue(new Callback<RetrofitResponse>() {
+
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     ArrayList<Good> goods = response.body().getGoods();
 
-                    tv_good_1.setText(goods.get(0).getTotalAvailable());
-                    tv_good_2.setText(goods.get(0).getSize());
-                    tv_good_3.setText(goods.get(0).getCoverType());
-                    tv_good_4.setText(goods.get(0).getPageNo());
+                    tv_good_1.setText(NumberFunctions.PerisanNumber(goods.get(0).getTotalAvailable()));
+                    tv_good_2.setText(NumberFunctions.PerisanNumber(goods.get(0).getSize()));
+                    tv_good_3.setText(NumberFunctions.PerisanNumber(goods.get(0).getCoverType()));
+                    tv_good_4.setText(NumberFunctions.PerisanNumber(goods.get(0).getPageNo()));
 
                 }
             }
@@ -583,9 +583,9 @@ callMethod.Log(callMethod.ReadString("SecendServerURL"));
         dialog.show();
     }
 
-    public void GoodScanDetail(ArrayList<Good> goodspass, String state, String barcodescan) {
+    public void GoodScanDetail(ArrayList<Ocr_Good> goodspass, String state, String barcodescan) {
 
-        ArrayList<Good> Currctgoods = new ArrayList<>();
+        ArrayList<Ocr_Good> Currctgoods = new ArrayList<>();
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -596,7 +596,7 @@ callMethod.Log(callMethod.ReadString("SecendServerURL"));
 
 
         if (goodspass.size() > 0) {
-            for (Good good : goodspass) {
+            for (Ocr_Good good : goodspass) {
                 if (state.equals("0"))
                     if (good.getAppRowIsControled().equals("0")) {
                         Currctgoods.add(good);
