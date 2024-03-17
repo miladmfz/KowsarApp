@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.base.Good;
+import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;

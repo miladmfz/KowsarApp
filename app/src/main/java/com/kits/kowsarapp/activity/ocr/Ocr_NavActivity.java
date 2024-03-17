@@ -27,7 +27,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
-import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;

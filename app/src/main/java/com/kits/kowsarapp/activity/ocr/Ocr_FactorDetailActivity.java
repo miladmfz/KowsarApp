@@ -28,6 +28,7 @@ import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
@@ -55,7 +56,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
     LinearLayoutCompat total_layout;
     androidx.viewpager.widget.ViewPager ViewPager, ViewPager_chap, ViewPager_rast;
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    ArrayList<Good> goods;
+    ArrayList<Ocr_Good> ocr_goods;
     Factor factor;
     String BarcodeScan;
     String bitmap_factor_base64="";
@@ -142,7 +143,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
                     if(response.isSuccessful()){
 
                         assert response.body() !=null;
-                        factor=response.body().getFactor();
+                        factor=response.body().getFactors().get(0);
                         if(factor.getFactorCode().equals("0"))
                         {
 
@@ -150,7 +151,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
                             finish();
                         }else {
 
-                            goods=response.body().getGoods();
+                            ocr_goods=response.body().getOcr_Goods();
                             dbh.InsertScan(factor.getAppOCRFactorCode(),BarcodeScan,factor.getFactorPrivateCode(),factor.getFactorDate(),factor.getCustName(),factor.getCustomerRef());
                             CreateView();
                         }
@@ -329,7 +330,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
 
         int CounterGood = 0;
-        for (Good g : goods) {
+        for (Ocr_Good g : ocr_goods) {
             CounterGood++;
             LinearLayoutCompat first_layout = new LinearLayoutCompat(getApplicationContext());
             first_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -386,7 +387,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
             good_amount_tv.setGravity(Gravity.CENTER);
 
             TextView good_totalprice_tv = new TextView(getApplicationContext());
-            good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getSumPrice()))));
+            good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getPrice())*Integer.valueOf(g.getFacAmount()))));
             good_totalprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
             good_totalprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
             good_totalprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));

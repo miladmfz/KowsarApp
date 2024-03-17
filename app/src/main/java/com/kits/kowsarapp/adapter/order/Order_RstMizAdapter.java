@@ -152,7 +152,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     holder.ll_table_mizexplain.setVisibility(View.GONE);
                     holder.ll_table_infoexplain.setVisibility(View.GONE);
                     holder.btn_cleartable.setVisibility(View.GONE);
-                    if (basketInfos.get(position).getIsReserved().equals("1")) {
+                    if (basketInfos.get(position).getIsReserved().equals("True")) {
                         holder.btn_cleartable.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -202,7 +202,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                 if (basketInfos.get(position).getInfoState().equals("0") || basketInfos.get(position).getInfoState().equals("3")) {
 
-                    if (basketInfos.get(position).getIsReserved().equals("1")) {
+                    if (basketInfos.get(position).getIsReserved().equals("True")) {
 
 
 
@@ -360,7 +360,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
 
 
-                if (basketInfos.get(position).getIsReserved().equals("1")) {
+                if (basketInfos.get(position).getIsReserved().equals("True")) {
 
                     Body_str =callMethod.CreateJson("Date", date, Body_str);
                     Body_str =callMethod.CreateJson("InfoCode", basketInfos.get(position).getReserve_AppBasketInfoCode(), Body_str);

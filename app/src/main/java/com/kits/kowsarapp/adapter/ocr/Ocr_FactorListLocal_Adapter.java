@@ -29,6 +29,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorDetailActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -99,7 +100,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
             holder.fac_signature.setText("ناموجود");
         }
 
-        if (factors.get(position).getIsSent().equals("1")) {
+        if (factors.get(position).getIsSent().equals("True")) {
             holder.fac_status.setVisibility(View.VISIBLE);
             holder.fac_status.setText("تاییدیه ارسال شده");
         } else {
@@ -180,7 +181,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                 {
 
                     callMethod.EditString("FactorDbName", factors.get(position).getDbname());
-                    if (factors.get(position).getIsSent().equals("0")) {
+                    if (factors.get(position).getIsSent().equals("False")) {
                         Call<RetrofitResponse> call;
 
                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){

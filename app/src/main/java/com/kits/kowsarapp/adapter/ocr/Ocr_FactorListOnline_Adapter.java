@@ -19,6 +19,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorDetailActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -92,13 +93,13 @@ public class Ocr_FactorListOnline_Adapter extends RecyclerView.Adapter<Ocr_Facto
             try {
 
                 holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
-                if(factor.getIsEdited().equals("1")){
+                if(factor.getIsEdited().equals("True")){
                     holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
                     holder.fac_hasedite.setText("اصلاح شده");
                 }else {
                     holder.fac_hasedite.setText(" ");
                 }
-                if(factor.getHasShortage().equals("1")){
+                if(factor.getHasShortage().equals("True")){
                     holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
                     holder.fac_hasshortage.setText("کسری موجودی");
                 }else {
@@ -112,10 +113,10 @@ public class Ocr_FactorListOnline_Adapter extends RecyclerView.Adapter<Ocr_Facto
 
 
 
-        if(factors.get(position).getAppIsControled().equals("1")) {
-            if (factors.get(position).getAppIsPacked().equals("1")) {
-                if (factors.get(position).getAppIsDelivered().equals("1")) {
-                    if (factors.get(position).getHasSignature().equals("1")) {
+        if(factors.get(position).getAppIsControled().equals("True")) {
+            if (factors.get(position).getAppIsPacked().equals("True")) {
+                if (factors.get(position).getAppIsDelivered().equals("True")) {
+                    if (factors.get(position).getHasSignature().equals("True")) {
                         holder.fac_state.setText("تحویل شده");
                     }else {
                         holder.fac_state.setText("باربری");

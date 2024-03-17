@@ -30,10 +30,9 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
-import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Factor;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
@@ -41,6 +40,8 @@ import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -207,15 +208,20 @@ public class Ocr_PackFragment extends Fragment{
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.OcrControlled("OcrControlled", goodchecks, "2", callMethod.ReadString("Deliverer"));
+                    call=apiInterface.OcrControlled(
+                            "OcrControlled",
+                            goodchecks,
+                            "2",
+                            callMethod.ReadString("JobPersonRef")
+                    );
                 }else{
-                    call=secendApiInterface.OcrControlled("OcrControlled", goodchecks, "2", callMethod.ReadString("Deliverer"));
+                    call=secendApiInterface.OcrControlled(
+                            "OcrControlled",
+                            goodchecks,
+                            "2",
+                            callMethod.ReadString("JobPersonRef")
+                    );
                 }
-
-
-
-
-
 
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
@@ -257,7 +263,24 @@ public class Ocr_PackFragment extends Fragment{
 
 
     }
-
+    public void ConfirmCount_Pack() {
+        int ConfirmCounter = 0;
+        for (Ocr_Good g : ocr_goods) {
+            if (g.getAppRowIsPacked().equals("True")) {
+                ConfirmCounter++;
+            }
+        }
+        if (ocr_goods.size() == ConfirmCounter) {
+            btn_confirm.setBackgroundResource(R.color.grey_60);
+            btn_confirm.setTextColor(requireActivity().getColor(R.color.black));
+            btn_confirm.setEnabled(false);
+            callMethod.showToast("اماده ارسال می باشد");
+        } else {
+            btn_send.setBackgroundResource(R.color.grey_60);
+            btn_send.setTextColor(requireActivity().getColor(R.color.black));
+            btn_send.setEnabled(false);
+        }
+    }
     @SuppressLint("RtlHardcoded")
     public View CreateGoodViewForPack(Ocr_Good good, int j) {
         LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -425,7 +448,7 @@ public class Ocr_PackFragment extends Fragment{
         for (Ocr_Good singlegood : ocr_goods) {
             countergood++;
 
-            if (singlegood.getAppRowIsPacked().equals("0")) {
+            if (singlegood.getAppRowIsPacked().equals("False")) {
                 ll_good_body_detail.addView(CreateGoodViewForshortage(singlegood, countergood));
 
             }
@@ -792,24 +815,7 @@ public class Ocr_PackFragment extends Fragment{
         ll_send_confirm.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
     }
 
-    public void ConfirmCount_Pack() {
-        int ConfirmCounter = 0;
-        for (Ocr_Good g : ocr_goods) {
-            if (g.getAppRowIsPacked().equals("1")) {
-                ConfirmCounter++;
-            }
-        }
-        if (ocr_goods.size() == ConfirmCounter) {
-            btn_confirm.setBackgroundResource(R.color.grey_60);
-            btn_confirm.setTextColor(requireActivity().getColor(R.color.black));
-            btn_confirm.setEnabled(false);
-            callMethod.showToast("اماده ارسال می باشد");
-        } else {
-            btn_send.setBackgroundResource(R.color.grey_60);
-            btn_send.setTextColor(requireActivity().getColor(R.color.black));
-            btn_send.setEnabled(false);
-        }
-    }
+
 
 
     public void image_zome_view(String GoodCode) {

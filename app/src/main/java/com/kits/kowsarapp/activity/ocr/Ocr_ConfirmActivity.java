@@ -16,7 +16,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
 import com.kits.kowsarapp.fragment.ocr.Ocr_PackFragment;
@@ -28,7 +28,6 @@ import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.base.Factor;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 
 import java.util.ArrayList;

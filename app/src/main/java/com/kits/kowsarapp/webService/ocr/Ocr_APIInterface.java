@@ -47,7 +47,7 @@ public interface Ocr_APIInterface {
 
     @POST(Ocr_Url+"GetOcrFactorList")
     Call<RetrofitResponse> GetOcrFactorList(@Body RequestBody requestBody );
-    @POST(Ocr_Url+"GetOcrFactorList")
+    @POST(Ocr_Url+"SetPackDetail")
     Call<RetrofitResponse> SetPackDetail(@Body RequestBody requestBody );
 
     @GET(Ocr_Url+"GetOcrGoodDetail")
@@ -116,83 +116,16 @@ public interface Ocr_APIInterface {
 
 
 
+    @POST(Ocr_Url+"OcrPrintControler")
+    Call<RetrofitResponse> OcrPrintControler(@Body RequestBody requestBody );
+    @POST(Ocr_Url+"OcrPrintPacker")
+    Call<RetrofitResponse> OcrPrintPacker(@Body RequestBody requestBody );
 
 
+    @POST(Ocr_Url+"SaveOcrImage")
+    Call<RetrofitResponse> SaveOcrImage(@Body RequestBody requestBody);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @GET(Ocr_Url+"SaveOcrImage")
-    Call<String> SaveOcrImage(
-            @Query("tag") String tag,
-            @Query("image") String image,
-            @Query("barcode") String barcode
-    );
-
-
-
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> OrderGetAppPrinter(@Field("tag") String tag);
-
-    @FormUrlEncoded
-    @POST("index.php")
-    Call<RetrofitResponse> OcrSendImage(@Field("tag") String tag
-            , @Field("Image") String image
-            , @Field("Code") String barcode
-            , @Field("PrinterName") String PrinterName
-            , @Field("PrintCount") String PrintCount
-    );
 
 
 

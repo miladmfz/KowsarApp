@@ -1,6 +1,7 @@
 package com.kits.kowsarapp.fragment.ocr;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -25,11 +26,10 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
-import com.kits.kowsarapp.adapter.ocr.Ocr_Action;
+import com.kits.kowsarapp.activity.order.Order_BasketActivity;
+import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.ocr.Ocr_Print;
 import com.kits.kowsarapp.model.base.Factor;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
@@ -38,6 +38,8 @@ import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.base.NumberFunctions;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ public class Ocr_CollectFragment extends Fragment {
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
     Ocr_DBH dbh ;
+    Ocr_Action ocr_action;
     ArrayList<String> GoodCodeCheck=new ArrayList<>();
     LinearLayoutCompat ll_main;
     LinearLayoutCompat ll_title;
@@ -83,7 +86,6 @@ public class Ocr_CollectFragment extends Fragment {
     TextView tv_phone;
     TextView tv_total_amount;
     TextView tv_total_price;
-    Ocr_Print print;
     View view;
     Dialog dialogProg;
 
@@ -120,10 +122,11 @@ public class Ocr_CollectFragment extends Fragment {
 
         callMethod = new CallMethod(requireActivity());
         dbh = new Ocr_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
+        ocr_action = new Ocr_Action(requireActivity());
+
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         handler=new Handler();
-        print=new Ocr_Print(requireActivity());
         DisplayMetrics metrics = new DisplayMetrics();
         view.getDisplay().getMetrics(metrics);
         width =metrics.widthPixels;
@@ -149,7 +152,9 @@ public class Ocr_CollectFragment extends Fragment {
         setBackgroundResource();
         setTextColor();
         setPadding();
-
+        callMethod.Log("-------------");
+        callMethod.Log(factor.getFactorPrivateCode());
+        callMethod.Log(factor.getFactorCode());
         ll_send_confirm.setWeightSum(2);
 
         tv_company.setText(NumberFunctions.PerisanNumber("بخش انبار"));
@@ -223,16 +228,24 @@ public class Ocr_CollectFragment extends Fragment {
 
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call=apiInterface.OcrControlled("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                call=apiInterface.OcrControlled(
+                        "OcrControlled",factor.getAppOCRFactorCode(),
+                        "1",
+                        callMethod.ReadString("JobPersonRef")
+                );
             }else{
-                call=secendApiInterface.OcrControlled("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                call=secendApiInterface.OcrControlled(
+                        "OcrControlled",factor.getAppOCRFactorCode(),
+                        "1",
+                        callMethod.ReadString("JobPersonRef")
+                );
             }
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
                         dialogProg.dismiss();
-                        print.Printing(factor,"0");
+                        ocr_action.OcrPrintPacker(factor);
                     }
                 }
                 @Override
@@ -596,16 +609,28 @@ public class Ocr_CollectFragment extends Fragment {
             }
         }
         if(ocr_goods.size() == ConfirmCounter){
+            btn_confirm.setBackgroundResource(R.color.grey_60);
+            btn_confirm.setTextColor(requireActivity().getColor(R.color.black));
+            btn_confirm.setEnabled(false);
+            callMethod.showToast("اماده ارسال می باشد");
+
+
             dialogProg.show();
 
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call=apiInterface.OcrControlled("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                call=apiInterface.OcrControlled(
+                        "OcrControlled",factor.getAppOCRFactorCode(),
+                        "1",
+                        callMethod.ReadString("JobPersonRef")
+                );
             }else{
-                call=secendApiInterface.OcrControlled("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                call=secendApiInterface.OcrControlled(
+                        "OcrControlled",factor.getAppOCRFactorCode(),
+                        "1",
+                        callMethod.ReadString("JobPersonRef")
+                );
             }
-
-
 
 
             call.enqueue(new Callback<RetrofitResponse>() {
@@ -614,7 +639,7 @@ public class Ocr_CollectFragment extends Fragment {
                     if(response.isSuccessful()) {
                         callMethod.showToast("تاییده ارسال شد.");
                         dialogProg.dismiss();
-                        print.Printing(factor,"0");
+                        ocr_action.OcrPrintControler(factor);
 
                     }
                 }
@@ -625,17 +650,12 @@ public class Ocr_CollectFragment extends Fragment {
             });
 
 
-            btn_confirm.setBackgroundResource(R.color.grey_60);
-            btn_confirm.setTextColor(requireActivity().getColor(R.color.black));
-            btn_confirm.setEnabled(false);
-            callMethod.showToast("اماده ارسال می باشد");
         }else{
             btn_send.setBackgroundResource(R.color.grey_60);
             btn_send.setTextColor(requireActivity().getColor(R.color.black));
             btn_send.setEnabled(false);
         }
     }
-
 
     public void image_zome_view(String GoodCode) {
 

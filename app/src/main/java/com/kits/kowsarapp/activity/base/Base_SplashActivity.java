@@ -116,6 +116,7 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditString("SecendServerURL", "");
             callMethod.EditString("DbName", "");
             callMethod.EditString("FactorDbName", "");
+            callMethod.EditString("JobPersonRef", "0");
             //endregion
 
             //region $ order
