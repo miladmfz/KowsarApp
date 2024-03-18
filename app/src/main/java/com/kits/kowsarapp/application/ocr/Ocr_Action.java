@@ -747,8 +747,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
     public void sendfactor(final String factor_code, String signatureimage) {
 
-        //app_info();
-        //dialogProg();
+        app_info();
+        dialogProg();
 
 
 
@@ -758,13 +758,10 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
 
         String Body_str  = "";
-        callMethod.Log("1 = "+Body_str);
         Body_str =callMethod.CreateJson("barcode", factor_code, Body_str);
 
-        callMethod.Log("2 = "+Body_str);
         Body_str =callMethod.CreateJson("ImageStr", signatureimage, Body_str);
-        callMethod.Log("3 = "+Body_str);
-/*
+
 
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
             call2 = apiInterface.SaveOcrImage(
@@ -799,7 +796,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                 Log.e("test",t.getMessage());
             }
         });
-*/
+
 
     }
 
