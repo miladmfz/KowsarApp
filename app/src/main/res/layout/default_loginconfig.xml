@@ -1,52 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/d_loginconfig"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_gravity="center"
-    android:layoutDirection="rtl"
+    android:id="@+id/d_loginconfig"
+    android:gravity="center"
+    android:padding="16dp"
+    android:background="@color/grey_100">
 
-    >
-
-
+    <!-- Login Form Container -->
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center"
-        android:layout_margin="25dp"
-        >
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="@drawable/bg_card"
+        android:elevation="8dp">
 
+        <!-- Password Input -->
         <EditText
             android:id="@+id/d_loginconfig_ed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="رمز عبور"
-            android:textSize="26sp"
+            android:textSize="18sp"
             android:gravity="center"
             android:singleLine="true"
             android:maxLength="6"
             android:inputType="numberPassword"
+            android:padding="12dp"
+            android:background="@drawable/bg_round"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey_600" />
 
-            />
+        <!-- Login Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/d_loginconfig_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="ورود"
             android:textColor="@color/white"
-            android:backgroundTint="@color/green_700"
-            android:textSize="22sp"
-            android:inputType="number"
-            app:rippleColor="@color/deep_purple_300"
-            app:strokeColor="@color/grey_1000"
-            app:strokeWidth="1dp"
+            android:textSize="18sp"
+            android:padding="12dp"
+            app:cornerRadius="12dp"
             app:backgroundTint="@color/green_600"
-
-            />
+            app:rippleColor="@color/deep_purple_300"
+            android:elevation="4dp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-
 </androidx.appcompat.widget.LinearLayoutCompat>

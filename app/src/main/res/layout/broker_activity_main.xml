@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:background="@drawable/bg_round_selected"
+            android:background="@drawable/bg_round"
             android:layout_margin="2dp">
 
 
@@ -116,11 +116,6 @@
                     android:visibility="visible">
 
 
-                    <ListView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/listView" />
-
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/b_main_a_test_btn"
                         android:layout_width="match_parent"
@@ -158,58 +153,58 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/b_main_a_create_factor"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_margin="10dp"
-                        android:text="@string/insert_prefactor"
-                        android:textColor="#ffffff"
-                        app:rippleColor="@color/deep_purple_300"
-                        app:strokeColor="@color/grey_1000"
-                        app:strokeWidth="1dp"
-                        app:backgroundTint="@color/green_600"
-                        android:textSize="42sp" />
+                        android:layout_height="60dp"
+                        android:text="ایجاد فاکتور جدید"
+                        android:layout_marginBottom="8dp"
+                        app:cornerRadius="12dp"
+                        android:textSize="18sp"
+                        android:backgroundTint="@color/green_500"
+                        android:textColor="@color/white"
+                        app:icon="@drawable/ic_add_invoice"
+                        app:iconGravity="start"
+                        app:iconSize="24dp"/>
 
                     <com.google.android.material.button.MaterialButton
 
                         android:id="@+id/b_main_a_good_search"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_margin="10dp"
-                        android:text="@string/good_search"
-                        android:textColor="@color/grey_1000"
-                        android:textSize="42sp"
-                        app:strokeColor="@color/grey_1000"
-                        app:strokeWidth="1dp"
-                        app:backgroundTint="@color/green_100"
-                        app:rippleColor="@color/deep_purple_300" />
+                        android:layout_height="60dp"
+                        android:text="جستجوی کالا"
+                        android:layout_marginBottom="8dp"
+                        app:cornerRadius="12dp"
+                        android:textSize="18sp"
+                        android:backgroundTint="@color/blue_500"
+                        android:textColor="@color/white"
+                        app:icon="@drawable/ic_search_product"
+                        app:iconGravity="start"
+                        app:iconSize="24dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/b_main_a_open_factor"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_margin="10dp"
-                        android:clickable="true"
-                        app:backgroundTint="@color/white"
-                        app:strokeColor="@color/grey_1000"
-                        app:strokeWidth="1dp"
-                        android:focusable="true"
-                        android:textColor="@color/grey_1000"
-                        app:rippleColor="@color/deep_purple_300"
-
-                        android:text="@string/open_prefactor"
-                        android:textSize="42sp" />
+                        android:layout_height="60dp"
+                        android:text="فاکتورهای باز"
+                        android:layout_marginBottom="8dp"
+                        app:cornerRadius="12dp"
+                        android:textSize="18sp"
+                        android:backgroundTint="@color/orange_500"
+                        android:textColor="@color/white"
+                        app:icon="@drawable/ic_open_invoices"
+                        app:iconGravity="start"
+                        app:iconSize="24dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/b_main_a_all_factor"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_margin="10dp"
-                        android:textColor="@color/grey_1000"
-                        app:rippleColor="@color/deep_purple_300"
-                        app:backgroundTint="@color/red_100"
-                        app:strokeColor="@color/grey_1000"
-                        app:strokeWidth="1dp"
-                        android:text="@string/all_prefactor"
-                        android:textSize="42sp" />
+                        android:layout_height="60dp"
+                        android:text="همه فاکتورها"
+                        app:cornerRadius="12dp"
+                        android:textSize="18sp"
+                        android:backgroundTint="@color/red_500"
+                        android:textColor="@color/white"
+                        app:icon="@drawable/ic_all_invoices"
+                        app:iconGravity="start"
+                        app:iconSize="24dp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

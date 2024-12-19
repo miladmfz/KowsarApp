@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.base.Factor;
@@ -71,15 +72,27 @@ public class Ocr_DBH extends SQLiteOpenHelper {
                 "AppType TEXT)");
     }
 
-    public void InitialConfigInsert() {
+    public void DatabaseCreate() {
+        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS FactorScan (RowCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE " +
+                ", AppOCRFactorCode TEXT" +
+                ", FactorBarcode TEXT" +
+                ", FactorPrivateCode TEXT" +
+                ", FactorImage TEXT" +
+                ", CameraImage TEXT" +
+                ", SignatureImage TEXT" +
+                ", FactorDate TEXT" +
+                ", ScanDate TEXT" +
+                ", IsSent TEXT" +
+                ", CustomerName TEXT" +
+                ", CustomerCode TEXT" +
+                ", Deliverer TEXT" +
+                ", DbName TEXT)");
 
-//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'BrokerCode', '0' Where Not Exists(Select * From Config Where KeyValue = 'BrokerCode')");
-//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'BrokerStack', '0' Where Not Exists(Select * From Config Where KeyValue = 'BrokerStack')");
-//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'MenuBroker', '0' Where Not Exists(Select * From Config Where KeyValue = 'MenuBroker')");
-//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'KsrImage_LastRepCode', '0' Where Not Exists(Select * From Config Where KeyValue = 'KsrImage_LastRepCode')");
-//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'VersionInfo', '" + BuildConfig.VERSION_NAME + "' Where Not Exists(Select * From Config Where KeyValue = 'VersionInfo')");
-
+        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailReader (PackDetailReader INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Reader TEXT )");
+        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailControler (PackDetailControler INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Controler TEXT)");
+        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailpack (PackDetailpack INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , pack TEXT)");
     }
+
 
     public void InsertActivation(@NotNull Activation activation) {
 
@@ -277,26 +290,6 @@ public class Ocr_DBH extends SQLiteOpenHelper {
 
 
 
-    public void DatabaseCreate() {
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS FactorScan (RowCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE " +
-                ", AppOCRFactorCode TEXT" +
-                ", FactorBarcode TEXT" +
-                ", FactorPrivateCode TEXT" +
-                ", FactorImage TEXT" +
-                ", CameraImage TEXT" +
-                ", SignatureImage TEXT" +
-                ", FactorDate TEXT" +
-                ", ScanDate TEXT" +
-                ", IsSent TEXT" +
-                ", CustomerName TEXT" +
-                ", CustomerCode TEXT" +
-                ", Deliverer TEXT" +
-                ", DbName TEXT)");
-
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailReader (PackDetailReader INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Reader TEXT )");
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailControler (PackDetailControler INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Controler TEXT)");
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailpack (PackDetailpack INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , pack TEXT)");
-    }
 
 
     public void Insert_signature(String factorbarcode, String Image) {

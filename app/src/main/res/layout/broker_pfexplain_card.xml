@@ -1,47 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="16dp"
     android:id="@+id/broker_pfexplain_card"
-    android:background="@drawable/bg_round_selected"
-    android:layoutDirection="rtl">
 
+    android:background="@color/grey_100">
 
-    <EditText
-        android:id="@+id/b_pfexplain_c_detail"
-        android:background="@drawable/bg_round_selected"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+    <!-- Login Form Container -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:gravity="center"
-        android:hint="@string/explain"
-        android:singleLine="true"
-        android:inputType="text"
-        android:focusable="true">
+        android:padding="16dp"
+        android:background="@drawable/bg_card"
+        android:elevation="8dp">
+
+        <!-- Password Input -->
+        <!-- توضیحات -->
+        <EditText
+            android:id="@+id/b_pfexplain_c_detail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_round"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:hint="@string/explain"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:inputType="text" />
 
 
-    </EditText>
-
-
-    <Button
-        android:id="@+id/b_pfexplain_c_btn"
-        android:layout_width="250dp"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:layout_height="50dp"
-        android:text="@string/insert_prefactor"
-        android:textSize="20sp"
-        android:textColor="#ffffff"
-
-
-        app:backgroundTint="@color/green_600"
-
-
-        style="?attr/materialButtonOutlinedStyle" />
-
+        <!-- Login Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/b_pfexplain_c_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="@string/insert_prefactor"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            app:cornerRadius="12dp"
+            app:backgroundTint="@color/green_600"
+            style="?attr/materialButtonOutlinedStyle" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+

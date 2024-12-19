@@ -49,9 +49,9 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_round_selected"
-            android:layout_margin="4dp">
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_round"
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"

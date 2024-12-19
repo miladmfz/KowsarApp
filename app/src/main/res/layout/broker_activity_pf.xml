@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".activity.broker.Broker_PFActivity"
     android:orientation="vertical"
+    android:padding="1dp"
+    android:background="@color/grey_200"
     android:layoutDirection="rtl">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,12 +20,10 @@
             android:id="@+id/b_pf_a_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
-            app:titleTextColor="@color/white"
             android:background="?attr/colorPrimary"
-            android:layout_gravity="center"
-
-            app:title="انتخاب فاکتور">
+            app:title="انتخاب فاکتور"
+            app:titleTextColor="@color/white"
+            >
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -33,85 +33,83 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="4dp"
+        android:background="@drawable/bg_round">
 
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="@string/factor_in_use"
+            android:layout_weight="0.3"
             android:gravity="center"
-
-            android:textStyle="bold"
+            android:text="@string/factor_in_use"
             android:textSize="16sp"
-            android:layout_weight="0.3" />
+            android:textStyle="bold"  />
 
 
         <TextView
             android:id="@+id/b_pf_a_lastfactor"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:textStyle="bold"
-            android:textSize="22sp"
+            android:layout_weight="0.3"
             android:gravity="center"
-            android:layout_weight="0.3" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
 
         <Button
             android:id="@+id/b_pf_a_addfactor"
-            android:layout_margin="2dp"
             android:layout_width="120dp"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:text="@string/insert_prefactor"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-
-
             android:textColor="@color/white"
+            app:cornerRadius="8dp"
             app:backgroundTint="@color/green_600"
-            app:strokeColor="@color/grey_1000"
-            app:strokeWidth="1dp"
             style="?attr/materialButtonOutlinedStyle"
-
             />
 
 
         <Button
             android:id="@+id/b_pf_a_refresh"
-            android:layout_margin="2dp"
             android:layout_width="120dp"
             android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:text="@string/refresh"
-
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-
             android:textColor="@color/white"
-            app:backgroundTint="@color/green_600"
-            app:strokeColor="@color/grey_1000"
-            app:strokeWidth="1dp"
-            style="?attr/materialButtonOutlinedStyle" />
+            app:cornerRadius="8dp"
+            app:backgroundTint="@color/blue_600"
+            style="?attr/materialButtonOutlinedStyle"
+            />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+
         android:id="@+id/b_pf_a_edtsearch"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginVertical="8dp"
         android:hint="@string/search_et"
         android:background="@drawable/bg_round_selected"
-        android:singleLine="true"
-        android:selectAllOnFocus="true"
-
+        android:gravity="center_vertical|start"
+        android:paddingHorizontal="12dp"
+        android:textSize="16sp"
         android:inputType="text"
-        android:paddingRight="10dp"
-        android:layout_margin="5dp" />
+        android:singleLine="true"  />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/b_pf_a_recyclerView"
         android:layout_width="match_parent"
-
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:background="@drawable/bg_round"  />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

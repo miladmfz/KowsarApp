@@ -1,69 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_gravity="center"
     android:id="@+id/b_spinner_prog"
-    android:layout_margin="10dp"
-    app:layout_constraintCircleRadius="10dp"
-    android:background="@drawable/bg_round_selected"
-    android:layoutDirection="rtl">
+    android:layout_margin="16dp"
+    android:padding="16dp"
+    android:background="@drawable/bg_round_card"
+    android:layoutDirection="rtl"
+    android:elevation="8dp">
 
-
+    <!-- Lottie Animation -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/b_spinner_lottie"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_margin="2dp"
+        android:layout_marginBottom="16dp"
         app:lottie_rawRes="@raw/loading"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        android:layout_gravity="center"
-        />
+        android:layout_gravity="center" />
 
-
+    <!-- Primary Text -->
     <TextView
         android:id="@+id/b_spinner_text"
         android:layout_width="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:textStyle="bold"
         android:gravity="center"
-        android:textSize="20sp"
-        android:paddingBottom="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:paddingBottom="8dp" />
 
-        />
-
+    <!-- Step Text -->
     <TextView
         android:id="@+id/b_spinner_step"
-        android:layout_width="match_parent"
-        android:layout_margin="5dp"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:textStyle="bold"
         android:gravity="center"
-        android:textSize="20sp"
-        android:paddingBottom="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/grey_700"
         android:visibility="gone" />
-    <LinearLayout
+
+    <!-- Action Button -->
+    <Button
+        android:id="@+id/b_spinner_btn"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1">
-        <Button
-            android:id="@+id/b_spinner_btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:layout_margin="2dp"
-            android:text="امتحان محدد"
-            android:textColor="#ffffff"
-            app:backgroundTint="@color/blue_500"
-            app:strokeColor="@color/grey_1000"
-            app:strokeWidth="1dp"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="12dp"
+        android:text="امتحان مجدد"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:backgroundTint="@color/blue_500"
+        android:visibility="gone"
+        android:elevation="4dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

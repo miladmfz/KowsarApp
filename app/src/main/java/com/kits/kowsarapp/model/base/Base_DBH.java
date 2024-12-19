@@ -38,12 +38,23 @@ public class Base_DBH extends SQLiteOpenHelper {
                 "EnglishCompanyName TEXT," +
                 "ServerURL TEXT," +
                 "SQLiteURL TEXT," +
-                "MaxDevice TEXT)"
-        );
+                "MaxDevice TEXT," +
+                "SecendServerURL TEXT," +
+                "DbName TEXT," +
+                "AppType TEXT)");
+        getWritableDatabase().close();
     }
 
 
+    public void UpdateUrl(String ActivationCode,String ServerURL) {
 
+        getWritableDatabase().execSQL("Update Activation set " +
+                "ServerURL = '" + ServerURL + "' " +
+                "Where ActivationCode= '" + ActivationCode + "'");
+
+
+
+    }
 
     @SuppressLint("Range")
     public ArrayList<Activation> getActivation() {
@@ -76,8 +87,8 @@ public class Base_DBH extends SQLiteOpenHelper {
         return activations;
     }
 
-
     public void InsertActivation(@NotNull Activation activation) {
+
         query = "select * from Activation Where ActivationCode= '" + activation.getActivationCode() + "'";
         cursor = getWritableDatabase().rawQuery(query, null);
         if (cursor.getCount() > 0) {
@@ -88,14 +99,17 @@ public class Base_DBH extends SQLiteOpenHelper {
             getWritableDatabase().execSQL("Update Activation set " +
                     "SQLiteURL = '" + activation.getSQLiteURL() + "' " +
                     "Where ActivationCode= '" + activation.getActivationCode() + "'");
+
         } else {
             getWritableDatabase().execSQL(" Insert Into Activation(AppBrokerCustomerCode,ActivationCode,PersianCompanyName, EnglishCompanyName,ServerURL,SQLiteURL,MaxDevice,SecendServerURL,DbName,AppType)" +
                     " Select '" + activation.getAppBrokerCustomerCode() + "','" + activation.getActivationCode() + "','" +
                     activation.getPersianCompanyName() + "','" + activation.getEnglishCompanyName() + "','" +
                     activation.getServerURL() + "','" + activation.getSQLiteURL() + "','" + activation.getMaxDevice() + "','" + activation.getSecendServerURL() + "','" + activation.getDbName() + "','" + activation.getAppType() + "'");
-        }
-    }
 
+        }
+
+
+    }
 
 
     @Override

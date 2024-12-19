@@ -2,11 +2,14 @@ package com.kits.kowsarapp.webService.base;
 
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface APIInterface_kowsar {
+public interface Kowsar_APIInterface {
 
 
 
@@ -16,21 +19,12 @@ public interface APIInterface_kowsar {
 
     @GET(Kits_Url+"Activation")
     Call<RetrofitResponse> Activation(
-            @Query("ActivationCode") String ActivationCode
+            @Query("ActivationCode") String ActivationCode,
+            @Query("Flag") String Flag
     );
+    @POST("kits/LogReport")
+    Call<RetrofitResponse> LogReport(@Body RequestBody requestBody);
 
-
-    @GET(Kits_Url+"LogReport")
-    Call<RetrofitResponse> LogReport(
-              @Query("tag") String tag
-            , @Query("Device_Id") String Device_Id
-            , @Query("Address_Ip") String Address_Ip
-            , @Query("Server_Name") String Server_Name
-            , @Query("Factor_Code") String Factor_Code
-            , @Query("StrDate") String StrDate
-            , @Query("Broker") String Broker
-            , @Query("Explain") String Explain
-    );
 
     @GET(Kits_Url+"Errorlog")
     Call<RetrofitResponse> Errorlog(

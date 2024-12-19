@@ -103,7 +103,6 @@
             android:orientation="horizontal"
             android:layout_weight="1"
             android:layout_margin="5dp"
-
             >
 
 
@@ -115,26 +114,24 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:text="@string/prefactor_date"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
-                    android:text="@string/prefactor_date"
                     android:gravity="center"
-
-                    android:textStyle="bold" />
+                    android:textStyle="bold"  />
 
                 <TextView
                     android:id="@+id/b_pfitem_c_date"
-                    android:background="@drawable/bg_round_selected"
+                    android:text="@string/prefactor_date"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:text="@string/prefactor_date"
-
+                    android:background="@drawable/bg_round"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
 
             </LinearLayout>
@@ -148,26 +145,25 @@
                 android:layout_weight="1">
 
                 <TextView
+
+                    android:text="کد فاکتور"
                     android:layout_width="150dp"
-                    android:layout_height="31dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:text="کد فاکتور"
-
-                    android:textSize="12sp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/b_pfitem_c_code"
+                    android:text="کد فاکتور"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:background="@drawable/bg_round_selected"
-                    android:text="کد فاکتور"
-
+                    android:background="@drawable/bg_round"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
 
             </LinearLayout>
@@ -192,24 +188,22 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:text="@string/prefactor_kowsarcode"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
-                    android:text="@string/prefactor_kowsarcode"
                     android:gravity="center"
-
-                    android:textStyle="bold" />
+                    android:textStyle="bold"  />
 
                 <TextView
                     android:id="@+id/b_pfitem_c_kowsarcode"
+                    android:text="@string/prefactor_kowsarcode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:background="@drawable/bg_round_selected"
-                    android:text="@string/prefactor_kowsarcode"
-
+                    android:background="@drawable/bg_round"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -224,27 +218,26 @@
                 android:layout_weight="1">
 
                 <TextView
+
+                    android:text="@string/prefactor_time"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
-                    android:text="@string/prefactor_time"
                     android:gravity="center"
-
-                    android:textSize="12sp" />
+                    android:textStyle="bold"  />
 
 
                 <TextView
                     android:id="@+id/b_pfitem_c_time"
+                    android:text="@string/prefactor_time"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:text="@string/prefactor_time"
-
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_round"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
 
             </LinearLayout>
@@ -269,26 +262,25 @@
                 android:layout_weight="1">
 
                 <TextView
+
+                    android:text="@string/buy_rows"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
-                    android:text="@string/buy_rows"
                     android:gravity="center"
-
-                    android:textSize="12sp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/b_pfitem_c_row"
+                    android:text="@string/buy_rows"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:background="@drawable/bg_round_selected"
-                    android:text="@string/buy_rows"
-
+                    android:background="@drawable/bg_round"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
 
             </LinearLayout>
@@ -301,26 +293,25 @@
                 android:layout_weight="1">
 
                 <TextView
+
+                    android:text="@string/prefactor_kowsardate"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
-                    android:text="@string/prefactor_kowsardate"
                     android:gravity="center"
-
-                    android:textSize="12sp" />
+                    android:textStyle="bold"  />
 
                 <TextView
                     android:id="@+id/b_pfitem_c_kowsardate"
+                    android:text="@string/prefactor_kowsardate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:background="@drawable/bg_round_selected"
-                    android:text="@string/prefactor_kowsardate"
-
+                    android:background="@drawable/bg_round"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
 
             </LinearLayout>
@@ -343,26 +334,24 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:text="@string/buy_totalamount"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
-                    android:text="@string/buy_totalamount"
                     android:gravity="center"
-
-                    android:textSize="12sp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/b_pfitem_c_count"
+                    android:text="@string/buy_totalamount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:background="@drawable/bg_round_selected"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:text="@string/buy_totalamount"
-
+                    android:background="@drawable/bg_round"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
 
             </LinearLayout>
@@ -374,28 +363,27 @@
                 android:paddingTop="2dp"
                 android:layout_weight="1">
 
+
                 <TextView
+
+                    android:text="@string/totalfactorheader"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
-                    android:text="@string/totalfactorheader"
                     android:gravity="center"
-
-                    android:textStyle="bold" />
-
+                    android:textStyle="bold"  />
 
                 <TextView
                     android:id="@+id/b_pfitem_c_price"
+                    android:text="@string/totalfactorheader"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_round_selected"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:text="@string/totalfactorheader"
-
+                    android:background="@drawable/bg_round"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
 
             </LinearLayout>

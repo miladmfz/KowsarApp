@@ -10,7 +10,7 @@ public class APIClient_kowsar {
     private static Retrofit t = null;
 
 
-    private static final String BASE_URL_log = "http://178.131.31.161:60005/api/";
+    private static final String BASE_URL_log = "http://192.168.1.20:60005/api/";
 
     public static Retrofit getCleint_log() {
         if (t == null) {

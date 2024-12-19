@@ -7,244 +7,217 @@
     android:layout_gravity="center"
     android:id="@+id/b_buynesbi_box"
     android:background="@drawable/bg_round_selected"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    android:padding="16dp">
 
-
+    <!-- Header -->
     <TextView
         android:id="@+id/b_buynesbi_factorname"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_gravity="center"
         android:gravity="center"
-
         android:text="@string/customerfactorheader"
         android:textSize="20sp"
-        android:focusable="true">
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp" />
 
+    <!-- Input Fields -->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    </TextView>
-
-
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-
+        <!-- Amount Input -->
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_weight="0.5"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp">
+            android:weightSum="1"
+            android:layout_marginBottom="8dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/amount"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.6"
                 android:gravity="center"
-                android:layout_weight="0.8" />
+                android:text="@string/amount"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/b_buynesbi_amount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@drawable/bg_round_selected"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/bg_round"
                 android:gravity="center"
                 android:hint="@string/amount"
                 android:maxLength="4"
                 android:inputType="number"
-                android:layout_weight="0.4"
-                android:focusable="true"
-                 />
-
+                android:padding="8dp"
+                android:textSize="16sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-    </LinearLayout>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_weight="0.5"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp">
-
-        <TextView
+        <!-- Scale Input -->
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/off_for_sale"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="8dp">
 
-            android:gravity="center"
-            android:layout_weight="0.4" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:text="@string/off_for_sale"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
 
-        <EditText
-            android:id="@+id/b_buynesbi_scale"
-            android:layout_weight="0.2"
+            <EditText
+                android:id="@+id/b_buynesbi_scale"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:hint="@string/off_for_sale"
+                android:maxLength="5"
+                android:inputType="number"
+                android:padding="8dp"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Price Input -->
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_round_selected"
-            android:gravity="center"
-            android:hint="@string/off_for_sale"
-            android:maxLength="5"
-            android:inputType="number" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="8dp">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:text="@string/boxbuy_price"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/b_buynesbi_price"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:hint="@string/boxbuy_price"
+                android:inputType="number"
+                android:maxLength="10"
+                android:padding="8dp"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Max Price Display -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:text="@string/boxbuy_maxprice"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/b_buynesbi_maxprice"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Total Price Display -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:text="@string/boxbuy_total"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/b_buynesbi_sumprice"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Has Amount Display -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:text="@string/boxbuy_hasamount"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/b_buynesbi_facamount"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/boxbuy_price"
-            android:gravity="center"
-            android:layout_weight="0.95" />
-
-        <EditText
-            android:id="@+id/b_buynesbi_price"
-            android:layout_weight="0.05"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_round_selected"
-            android:focusable="true"
-
-            android:gravity="center"
-            android:hint="@string/boxbuy_price"
-            android:inputType="number"
-            android:maxLength="10" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/boxbuy_maxprice"
-
-            android:gravity="center"
-            android:layout_weight="0.95" />
-
-        <TextView
-            android:id="@+id/b_buynesbi_maxprice"
-            android:layout_weight="0.05"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_round_selected"
-            android:focusable="true"
-
-            android:gravity="center"
-            android:hint="@string/boxbuy_maxprice"
-            android:textSize="20sp"
-            android:maxLength="10" />
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/boxbuy_total"
-
-            android:gravity="center"
-            android:layout_weight="0.95" />
-
-        <TextView
-            android:id="@+id/b_buynesbi_sumprice"
-            android:layout_weight="0.05"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_round_selected"
-            android:focusable="true"
-
-            android:gravity="center"
-            android:textSize="20sp"
-            android:hint="@string/boxbuy_total"
-            android:maxLength="10" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/boxbuy_hasamount"
-
-            android:gravity="center"
-            android:layout_weight="0.95" />
-
-        <TextView
-            android:id="@+id/b_buynesbi_facamount"
-            android:layout_weight="0.05"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_round_selected"
-            android:focusable="true"
-
-            android:gravity="center"
-            android:textSize="20sp"
-            android:hint="@string/boxbuy_hasamount"
-            android:maxLength="10" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-    <Button
+    <!-- Submit Button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/b_buynesbi_btn"
-        android:layout_width="250dp"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_gravity="center"
         android:text="@string/detail_buy"
         android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="#ffffff"
-
+        android:textSize="18sp"
+        android:textColor="@color/white"
         app:backgroundTint="@color/green_600"
-        app:strokeColor="@color/grey_1000"
-        app:strokeWidth="1dp"
-        app:icon="@drawable/ic_add_shopping_black"
-        app:iconTint="@color/white"
         style="?attr/materialButtonOutlinedStyle"
-
-
-        />
+        android:layout_marginTop="16dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

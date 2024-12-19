@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.model.order.Order_RstMiz;
+import com.kits.kowsarapp.model.search.Search_Good;
 
 import java.util.ArrayList;
 
@@ -12,6 +13,8 @@ public class RetrofitResponse {
     @SerializedName("Goods")
     private ArrayList<Good> Goods;
 
+    @SerializedName("SearchGoods")
+    private ArrayList<Search_Good> Search_Goods;
     @SerializedName("OcrGoods")
     private ArrayList<Ocr_Good> Ocr_Goods;
     @SerializedName("Customers")
@@ -97,6 +100,14 @@ public class RetrofitResponse {
     @SerializedName("ErrDesc")
     private String ErrDesc;
 
+
+    public ArrayList<Search_Good> getSearch_Goods() {
+        return Search_Goods;
+    }
+
+    public void setSearch_Goods(ArrayList<Search_Good> search_Goods) {
+        Search_Goods = search_Goods;
+    }
 
     public ArrayList<Ocr_Good> getOcr_Goods() {
         return Ocr_Goods;

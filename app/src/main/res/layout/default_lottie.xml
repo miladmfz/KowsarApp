@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:id="@+id/d_lottie_line"
-    android:background="@drawable/bg_overlay"
+    android:background="@drawable/bg_round_card"
     android:layout_margin="10dp"
 
     >

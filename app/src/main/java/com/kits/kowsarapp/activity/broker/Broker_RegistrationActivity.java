@@ -78,17 +78,15 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
         Call<RetrofitResponse> call1 = broker_apiInterface.GetSellBroker("GetSellBroker");
-        callMethod.Log(call1.toString());
-        callMethod.Log(call1.request().toString());
-        callMethod.Log(call1.request().url().toString());
+
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                callMethod.Log(response.body().toString());
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     SellBrokers.clear();
                     SellBrokers = response.body().getSellBrokers();
+
                     SellBroker sellBroker= new SellBroker();
                     sellBroker.setBrokerCode("0");
                     sellBroker.setBrokerNameWithoutType("بازاریاب تعریف نشده");
@@ -102,6 +100,9 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                SellBrokers.clear();
+
+                callMethod.Log(""+t.getMessage());
                 SellBroker sellBroker= new SellBroker();
                 sellBroker.setBrokerCode("0");
                 sellBroker.setBrokerNameWithoutType("بازاریاب تعریف نشده");
@@ -117,6 +118,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, SellBroker_Names);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.bRegisterASpinnerbroker.setAdapter(spinner_adapter);
+
         int possellbroker=0;
         for (SellBroker sellBroker:SellBrokers){
             if (sellBroker.getBrokerCode().equals(dbh.ReadConfig("BrokerCode"))){
@@ -124,13 +126,13 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
             }
         }
 
+
         binding.bRegisterASpinnerbroker.setSelection(possellbroker);
         binding.bRegisterASpinnerbroker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                dbh.SaveConfig("BrokerCode",SellBrokers.get(position).getBrokerCode());
-                binding.bRegisterABroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
+                binding.bRegisterABroker.setText(NumberFunctions.PerisanNumber(SellBrokers.get(position).getBrokerCode()));
 
             }
 
@@ -151,6 +153,9 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         binding.bRegisterAPhonenumber.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PhoneNumber")));
         binding.bRegisterADbname.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PersianCompanyNameUse")));
 
+        binding.bRegisterABroker.setOnClickListener(v -> {
+            binding.bRegisterABroker.selectAll();
+        });
 
         binding.bRegisterATotaldelete.setOnClickListener(v -> {
 
@@ -192,7 +197,6 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
                     intent = new Intent(this, Base_SplashActivity.class);
                     finish();
                     startActivity(intent);
-                    Log.i("test", "Success");
                 }
             });
 
@@ -333,6 +337,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
             callMethod.EditString("TitleSize", NumberFunctions.EnglishNumber(binding.bRegisterATitlesize.getText().toString()));
             callMethod.EditString("BodySize", NumberFunctions.EnglishNumber(binding.bRegisterABodysize.getText().toString()));
             callMethod.EditString("PhoneNumber", NumberFunctions.EnglishNumber(binding.bRegisterAPhonenumber.getText().toString()));
+
             if(!dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.bRegisterABroker.getText().toString()))){
                 Registration();
             }else {
@@ -351,7 +356,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
             UserInfo UserInfoNew = new UserInfo();
             UserInfoNew.setBrokerCode(NumberFunctions.EnglishNumber(binding.bRegisterABroker.getText().toString()));
-            callMethod.EditString("BrokerCode", NumberFunctions.EnglishNumber(binding.bRegisterABroker.getText().toString()));
+            dbh.SaveConfig("BrokerCode",NumberFunctions.EnglishNumber(binding.bRegisterABroker.getText().toString()));
             dbh.SavePersonalInfo(UserInfoNew);
             dbh.DatabaseCreate();
 

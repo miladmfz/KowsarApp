@@ -78,7 +78,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
         this.Columns = dbh.GetColumns("id", "", "1");
         this.broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
-        mainline = itemView.findViewById(R.id.prosearch_mainline);
+        mainline = itemView.findViewById(R.id.b_good_c_mainline);
         img = itemView.findViewById(R.id.b_good_c_img);
         rltv = itemView.findViewById(R.id.broker_good_card);
         btnadd = itemView.findViewById(R.id.b_good_c_btn);

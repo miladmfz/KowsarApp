@@ -27,6 +27,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_NavActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
 import com.kits.kowsarapp.activity.order.Order_NavActivity;
+import com.kits.kowsarapp.activity.search.Search_NavActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
@@ -84,6 +85,7 @@ public class Base_SplashActivity extends AppCompatActivity {
     public void init() {
         callMethod = new CallMethod(this);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        callMethod.EditString("AppType", "1");
 
         if (callMethod.ReadString("ServerURLUse").equals("")) {
             callMethod.EditString("DatabaseName", "");
@@ -223,6 +225,11 @@ public class Base_SplashActivity extends AppCompatActivity {
                         }else if (callMethod.ReadString("AppType").equals("3")){
                             callMethod.Log("order");
                             intent = new Intent(this, Order_NavActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else if (callMethod.ReadString("AppType").equals("4")){
+                            callMethod.Log("order");
+                            intent = new Intent(this, Search_NavActivity.class);
                             startActivity(intent);
                             finish();
                         }

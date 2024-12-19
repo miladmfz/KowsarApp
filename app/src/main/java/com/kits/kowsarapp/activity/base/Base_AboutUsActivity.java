@@ -48,9 +48,7 @@ public class Base_AboutUsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         Config();
         setPersianText(binding.tv1);
-        setPersianText(binding.tv2);
         setPersianText(binding.tv3);
-        setPersianText(binding.tv4);
 
         binding.tv5.setOnClickListener(v -> {
 
@@ -175,7 +173,7 @@ public class Base_AboutUsActivity extends AppCompatActivity {
 
     private void DownloadFun() {
 
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse("http://178.131.31.161:60005/api/kits/Brokerkowsar"));
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse("http://192.168.1.20:60005/api/kits/KowsarApp"));
         request.setTitle("BrokerKowsar");
         request.setDescription("Downloading New Version");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);

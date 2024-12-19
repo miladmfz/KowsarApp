@@ -184,7 +184,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
 
 
-        if (Integer.parseInt(dbh.ReadConfig("BrokerCode")) != 0) {
+        if (!dbh.ReadConfig("BrokerCode").equals("0")) {
 
             tv_brokercode.setText(" کد بازاریاب : " + NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
             if (dbh.ReadConfig("BrokerStack").equals("0")) {

@@ -8,6 +8,8 @@
     android:layout_height="match_parent"
     tools:context=".activity.broker.Broker_PFOpenActivity"
     android:orientation="vertical"
+    android:background="@color/grey_200"
+    android:padding="2dp"
     android:layoutDirection="rtl">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -36,66 +38,56 @@
     <Button
         android:id="@+id/b_pfopen_a_btn"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
         android:layout_height="50dp"
+        android:layout_marginVertical="8dp"
         android:text="@string/insert_prefactor"
         android:textStyle="bold"
-        android:textSize="20sp"
-
-
+        android:textSize="18sp"
         android:textColor="@color/white"
+        app:cornerRadius="12dp"
         app:backgroundTint="@color/green_600"
-        app:strokeColor="@color/grey_1000"
-        app:strokeWidth="1dp"
         style="?attr/materialButtonOutlinedStyle" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="10dp">
+        android:background="@drawable/bg_round"
+        android:padding="8dp"
+        android:layout_marginVertical="8dp">
 
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:textSize="15sp"
+            android:layout_weight="0.4"
             android:gravity="center"
             android:text="@string/open_amountprefactor"
-            android:focusable="true"
-            android:layout_weight="0.3" />
+            android:textStyle="bold"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/b_pfopen_a_amount"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_gravity="center"
+            android:layout_weight="0.2"
             android:gravity="center"
-            android:layout_weight="0.4"
-            android:focusable="true" />
+            android:textStyle="bold"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/b_pfopen_a_deleteempty"
-            android:layout_margin="2dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.4"
+            android:layout_marginHorizontal="4dp"
             android:text="@string/open_deleteprefactor"
-            android:layout_weight="0.3"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/white"
-
-
-            app:backgroundTint="@color/green_600"
-            app:strokeColor="@color/grey_1000"
-            app:strokeWidth="1dp"
-            style="?attr/materialButtonOutlinedStyle" />
+            app:cornerRadius="8dp"
+            app:backgroundTint="@color/red_600"
+            style="?attr/materialButtonOutlinedStyle"/>
 
 
         <Button
@@ -104,7 +96,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="@string/refresh"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/white"
@@ -116,8 +108,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/b_pfopen_a_recyclerView"
         android:layout_width="match_parent"
-
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_round"
+        android:padding="8dp"
+        android:layout_marginVertical="8dp"/>
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

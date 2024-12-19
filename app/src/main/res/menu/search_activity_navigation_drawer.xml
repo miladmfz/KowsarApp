@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layoutDirection="rtl"
+    tools:showIn="navigation_view">
+
+
+    <item android:title="@string/nav_public">
+
+        <menu>
+
+            <item
+                android:id="@+id/nav_cfg"
+                android:icon="@drawable/ic_config_w"
+
+                android:title="@string/setting" />
+            <item
+                android:id="@+id/aboutus"
+                android:icon="@drawable/nav_about_us"
+
+                android:title="@string/aboutus" />
+
+
+        </menu>
+    </item>
+
+</menu>

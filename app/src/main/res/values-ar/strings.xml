@@ -154,7 +154,7 @@
 
 
 
-    <string name="Kowsar_log">178.131.31.161:60005</string>
+    <string name="Kowsar_log">192.168.1.20:60005</string>
 
     <string name="new_printer">اتصال به پرینتر</string>
     <string name="print">پرینت کردن</string>

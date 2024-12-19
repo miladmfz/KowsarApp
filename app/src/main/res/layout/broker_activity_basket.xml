@@ -49,8 +49,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_margin="3dp"
-                android:background="@drawable/bg_round_green"
-                android:orientation="horizontal">
+                android:background="@drawable/bg_round"
+                android:orientation="horizontal"
+                >
 
 
                 <Button
@@ -67,7 +68,6 @@
                     android:textStyle="bold"
                     app:backgroundTint="@color/red_800"
                     app:strokeColor="@color/grey_1000"
-
                     app:strokeWidth="1dp" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat

@@ -43,7 +43,7 @@
             android:layout_height="50dp"
             android:layout_margin="4dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/bg_round_selected"
+            android:background="@drawable/bg_round"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.LinearLayoutCompat
