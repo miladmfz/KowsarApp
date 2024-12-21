@@ -89,6 +89,11 @@
         <activity android:name=".activity.ocr.Ocr_ScanCodeActivity" />
 
 
+        <activity android:name=".activity.search.Search_SearchActivity" />
+        <activity android:name=".activity.search.Search_RegistrationActivity" />
+        <activity android:name=".activity.search.Search_ConfigActivity" />
+        <activity android:name=".activity.search.Search_NavActivity" />
+
 
 
 

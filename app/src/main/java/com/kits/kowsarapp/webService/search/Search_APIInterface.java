@@ -13,49 +13,60 @@ import retrofit2.http.Query;
 
 public interface Search_APIInterface {
 
+    String Search_Url = "Search/";
+    String Kowsar_Url = "Kowsar/";
 
 
-        @GET("kits/Activation")
-    Call<RetrofitResponse> Activation(
-            @Query("ActivationCode") String ActivationCode,
-            @Query("Flag") String Flag
+
+    @GET(Kowsar_Url+"GetImage")
+    Call<RetrofitResponse> GetImage(
+            @Query("tag") String tag,
+            @Query("ObjectRef") String ObjectRef,
+            @Query("IX") String IX,
+            @Query("Scale") String Scale
     );
-    @POST("index.php")
-    @FormUrlEncoded
-    Call <RetrofitResponse> GetImage(@Field("tag") String tag,
-                                     @Field("ObjectRef") String ObjectRef,
-                                     @Field("IX") Integer IX,
-                                     @Field("Scale") Integer Scale);
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetGoodList(@Field("tag") String tag,
-                                       @Field("SearchTarget") String SearchTarget
+    @GET(Kowsar_Url+"GetSellBroker")
+    Call<RetrofitResponse> GetSellBroker(
+            @Query("tag") String tag
     );
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> BrokerStack(
-            @Field("tag") String tag
-            , @Field("BrokerRef") String BrokerRef
-    );
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> GetSellBroker(@Field("tag") String tag);
+    @GET(Kowsar_Url+"GetGoodType")
 
-    @POST("index.php")
-    @FormUrlEncoded
     Call<RetrofitResponse> GetGoodType(
-            @Field("tag") String tag
+            @Query("tag") String tag
     );
 
-    @POST("index.php")
+
+
+    @POST(Search_Url+"GetGoodList")
     @FormUrlEncoded
-    Call<RetrofitResponse> GetColumnList(
-            @Field("tag") String tag
-            , @Field("Type") String Type
-            , @Field("AppType") String AppType
-            , @Field("IncludeZero") String IncludeZero
+    Call<RetrofitResponse> GetGoodList(@Body RequestBody requestBody );
+
+
+
+
+    @GET(Search_Url+"BrokerStack")
+
+    Call<RetrofitResponse> BrokerStack(
+            @Query("tag") String tag
+            , @Query("BrokerRef") String BrokerRef
     );
+
+
+
+
+    @GET(Search_Url+"GetColumnList")
+
+    Call<RetrofitResponse> GetColumnList(
+            @Query("tag") String tag
+            , @Query("Type") String Type
+            , @Query("AppType") String AppType
+            , @Query("IncludeZero") String IncludeZero
+    );
+
+
+
+
 
 
 

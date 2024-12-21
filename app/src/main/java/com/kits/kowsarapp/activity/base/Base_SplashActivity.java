@@ -85,7 +85,7 @@ public class Base_SplashActivity extends AppCompatActivity {
     public void init() {
         callMethod = new CallMethod(this);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        callMethod.EditString("AppType", "1");
+        callMethod.EditString("AppType", "3");
 
         if (callMethod.ReadString("ServerURLUse").equals("")) {
             callMethod.EditString("DatabaseName", "");

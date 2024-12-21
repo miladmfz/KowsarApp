@@ -391,6 +391,8 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                 callMethod.EditString("ServerURLUse", singleactive.getServerURL());
                 callMethod.EditString("DatabaseName", singleactive.getDatabaseFilePath());
                 callMethod.EditString("ActivationCode", singleactive.getActivationCode());
+                callMethod.EditString("AppType", singleactive.getAppType());
+
                 intent = new Intent(this, Base_SplashActivity.class);
                 startActivity(intent);
                 finish();

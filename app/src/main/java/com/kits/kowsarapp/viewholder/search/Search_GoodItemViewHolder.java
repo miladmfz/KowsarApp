@@ -149,7 +149,7 @@ public class Search_GoodItemViewHolder extends RecyclerView.ViewHolder {
                     .into(img);
             img.setVisibility(View.VISIBLE);
 
-            call = apiInterface.GetImage("getImage",good.getGoodFieldValue("GoodCode"),0,150);
+            call = apiInterface.GetImage("getImage",good.getGoodFieldValue("GoodCode"),"0","150");
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(Call<RetrofitResponse> call2, Response<RetrofitResponse> response) {

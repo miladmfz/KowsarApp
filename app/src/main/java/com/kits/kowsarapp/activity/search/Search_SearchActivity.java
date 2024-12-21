@@ -3,13 +3,11 @@ package com.kits.kowsarapp.activity.search;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -26,7 +24,6 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.search.Search_GoodAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.SearchActivitySearchBinding;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.search.Search_DBH;
@@ -35,7 +32,6 @@ import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.search.Search_APIInterface;
 
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -203,7 +199,11 @@ public class Search_SearchActivity extends AppCompatActivity {
 
 
     public void allgood() {
-        Call<RetrofitResponse> call = search_apiInterface.GetGoodList ("GetSearchBarcodeGoodList", AutoSearch);
+
+        String Body_str  = "";
+        Body_str =callMethod.CreateJson("SearchTarget", AutoSearch, Body_str);
+        Call<RetrofitResponse> call = search_apiInterface.GetGoodList(callMethod.RetrofitBody(Body_str));
+
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {

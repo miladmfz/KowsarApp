@@ -776,14 +776,15 @@ public class Broker_Action extends Base_Action {
         jsonPayload.add("RowDetails", pr2);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonPayload.toString());
 
-        Call<RetrofitResponse> call1 = broker_apiInterface.sendData_Body(requestBody);
+        Call<RetrofitResponse> call1 = broker_apiInterface.BrokerOrder(requestBody);
 
 
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
-                callMethod.Log(response.body().getText());
                 if (response.isSuccessful()) {
+                    callMethod.Log(response.body().toString());
+
                     try {
                         callMethod.Log("0");
                         JSONArray object = new JSONArray(response.body().getText());

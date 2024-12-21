@@ -70,14 +70,14 @@ public interface Broker_APIInterface {
 
 
     @POST(Broker_Url+"BrokerOrder") // Replace with your actual API endpoint
-    Call<RetrofitResponse> sendData_Body(@Body RequestBody requestBody);
+    Call<RetrofitResponse> BrokerOrder(@Body RequestBody requestBody);
 
 
-    @GET(Broker_Url+"BrokerOrder") // Replace with your actual API endpoint
-    Call<RetrofitResponse> sendData(
-            @Query("HeaderDetails") String HeaderDetail,
-            @Query("RowDetails") String RowDetail
-    );
+//    @GET(Broker_Url+"BrokerOrder") // Replace with your actual API endpoint
+//    Call<RetrofitResponse> sendData(
+//            @Query("HeaderDetails") String HeaderDetail,
+//            @Query("RowDetails") String RowDetail
+//    );
 
     @GET(Kowsar_Url+"GetImageFromKsr")
     Call<RetrofitResponse> GetImageFromKsr(

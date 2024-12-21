@@ -22,7 +22,7 @@ public interface Order_APIInterface {
             @Query("tag") String tag,
             @Query("ObjectType") String ObjectType
     );
-    @GET(Kowsar_Url+"DbSetupvalue")
+    @GET(Order_Url+"DbSetupvalue")
     Call<RetrofitResponse> DbSetupvalue(
             @Query("tag") String tag,
             @Query("Where") String Where
@@ -69,7 +69,7 @@ public interface Order_APIInterface {
     );
 
 
-    @GET(Kowsar_Url+"GetDistinctValues")
+    @GET(Order_Url+"GetDistinctValues")
     Call<RetrofitResponse> GetDistinctValues(
             @Query("tag") String tag,
             @Query("TableName") String TableName,
@@ -133,7 +133,7 @@ public interface Order_APIInterface {
             @Query("AppBasketInfoRef") String AppBasketInfoRef
     );
 
-    @GET(Kowsar_Url+"GetSellBroker")
+    @GET(Order_Url+"GetSellBroker")
     Call<RetrofitResponse> GetSellBroker(
             @Query("tag") String tag
     );
