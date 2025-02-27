@@ -112,9 +112,35 @@ public interface Ocr_APIInterface {
 
 
 
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> SetStackLocation(@Field("tag") String tag,
+                                            @Field("GoodCode") String GoodCode,
+                                            @Field("StackLocation") String StackLocation
+    );
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> OrderGetAppPrinter(@Field("tag") String tag);
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetFactor(@Field("tag") String tag
+            , @Field("barcode") String barcode
+            , @Field("orderby") String orderby);
 
 
-
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetOcrGoodList(@Field("tag") String tag, @Field("SearchTarget") String SearchTarget);
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> OcrSendImage(@Field("tag") String tag
+            , @Field("Image") String image
+            , @Field("Code") String barcode
+            , @Field("PrinterName") String PrinterName
+            , @Field("PrintCount") String PrintCount
+    );
 
     @POST(Ocr_Url+"OcrPrintControler")
     Call<RetrofitResponse> OcrPrintControler(@Body RequestBody requestBody );

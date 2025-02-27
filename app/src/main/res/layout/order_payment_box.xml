@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ord_payment_b"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_overlay"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
+
+
+
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_card"
+        android:padding="4dp"
+        android:layout_margin="4dp"
+        android:elevation="4dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="2dp"
+            android:weightSum="2"
+            >
+
+            <!-- Label: Title Size -->
+            <Button
+                android:id="@+id/ord_payment_b_btn_cash"
+
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_margin="2dp"
+                android:gravity="center"
+                android:text="نقدی"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:backgroundTint="@color/blue_500"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/ord_payment_b_btn_pos"
+
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_margin="2dp"
+                android:gravity="center"
+                android:text="پوز"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:backgroundTint="@color/gray_secondary"
+                android:layout_weight="1"/>
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <!-- Row 1: Config Delay and Config Item -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <!-- Label: Config Delay -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start"
+                android:text="جمع فاکتور"
+
+                android:textSize="12sp"
+                android:textColor="?attr/colorOnBackground"
+                android:paddingStart="8dp"
+                android:layout_weight="1"
+                />
+
+            <!-- Input: Config Delay -->
+            <TextView
+                android:id="@+id/ord_payment_b_sumprice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_editbox"
+                android:padding="3dp"
+                android:textSize="12sp"
+                android:textColor="?attr/colorOnBackground"
+                android:gravity="center"
+                android:layout_weight="2"
+                />
+
+            <!-- Label: Config Item -->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <!-- Label: Config Delay -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start"
+                android:text="ارزش افزوده"
+                android:textSize="12sp"
+                android:textColor="?attr/colorOnBackground"
+                android:paddingStart="8dp"
+                android:layout_weight="1"
+                />
+
+            <!-- Input: Config Delay -->
+            <TextView
+                android:id="@+id/ord_payment_b_sumtaxmayor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_editbox"
+                android:padding="3dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_weight="2"
+                />
+
+            <!-- Label: Config Item -->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+
+            <!-- Label: Config Delay -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start"
+                android:text="مبلغ کل "
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="12sp"
+                android:paddingStart="8dp"
+                android:layout_weight="1"
+                />
+
+            <!-- Input: Config Delay -->
+            <TextView
+                android:id="@+id/ord_payment_b_totalprice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_editbox"
+                android:padding="3dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_weight="2"
+                />
+
+            <!-- Label: Config Item -->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Row 2: Title Size and Body Size -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ord_payment_b_ll_received"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            >
+
+            <!-- Label: Title Size -->
+
+            <!-- Label: Body Size -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:text="دریافت شده"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="12sp"
+                android:paddingStart="4dp" />
+
+            <!-- Input: Body Size -->
+            <TextView
+                android:id="@+id/ord_payment_b_received"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@drawable/bg_editbox"
+                android:padding="3dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="16sp"
+                android:gravity="center" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ord_payment_b_ll_decrement"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            >
+
+            <!-- Label: Title Size -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:text="تخفیف"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="12sp"
+                android:paddingStart="8dp" />
+
+            <!-- Input: Title Size -->
+            <TextView
+                android:id="@+id/ord_payment_b_decrement"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@drawable/bg_editbox"
+                android:padding="3dp"
+
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="16sp"
+                android:gravity="center" />
+
+            <!-- Label: Body Size -->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ord_payment_b_ll_notreceived"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            >
+
+            <!-- Label: Title Size -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:text="مانده"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="16sp"
+                android:paddingStart="8dp" />
+
+            <!-- Input: Title Size -->
+            <TextView
+                android:id="@+id/ord_payment_b_notreceived"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@drawable/bg_editbox"
+                android:padding="3dp"
+
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="24sp"
+                android:gravity="center" />
+
+            <!-- Label: Body Size -->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ord_payment_b_ll_edlable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            >
+
+            <!-- Label: Title Size -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:text="درصد تخفیف"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp"
+                android:paddingStart="8dp" />
+
+            <!-- Input: Title Size -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center_vertical|start"
+                android:text="مبلغ"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp"
+                android:paddingStart="8dp" />
+
+            <!-- Label: Body Size -->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ord_payment_b_ll_edpay"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            >
+
+            <!-- Label: Title Size -->
+            <EditText
+                android:id="@+id/ord_payment_b_selloff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+
+                android:background="@drawable/bg_editbox"
+                android:padding="4dp"
+                android:inputType="numberDecimal"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="20sp"
+                android:gravity="center" />
+
+            <!-- Input: Title Size -->
+            <EditText
+                android:id="@+id/ord_payment_b_mablagh"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+
+                android:layout_weight="2"
+                android:background="@drawable/bg_editbox"
+                android:padding="4dp"
+                android:inputType="numberDecimal"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="20sp"
+
+
+                android:gravity="center" />
+
+            <!-- Label: Body Size -->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ord_payment_b_ll_cashtopay"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            >
+
+            <!-- Label: Title Size -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:text="دریافت نقد"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="16sp"
+                android:paddingStart="8dp" />
+
+            <!-- Input: Title Size -->
+            <EditText
+                android:id="@+id/ord_payment_b_cashtopay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="numberDecimal"
+                android:background="@drawable/bg_editbox"
+                android:padding="3dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="24sp"
+                android:gravity="center" />
+
+            <!-- Label: Body Size -->
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <Button
+        android:id="@+id/ord_payment_b_btn_final"
+        android:layout_width="400dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="دریافت"
+        android:textSize="20sp"
+        style="@style/Widget.MaterialComponents.Button"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

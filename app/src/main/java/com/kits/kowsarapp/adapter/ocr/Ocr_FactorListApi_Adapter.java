@@ -35,10 +35,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_FactorListOnline_Adapter extends RecyclerView.Adapter<Ocr_FactorListOnline_Adapter.facViewHolder> {
+public class Ocr_FactorListApi_Adapter extends RecyclerView.Adapter<Ocr_FactorListApi_Adapter.facViewHolder> {
     Ocr_APIInterface apiInterface ;
     Ocr_APIInterface secendApiInterface ;
-
     private final Context mContext;
     Intent intent;
     ArrayList<Factor> factors ;
@@ -48,7 +47,7 @@ public class Ocr_FactorListOnline_Adapter extends RecyclerView.Adapter<Ocr_Facto
     CallMethod callMethod;
 
     Ocr_DBH dbh;
-    public Ocr_FactorListOnline_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
+    public Ocr_FactorListApi_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
         this.ocrAction =new Ocr_Action(context);

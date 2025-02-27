@@ -39,13 +39,35 @@ public class Base_DBH extends SQLiteOpenHelper {
                 "ServerURL TEXT," +
                 "SQLiteURL TEXT," +
                 "MaxDevice TEXT," +
+                "UsedDevice TEXT," +
                 "SecendServerURL TEXT," +
                 "DbName TEXT," +
-                "AppType TEXT)");
+                "AppType TEXT," +
+                "ServerPort TEXT," +
+                "ServerPathApi TEXT," +
+                "ServerIp TEXT)");
         getWritableDatabase().close();
     }
 
 
+    public void UpdateActivation(Activation activation) {
+
+        getWritableDatabase().execSQL("Update Activation set " +
+
+                "PersianCompanyName = '" + activation.getPersianCompanyName() + "' " +
+                "EnglishCompanyName = '" + activation.getEnglishCompanyName() + "' " +
+                "ServerURL = '" + activation.getServerURL() + "' " +
+                "SQLiteURL = '" + activation.getSQLiteURL() + "' " +
+                "MaxDevice = '" + activation.getMaxDevice() + "' " +
+                "UsedDevice = '" + activation.getUsedDevice() + "' " +
+                "ServerIp = '" + activation.getServerIp() + "' " +
+                "ServerPort = '" + activation.getServerPort() + "' " +
+                "ServerPathApi = '" + activation.getServerPathApi() + "' " +
+                "SecendServerURL = '" + activation.getSecendServerURL() + "' " +
+                "DbName = '" + activation.getDbName() + "' " +
+                "AppType = '" + activation.getAppType() + "' " +
+                "Where ActivationCode= '" + activation.getActivationCode() + "'");
+    }
     public void UpdateUrl(String ActivationCode,String ServerURL) {
 
         getWritableDatabase().execSQL("Update Activation set " +
@@ -73,9 +95,13 @@ public class Base_DBH extends SQLiteOpenHelper {
                     activation.setServerURL(cursor.getString(cursor.getColumnIndex("ServerURL")));
                     activation.setSQLiteURL(cursor.getString(cursor.getColumnIndex("SQLiteURL")));
                     activation.setMaxDevice(cursor.getString(cursor.getColumnIndex("MaxDevice")));
+                    activation.setUsedDevice(cursor.getString(cursor.getColumnIndex("UsedDevice")));
                     activation.setSecendServerURL(cursor.getString(cursor.getColumnIndex("SecendServerURL")));
                     activation.setDbName(cursor.getString(cursor.getColumnIndex("DbName")));
                     activation.setAppType(cursor.getString(cursor.getColumnIndex("AppType")));
+                    activation.setServerIp(cursor.getString(cursor.getColumnIndex("ServerIp")));
+                    activation.setServerPort(cursor.getString(cursor.getColumnIndex("ServerPort")));
+                    activation.setServerPathApi(cursor.getString(cursor.getColumnIndex("ServerPathApi")));
                 } catch (Exception ignored) {
                     callMethod.Log("db="+ignored.getMessage());
                 }
@@ -92,19 +118,15 @@ public class Base_DBH extends SQLiteOpenHelper {
         query = "select * from Activation Where ActivationCode= '" + activation.getActivationCode() + "'";
         cursor = getWritableDatabase().rawQuery(query, null);
         if (cursor.getCount() > 0) {
-            getWritableDatabase().execSQL("Update Activation set " +
-                    "ServerURL = '" + activation.getServerURL() + "' " +
-                    "Where ActivationCode= '" + activation.getActivationCode() + "'");
-
-            getWritableDatabase().execSQL("Update Activation set " +
-                    "SQLiteURL = '" + activation.getSQLiteURL() + "' " +
-                    "Where ActivationCode= '" + activation.getActivationCode() + "'");
-
+            UpdateActivation( activation);
         } else {
-            getWritableDatabase().execSQL(" Insert Into Activation(AppBrokerCustomerCode,ActivationCode,PersianCompanyName, EnglishCompanyName,ServerURL,SQLiteURL,MaxDevice,SecendServerURL,DbName,AppType)" +
-                    " Select '" + activation.getAppBrokerCustomerCode() + "','" + activation.getActivationCode() + "','" +
+            getWritableDatabase().execSQL(" Insert Into Activation(AppBrokerCustomerCode,ActivationCode,PersianCompanyName, EnglishCompanyName,ServerURL,SQLiteURL,MaxDevice,UsedDevice,SecendServerURL,DbName,AppType,ServerIp,ServerPort,ServerPathApi)" +
+                     " Select '" + activation.getAppBrokerCustomerCode() + "','" + activation.getActivationCode() + "','" +
                     activation.getPersianCompanyName() + "','" + activation.getEnglishCompanyName() + "','" +
-                    activation.getServerURL() + "','" + activation.getSQLiteURL() + "','" + activation.getMaxDevice() + "','" + activation.getSecendServerURL() + "','" + activation.getDbName() + "','" + activation.getAppType() + "'");
+                    activation.getServerURL() + "','" + activation.getSQLiteURL() + "','" + activation.getMaxDevice() + "','" +
+                    activation.getUsedDevice() + "','" + activation.getSecendServerURL() + "','" + activation.getDbName() + "','" +
+                    activation.getAppType() + "','" + activation.getServerIp() + "','" + activation.getServerPort() + "','" +
+                    activation.getServerPathApi() + "'");
 
         }
 

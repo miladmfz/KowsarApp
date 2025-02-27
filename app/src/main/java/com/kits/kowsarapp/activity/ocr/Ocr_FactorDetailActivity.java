@@ -24,6 +24,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -64,6 +65,13 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
     Bitmap bitmap_factor;
     int width=1;
     CallMethod callMethod;
+
+
+    Ocr_Action ocr_action;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +144,12 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
                 call = secendApiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
             }
 
+//            Call<RetrofitResponse> call;
+//            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//                call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
+//            }else {
+//                call =secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
+//            }
 
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override

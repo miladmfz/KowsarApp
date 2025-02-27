@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.application.search;
+package com.kits.kowsarapp.application.find;
 
 
 import android.app.Activity;
@@ -11,15 +11,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.kits.kowsarapp.activity.search.Search_NavActivity;
+import com.kits.kowsarapp.activity.find.Find_NavActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.base.UserInfo;
-import com.kits.kowsarapp.model.search.Search_DBH;
+import com.kits.kowsarapp.model.find.Find_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.search.Search_APIInterface;
+import com.kits.kowsarapp.webService.find.Find_APIInterface;
 import com.kits.kowsarapp.R;
 
 import java.util.ArrayList;
@@ -29,14 +29,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Search_Replication {
+public class Find_Replication {
     private final Context mContext;
     private final SQLiteDatabase database;
     private final Integer RepRowCount = 100;
-    private final Search_DBH dbh;
+    private final Find_DBH dbh;
 
     CallMethod callMethod;
-    Search_APIInterface search_apiInterface;
+    Find_APIInterface find_apiInterface;
     Intent intent;
 
 
@@ -48,15 +48,15 @@ public class Search_Replication {
     TextView tv_rep;
     TextView tv_step;
 
-    public Search_Replication(Context context) {
+    public Find_Replication(Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Search_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.dbh = new Find_DBH(mContext, callMethod.ReadString("DatabaseName"));
 
         url = callMethod.ReadString("ServerURLUse");
         database = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
         sqLiteDatabase = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
-        search_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Search_APIInterface.class);
+        find_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
     }
 
@@ -73,7 +73,7 @@ public class Search_Replication {
         } else {
             tv_step.setVisibility(View.GONE);
             dialog.dismiss();
-            intent = new Intent(mContext, Search_NavActivity.class);
+            intent = new Intent(mContext, Find_NavActivity.class);
             mContext.startActivity(intent);
             ((Activity) mContext).finish();
             callMethod.showToast("بروز رسانی انجام شد");
@@ -107,7 +107,7 @@ public class Search_Replication {
 
         UserInfo userInfo = dbh.LoadPersonalInfo();
 
-        Call<RetrofitResponse> call1 = search_apiInterface.BrokerStack( "BrokerStack",userInfo.getBrokerCode());
+        Call<RetrofitResponse> call1 = find_apiInterface.BrokerStack( "BrokerStack",userInfo.getBrokerCode());
 
 
 
@@ -133,7 +133,7 @@ public class Search_Replication {
 
     public void GoodTypeReplication() {
 
-        Call<RetrofitResponse> call1 = search_apiInterface.GetGoodType("GetGoodType");
+        Call<RetrofitResponse> call1 = find_apiInterface.GetGoodType("GetGoodType");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -158,7 +158,7 @@ public class Search_Replication {
     public void columnReplication() {
 
 
-        Call<RetrofitResponse> call2 = search_apiInterface.GetColumnList( "GetColumnList","1", "4", "1");
+        Call<RetrofitResponse> call2 = find_apiInterface.GetColumnList( "GetColumnList","1", "4", "1");
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -115,23 +116,33 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
             });
         }
 
+        holder.grpname.setOnClickListener(v -> {
+            Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
+            searchViewFragment.setParent_GourpCode(Parent_GourpCode);
+            searchViewFragment.setGood_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
+            fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
+            fragmentTransaction.commit();
+
+
+        });
         holder.rltv.setOnClickListener(v -> {
             Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
             searchViewFragment.setParent_GourpCode(Parent_GourpCode);
             searchViewFragment.setGood_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
             fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
             fragmentTransaction.commit();
+
+
         });
 
         holder.extraimg.setOnClickListener(v -> {
             Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
-            searchViewFragment.setParent_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
+            searchViewFragment.setParent_GourpCode(Parent_GourpCode);
             searchViewFragment.setGood_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
             fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
-            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        });
 
+        });
 
     }
     @Override
@@ -150,7 +161,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
         ImageView img;
         ImageView extraimg;
         TextView grpname;
-        LinearLayout rltv;
+        LinearLayoutCompat rltv;
 
         GoodGroupViewHolder(View itemView) {
             super(itemView);

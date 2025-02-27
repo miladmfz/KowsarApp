@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.model.order.Order_RstMiz;
-import com.kits.kowsarapp.model.search.Search_Good;
+import com.kits.kowsarapp.model.find.Find_Good;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class RetrofitResponse {
     private ArrayList<Good> Goods;
 
     @SerializedName("SearchGoods")
-    private ArrayList<Search_Good> Search_Goods;
+    private ArrayList<Find_Good> find_Goods;
     @SerializedName("OcrGoods")
     private ArrayList<Ocr_Good> Ocr_Goods;
     @SerializedName("Customers")
@@ -48,6 +48,8 @@ public class RetrofitResponse {
     @SerializedName("SellBrokers")
     private ArrayList<SellBroker> SellBrokers;
 
+    @SerializedName("PosDrivers")
+    private ArrayList<PosDriver> posDrivers;
 
 
 
@@ -101,12 +103,20 @@ public class RetrofitResponse {
     private String ErrDesc;
 
 
-    public ArrayList<Search_Good> getSearch_Goods() {
-        return Search_Goods;
+    public ArrayList<PosDriver> getPosDrivers() {
+        return posDrivers;
     }
 
-    public void setSearch_Goods(ArrayList<Search_Good> search_Goods) {
-        Search_Goods = search_Goods;
+    public void setPosDrivers(ArrayList<PosDriver> posDrivers) {
+        this.posDrivers = posDrivers;
+    }
+
+    public ArrayList<Find_Good> getSearch_Goods() {
+        return find_Goods;
+    }
+
+    public void setSearch_Goods(ArrayList<Find_Good> find_Goods) {
+        this.find_Goods = find_Goods;
     }
 
     public ArrayList<Ocr_Good> getOcr_Goods() {

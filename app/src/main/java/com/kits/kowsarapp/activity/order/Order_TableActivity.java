@@ -105,6 +105,8 @@ public class Order_TableActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.DefaultTheme));
+
         setContentView(R.layout.order_activity_table);
         intent();
         Config();
@@ -205,7 +207,8 @@ public class Order_TableActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("InfoState", State, Body_str);
 
 
-        Call<RetrofitResponse> call1 = apiInterface.OrderMizList(callMethod.RetrofitBody(Body_str));
+       // Call<RetrofitResponse> call1 = apiInterface.OrderMizList(callMethod.RetrofitBody(Body_str));
+        Call<RetrofitResponse> call1 = apiInterface.OrderMizList("OrderMizList", State,callMethod.ReadString("ObjectType"));
 
 
         call1.enqueue(new Callback<RetrofitResponse>() {

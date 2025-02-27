@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.model.search;
+package com.kits.kowsarapp.model.find;
 
 
 import com.google.gson.annotations.SerializedName;
@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 
-public class Search_Good implements Serializable {
+public class Find_Good implements Serializable {
 
 
     @SerializedName("GoodCode")

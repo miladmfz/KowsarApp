@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.model.search;
+package com.kits.kowsarapp.model.find;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,11 +19,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class Search_DBH extends SQLiteOpenHelper {
+public class Find_DBH extends SQLiteOpenHelper {
 
 
     CallMethod callMethod;
-    ArrayList<Search_Good> goods;
+    ArrayList<Find_Good> goods;
     int limitcolumn;
     ArrayList<Column> columns;
 
@@ -33,7 +33,7 @@ public class Search_DBH extends SQLiteOpenHelper {
     String result = "";
 
 
-    public Search_DBH(Context context, String DATABASE_NAME) {
+    public Find_DBH(Context context, String DATABASE_NAME) {
         super(context, DATABASE_NAME, null, 1);
         this.callMethod = new CallMethod(context);
         this.goods = new ArrayList<>();

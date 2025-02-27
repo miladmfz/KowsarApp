@@ -34,7 +34,7 @@ import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.model.order.Order_DBH;
-import com.kits.kowsarapp.model.search.Search_DBH;
+import com.kits.kowsarapp.model.find.Find_DBH;
 import com.kits.kowsarapp.webService.base.APIClient_kowsar;
 import com.kits.kowsarapp.webService.base.Kowsar_APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
@@ -100,7 +100,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     public void init() {
 
         activations = base_dbh.getActivation();
-        Log.e("kowsar","activations="+activations.size()+"");
 
         binding.baseAppVersion.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : " + BuildConfig.VERSION_NAME));
         for (Activation singleactive : activations) {
@@ -115,25 +114,13 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
 
         binding.baseAppRegistercode.setOnClickListener(v -> {
-            Log.e("kowsar","0");
-
-
             int exist=0;
-            Log.e("kowsar","1");
-
             for (Activation singleactive : activations) {
-
                 if (binding.baseAppTvGetcode.getText().toString().equals(singleactive.getActivationCode())){
-
                     exist=exist+1;
                 }
-
-
             }
-            Log.e("kowsar","3");
-
             if (exist<1){
-                Log.e("kowsar","4");
 
                 Call<RetrofitResponse> call1 = apiInterface.Activation(
                         Objects.requireNonNull(binding.baseAppTvGetcode.getText()).toString(),"1");
@@ -142,7 +129,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
                             assert response.body() != null;
-                            Log.e("kowsar","5");
 
                             activation = response.body().getActivations().get(0);
 
@@ -154,7 +140,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                                 finish();
                                 startActivity(getIntent());
                             }
-
                         }
                     }
 
@@ -164,8 +149,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
                     }
                 });
-
-
 
 
             }else{
@@ -246,7 +229,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                             Order_DBH order_dbh = new Order_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
                             order_dbh.DatabaseCreate();
                         }else if (activation.getAppType().equals("4")){ // search
-                            Search_DBH search_dbh = new Search_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
+                            Find_DBH search_dbh = new Find_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
                             search_dbh.DatabaseCreate();
                         }
 
@@ -256,8 +239,16 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                         callMethod.EditString("ServerURLUse", activation.getServerURL());
                         callMethod.EditString("IpConfig", "");
                         callMethod.EditString("AppType", activation.getAppType());
+                        callMethod.EditString("DbName", activation.getDbName());
 
                         callMethod.EditString("ActivationCode", activation.getActivationCode());
+
+                        if (activation.getSecendServerURL() == null || activation.getSecendServerURL().isEmpty()) {
+                            callMethod.EditString("SecendServerURL", activation.getServerURL());
+                        }else{
+                            callMethod.EditString("SecendServerURL", activation.getSecendServerURL());
+                        }
+
                         intent = new Intent(App.getContext(), Base_SplashActivity.class);
                         startActivity(intent);
                         finish();
@@ -347,11 +338,11 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         if (singleactive.getAppType().equals("1")){ // broker
             tv_apptype.setText("نوع نرم افزار : بازاریابی");
         }else if (singleactive.getAppType().equals("2")){ // ocr
-            tv_apptype.setText("نوع نرم افزار : انباردازی و توضیع");
+            tv_apptype.setText("نوع نرم افزار : جمع آوری و توضیع");
         }else if (singleactive.getAppType().equals("3")){ // order
             tv_apptype.setText("نوع نرم افزار : سفارشگیری");
-        }else if (singleactive.getAppType().equals("4")){ // search
-            tv_apptype.setText("نوع نرم افزار : جستجوی کالا");
+        }else if (singleactive.getAppType().equals("4")){ // find
+            tv_apptype.setText("نوع نرم افزار :  کالایاب");
         }
 
 

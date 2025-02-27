@@ -1,112 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:id="@+id/ocr_gooddetail_box"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
-    >
+    android:padding="16dp"
+    android:background="@color/white">
 
-
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        >
-        <ImageView
-            android:id="@+id/ocr_gooddetail_b_img"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:background="@drawable/no_photo"
-            android:layout_gravity="center_vertical"/>
+        android:layout_margin="12dp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <TextView
+            <ImageView
+                android:id="@+id/ocr_gooddetail_b_img"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/no_photo"
+                android:layout_gravity="center"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"/>
+
+            <!-- Row: موجودی کل -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ocr_gooddetail_ll1_tv1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:text="موجودی کل "
-                android:layout_weight="0.5"/>
-            <TextView
-                android:id="@+id/ocr_gooddetail_b_tv1"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginBottom="8dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/divider_bottom">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="موجودی کل"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/ocr_gooddetail_b_tv1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Row: قطع -->
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:layout_weight="0.5"/>
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginBottom="8dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/divider_bottom">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="قطع"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/ocr_gooddetail_b_tv2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Row: نوع جلد -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginBottom="8dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/divider_bottom">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="نوع جلد"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/ocr_gooddetail_b_tv3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Row: پشت جلد -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginBottom="8dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/divider_bottom">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="پشت جلد"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/ocr_gooddetail_b_tv4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Row: شماره قفسه -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="شماره قفسه"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/ocr_gooddetail_b_tv5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:text="قطع"
-                android:layout_weight="0.5"/>
-            <TextView
-                android:id="@+id/ocr_gooddetail_b_tv2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:layout_weight="0.5"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:text="نوع جلد"
-                android:layout_weight="0.5"/>
-            <TextView
-                android:id="@+id/ocr_gooddetail_b_tv3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:layout_weight="0.5"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:text="تعداد صفحه"
-                android:layout_weight="0.5"/>
-            <TextView
-                android:id="@+id/ocr_gooddetail_b_tv4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:layout_weight="0.5"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
+    </androidx.cardview.widget.CardView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -46,31 +46,7 @@ public class Ocr_DBH extends SQLiteOpenHelper {
         this.SH_ArabicText = callMethod.ReadBoolan("ArabicText");
     }
 
-    public void GetLastDataFromOldDataBase(String tempDbPath) {
 
-        getWritableDatabase().execSQL("ATTACH DATABASE '" + tempDbPath + "' AS tempDb");
-
-        getWritableDatabase().execSQL("INSERT INTO main.Prefactor SELECT * FROM tempDb.Prefactor " );
-        getWritableDatabase().execSQL("INSERT INTO main.PreFactorRow SELECT * FROM tempDb.PreFactorRow " );
-        getWritableDatabase().execSQL("INSERT INTO main.Config SELECT * FROM tempDb.Config " );
-
-        getWritableDatabase().execSQL("DETACH DATABASE 'tempDb' ");
-
-    }
-
-    public void CreateActivationDb() {
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS Activation (" +
-                "AppBrokerCustomerCode TEXT," +
-                "ActivationCode TEXT," +
-                "PersianCompanyName TEXT," +
-                "EnglishCompanyName TEXT," +
-                "ServerURL TEXT," +
-                "SQLiteURL TEXT," +
-                "MaxDevice TEXT," +
-                "SecendServerURL TEXT," +
-                "DbName TEXT," +
-                "AppType TEXT)");
-    }
 
     public void DatabaseCreate() {
         getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS FactorScan (RowCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE " +
@@ -94,61 +70,6 @@ public class Ocr_DBH extends SQLiteOpenHelper {
     }
 
 
-    public void InsertActivation(@NotNull Activation activation) {
-
-        query="select * from Activation Where ActivationCode= '"+activation.getActivationCode()+"'";
-        cursor = getWritableDatabase().rawQuery(query, null);
-        if (cursor.getCount() > 0) {
-            getWritableDatabase().execSQL("Update Activation set " +
-                    "ServerURL = '" + activation.getServerURL() + "' " +
-                    "Where ActivationCode= '"+activation.getActivationCode()+"'");
-
-            getWritableDatabase().execSQL("Update Activation set " +
-                    "SQLiteURL = '" + activation.getSQLiteURL() + "' " +
-                    "Where ActivationCode= '"+activation.getActivationCode()+"'");
-
-        } else {
-            getWritableDatabase().execSQL(" Insert Into Activation(AppBrokerCustomerCode,ActivationCode,PersianCompanyName, EnglishCompanyName,ServerURL,SQLiteURL,MaxDevice,SecendServerURL,DbName,AppType)" +
-                    " Select '" + activation.getAppBrokerCustomerCode() + "','" + activation.getActivationCode() + "','" +
-                    activation.getPersianCompanyName() + "','" + activation.getEnglishCompanyName() + "','" +
-                    activation.getServerURL() + "','" + activation.getSQLiteURL() + "','" + activation.getMaxDevice() + "','" + activation.getSecendServerURL() + "','" + activation.getDbName() + "','" + activation.getAppType() + "'");
-
-        }
-
-
-
-    }
-
-    @SuppressLint("Range")
-    public ArrayList<Activation> getActivation() {
-
-        query="Select * From Activation";
-        cursor = getWritableDatabase().rawQuery(query, null);
-        ArrayList<Activation> activations = new ArrayList<>();
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                Activation activation = new Activation();
-                try{
-                    activation.setAppBrokerCustomerCode(cursor.getString(cursor.getColumnIndex("AppBrokerCustomerCode")));
-                    activation.setActivationCode(cursor.getString(cursor.getColumnIndex("ActivationCode")));
-                    activation.setPersianCompanyName(cursor.getString(cursor.getColumnIndex("PersianCompanyName")));
-                    activation.setEnglishCompanyName(cursor.getString(cursor.getColumnIndex("EnglishCompanyName")));
-                    activation.setServerURL(cursor.getString(cursor.getColumnIndex("ServerURL")));
-                    activation.setSQLiteURL(cursor.getString(cursor.getColumnIndex("SQLiteURL")));
-                    activation.setMaxDevice(cursor.getString(cursor.getColumnIndex("MaxDevice")));
-                    activation.setSecendServerURL(cursor.getString(cursor.getColumnIndex("SecendServerURL")));
-                    activation.setDbName(cursor.getString(cursor.getColumnIndex("DbName")));
-                    activation.setAppType(cursor.getString(cursor.getColumnIndex("AppType")));
-                }catch (Exception ignored) {}
-                activations.add(activation);
-
-            }
-        }
-        assert cursor != null;
-        cursor.close();
-        return activations;
-    }
 
 
     @SuppressLint("Range")

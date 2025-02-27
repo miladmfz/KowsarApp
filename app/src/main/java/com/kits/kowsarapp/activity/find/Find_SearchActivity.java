@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.activity.search;
+package com.kits.kowsarapp.activity.find;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -21,15 +21,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.search.Search_GoodAdapter;
+import com.kits.kowsarapp.adapter.find.Find_GoodAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.SearchActivitySearchBinding;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
-import com.kits.kowsarapp.model.search.Search_DBH;
-import com.kits.kowsarapp.model.search.Search_Good;
+import com.kits.kowsarapp.model.find.Find_DBH;
+import com.kits.kowsarapp.model.find.Find_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.search.Search_APIInterface;
+import com.kits.kowsarapp.webService.find.Find_APIInterface;
 
 
 import java.util.ArrayList;
@@ -39,12 +39,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Search_SearchActivity extends AppCompatActivity {
+public class Find_SearchActivity extends AppCompatActivity {
 
 
-    Search_GoodAdapter adapter;
+    Find_GoodAdapter adapter;
 
-    public ArrayList<Search_Good> search_goods = new ArrayList<>();
+    public ArrayList<Find_Good> find_goods = new ArrayList<>();
     public String id = "0";
     public String title = "";
     public String AutoSearch = "";
@@ -53,8 +53,8 @@ public class Search_SearchActivity extends AppCompatActivity {
     private int backPressCount = 0;
     GridLayoutManager gridLayoutManager;
 
-    Search_DBH dbh;
-    Search_APIInterface search_apiInterface;
+    Find_DBH dbh;
+    Find_APIInterface find_apiInterface;
 
     CallMethod callMethod;
     SearchActivitySearchBinding binding;
@@ -177,8 +177,8 @@ public class Search_SearchActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new Search_DBH(this, callMethod.ReadString("DatabaseName"));
-        search_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Search_APIInterface.class);
+        dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
+        find_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
 
         handler = new Handler();
@@ -187,7 +187,7 @@ public class Search_SearchActivity extends AppCompatActivity {
     }
 
     public void GetDataFromDataBase() {
-        search_goods.clear();
+        find_goods.clear();
 
         loading = true;
         allgood();
@@ -202,15 +202,15 @@ public class Search_SearchActivity extends AppCompatActivity {
 
         String Body_str  = "";
         Body_str =callMethod.CreateJson("SearchTarget", AutoSearch, Body_str);
-        Call<RetrofitResponse> call = search_apiInterface.GetGoodList(callMethod.RetrofitBody(Body_str));
+        Call<RetrofitResponse> call = find_apiInterface.GetGoodList(callMethod.RetrofitBody(Body_str));
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     loading = false;
-                    search_goods = response.body().getSearch_Goods();
-                    adapter = new Search_GoodAdapter(search_goods, Search_SearchActivity.this);
+                    find_goods = response.body().getSearch_Goods();
+                    adapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
 
                     CallRecyclerView();
 
@@ -221,7 +221,7 @@ public class Search_SearchActivity extends AppCompatActivity {
             public void onFailure(Call<RetrofitResponse> call, Throwable t) {
                 loading = false;
 
-                Toast toast = Toast.makeText(Search_SearchActivity.this, "کالایی یافت نشد", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(Find_SearchActivity.this, "کالایی یافت نشد", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER, 10, 10);
                 toast.show();
             }

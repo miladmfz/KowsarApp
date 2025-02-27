@@ -24,6 +24,11 @@ public class Ocr_Good implements Serializable {
     @SerializedName("ShortageAmount")private String ShortageAmount;
     @SerializedName("CachedBarCode")private String CachedBarCode;
 
+    @SerializedName("StackLocation")
+    private String StackLocation;
+
+    @SerializedName("FormNo")
+    private String FormNo;
     @SerializedName("TotalAvailable")
     private String TotalAvailable;
 
@@ -89,7 +94,54 @@ public class Ocr_Good implements Serializable {
 
     @SerializedName("InfoState")
     private String InfoState;
+    @SerializedName("StackAmount")
+    private String StackAmount;
 
+    @SerializedName("MaxSellPrice")
+    private String MaxSellPrice;
+    @SerializedName("GoodExplain2")
+    private String GoodExplain2;
+
+
+    public String getStackLocation() {
+        return StackLocation;
+    }
+
+    public void setStackLocation(String stackLocation) {
+        StackLocation = stackLocation;
+    }
+
+    public String getFormNo() {
+        return FormNo;
+    }
+
+    public void setFormNo(String formNo) {
+        FormNo = formNo;
+    }
+
+    public String getStackAmount() {
+        return StackAmount;
+    }
+
+    public void setStackAmount(String stackAmount) {
+        StackAmount = stackAmount;
+    }
+
+    public String getMaxSellPrice() {
+        return MaxSellPrice;
+    }
+
+    public void setMaxSellPrice(String maxSellPrice) {
+        MaxSellPrice = maxSellPrice;
+    }
+
+    public String getGoodExplain2() {
+        return GoodExplain2;
+    }
+
+    public void setGoodExplain2(String goodExplain2) {
+        GoodExplain2 = goodExplain2;
+    }
 
     public String getTotalAvailable() {
         return TotalAvailable;

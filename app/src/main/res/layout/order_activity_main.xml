@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/ord_main_a_layout"
+    android:background="?attr/colorSurface"
+
     android:layoutDirection="rtl">
 
 
@@ -28,7 +30,7 @@
                 android:background="?attr/colorPrimary"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="@string/app_name"
-                app:titleTextColor="@color/white">
+                app:titleTextColor="?attr/colorOnPrimary">
 
 
             </androidx.appcompat.widget.Toolbar>
@@ -60,23 +62,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
                         android:background="#C55615"
                         android:gravity="center"
                         android:text="@string/mainactivity_btn0"
-                        android:textColor="@color/white"
                         app:rippleColor="@color/deep_purple_300"
                         app:strokeColor="@color/grey_1000"
                         app:strokeWidth="1dp"
-                        android:autoSizeTextType="uniform" />
+                        android:autoSizeTextType="uniform"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:layout_margin="3dp"
+                        />
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@drawable/bg_round_selected"
-                        android:backgroundTint="#D6BD9E"
+                        android:background="@drawable/bg_card"
                         android:orientation="horizontal"
                         android:visibility="visible"
                         android:weightSum="1">
@@ -93,12 +97,14 @@
                             android:id="@+id/ord_main_a_btn3"
                             android:layout_width="match_parent"
                             android:layout_height="70dp"
+                            android:autoSizeTextType="uniform"
+                            style="@style/Widget.MaterialComponents.Button"
                             android:layout_gravity="center"
                             android:layout_margin="10dp"
                             android:gravity="center"
                             android:text="@string/mainactivity_btn1"
-                            android:textColor="@color/black"
-                            android:textSize="42sp" />
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground"/>
 
                     </LinearLayout>
 
@@ -107,8 +113,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@drawable/bg_round_selected"
-                        android:backgroundTint="#D6BD9E"
+                        android:background="@drawable/bg_card"
                         android:orientation="horizontal"
                         android:visibility="visible"
                         android:weightSum="1">
@@ -126,11 +131,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="70dp"
                             android:layout_gravity="center"
+                            android:autoSizeTextType="uniform"
                             android:layout_margin="10dp"
                             android:gravity="center"
                             android:text="@string/mainactivity_btn2"
-                            android:textColor="@color/black"
-                            android:textSize="42sp" />
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground"/>
 
                     </LinearLayout>
 
@@ -139,8 +145,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@drawable/bg_round_selected"
-                        android:backgroundTint="#D6BD9E"
+                        android:background="@drawable/bg_card"
                         android:orientation="horizontal"
                         android:visibility="visible"
                         android:weightSum="1">
@@ -159,10 +164,13 @@
                             android:layout_height="70dp"
                             android:layout_gravity="center"
                             android:layout_margin="10dp"
+                            android:autoSizeTextType="uniform"
+
                             android:gravity="center"
                             android:text="@string/mainactivity_btn3"
-                            android:textColor="@color/black"
-                            android:textSize="42sp" />
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground"/>
 
                     </LinearLayout>
 
@@ -171,8 +179,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@drawable/bg_round_selected"
-                        android:backgroundTint="#D6BD9E"
+                        android:background="@drawable/bg_card"
                         android:orientation="horizontal"
                         android:visibility="visible"
                         android:weightSum="1">
@@ -192,9 +199,11 @@
                             android:layout_gravity="center"
                             android:layout_margin="10dp"
                             android:gravity="center"
+                            android:autoSizeTextType="uniform"
+
                             android:text="@string/mainactivity_btn4"
-                            android:textColor="@color/black"
-                            android:textSize="42sp" />
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
 
                     </LinearLayout>
 

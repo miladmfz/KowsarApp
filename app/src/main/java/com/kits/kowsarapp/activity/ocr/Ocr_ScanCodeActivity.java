@@ -32,6 +32,11 @@ public class Ocr_ScanCodeActivity extends AppCompatActivity implements ZXingScan
         if(callMethod.ReadString("Category").equals("1")){
             intent = new Intent(Ocr_ScanCodeActivity.this, Ocr_ConfirmActivity.class);
             intent.putExtra("ScanResponse", scan_result);
+        }else if(callMethod.ReadString("Category").equals("6")){
+            intent = new Intent(Ocr_ScanCodeActivity.this, Ocr_ConfirmActivity.class);
+            intent.putExtra("ScanResponse", scan_result);
+            intent.putExtra("State", "6");
+            intent.putExtra("FactorImage", "");
         }else {
             intent = new Intent(Ocr_ScanCodeActivity.this, Ocr_FactorDetailActivity.class);
             intent.putExtra("ScanResponse", scan_result);

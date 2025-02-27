@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.viewholder.search;
+package com.kits.kowsarapp.viewholder.find;
 
 import android.content.Context;
 import android.util.Base64;
@@ -19,10 +19,10 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
-import com.kits.kowsarapp.model.search.Search_DBH;
-import com.kits.kowsarapp.model.search.Search_Good;
+import com.kits.kowsarapp.model.find.Find_DBH;
+import com.kits.kowsarapp.model.find.Find_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.search.Search_APIInterface;
+import com.kits.kowsarapp.webService.find.Find_APIInterface;
 
 
 import java.text.DecimalFormat;
@@ -33,7 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Search_GoodItemViewHolder extends RecyclerView.ViewHolder {
+public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     private final LinearLayoutCompat mainline;
@@ -50,22 +50,22 @@ public class Search_GoodItemViewHolder extends RecyclerView.ViewHolder {
     private final Context mContext;
     CallMethod callMethod;
 
-    Search_DBH dbh;
+    Find_DBH dbh;
 
-    Search_APIInterface apiInterface;
+    Find_APIInterface apiInterface;
     public Call<RetrofitResponse> call;
 
     ArrayList<Column> Columns;
 
 
-    public Search_GoodItemViewHolder(View itemView, Context context) {
+    public Find_GoodItemViewHolder(View itemView, Context context) {
         super(itemView);
 
         this.mContext = context;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Search_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.dbh = new Find_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.Columns = dbh.GetColumns("id", "", "1");
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Search_APIInterface.class);
+        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
         mainline = itemView.findViewById(R.id.sea_good_c_mainline);
         img = itemView.findViewById(R.id.sea_good_c_img);
@@ -74,7 +74,7 @@ public class Search_GoodItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void bind(ArrayList<Column> Columns, Search_Good good, Context mContext, CallMethod callMethod) {
+    public void bind(ArrayList<Column> Columns, Find_Good good, Context mContext, CallMethod callMethod) {
 
 
 
@@ -120,7 +120,7 @@ public class Search_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
 
 
-    public void callimage(Search_Good good){
+    public void callimage(Find_Good good){
 
         if (!good.getGoodImageName().equals("")) {
             Glide.with(img)

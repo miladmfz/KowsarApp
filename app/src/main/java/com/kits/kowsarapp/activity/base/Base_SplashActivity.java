@@ -27,7 +27,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_NavActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
 import com.kits.kowsarapp.activity.order.Order_NavActivity;
-import com.kits.kowsarapp.activity.search.Search_NavActivity;
+import com.kits.kowsarapp.activity.find.Find_NavActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
@@ -85,7 +85,6 @@ public class Base_SplashActivity extends AppCompatActivity {
     public void init() {
         callMethod = new CallMethod(this);
         dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        callMethod.EditString("AppType", "3");
 
         if (callMethod.ReadString("ServerURLUse").equals("")) {
             callMethod.EditString("DatabaseName", "");
@@ -114,17 +113,29 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditString("ConditionPosition", "0");
             callMethod.EditString("LastTcPrint", "0");
             callMethod.EditBoolan("ArabicText", true);
-            callMethod.EditString("DatabaseName", "");
-            callMethod.EditString("SecendServerURL", "");
-            callMethod.EditString("DbName", "");
             callMethod.EditString("FactorDbName", "");
             callMethod.EditString("JobPersonRef", "0");
+            callMethod.EditString("ActiveDatabase","0");
+            callMethod.EditBoolan("ShowAmount", true);
+            callMethod.EditBoolan("AutoSend", true);
+            callMethod.EditBoolan("PrintBarcode", true);
+            callMethod.EditBoolan("JustScanner", true);
+            callMethod.EditBoolan("SendTimeType", true);
+            callMethod.EditString("RowCall", "200");
+            callMethod.EditString("PrinterName", "");
+            callMethod.EditString("AccessCount", "5");
+
             //endregion
 
             //region $ order
             callMethod.EditString("AppBasketInfoCode", "0");
             callMethod.EditString("ObjectType", "");
             callMethod.EditBoolan("ReserveActive", false);
+            callMethod.EditBoolan("CanFreeTable", false);
+            callMethod.EditString("PosName", "");
+            callMethod.EditString("PosCode", "0");
+            callMethod.EditBoolan("PosPayment", false);
+            callMethod.EditBoolan("PaymentWithDevice", false);
 
             //endregion
 
@@ -145,6 +156,9 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditString("PersianCompanyNameUse", "");
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("ActivationCode", "");
+            callMethod.EditString("DatabaseName", "");
+            callMethod.EditString("SecendServerURL", "");
+            callMethod.EditString("DbName", "");
             callMethod.EditString("AppType", "");
 
             dbhbase = new Broker_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
@@ -229,7 +243,7 @@ public class Base_SplashActivity extends AppCompatActivity {
                             finish();
                         }else if (callMethod.ReadString("AppType").equals("4")){
                             callMethod.Log("order");
-                            intent = new Intent(this, Search_NavActivity.class);
+                            intent = new Intent(this, Find_NavActivity.class);
                             startActivity(intent);
                             finish();
                         }

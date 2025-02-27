@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/print_layout_view_ll"
+        android:id="@+id/ord_print_layout_view_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"

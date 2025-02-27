@@ -17,8 +17,45 @@
                 android:layout_width="1dp"
                 android:layout_height="25dp"
                 android:id="@+id/ocr_confirm_a_barcode"
-                android:background="@color/white"
-                android:visibility="visible"/>
+                android:background="@drawable/edittest1"
+                android:layout_margin="2dp"
+                android:visibility="visible"
+                android:hint="جستجو ..."/>
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/ocr_confirm_a_good_prog"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_margin="2dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading"
+                android:visibility="gone"/>
+
+
+
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/ocr_confirm_a_good_lottie"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_margin="2dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/notfind"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/ocr_confirm_a_good_tvstatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#BD622B"
+                android:textSize="40sp"
+                android:visibility="gone"
+                />
             <FrameLayout
                 android:id="@+id/ocr_confirm_a_framelayout"
                 android:layout_width="match_parent"
@@ -37,7 +74,7 @@
                     android:orientation="vertical"
                     android:background="@color/white">
                     <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/ocr_confirm_a_viewforwidth"
+                        android:id="@+id/viewforwidth_confirm"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:background="@color/grey_1000"/>

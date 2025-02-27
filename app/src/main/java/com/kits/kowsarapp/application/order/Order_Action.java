@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -25,8 +27,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.order.Order_BasketActivity;
+import com.kits.kowsarapp.activity.order.Order_RegistrationActivity;
 import com.kits.kowsarapp.activity.order.Order_SearchActivity;
 import com.kits.kowsarapp.activity.order.Order_TableActivity;
 import com.kits.kowsarapp.adapter.order.Order_GoodBoxItemAdapter;
@@ -48,6 +52,7 @@ import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -60,6 +65,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     private final Context mContext;
     public Order_APIInterface apiInterface;
     public Call<RetrofitResponse> call;
+    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+
     CallMethod callMethod;
     Order_DBH dbh;
     Intent intent;
@@ -82,18 +89,326 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     ArrayList<ObjectType> objectTypes = new ArrayList<>();
 
     TextView tv_rep;
-    //Order_Print orderPrint;
+    Order_Print order_print;
+    String payment_type="";
+    String totalprice="0";
+    String payment_mablagh_tosend="0";
+    String payment_mablagh_incrise="0";
+    String payment_mablagh_decrise="0";
 
     public Order_Action(Context mContext) {
         this.mContext = mContext;
         this.il = 0;
         this.callMethod = new CallMethod(mContext);
+
         this.dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
         this.persianCalendar = new PersianCalendar();
         this.dialog = new Dialog(mContext);
         this.dialogProg = new Dialog(mContext);
+        this.order_print = new Order_Print(mContext);
+
         printerconter = 0;
+
+    }
+    public void BasketInfopayment(Order_BasketInfo basketInfo) {
+
+        payment_type="cash";
+        payment_mablagh_tosend="0";
+        payment_mablagh_incrise="0";
+        payment_mablagh_decrise="0";
+        totalprice="0";
+
+        final Dialog dialog_payment = new Dialog(mContext);
+
+        dialog_payment.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_payment.setContentView(R.layout.order_payment_box);
+
+        Button btn_payment = dialog_payment.findViewById(R.id.ord_payment_b_btn_final);
+        Button btn_tocash = dialog_payment.findViewById(R.id.ord_payment_b_btn_cash);
+        Button btn_topos = dialog_payment.findViewById(R.id.ord_payment_b_btn_pos);
+
+        LinearLayoutCompat ll_edpay = dialog_payment.findViewById(R.id.ord_payment_b_ll_edpay);
+        LinearLayoutCompat ll_edlable = dialog_payment.findViewById(R.id.ord_payment_b_ll_edlable);
+        LinearLayoutCompat ll_notreceived = dialog_payment.findViewById(R.id.ord_payment_b_ll_notreceived);
+        LinearLayoutCompat ll_received = dialog_payment.findViewById(R.id.ord_payment_b_ll_received);
+        LinearLayoutCompat ll_cashtopay = dialog_payment.findViewById(R.id.ord_payment_b_ll_cashtopay);
+        LinearLayoutCompat ll_decrement = dialog_payment.findViewById(R.id.ord_payment_b_ll_decrement);
+
+        TextView tv_payment_sumprice = dialog_payment.findViewById(R.id.ord_payment_b_sumprice);
+        TextView tv_payment_sumtaxmayor = dialog_payment.findViewById(R.id.ord_payment_b_sumtaxmayor);
+        TextView tv_payment_totalprice = dialog_payment.findViewById(R.id.ord_payment_b_totalprice);
+        TextView tv_payment_received = dialog_payment.findViewById(R.id.ord_payment_b_received);
+        TextView tv_payment_notreceived = dialog_payment.findViewById(R.id.ord_payment_b_notreceived);
+        TextView tv_payment_decrement = dialog_payment.findViewById(R.id.ord_payment_b_decrement);
+
+        EditText ed_payment_mablagh = dialog_payment.findViewById(R.id.ord_payment_b_mablagh);
+        EditText ed_payment_selloff = dialog_payment.findViewById(R.id.ord_payment_b_selloff);
+        EditText ed_payment_cashtopay = dialog_payment.findViewById(R.id.ord_payment_b_cashtopay);
+
+        dialog_payment.show();
+
+
+        if (callMethod.ReadBoolan("PosPayment")){
+            payment_type="pos";
+            btn_topos.setBackgroundColor(mContext.getResources().getColor(R.color.blue_500));
+            btn_tocash.setBackgroundColor(mContext.getResources().getColor(R.color.gray_secondary));
+        }
+
+        if (Integer.parseInt(basketInfo.getDecrementValue().replace("-",""))>0){
+            ll_decrement.setVisibility(View.VISIBLE);
+        }else{
+            ll_decrement.setVisibility(View.GONE);
+        }
+
+
+        if (Integer.parseInt(basketInfo.getReceived())>0){
+            ll_edpay.setVisibility(View.GONE);
+            ll_edlable.setVisibility(View.GONE);
+            ll_cashtopay.setVisibility(View.GONE);
+            ll_notreceived.setVisibility(View.VISIBLE);
+            ll_received.setVisibility(View.VISIBLE);
+        }else{
+            ll_edpay.setVisibility(View.VISIBLE);
+            ll_edlable.setVisibility(View.VISIBLE);
+            ll_notreceived.setVisibility(View.GONE);
+            ll_received.setVisibility(View.GONE);
+        }
+
+
+        btn_tocash.setOnClickListener(v -> {
+            payment_type="cash";
+            btn_tocash.setBackgroundColor(mContext.getResources().getColor(R.color.blue_500));
+            btn_topos.setBackgroundColor(mContext.getResources().getColor(R.color.gray_secondary));
+
+            if (Integer.parseInt(basketInfo.getReceived())==0){
+                ll_cashtopay.setVisibility(View.VISIBLE);
+            }else{
+                ll_cashtopay.setVisibility(View.GONE);
+            }
+        });
+
+        btn_topos.setOnClickListener(v -> {
+            ll_cashtopay.setVisibility(View.GONE);
+            if (callMethod.ReadString("PosName").length()>1){
+                payment_type="pos";
+                btn_topos.setBackgroundColor(mContext.getResources().getColor(R.color.blue_500));
+                btn_tocash.setBackgroundColor(mContext.getResources().getColor(R.color.gray_secondary));
+            }else{
+                btn_tocash.callOnClick();
+                callMethod.showToast("پوزی انتخاب نشده است");
+            }
+
+        });
+
+
+
+        totalprice =String.valueOf(Integer.parseInt(basketInfo.getSumPrice())+Integer.parseInt(basketInfo.getSumTaxAndMayor()));
+
+
+
+        tv_payment_sumprice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(basketInfo.getSumPrice()))));
+        tv_payment_sumtaxmayor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(basketInfo.getSumTaxAndMayor()))));
+
+        tv_payment_totalprice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(totalprice))));
+
+        tv_payment_received.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(basketInfo.getReceived()))));
+        tv_payment_notreceived.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(basketInfo.getNotReceived()))));
+        tv_payment_decrement.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(basketInfo.getDecrementValue()))));
+
+        ed_payment_mablagh.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(totalprice))));
+        ed_payment_cashtopay.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(totalprice))));
+
+        ed_payment_selloff.setText(NumberFunctions.PerisanNumber("0"));
+
+        ed_payment_mablagh.setOnClickListener(v -> ed_payment_mablagh.selectAll());
+        ed_payment_selloff.setOnClickListener(v -> ed_payment_selloff.selectAll());
+        ed_payment_cashtopay.setOnClickListener(v -> ed_payment_cashtopay.selectAll());
+
+
+
+        ed_payment_mablagh.addTextChangedListener(new TextWatcher() {
+            @Override  public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override  public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (ed_payment_mablagh.hasFocus()) {
+                    try {
+                        String NewPrice = NumberFunctions.EnglishNumber(ed_payment_mablagh.getText().toString());
+                        ed_payment_selloff.setText(NumberFunctions.PerisanNumber("" + (100 - (100 * Long.parseLong(NewPrice) / Integer.parseInt(totalprice)))));
+                        ed_payment_cashtopay.setText(NewPrice);
+
+                    } catch (Exception e) {
+                        ed_payment_mablagh.setText(totalprice);
+                        ed_payment_cashtopay.setText(totalprice);
+                    }
+                }
+            }
+        });
+
+
+
+        ed_payment_selloff.addTextChangedListener(new TextWatcher() {
+            @Override  public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override  public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (ed_payment_selloff.hasFocus()) {
+                    long selloff;
+                    try {
+
+                        selloff = Integer.parseInt(NumberFunctions.EnglishNumber(ed_payment_selloff.getText().toString()));
+
+
+
+                        if (selloff > Integer.parseInt(callMethod.ReadString("MaxSellOff"))) {
+                            selloff = Integer.parseInt(callMethod.ReadString("MaxSellOff"));
+                            ed_payment_selloff.setText(NumberFunctions.PerisanNumber(String.valueOf(selloff)));
+                            ed_payment_selloff.setError("حداکثر تخفیف");
+                        }
+
+                        long sellpricenew = (long) (Integer.parseInt(totalprice) - ((Integer.parseInt(totalprice) * selloff / 100)));
+
+                        ed_payment_mablagh.setText(NumberFunctions.PerisanNumber(decimalFormat.format(sellpricenew)));
+                        ed_payment_cashtopay.setText(NumberFunctions.PerisanNumber(decimalFormat.format(sellpricenew)));
+                    } catch (Exception e) {
+                        ed_payment_mablagh.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(totalprice))));
+                        ed_payment_cashtopay.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(totalprice))));
+
+                    }
+
+                }
+
+            }
+        });
+
+
+        btn_payment.setOnClickListener(v -> {
+
+
+            Call<RetrofitResponse> call_payment = null;
+            Call<RetrofitResponse> call_payment_inc_dec= null;
+
+            if (Integer.parseInt(basketInfo.getReceived())>0){ // Received >0
+
+                if (payment_type.equals("cash")){
+
+                    String DecrementValue_str= basketInfo.getDecrementValue().replace("-","");
+
+                    call_payment = apiInterface.Factor_Payment_Cash(
+                            "Factor_Payment_Cash"
+                            ,basketInfo.getFactorCode()
+                            ,String.valueOf(Integer.parseInt(basketInfo.getNotReceived())+Integer.parseInt(basketInfo.getShopNaghdReceive()))
+                            ,"0"
+                            ,DecrementValue_str
+                    );
+                }else{
+                    call_payment = apiInterface.Factor_Payment_Pos(
+                            "Factor_Payment_Pos"
+                            ,basketInfo.getFactorCode()
+                            ,callMethod.ReadString("PosCode")
+                            ,basketInfo.getNotReceived()
+                    );
+                }
+
+                dialogProg();
+                call_payment.enqueue(new Callback<RetrofitResponse>() {
+                    @Override
+                    public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            dialog_payment.dismiss();
+                            dialogProg.dismiss();
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                        callMethod.Log("kowsar_______"+t.getMessage());
+                    }
+                });
+            }else{ // Received == 0
+
+
+                int mablagh = (Integer.parseInt(totalprice) - ((Integer.parseInt(totalprice) * (Integer.parseInt(NumberFunctions.EnglishNumber(ed_payment_selloff.getText().toString()))) / 100)));
+
+                if (mablagh>Integer.parseInt(totalprice)){
+                    payment_mablagh_incrise=String.valueOf(mablagh-Integer.parseInt(totalprice));
+                }else{
+                    payment_mablagh_decrise=String.valueOf(Integer.parseInt(totalprice)-mablagh);
+                }
+
+                if ((!payment_mablagh_incrise.equals("0"))||(!payment_mablagh_decrise.equals("0"))){
+
+                    call_payment_inc_dec = apiInterface.Factor_Payment_Cash(
+                            "Factor_Payment_Cash"
+                            ,basketInfo.getFactorCode()
+                            ,NumberFunctions.EnglishNumber(ed_payment_cashtopay.getText().toString().replace(",", ""))
+                            ,payment_mablagh_incrise
+                            ,payment_mablagh_decrise
+                    );
+
+
+                }else{
+
+                    if (payment_type.equals("cash")){
+                        call_payment = apiInterface.Factor_Payment_Cash(
+                                "Factor_Payment_Cash"
+                                ,basketInfo.getFactorCode()
+                                ,NumberFunctions.EnglishNumber(ed_payment_cashtopay.getText().toString().replace(",", ""))
+                                ,"0"
+                                ,"0"
+                        );
+                    }else{
+                        call_payment = apiInterface.Factor_Payment_Pos(
+                                "Factor_Payment_Pos"
+                                ,basketInfo.getFactorCode()
+                                ,callMethod.ReadString("PosCode")
+                                ,basketInfo.getNotReceived()
+                        );
+                    }
+
+                }
+
+
+                if ((!payment_mablagh_incrise.equals("0"))||(!payment_mablagh_decrise.equals("0"))){
+                    dialogProg();
+                    Call<RetrofitResponse> finalCall_payment = call_payment;
+                    call_payment_inc_dec.enqueue(new Callback<RetrofitResponse>() {
+                        @Override
+                        public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                            if (response.isSuccessful()) {
+                                dialog_payment.dismiss();
+                                dialogProg.dismiss();
+                            }
+                        }
+                        @Override
+                        public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                            callMethod.Log("kowsar_______"+t.getMessage());
+                        }
+                    });
+
+                }else{
+                    dialogProg();
+                    call_payment.enqueue(new Callback<RetrofitResponse>() {
+                        @Override
+                        public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                            if (response.isSuccessful()) {
+                                assert response.body() != null;
+                                dialog_payment.dismiss();
+                                dialogProg.dismiss();
+                            }
+                        }
+                        @Override
+                        public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                            callMethod.Log("kowsar_______"+t.getMessage());
+                        }
+                    });
+                }
+            }
+
+        });
 
     }
 
@@ -130,7 +445,22 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
 
     }
-
+    public void LoginSetting() {
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.default_loginconfig);
+        EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
+        MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);
+        btn_login.setOnClickListener(v -> {
+            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
+                Intent intent = new Intent(mContext, Order_RegistrationActivity.class);
+                mContext.startActivity(intent);
+            }else {
+                callMethod.showToast("رمز عبور صیحیح نیست");
+            }
+        });
+        dialog.show();
+    }
     public void ReserveBoxDialog(Order_BasketInfo basketInfo) {
 
         dialog = new Dialog(mContext);
@@ -212,8 +542,12 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                         + tminute.substring(tminute.length() - 2);
 
                 tv_reservestart.setText(callMethod.NumberRegion(Time));
-                call = apiInterface.DbSetupvalue(
-                        "DbSetupvalue",
+//                call = apiInterface.DbSetupvalue(
+//                        "DbSetupvalue",
+//                        "AppOrder_ValidReserveTime"
+//                );
+                call = apiInterface.kowsar_info(
+                        "kowsar_info",
                         "AppOrder_ValidReserveTime"
                 );
                 call.enqueue(new Callback<RetrofitResponse>() {
@@ -306,23 +640,39 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             dialogProg();
             tv_rep.setText(R.string.textvalue_sendinformation);
 
+//
+//            String Body_str  = "";
+//
+//            Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+//            Body_str =callMethod.CreateJson("Miz", basketInfo.getRstmizCode(), Body_str);
+//            Body_str =callMethod.CreateJson("PersonName", NumberFunctions.EnglishNumber(ed_personname.getText().toString()), Body_str);
+//            Body_str =callMethod.CreateJson("Mobile", NumberFunctions.EnglishNumber(ed_mobileno.getText().toString()), Body_str);
+//            Body_str =callMethod.CreateJson("InfoExplain", NumberFunctions.EnglishNumber(ed_explain.getText().toString()) + mContext.getString(R.string.textvalue_tagreserve), Body_str);
+//            Body_str =callMethod.CreateJson("Prepayed", "0", Body_str);
+//            Body_str =callMethod.CreateJson("ReserveStartTime", NumberFunctions.EnglishNumber(tv_reservestart.getText().toString()), Body_str);
+//            Body_str =callMethod.CreateJson("ReserveEndTime", NumberFunctions.EnglishNumber(tv_reserveend.getText().toString()), Body_str);
+//            Body_str =callMethod.CreateJson("Date", NumberFunctions.EnglishNumber(tv_date.getText().toString()), Body_str);
+//            Body_str =callMethod.CreateJson("State", "4", Body_str);
+//            Body_str =callMethod.CreateJson("InfoCode", "0", Body_str);
+//
+//
+//            Call<RetrofitResponse> call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
 
-            String Body_str  = "";
 
-            Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
-            Body_str =callMethod.CreateJson("Miz", basketInfo.getRstmizCode(), Body_str);
-            Body_str =callMethod.CreateJson("PersonName", NumberFunctions.EnglishNumber(ed_personname.getText().toString()), Body_str);
-            Body_str =callMethod.CreateJson("Mobile", NumberFunctions.EnglishNumber(ed_mobileno.getText().toString()), Body_str);
-            Body_str =callMethod.CreateJson("InfoExplain", NumberFunctions.EnglishNumber(ed_explain.getText().toString()) + mContext.getString(R.string.textvalue_tagreserve), Body_str);
-            Body_str =callMethod.CreateJson("Prepayed", "0", Body_str);
-            Body_str =callMethod.CreateJson("ReserveStartTime", NumberFunctions.EnglishNumber(tv_reservestart.getText().toString()), Body_str);
-            Body_str =callMethod.CreateJson("ReserveEndTime", NumberFunctions.EnglishNumber(tv_reserveend.getText().toString()), Body_str);
-            Body_str =callMethod.CreateJson("Date", NumberFunctions.EnglishNumber(tv_date.getText().toString()), Body_str);
-            Body_str =callMethod.CreateJson("State", "4", Body_str);
-            Body_str =callMethod.CreateJson("InfoCode", "0", Body_str);
-
-
-            Call<RetrofitResponse> call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+            call = apiInterface.OrderInfoInsert(
+                    "OrderInfoInsert",
+                    dbh.ReadConfig("BrokerCode"),
+                    basketInfo.getRstmizCode(),
+                    NumberFunctions.EnglishNumber(ed_personname.getText().toString()),
+                    NumberFunctions.EnglishNumber(ed_mobileno.getText().toString()),
+                    NumberFunctions.EnglishNumber(ed_explain.getText().toString()) + mContext.getString(R.string.textvalue_tagreserve),
+                    "0",
+                    NumberFunctions.EnglishNumber(tv_reservestart.getText().toString()),
+                    NumberFunctions.EnglishNumber(tv_reserveend.getText().toString()),
+                    NumberFunctions.EnglishNumber(tv_date.getText().toString()),
+                    "4",
+                    "0"
+            );
 
 
             call.enqueue(new Callback<RetrofitResponse>() {
@@ -506,22 +856,32 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
 
 
-                    String Body_str  = "";
-
-
-                    Body_str =callMethod.CreateJson("GoodRef", String.valueOf(good.getGoodCode()), Body_str);
-                    Body_str =callMethod.CreateJson("FacAmount", good.getAmount(), Body_str);
-                    Body_str =callMethod.CreateJson("Price", good.getMaxSellPrice(), Body_str);
-                    Body_str =callMethod.CreateJson("bUnitRef", String.valueOf(good.getGoodUnitRef()), Body_str);
-                    Body_str =callMethod.CreateJson("bRatio", String.valueOf(good.getDefaultUnitValue()), Body_str);
-                    Body_str =callMethod.CreateJson("Explain", good.getExplain(), Body_str);
-                    Body_str =callMethod.CreateJson("UserId", "-2000", Body_str);
-                    Body_str =callMethod.CreateJson("InfoRef", callMethod.ReadString("AppBasketInfoCode"), Body_str);
-                    Body_str =callMethod.CreateJson("RowCode", good.getRowCode(), Body_str);
-
-
-                    call = apiInterface.OrderRowInsert(callMethod.RetrofitBody(Body_str));
-
+//                    String Body_str  = "";
+//
+//
+//                    Body_str =callMethod.CreateJson("GoodRef", String.valueOf(good.getGoodCode()), Body_str);
+//                    Body_str =callMethod.CreateJson("FacAmount", good.getAmount(), Body_str);
+//                    Body_str =callMethod.CreateJson("Price", good.getMaxSellPrice(), Body_str);
+//                    Body_str =callMethod.CreateJson("bUnitRef", String.valueOf(good.getGoodUnitRef()), Body_str);
+//                    Body_str =callMethod.CreateJson("bRatio", String.valueOf(good.getDefaultUnitValue()), Body_str);
+//                    Body_str =callMethod.CreateJson("Explain", good.getExplain(), Body_str);
+//                    Body_str =callMethod.CreateJson("UserId", "-2000", Body_str);
+//                    Body_str =callMethod.CreateJson("InfoRef", callMethod.ReadString("AppBasketInfoCode"), Body_str);
+//                    Body_str =callMethod.CreateJson("RowCode", good.getRowCode(), Body_str);
+//
+//
+//                    call = apiInterface.OrderRowInsert(callMethod.RetrofitBody(Body_str));
+                    tv_rep.setText(R.string.textvalue_sendinformation);
+                    Call<RetrofitResponse> call = apiInterface.OrderRowInsert("OrderRowInsert",
+                            good.getGoodCode()+"",
+                            good.getAmount(),
+                            good.getMaxSellPrice(),
+                            good.getGoodUnitRef()+"",
+                            good.getDefaultUnitValue()+"",
+                            good.getExplain(),
+                            callMethod.ReadString("AppBasketInfoCode"),
+                            good.getRowCode()
+                    );
 
                     call.enqueue(new Callback<RetrofitResponse>() {
                         @Override
@@ -591,7 +951,10 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                         callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                         dialogProg.dismiss();
                     } else {
-                        OrderPrintFactor();
+                        //todo dotnet
+                        //OrderPrintFactor();
+                        order_print.GetHeader_Data("");
+
                     }
                 }
             }
@@ -606,161 +969,161 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         });
 
     }
-    public void ChangeTable(Order_BasketInfo basketInfo) {
+//    public void ChangeTable(Order_BasketInfo basketInfo) {
+//
+//
+//
+//        String Body_str  = "";
+//
+//        Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+//        Body_str =callMethod.CreateJson("Miz",basketInfo.getRstmizCode(), Body_str);
+//        Body_str =callMethod.CreateJson("PersonName",callMethod.ReadString("PersonName"), Body_str);
+//        Body_str =callMethod.CreateJson("Mobile",callMethod.ReadString("MobileNo"), Body_str);
+//        Body_str =callMethod.CreateJson("InfoExplain", callMethod.ReadString("InfoExplain"), Body_str);
+//        Body_str =callMethod.CreateJson("Prepayed",  "0", Body_str);
+//        Body_str =callMethod.CreateJson("ReserveStartTime", callMethod.ReadString("ReserveStart"), Body_str);
+//        Body_str =callMethod.CreateJson("ReserveEndTime", callMethod.ReadString("ReserveEnd"), Body_str);
+//        Body_str =callMethod.CreateJson("Date", callMethod.ReadString("Today"), Body_str);
+//        Body_str =callMethod.CreateJson("State", callMethod.ReadString("InfoState"), Body_str);
+//        Body_str =callMethod.CreateJson("InfoCode", callMethod.ReadString("AppBasketInfoCode"), Body_str);
+//
+//
+//
+//       // call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+//
+//
+//        call.enqueue(new Callback<RetrofitResponse>() {
+//            @Override
+//            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+//                assert response.body() != null;
+//                if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
+//                    callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
+//                } else {
+//                    OrderChangeTable();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+//            }
+//        });
+//
+//    }
 
-
-
-        String Body_str  = "";
-
-        Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
-        Body_str =callMethod.CreateJson("Miz",basketInfo.getRstmizCode(), Body_str);
-        Body_str =callMethod.CreateJson("PersonName",callMethod.ReadString("PersonName"), Body_str);
-        Body_str =callMethod.CreateJson("Mobile",callMethod.ReadString("MobileNo"), Body_str);
-        Body_str =callMethod.CreateJson("InfoExplain", callMethod.ReadString("InfoExplain"), Body_str);
-        Body_str =callMethod.CreateJson("Prepayed",  "0", Body_str);
-        Body_str =callMethod.CreateJson("ReserveStartTime", callMethod.ReadString("ReserveStart"), Body_str);
-        Body_str =callMethod.CreateJson("ReserveEndTime", callMethod.ReadString("ReserveEnd"), Body_str);
-        Body_str =callMethod.CreateJson("Date", callMethod.ReadString("Today"), Body_str);
-        Body_str =callMethod.CreateJson("State", callMethod.ReadString("InfoState"), Body_str);
-        Body_str =callMethod.CreateJson("InfoCode", callMethod.ReadString("AppBasketInfoCode"), Body_str);
-
-
-
-        call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
-
-
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                assert response.body() != null;
-                if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
-                    callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
-                } else {
-                    OrderChangeTable();
-                }
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-            }
-        });
-
-    }
-
-    public void OrderPrintFactor() {
-        dialogProg();
-        tv_rep.setText(R.string.textvalue_sendinformation);
-        Call<RetrofitResponse> call = apiInterface.OrderPrintFactor(
-                "OrderPrintFactor",
-                callMethod.ReadString("AppBasketInfoCode")
-        );
-
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                dialogProg.dismiss();
-
-                    call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "0");
-                    call.enqueue(new Callback<RetrofitResponse>() {
-                        @Override
-                        public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                            if (response.isSuccessful()) {
-                                assert response.body() != null;
-                                if (response.body().getText().equals("Done")) {
-                                    callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
-                                    dialogProg.dismiss();
-                                    intent = new Intent(mContext, Order_TableActivity.class);
-                                    intent.putExtra("State", "0");
-                                    intent.putExtra("EditTable", "0");
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    mContext.startActivity(intent);
-                                    ((Activity) mContext).finish();
-                                }
-
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
-                        }
-                    });
-
-
-
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                intent = new Intent(mContext, Order_BasketActivity.class);
-                ((Activity) mContext).finish();
-                ((Activity) mContext).overridePendingTransition(0, 0);
-                mContext.startActivity(intent);
-            }
-        });
-
-    }
-
-    public void OrderChangeTable() {
-        dialogProg();
-        tv_rep.setText(R.string.textvalue_sendinformation);
-
-
-        call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    if (response.body().getText().equals("Done")) {
-
-                        Call<RetrofitResponse> call_Change = apiInterface.OrderChangeTable(
-                                "OrderChangeTable",
-                                callMethod.ReadString("AppBasketInfoCode")
-                        );
-
-                        call_Change.enqueue(new Callback<RetrofitResponse>() {
-                            @Override
-                            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                                dialogProg.dismiss();
-                                if (response.body().getText().equals("Done")) {
-                                    callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
-                                    dialogProg.dismiss();
-                                    intent = new Intent(mContext, Order_TableActivity.class);
-                                    intent.putExtra("State", "0");
-                                    intent.putExtra("EditTable", "0");
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    mContext.startActivity(intent);
-                                    ((Activity) mContext).finish();
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                                intent = new Intent(mContext, Order_BasketActivity.class);
-                                ((Activity) mContext).finish();
-                                ((Activity) mContext).overridePendingTransition(0, 0);
-                                mContext.startActivity(intent);
-                            }
-                        });
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
-            }
-        });
-
-
-
-
-    }
-
+//    public void OrderPrintFactor() {
+//        dialogProg();
+//        tv_rep.setText(R.string.textvalue_sendinformation);
+//        Call<RetrofitResponse> call = apiInterface.OrderPrintFactor(
+//                "OrderPrintFactor",
+//                callMethod.ReadString("AppBasketInfoCode")
+//        );
+//
+//        call.enqueue(new Callback<RetrofitResponse>() {
+//            @Override
+//            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+//                dialogProg.dismiss();
+//
+//                    call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "0");
+//                    call.enqueue(new Callback<RetrofitResponse>() {
+//                        @Override
+//                        public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+//                            if (response.isSuccessful()) {
+//                                assert response.body() != null;
+//                                if (response.body().getText().equals("Done")) {
+//                                    callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
+//                                    dialogProg.dismiss();
+//                                    intent = new Intent(mContext, Order_TableActivity.class);
+//                                    intent.putExtra("State", "0");
+//                                    intent.putExtra("EditTable", "0");
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                    mContext.startActivity(intent);
+//                                    ((Activity) mContext).finish();
+//                                }
+//
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+//
+//                        }
+//                    });
+//
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+//                intent = new Intent(mContext, Order_BasketActivity.class);
+//                ((Activity) mContext).finish();
+//                ((Activity) mContext).overridePendingTransition(0, 0);
+//                mContext.startActivity(intent);
+//            }
+//        });
+//
+//    }
+//
+//    public void OrderChangeTable() {
+//        dialogProg();
+//        tv_rep.setText(R.string.textvalue_sendinformation);
+//
+//
+//        call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
+//        call.enqueue(new Callback<RetrofitResponse>() {
+//            @Override
+//            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+//                if (response.isSuccessful()) {
+//                    assert response.body() != null;
+//                    if (response.body().getText().equals("Done")) {
+//
+//                        Call<RetrofitResponse> call_Change = apiInterface.OrderChangeTable(
+//                                "OrderChangeTable",
+//                                callMethod.ReadString("AppBasketInfoCode")
+//                        );
+//
+//                        call_Change.enqueue(new Callback<RetrofitResponse>() {
+//                            @Override
+//                            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+//                                dialogProg.dismiss();
+//                                if (response.body().getText().equals("Done")) {
+//                                    callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
+//                                    dialogProg.dismiss();
+//                                    intent = new Intent(mContext, Order_TableActivity.class);
+//                                    intent.putExtra("State", "0");
+//                                    intent.putExtra("EditTable", "0");
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                    mContext.startActivity(intent);
+//                                    ((Activity) mContext).finish();
+//
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+//                                intent = new Intent(mContext, Order_BasketActivity.class);
+//                                ((Activity) mContext).finish();
+//                                ((Activity) mContext).overridePendingTransition(0, 0);
+//                                mContext.startActivity(intent);
+//                            }
+//                        });
+//                    }
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+//
+//            }
+//        });
+//
+//
+//
+//
+//    }
+//
 
 
     public void EditBasketInfoExplain(Order_BasketInfo basketInfo) {
@@ -847,24 +1210,37 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             tv_rep.setText(R.string.textvalue_sendinformation);
 
 
-            String Body_str  = "";
-
-            Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
-            Body_str =callMethod.CreateJson("Miz", basketInfo.getRstmizCode(), Body_str);
-            Body_str =callMethod.CreateJson("PersonName", basketInfo.getPersonName(), Body_str);
-            Body_str =callMethod.CreateJson("Mobile", basketInfo.getMobileNo(), Body_str);
-            Body_str =callMethod.CreateJson("InfoExplain", NumberFunctions.EnglishNumber( " * "+explain_tv.getText().toString())+" * ", Body_str);
-            Body_str =callMethod.CreateJson("Prepayed", basketInfo.getPrepayed(), Body_str);
-            Body_str =callMethod.CreateJson("ReserveStartTime", basketInfo.getReserveStart(), Body_str);
-            Body_str =callMethod.CreateJson("ReserveEndTime", basketInfo.getReserveEnd(), Body_str);
-            Body_str =callMethod.CreateJson("Date", basketInfo.getToday(), Body_str);
-            Body_str =callMethod.CreateJson("State", basketInfo.getInfoState(), Body_str);
-            Body_str =callMethod.CreateJson("InfoCode", basketInfo.getAppBasketInfoCode(), Body_str);
-
-
-
-             call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
-
+//            String Body_str  = "";
+//
+//            Body_str =callMethod.CreateJson("Broker", dbh.ReadConfig("BrokerCode"), Body_str);
+//            Body_str =callMethod.CreateJson("Miz", basketInfo.getRstmizCode(), Body_str);
+//            Body_str =callMethod.CreateJson("PersonName", basketInfo.getPersonName(), Body_str);
+//            Body_str =callMethod.CreateJson("Mobile", basketInfo.getMobileNo(), Body_str);
+//            Body_str =callMethod.CreateJson("InfoExplain", NumberFunctions.EnglishNumber( " * "+explain_tv.getText().toString())+" * ", Body_str);
+//            Body_str =callMethod.CreateJson("Prepayed", basketInfo.getPrepayed(), Body_str);
+//            Body_str =callMethod.CreateJson("ReserveStartTime", basketInfo.getReserveStart(), Body_str);
+//            Body_str =callMethod.CreateJson("ReserveEndTime", basketInfo.getReserveEnd(), Body_str);
+//            Body_str =callMethod.CreateJson("Date", basketInfo.getToday(), Body_str);
+//            Body_str =callMethod.CreateJson("State", basketInfo.getInfoState(), Body_str);
+//            Body_str =callMethod.CreateJson("InfoCode", basketInfo.getAppBasketInfoCode(), Body_str);
+//
+//
+//
+//             call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+            call = apiInterface.OrderInfoInsert(
+                    "OrderInfoInsert",
+                    dbh.ReadConfig("BrokerCode"),
+                    basketInfo.getRstmizCode(),
+                    basketInfo.getPersonName(),
+                    basketInfo.getMobileNo(),
+                    NumberFunctions.EnglishNumber( " * "+explain_tv.getText().toString())+" * ",
+                    basketInfo.getPrepayed(),
+                    basketInfo.getReserveStart(),
+                    basketInfo.getReserveEnd(),
+                    basketInfo.getToday(),
+                    basketInfo.getInfoState(),
+                    basketInfo.getAppBasketInfoCode()
+            );
 
             if (!basketInfo.getInfoExplain().equals(NumberFunctions.EnglishNumber(explain_tv.getText().toString()))) {
                 call.enqueue(new Callback<RetrofitResponse>() {
@@ -973,16 +1349,21 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                 dialogProg();
                 tv_rep.setText(R.string.textvalue_sendinformation);
 
-
-
-
-                String Body_str  = "";
-
-                Body_str =callMethod.CreateJson("AppBasketInfoCode", callMethod.ReadString("AppBasketInfoCode"), Body_str);
-                Body_str =callMethod.CreateJson("Explain", NumberFunctions.EnglishNumber(explain_tv.getText().toString()), Body_str);
-
-
-                call = apiInterface.OrderEditInfoExplain(callMethod.RetrofitBody(Body_str));
+//
+//
+//
+//                String Body_str  = "";
+//
+//                Body_str =callMethod.CreateJson("AppBasketInfoCode", callMethod.ReadString("AppBasketInfoCode"), Body_str);
+//                Body_str =callMethod.CreateJson("Explain", NumberFunctions.EnglishNumber(explain_tv.getText().toString()), Body_str);
+//
+//
+//                call = apiInterface.OrderEditInfoExplain(callMethod.RetrofitBody(Body_str));
+                call = apiInterface.OrderEditInfoExplain(
+                        "OrderEditInfoExplain",
+                        callMethod.ReadString("AppBasketInfoCode"),
+                        NumberFunctions.EnglishNumber(explain_tv.getText().toString())
+                );
 
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override

@@ -61,6 +61,11 @@ public class Order_SearchActivity extends AppCompatActivity {
 
     OrderActivitySearchBinding binding;
 
+
+
+
+
+
     @SuppressLint("ObsoleteSdkInt")
     public static ContextWrapper changeLanguage(Context context, String lang) {
 
@@ -183,7 +188,9 @@ public class Order_SearchActivity extends AppCompatActivity {
             if (textCartItemCount.getVisibility() != View.GONE) {
                 textCartItemCount.setVisibility(View.GONE);
             }
-            Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
+            //Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
+            Call<RetrofitResponse> call2 = apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
+
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {

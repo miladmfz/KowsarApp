@@ -34,7 +34,7 @@ public class Order_GoodBasketAdapter extends RecyclerView.Adapter<Order_GoodBask
     private final Context mContext;
     private final ArrayList<Good> goods;
     CallMethod callMethod;
-   Order_Action action;
+    Order_Action action;
     Call<RetrofitResponse> call;
 
     public Order_GoodBasketAdapter(ArrayList<Good> goods, Context mContext) {

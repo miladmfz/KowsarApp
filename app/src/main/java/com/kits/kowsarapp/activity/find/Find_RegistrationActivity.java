@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.activity.search;
+package com.kits.kowsarapp.activity.find;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.search.Search_Replication;
+import com.kits.kowsarapp.application.find.Find_Replication;
 
 import com.kits.kowsarapp.databinding.SearchActivityRegistrationBinding;
 import com.kits.kowsarapp.model.base.Base_DBH;
@@ -22,10 +22,10 @@ import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.base.SellBroker;
 import com.kits.kowsarapp.model.base.UserInfo;
-import com.kits.kowsarapp.model.search.Search_DBH;
+import com.kits.kowsarapp.model.find.Find_DBH;
 
 import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.search.Search_APIInterface;
+import com.kits.kowsarapp.webService.find.Find_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,15 +38,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Search_RegistrationActivity extends AppCompatActivity {
+public class Find_RegistrationActivity extends AppCompatActivity {
 
-    Search_DBH dbh;
+    Find_DBH dbh;
     Base_DBH dbhbase;
     CallMethod callMethod;
-    Search_Replication replication;
+    Find_Replication replication;
     Intent intent;
     SearchActivityRegistrationBinding binding;
-    Search_APIInterface apiInterface;
+    Find_APIInterface apiInterface;
     ArrayList<String> SellBroker_Names = new ArrayList<>();
     ArrayList<SellBroker> SellBrokers = new ArrayList<>();
     @Override
@@ -65,9 +65,9 @@ public class Search_RegistrationActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new Search_DBH(this, callMethod.ReadString("DatabaseName"));
-        replication = new Search_Replication(this);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Search_APIInterface.class);
+        dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
+        replication = new Find_Replication(this);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
         dbhbase = new Base_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
 
         Call<RetrofitResponse> call1 = apiInterface.GetSellBroker("GetSellBroker");
@@ -211,7 +211,7 @@ public class Search_RegistrationActivity extends AppCompatActivity {
                 String newUrl = replaceIpInUrl(fullUrl, newIp);
                 callMethod.EditString("ServerURLUse", newUrl); // ذخیره آدرس جدید
                 dbhbase.UpdateUrl(callMethod.ReadString("ActivationCode"),newUrl);
-                callMethod.showToast("آدرس ذخیره شد");
+                callMethod.showToast(" ذخیره شد");
                 if(!dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.seaRegistrABroker.getText().toString()))){
                     Registration();
                 }else {

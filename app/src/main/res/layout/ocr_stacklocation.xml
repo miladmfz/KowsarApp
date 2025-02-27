@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ocr_stacklocation_explain"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_round_selected"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/ocr_stacklocation_goodname_tv"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:focusable="true"
+        android:gravity="center"
+        android:inputType="text"
+        android:singleLine="true">
+
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/ocr_stacklocation_explain_et"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:background="@drawable/bg_round_selected"
+        android:textColor="@color/black"
+
+        android:focusable="true"
+        android:gravity="center"
+        android:inputType="text"
+        android:singleLine="true">
+
+
+    </EditText>
+
+
+    <Button
+        android:id="@+id/ocr_stacklocation_explain_btn"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="اعمال"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:backgroundTint="#4CAF50"
+        app:strokeColor="#4CAF50" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

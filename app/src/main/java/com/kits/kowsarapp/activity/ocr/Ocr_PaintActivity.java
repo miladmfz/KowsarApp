@@ -250,23 +250,23 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                 btn_pic.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
                 btn_pic.setOnClickListener(v -> {
 
-                    final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+                    final CharSequence[] options = { "گرفتن عکس", "انتخاب از نصویر موجود","لغو" };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(Ocr_PaintActivity.this);
                     builder.setTitle("Choose your profile picture");
 
                     builder.setItems(options, (dialog, item) -> {
 
-                        if (options[item].equals("Take Photo")) {
+                        if (options[item].equals( "گرفتن عکس")) {
                             dispatchTakePictureIntent();
-                        } else if (options[item].equals("Choose from Gallery")) {
+                        } else if (options[item].equals("انتخاب از نصویر موجود")) {
                             intent = new Intent();
                             intent.setType("image/*");
                             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             intent.setAction(Intent.ACTION_GET_CONTENT);
                             startActivityForResult(intent , 1);
 
-                        } else if (options[item].equals("Cancel")) {
+                        } else if (options[item].equals("لغو")) {
                             dialog.dismiss();
                         }
                     });

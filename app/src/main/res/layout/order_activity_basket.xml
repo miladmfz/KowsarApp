@@ -29,10 +29,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_weight="1"
-
                 android:background="?attr/colorPrimary"
-
-                >
+                app:title="@string/buyactivity_titlename"
+                app:titleTextColor="?attr/colorOnPrimary">
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -45,38 +44,112 @@
             android:orientation="vertical">
 
 
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_margin="3dp"
-                android:background="@drawable/bg_round_selected"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:layout_margin="4dp"
+                >
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:orientation="vertical">
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
 
-
-                    <TextView
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
-                        android:gravity="center"
-                        android:text="@string/buyactivity_rowcount"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical">
 
 
-                    <TextView
-                        android:id="@+id/ord_basket_a_total_row_buy"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+                            android:text="مبلغ کل"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                        <TextView
+                            android:id="@+id/ord_basket_a_total_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+                            android:text=" مبلغ دریافتی"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                        <TextView
+                            android:id="@+id/ord_basket_a_total_resive"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+                            android:text=" مبلغ مانده"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                        <TextView
+                            android:id="@+id/ord_basket_a_total_notresive"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -84,52 +157,93 @@
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:orientation="vertical">
+                    android:layout_height="45dp"
+                    android:orientation="horizontal">
 
 
-                    <TextView
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
-                        android:gravity="center"
-                        android:text="@string/buyactivity_totalamount"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+                            android:text="@string/buyactivity_rowcount"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                        <TextView
+                            android:id="@+id/ord_basket_a_total_row_buy"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+                            android:text="@string/buyactivity_totalamount"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                        <TextView
+                            android:id="@+id/ord_basket_a_total_amount_buy"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:gravity="center"
+
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnBackground" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/ord_basket_a_total_delete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="3dp"
+                        android:layout_weight="0.3"
+                        android:text="@string/buyactivity_delete"
+                        android:textColor="#ffffff"
                         android:textSize="12sp"
-                        android:textStyle="bold" />
-
-
-                    <TextView
-                        android:id="@+id/ord_basket_a_total_amount_buy"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.3"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        app:backgroundTint="@color/red_800"
+                        app:strokeColor="@color/grey_1000"
+                        app:strokeWidth="1dp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/ord_basket_a_total_delete"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="3dp"
-                    android:layout_weight="0.3"
-                    android:text="@string/buyactivity_delete"
-                    android:textColor="#ffffff"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    app:backgroundTint="@color/red_800"
-                    app:strokeColor="@color/grey_1000"
-                    app:strokeWidth="1dp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
-
 
             <ListView
                 android:id="@+id/ord_basket_a_Listview"
@@ -143,6 +257,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
+
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="?attr/colorOnBackground"
                 android:paddingBottom="70dp"
 
                 />
@@ -173,8 +290,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#B86634"
-                android:textSize="40sp" />
+
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="?attr/colorOnBackground"
+                />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -189,24 +308,42 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:orientation="vertical"
+        android:weightSum="2"
 
         >
-
-
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/ord_basket_a_test"
+            android:id="@+id/ord_basket_a_ordertofactor"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_margin="5dp"
             android:gravity="center"
             android:text="@string/buyactivity_finalstep"
-            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:backgroundTint="#D5BC9D"
-            app:strokeColor="#B96838"
-            app:strokeWidth="1dp" />
+
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
+            android:layout_weight="1"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ord_basket_a_payment"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="پرداخت"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:layout_weight="1"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="?attr/colorSecondary"
+            android:textColor="?attr/colorOnSecondary"
+            />
+
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

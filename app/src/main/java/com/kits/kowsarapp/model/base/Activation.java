@@ -21,6 +21,8 @@ public class Activation {
     private String SQLiteURL;
     @SerializedName("MaxDevice")
     private String MaxDevice;
+
+
     @SerializedName("SecendServerURL")
     private String SecendServerURL;
     @SerializedName("DbName")
@@ -28,6 +30,15 @@ public class Activation {
     @SerializedName("AppType")
     private String AppType;
 
+
+    @SerializedName("ServerIp")
+    private String ServerIp;
+    @SerializedName("ServerPort")
+    private String ServerPort;
+    @SerializedName("ServerPathApi")
+    private String ServerPathApi;
+    @SerializedName("UsedDevice")
+    private String UsedDevice;
 
     //region $ getter setter
 
@@ -37,6 +48,38 @@ public class Activation {
     @SerializedName("ErrDesc")
     private String ErrDesc;
 
+
+    public String getServerIp() {
+        return ServerIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        ServerIp = serverIp;
+    }
+
+    public String getServerPort() {
+        return ServerPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        ServerPort = serverPort;
+    }
+
+    public String getServerPathApi() {
+        return ServerPathApi;
+    }
+
+    public void setServerPathApi(String serverPathApi) {
+        ServerPathApi = serverPathApi;
+    }
+
+    public String getUsedDevice() {
+        return UsedDevice;
+    }
+
+    public void setUsedDevice(String usedDevice) {
+        UsedDevice = usedDevice;
+    }
 
     public String getErrCode() {
         return ErrCode;

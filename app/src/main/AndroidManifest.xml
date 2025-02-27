@@ -83,16 +83,16 @@
         <activity android:name=".activity.ocr.Ocr_ConfirmActivity" />
         <activity android:name=".activity.ocr.Ocr_FactorDetailActivity" />
         <activity android:name=".activity.ocr.Ocr_FactorListLocalActivity" />
-        <activity android:name=".activity.ocr.Ocr_FactorListOnlineActivity" />
+        <activity android:name=".activity.ocr.Ocr_FactorListApiActivity" />
         <activity android:name=".activity.ocr.Ocr_NavActivity" />
         <activity android:name=".activity.ocr.Ocr_PaintActivity" />
         <activity android:name=".activity.ocr.Ocr_ScanCodeActivity" />
 
 
-        <activity android:name=".activity.search.Search_SearchActivity" />
-        <activity android:name=".activity.search.Search_RegistrationActivity" />
-        <activity android:name=".activity.search.Search_ConfigActivity" />
-        <activity android:name=".activity.search.Search_NavActivity" />
+        <activity android:name=".activity.find.Find_SearchActivity" />
+        <activity android:name=".activity.find.Find_RegistrationActivity" />
+        <activity android:name=".activity.find.Find_ConfigActivity" />
+        <activity android:name=".activity.find.Find_NavActivity" />
 
 
 

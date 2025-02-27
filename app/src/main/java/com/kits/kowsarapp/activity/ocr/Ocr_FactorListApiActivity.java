@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,30 +33,34 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.ocr.Ocr_FactorListOnline_Adapter;
+import com.kits.kowsarapp.adapter.ocr.Ocr_FactorListApi_Adapter;
+import com.kits.kowsarapp.adapter.ocr.Ocr_ItemAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Query;
 
-public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
+public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
-    Ocr_FactorListOnline_Adapter adapter;
+    Ocr_FactorListApi_Adapter adapter;
     GridLayoutManager gridLayoutManager;
-    RecyclerView factor_list_recycler;
+    RecyclerView rc_factors;
     AppCompatEditText edtsearch;
     Handler handler;
     Handler counthandler=new Handler();
@@ -88,6 +93,32 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
     int pastVisiblesItems=0, visibleItemCount, totalItemCount;
     public int PageNo=0;
     String Row="10";
+
+
+
+
+
+
+    LinearLayout ll_counter;
+    LinearLayout ll_stackcombo;
+    RecyclerView rc_stackcombo;
+
+    ArrayList<Factor> visible_factors=new ArrayList<>();
+    ArrayList<Factor> visible_factors_temp=new ArrayList<>();
+
+
+    Ocr_ItemAdapter itemAdapter;
+
+    ArrayList<String> stacks=new ArrayList<>();
+
+    private int clickCount = 0;
+    private long lastClickTime = 0;
+    private static final long DOUBLE_CLICK_TIME_DELTA = 500;
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,18 +166,59 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         handler=new Handler();
-        prog = findViewById(R.id.ocr_onlinefactor_a_prog);
+        prog = findViewById(R.id.ocr_apifactor_a_prog);
 
-        Toolbar toolbar = findViewById(R.id.ocr_onlinefactor_a_toolbar);
+        Toolbar toolbar = findViewById(R.id.ocr_apifactor_a_toolbar);
         setSupportActionBar(toolbar);
 
-        factor_list_recycler=findViewById(R.id.ocr_onlinefactor_a_recyclerView);
-        textView_Count=findViewById(R.id.ocr_onlinefactor_a_count);
-        textView_status=findViewById(R.id.ocr_onlinefactor_a_Tvstatus);
-        edtsearch = findViewById(R.id.ocr_onlinefactor_a_edtsearch);
-        RadioEdited= findViewById(R.id.ocr_onlinefactor_a_edited);
-        RadioShortage= findViewById(R.id.ocr_onlinefactor_a_shortage);
-        spinnerPath= findViewById(R.id.ocr_onlinefactor_a_path);
+        rc_factors=findViewById(R.id.ocr_apifactor_a_recyclerView);
+        ll_counter=findViewById(R.id.ocr_apifactor_a_ll_counter);
+
+        rc_stackcombo=findViewById(R.id.ocr_apifactor_a_stackcombo_rc);
+        ll_stackcombo=findViewById(R.id.ocr_apifactor_a_ll_stackcombo);
+
+
+
+        textView_Count=findViewById(R.id.ocr_apifactor_a_count);
+        textView_status=findViewById(R.id.ocr_apifactor_a_Tvstatus);
+        edtsearch = findViewById(R.id.ocr_apifactor_a_edtsearch);
+        RadioEdited= findViewById(R.id.ocr_apifactor_a_edited);
+        RadioShortage= findViewById(R.id.ocr_apifactor_a_shortage);
+        spinnerPath= findViewById(R.id.ocr_apifactor_a_path);
+
+        if (callMethod.ReadString("StackCategory").equals("همه") && callMethod.ReadString("Category").equals("2")) {
+            Row=callMethod.ReadString("RowCall");
+            ll_stackcombo.setVisibility(View.VISIBLE);
+
+        }else{
+            ll_stackcombo.setVisibility(View.GONE);
+        }
+
+
+        ll_counter.setOnClickListener(v -> {
+            long currentClickTime = System.currentTimeMillis();
+
+            if (lastClickTime != 0 && (currentClickTime - lastClickTime) > DOUBLE_CLICK_TIME_DELTA) {
+                clickCount = 0;
+            }
+
+            clickCount++;
+
+            if (clickCount == 2) {
+
+                itemAdapter.Clear_selectedItems();
+                visibleItemCount =  0;
+                totalItemCount =   0;
+                pastVisiblesItems =   0;
+                prog.setVisibility(View.VISIBLE);
+                loading = false;
+                RetrofitRequset_List();
+            }
+
+            lastClickTime = currentClickTime;
+        });
+
+
 
     }
 
@@ -174,9 +246,87 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
     }
 
+    public void CheckStackList() {
+
+        visible_factors_temp.clear();
+
+        List<String> selectedItems = itemAdapter.getSelectedItems();
+        Log.e("selectedItems.size_", selectedItems.size()+"");
+        if (selectedItems.size()>0) {
+
+            for (Factor factor : factors) {
+                List<String> factorStacks = Arrays.asList(factor.getStackClass().split(","));
+                if (new HashSet<>(factorStacks).equals(new HashSet<>(selectedItems))) {
+                    visible_factors_temp.add(factor);
+                }
+
+            }
+
+
+
+            if(visible_factors_temp.size()>0){
+
+                visible_factors=visible_factors_temp;
+                adapter.notifyDataSetChanged();
+
+                CallRecycle();
+
+            }else {
+
+                callMethod.showToast("فاکتوری موجود نمی باشد");
+            }
+            Log.e("Visible Factors", factors.size()+"");
+            Log.e("Selected Items", selectedItems.toString());
+            Log.e("Visible Factors", visible_factors.size()+"");
+
+        } else {
+
+
+            visible_factors=factors;
+            adapter.notifyDataSetChanged();
+
+            CallRecycle();
+
+        }
+
+
+    }
 
 
     public void init(){
+
+        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    for ( Ocr_Good good : response.body().getOcr_Goods()) {
+
+                        stacks.add(good.getGoodExplain4());
+                    }
+
+                    itemAdapter=new Ocr_ItemAdapter(Ocr_FactorListApiActivity.this,stacks);
+
+                    rc_stackcombo.setLayoutManager(new GridLayoutManager(Ocr_FactorListApiActivity.this, 1, GridLayoutManager.HORIZONTAL, false
+                    ));
+                    rc_stackcombo.setAdapter(itemAdapter);
+
+                }
+
+            }
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
+
+
+
+
+
 
 
         customerpath.add("همه");
@@ -219,7 +369,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
 
 
-        factor_list_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rc_factors.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) { //check for scroll down
@@ -230,6 +380,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount-1) {
                                 loading = false;
                                 PageNo++;
+                            itemAdapter.Clear_selectedItems();
                                 MoreFactor();
                         }
                     }
@@ -301,6 +452,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
                     assert response.body() != null;
                     ArrayList<Factor> factor_page = response.body().getFactors();
                     factors.addAll(factor_page);
+                    visible_factors=factors;
                     adapter.notifyDataSetChanged();
                     String textView_st="تعداد "+adapter.getItemCount()+" از "+TotallistCount+"";
                     textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
@@ -324,7 +476,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
 
     public void CallRecycle() {
 
-        adapter = new Ocr_FactorListOnline_Adapter(factors,state, Ocr_FactorListOnlineActivity.this);
+        adapter = new Ocr_FactorListApi_Adapter(factors,state, Ocr_FactorListApiActivity.this);
         if (adapter.getItemCount()==0){
             callMethod.showToast("فاکتوری یافت نشد");
         }
@@ -334,15 +486,15 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
             textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
         }, 500);
         gridLayoutManager = new GridLayoutManager(this, 1);//grid
-        factor_list_recycler.setLayoutManager(gridLayoutManager);
-        factor_list_recycler.setAdapter(adapter);
-        factor_list_recycler.setItemAnimator(new DefaultItemAnimator());
-        factor_list_recycler.scrollToPosition(pastVisiblesItems);
+        rc_factors.setLayoutManager(gridLayoutManager);
+        rc_factors.setAdapter(adapter);
+        rc_factors.setItemAnimator(new DefaultItemAnimator());
+        rc_factors.scrollToPosition(pastVisiblesItems);
 
         if (Integer.parseInt(callMethod.ReadString("LastTcPrint"))>0){
             for (Factor singlefactor :factors) {
                 if(singlefactor.getAppTcPrintRef().equals(callMethod.ReadString("LastTcPrint")))
-                    factor_list_recycler.scrollToPosition(factors.indexOf(singlefactor));
+                    rc_factors.scrollToPosition(factors.indexOf(singlefactor));
             }
 
         }
@@ -367,7 +519,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
                         customerpath.add(factor.getCustomerPath());
                     }
 
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_FactorListOnlineActivity.this,
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_FactorListApiActivity.this,
                             android.R.layout.simple_spinner_item, customerpath);
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerPath.setAdapter(spinner_adapter);
@@ -432,10 +584,17 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                 if(response.isSuccessful()) {
+
+                    prog.setVisibility(View.GONE);
+                    loading = true;
                     recallcount=0;
                     assert response.body() != null;
                     factors.clear();
+                    visible_factors.clear();
                     factors= response.body().getFactors();
+                    visible_factors=factors;
+                    callMethod.showToast("بارگیری شد");
+
                     if(factors.size()>0){
                         CallRecycle();
 
@@ -444,12 +603,15 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
                         callMethod.showToast("فاکتوری موجود نمی باشد");
                     }
 
+
                 }
             }
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 recallcount++;
+                loading = true;
+
                 if(recallcount<2){
                     RetrofitRequset_List();
                 }else if (recallcount==2){
@@ -585,7 +747,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
             NotificationChannel Channel = new NotificationChannel(channel_id, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(Channel);
         }
-        Intent notificationIntent = new Intent(this, Ocr_FactorListOnlineActivity.class);
+        Intent notificationIntent = new Intent(this, Ocr_FactorListApiActivity.class);
         notificationIntent.putExtra("State", "5");
         if(flag.equals("0")){
             notificationIntent.putExtra("StateEdited", "0");
@@ -613,7 +775,7 @@ public class Ocr_FactorListOnlineActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(this, Ocr_FactorListOnlineActivity.class);
+        intent = new Intent(this, Ocr_FactorListApiActivity.class);
         intent.putExtra("State", state);
         startActivity(intent);
         finish();

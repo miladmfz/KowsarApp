@@ -19,7 +19,29 @@ public class AppPrinter {
     @SerializedName("PrinterActive")
     private String PrinterActive;
 
+    @SerializedName("FilePath")
+    private String FilePath;
+    @SerializedName("AppType")
+    private String AppType;
+
+
+
     //region $ getter setter
+    public String getFilePath() {
+        return FilePath;
+    }
+
+    public void setFilePath(String filePath) {
+        FilePath = filePath;
+    }
+
+    public String getAppType() {
+        return AppType;
+    }
+
+    public void setAppType(String appType) {
+        AppType = appType;
+    }
     public String getAppPrinterCode() {
         return AppPrinterCode;
     }

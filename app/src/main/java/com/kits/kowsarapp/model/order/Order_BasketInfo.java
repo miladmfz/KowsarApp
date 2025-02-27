@@ -69,6 +69,89 @@ public class Order_BasketInfo {
     @SerializedName("Time")
     private String Time;
 
+    @SerializedName("SumTaxAndMayor")
+    private String SumTaxAndMayor;
+    @SerializedName("SumFacAmount")    private String SumFacAmount;
+    @SerializedName("SumPrice")    private String SumPrice;
+    @SerializedName("CountGood")    private String CountGood;
+    @SerializedName("NewSumPrice")    private String NewSumPrice;
+    @SerializedName("Received")    private String Received;
+    @SerializedName("NotReceived")    private String NotReceived;
+    @SerializedName("DecrementValue")    private String DecrementValue;
+    @SerializedName("ShopNaghdReceive")    private String ShopNaghdReceive;
+
+    public String getSumTaxAndMayor() {
+        return SumTaxAndMayor;
+    }
+
+    public void setSumTaxAndMayor(String sumTaxAndMayor) {
+        SumTaxAndMayor = sumTaxAndMayor;
+    }
+
+    public String getSumFacAmount() {
+        return SumFacAmount;
+    }
+
+    public void setSumFacAmount(String sumFacAmount) {
+        SumFacAmount = sumFacAmount;
+    }
+
+    public String getSumPrice() {
+        return SumPrice;
+    }
+
+    public void setSumPrice(String sumPrice) {
+        SumPrice = sumPrice;
+    }
+
+    public String getCountGood() {
+        return CountGood;
+    }
+
+    public void setCountGood(String countGood) {
+        CountGood = countGood;
+    }
+
+    public String getNewSumPrice() {
+        return NewSumPrice;
+    }
+
+    public void setNewSumPrice(String newSumPrice) {
+        NewSumPrice = newSumPrice;
+    }
+
+    public String getReceived() {
+        return Received;
+    }
+
+    public void setReceived(String received) {
+        Received = received;
+    }
+
+    public String getNotReceived() {
+        return NotReceived;
+    }
+
+    public void setNotReceived(String notReceived) {
+        NotReceived = notReceived;
+    }
+
+    public String getDecrementValue() {
+        return DecrementValue;
+    }
+
+    public void setDecrementValue(String decrementValue) {
+        DecrementValue = decrementValue;
+    }
+
+    public String getShopNaghdReceive() {
+        return ShopNaghdReceive;
+    }
+
+    public void setShopNaghdReceive(String shopNaghdReceive) {
+        ShopNaghdReceive = shopNaghdReceive;
+    }
+
     public String getTime() {
         if (Time == null) {
             return "00:00";

@@ -28,7 +28,9 @@
 
 
     </com.google.android.material.appbar.AppBarLayout>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -74,6 +76,90 @@
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="نام پرینتر:"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+            <TextView
+                android:id="@+id/ocr_config_a_lastprinter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textColor="@color/black"/>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="3dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="دیتابیس مورد استفاده:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+
+            <Spinner
+                android:id="@+id/ocr_config_a_spinneractivedatabase"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:scrollbarSize="25sp"
+
+                />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="3dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="پرینتر :"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+
+            <Spinner
+                android:id="@+id/ocr_config_a_spinnerprinter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:scrollbarSize="25sp"
+
+                />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -146,7 +232,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="انتخاب طبقه :"
+                    android:text="انتخاب انبار :"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:layout_weight="0.5"/>
@@ -214,54 +300,6 @@
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp"
-            android:visibility="invisible">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="سایز عنوان ها"
-
-                android:layout_weight="0.5"
-                />
-
-            <EditText
-                android:id="@+id/ocr_config_a_titlesize"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/edittest1"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:textSize="22sp"
-                android:inputType="number"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="سایز اطلاعات"
-
-                android:layout_weight="0.5"
-                android:visibility="invisible"
-                />
-
-            <TextView
-                android:visibility="invisible"
-                android:id="@+id/ocr_config_a_bodysize"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:textSize="22sp"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -292,6 +330,290 @@
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="نمایش موجودی :"
+                android:layout_weight="0.5" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/ocr_config_a_showamount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:visibility="invisible" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="ارسال خودکار"
+                android:layout_weight="0.5" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/ocr_config_a_autosend"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:visibility="invisible" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="نمایش نحوه ارسال"
+                android:layout_weight="0.5" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/ocr_config_a_sendtimetype"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:visibility="invisible" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="فقط استفاده بارکدخوان"
+                android:layout_weight="0.5" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/ocr_config_a_justscanner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:visibility="invisible" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="چاپ بارکد"
+                android:layout_weight="0.5" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/ocr_config_a_printbarcode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.75"
+                android:visibility="invisible" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:visibility="visible">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="سایز عنوان ها"
+                android:textColor="@color/grey_1000"
+                android:layout_weight="0.5"
+                />
+
+            <EditText
+                android:id="@+id/ocr_config_a_titlesize"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/edittest1"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:inputType="number"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+
+                android:gravity="center"
+                android:text="سایز اطلاعات"
+                android:textColor="@color/grey_1000"
+                android:layout_weight="0.5"
+                />
+
+            <EditText
+                android:id="@+id/ocr_config_a_bodysize"
+                android:layout_width="match_parent"
+                android:background="@drawable/edittest1"
+
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="22sp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_weight="0.5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="تعداد فاکتور دریافتی :" />
+
+            <EditText
+                android:layout_weight="0.5"
+                android:id="@+id/ocr_config_a_rowcall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittest1"
+
+                android:inputType="text"
+                tools:ignore="LabelFor"
+                android:gravity="center" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_weight="0.5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="تعداد فاکتور مجاز عملیات :" />
+
+            <EditText
+                android:layout_weight="0.5"
+                android:id="@+id/ocr_config_a_accesscount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittest1"
+
+                android:inputType="text"
+                tools:ignore="LabelFor"
+                android:gravity="center" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_weight="0.5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="وقفه جستجو :" />
+
+            <EditText
+                android:layout_weight="0.5"
+                android:id="@+id/ocr_config_a_delay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittest1"
+
+                android:inputType="text"
+                tools:ignore="LabelFor"
+                android:gravity="center" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
 </androidx.appcompat.widget.LinearLayoutCompat>

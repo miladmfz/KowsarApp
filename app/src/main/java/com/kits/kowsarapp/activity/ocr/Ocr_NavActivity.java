@@ -111,8 +111,6 @@ public void Config() {
         });
 
 
-
-
         try {
             state_category=Integer.parseInt(callMethod.ReadString("Category"));
         }catch (Exception e){
@@ -132,11 +130,29 @@ public void Config() {
             Delivery();
         }else if(state_category==5){ //state 2
             Manage();
+        }else if(state_category==6){ //state 2
+            StackLocation();
         }
 
     }
 
 
+    public void StackLocation() {
+
+
+        btn1.setText("جانمایی انبار");
+        btn2.setVisibility(View.GONE);
+        btn3.setVisibility(View.GONE);
+
+        btn1.setOnClickListener(view -> {
+            intent = new Intent(Ocr_NavActivity.this, Ocr_ConfirmActivity.class);
+            intent.putExtra("ScanResponse", "");
+            intent.putExtra("State", "6");
+            intent.putExtra("FactorImage", "");
+            startActivity(intent);
+        });
+
+    }
 
 
 
@@ -200,7 +216,7 @@ public void Config() {
 
         });
         btn3.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -219,13 +235,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
             intent.putExtra("State", "0");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -244,13 +260,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
             intent.putExtra("State", "1");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
             intent.putExtra("State", "4");
 
             startActivity(intent);
@@ -258,7 +274,7 @@ public void Config() {
         });
         btn3.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
 
@@ -277,7 +293,7 @@ public void Config() {
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
         });
@@ -313,7 +329,7 @@ public void Config() {
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListOnlineActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
         });

@@ -96,6 +96,8 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.DefaultTheme));
+
         setContentView(R.layout.order_activity_nav);
 
         init();
@@ -246,8 +248,9 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             startActivity(intent);
 
         } else if (id == R.id.order_nav_cfg) {
-            intent = new Intent(this, Order_RegistrationActivity.class);
-            startActivity(intent);
+            action.LoginSetting();
+
+
         }
         DrawerLayout drawer = findViewById(R.id.order_nav_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,7 +32,7 @@ import com.kits.kowsarapp.activity.ocr.Ocr_ConfigActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.adapter.ocr.Ocr_GoodScan_Adapter;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.base.Good;
+
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.Job;
@@ -74,6 +75,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     Dialog dialog, dialogProg;
     ArrayList<String> sendtimearray = new ArrayList<>();
     TextView tv_rep;
+    Ocr_Print print;
+
     public Ocr_Action(Context mcontxt) {
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
@@ -85,6 +88,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         dialog = new Dialog(mcontxt);
         dialogProg = new Dialog(mContext);
+        print = new Ocr_Print(mContext);
+
 
     }
     public void dialogProg() {
@@ -136,6 +141,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         tv_FactorDate.setText(NumberFunctions.PerisanNumber(factor.getFactorDate()));
         tv_CustName.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
         tv_customercode.setText(NumberFunctions.PerisanNumber(factor.getCustomercode()));
+        //TODO change Ersal be customer path
         tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getErsall()));
         Log.e("kowsar",factor.getBrokerName());
         if (factor.getBrokerName().length() > 20)
@@ -210,61 +216,6 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         dialog.show();
 
-
-    }
-
-    public void OcrPrintPacker(Factor factor) {
-
-
-
-        String Body_str  = "";
-
-        Body_str =callMethod.CreateJson("FactorCode", factor.getFactorCode(), Body_str);
-        Body_str =callMethod.CreateJson("StackCategory", callMethod.ReadString("StackCategory"), Body_str);
-        Body_str =callMethod.CreateJson("Sender", callMethod.ReadString("Deliverer"), Body_str);
-
-        Call<RetrofitResponse> call = apiInterface.OcrPrintPacker(callMethod.RetrofitBody(Body_str));
-
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    ((Activity) mContext).finish();
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                ((Activity) mContext).finish();
-            }
-        });
-
-    }
-    public void OcrPrintControler(Factor factor) {
-
-
-
-        String Body_str  = "";
-
-        Body_str =callMethod.CreateJson("FactorCode", factor.getFactorCode(), Body_str);
-        Body_str =callMethod.CreateJson("StackCategory", callMethod.ReadString("StackCategory"), Body_str);
-        Body_str =callMethod.CreateJson("Sender", callMethod.ReadString("Deliverer"), Body_str);
-
-        Call<RetrofitResponse> call = apiInterface.OcrPrintControler(callMethod.RetrofitBody(Body_str));
-
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    ((Activity) mContext).finish();
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                ((Activity) mContext).finish();
-            }
-        });
 
     }
 
@@ -388,51 +339,60 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         ll_pack_h_main.addView(ll_new);
                     }
 
-                    sendtimearray.clear();
-                    sendtimearray.add("");
-                    sendtimearray.add("صبح");
 
-                    LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                            70
-                    );
+                    if (callMethod.ReadBoolan("SendTimeType")) {
 
-                    params.setMargins(30, 30, 30, 30);
-                    LinearLayoutCompat ll_new = new LinearLayoutCompat(mContext.getApplicationContext());
-                    ll_new.setLayoutParams(params);
-                    ll_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                    ll_new.setOrientation(LinearLayoutCompat.HORIZONTAL);
-                    ll_new.setWeightSum(2);
+                        sendtimearray.clear();
+                        sendtimearray.add("");
+                        sendtimearray.add("صبح");
+                        sendtimearray.add("ظهر");
+                        sendtimearray.add("شب");
+
+                        LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                70
+                        );
+
+                        params.setMargins(30, 30, 30, 30);
+                        LinearLayoutCompat ll_new = new LinearLayoutCompat(mContext.getApplicationContext());
+                        ll_new.setLayoutParams(params);
+                        ll_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                        ll_new.setOrientation(LinearLayoutCompat.HORIZONTAL);
+                        ll_new.setWeightSum(2);
 
 
-                    TextView Tv_new = new TextView(mContext.getApplicationContext());
-                    Tv_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-                    Tv_new.setText("نحوه ارسال :");
-                    Tv_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                        TextView Tv_new = new TextView(mContext.getApplicationContext());
+                        Tv_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
+                        Tv_new.setText("نحوه ارسال :");
+                        Tv_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
 
 
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(mContext,
-                            android.R.layout.simple_spinner_item, sendtimearray);
-                    spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    Spinner spinner_sendtime = new Spinner(mContext.getApplicationContext());
-                    spinner_sendtime.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-                    spinner_sendtime.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                    spinner_sendtime.setAdapter(spinner_adapter);
-                    spinner_sendtime.setSelection(0);
+                        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(mContext,
+                                android.R.layout.simple_spinner_item, sendtimearray);
+                        spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Spinner spinner_sendtime = new Spinner(mContext.getApplicationContext());
+                        spinner_sendtime.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
+                        spinner_sendtime.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                        spinner_sendtime.setAdapter(spinner_adapter);
+                        spinner_sendtime.setSelection(0);
 
-                    spinner_sendtime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            sendtime = sendtimearray.get(position);
-                        }
+                        spinner_sendtime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                sendtime = sendtimearray.get(position);
+                            }
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-                    });
-                    ll_new.addView(Tv_new);
-                    ll_new.addView(spinner_sendtime);
-                    ll_pack_h_main.addView(ll_new);
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+                            }
+                        });
+                        ll_new.addView(Tv_new);
+                        ll_new.addView(spinner_sendtime);
+                        ll_pack_h_main.addView(ll_new);
+
+
+                    }
+
 
                 }
             }
@@ -472,6 +432,10 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             String falt_message = "";
 
             for (Job job : jobs) {
+
+
+                // TODO qoqnos shod 1-2-3
+                // TODO gostaresh shod 3-4-5
 
                  if (!job.getText().equals("برای انتخاب کلیک کنید")) {
                     if (job.getJobCode().equals("1")) {
@@ -578,6 +542,22 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
     }
 
+    public void goodamount_detail(String amount,String shortage) {
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.ocr_amount_zoom);
+        TextView tv_good_1 = dialog.findViewById(R.id.ocr_amountzoome_tv1);
+        TextView tv_good_2 = dialog.findViewById(R.id.ocr_amountzoome_tv2);
+        TextView tv_good_3 = dialog.findViewById(R.id.ocr_amountzoome_tv3);
+
+        tv_good_1.setText(NumberFunctions.PerisanNumber(amount));
+        int finalShortage = (shortage != null||shortage != "null") ? Integer.parseInt(shortage) : 0;
+        tv_good_2.setText(NumberFunctions.PerisanNumber(String.valueOf(Integer.parseInt(amount) - finalShortage)));
+
+        tv_good_3.setText(NumberFunctions.PerisanNumber(shortage));
+
+        dialog.show();
+    }
     public void good_detail(String GoodCode) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -587,6 +567,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         TextView tv_good_2 = dialog.findViewById(R.id.ocr_gooddetail_b_tv2);
         TextView tv_good_3 = dialog.findViewById(R.id.ocr_gooddetail_b_tv3);
         TextView tv_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_tv4);
+        TextView tv_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_tv5);
+        LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.ocr_gooddetail_ll1_tv1);
+
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
@@ -601,13 +584,16 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    ArrayList<Good> goods = response.body().getGoods();
+                    ArrayList<Ocr_Good> ocr_goods = response.body().getOcr_Goods();
 
-                    tv_good_1.setText(NumberFunctions.PerisanNumber(goods.get(0).getTotalAvailable()));
-                    tv_good_2.setText(NumberFunctions.PerisanNumber(goods.get(0).getSize()));
-                    tv_good_3.setText(NumberFunctions.PerisanNumber(goods.get(0).getCoverType()));
+                    tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
+                    tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
+                    tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
+                    // TODO
+                    /*
                     tv_good_4.setText(NumberFunctions.PerisanNumber(goods.get(0).getPageNo()));
-
+                    tv_good_5.setText(NumberFunctions.PerisanNumber(goods.get(0).getFormNo()));
+*/
                 }
             }
 
@@ -667,14 +653,16 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         if (goodspass.size() > 0) {
             for (Ocr_Good good : goodspass) {
-                if (state.equals("0"))
+                if (state.equals("0")){
                     if (good.getAppRowIsControled().equals("False")) {
                         Currctgoods.add(good);
                     }
-                if (state.equals("1"))
+                }
+                if (state.equals("1")) {
                     if (good.getAppRowIsPacked().equals("False")) {
                         Currctgoods.add(good);
                     }
+                }
             }
             if (Currctgoods.size() > 0) {
                 Ocr_GoodScan_Adapter goodscanadapter = new Ocr_GoodScan_Adapter(Currctgoods, mContext, state, barcodescan);
@@ -751,9 +739,6 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         dialogProg();
 
 
-
-
-
         Call<RetrofitResponse> call2;
 
 
@@ -799,6 +784,127 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
 
     }
+    public void OcrPrintPacker(Factor factor) {
+
+
+
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("FactorCode", factor.getFactorCode(), Body_str);
+        Body_str =callMethod.CreateJson("StackCategory", callMethod.ReadString("StackCategory"), Body_str);
+        Body_str =callMethod.CreateJson("Sender", callMethod.ReadString("Deliverer"), Body_str);
+
+        Call<RetrofitResponse> call = apiInterface.OcrPrintPacker(callMethod.RetrofitBody(Body_str));
+
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                if (response.isSuccessful()) {
+                    ((Activity) mContext).finish();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                ((Activity) mContext).finish();
+            }
+        });
+
+    }
+    public void OcrPrintControler(Factor factor) {
+
+
+
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("FactorCode", factor.getFactorCode(), Body_str);
+        Body_str =callMethod.CreateJson("StackCategory", callMethod.ReadString("StackCategory"), Body_str);
+        Body_str =callMethod.CreateJson("Sender", callMethod.ReadString("Deliverer"), Body_str);
+
+        Call<RetrofitResponse> call = apiInterface.OcrPrintControler(callMethod.RetrofitBody(Body_str));
+
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                if (response.isSuccessful()) {
+                    ((Activity) mContext).finish();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                ((Activity) mContext).finish();
+            }
+        });
+
+    }
+
+    public void GoodStackLocation(Ocr_Good ocr_good) {
+
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.ocr_stacklocation);
+
+
+        Button explain_btn = dialog.findViewById(R.id.ocr_stacklocation_explain_btn);
+        final TextView goodname_tv = dialog.findViewById(R.id.ocr_stacklocation_goodname_tv);
+        final EditText stacklocation_et = dialog.findViewById(R.id.ocr_stacklocation_explain_et);
+
+
+        goodname_tv.setText(ocr_good.getGoodName());
+        stacklocation_et.setText(ocr_good.getStackLocation());
+        stacklocation_et.selectAll();
+
+
+
+        dialog.show();
+        stacklocation_et.requestFocus();
+        stacklocation_et.postDelayed(() -> {
+            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(stacklocation_et, InputMethodManager.SHOW_IMPLICIT);
+        }, 500);
+
+
+
+
+        explain_btn.setOnClickListener(view -> {
+            String safeInput = stacklocation_et.getText().toString().replaceAll("[;'\"--#/*]", "");
+
+            dialogProg();
+            tv_rep.setText("در حال ارسال اطلاعات");
+            Call<RetrofitResponse> call = apiInterface.SetStackLocation(
+                    "SetStackLocation",
+                    ocr_good.getGoodCode(),
+                    NumberFunctions.EnglishNumber(safeInput)
+            );
+
+            call.enqueue(new Callback<RetrofitResponse>() {
+                @Override
+                public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+
+                    if (response.isSuccessful()) {
+
+                        assert response.body() != null;
+                        dialog.dismiss();
+                        dialogProg.dismiss();
+                        callMethod.showToast("ثبت گردید");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+
+                    dialog.dismiss();
+                    dialogProg.dismiss();
+                    callMethod.showToast("ثبت نگردید");
+
+                }
+            });
+        });
+
+    }
+
 
     public void app_info() {
 

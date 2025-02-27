@@ -69,6 +69,7 @@ public class Print {
         //sizetext=40;
     }
 
+
     public void dialogProg() {
         dialogProg.setContentView(R.layout.broker_spinner_box);
         tv_rep = dialogProg.findViewById(R.id.b_spinner_text);

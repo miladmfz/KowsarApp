@@ -20,6 +20,182 @@
 
 
 
+    <style name="BlueHarmonyTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#1E3A8A</item>
+        <item name="colorPrimaryVariant">#172554</item>
+        <item name="colorSecondary">#3B82F6</item>
+        <item name="colorSecondaryVariant">#60A5FA</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#E0F2FE</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">#172554</item>
+    </style>
+
+
+
+    <style name="MintGreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#2DD4BF</item>
+        <item name="colorPrimaryVariant">#0F766E</item>
+        <item name="colorSecondary">#99F6E4</item>
+        <item name="colorSecondaryVariant">#CCFBF1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#F0FDFA</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">#0F766E</item>
+    </style>
+
+
+    <style name="SunsetGlowTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#F97316</item>
+        <item name="colorPrimaryVariant">#C2410C</item>
+        <item name="colorSecondary">#FB923C</item>
+        <item name="colorSecondaryVariant">#FDBA74</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#FFF7ED</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">#C2410C</item>
+    </style>
+
+
+    <style name="CyberPurpleTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#8B5CF6</item>
+        <item name="colorPrimaryVariant">#5B21B6</item>
+        <item name="colorSecondary">#C084FC</item>
+        <item name="colorSecondaryVariant">#E9D5FF</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#FAF5FF</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">#5B21B6</item>
+    </style>
+
+
+
+    <style name="ElegantGoldTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#B8860B</item>
+        <item name="colorPrimaryVariant">#8B6508</item>
+        <item name="colorSecondary">#FFD700</item>
+        <item name="colorSecondaryVariant">#FFFACD</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#1C1C1C</item>
+        <item name="colorOnBackground">#FFFFFF</item>
+        <item name="android:statusBarColor">#8B6508</item>
+    </style>
+
+
+
+    <style name="OceanBreezeTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#0E7490</item>
+        <item name="colorPrimaryVariant">#155E75</item>
+        <item name="colorSecondary">#38BDF8</item>
+        <item name="colorSecondaryVariant">#7DD3FC</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#ECFEFF</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">#155E75</item>
+    </style>
+
+
+    <style name="NeonFutureTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#1E40AF</item>
+        <item name="colorPrimaryVariant">#312E81</item>
+        <item name="colorSecondary">#E11D48</item>
+        <item name="colorSecondaryVariant">#F472B6</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#111827</item>
+        <item name="colorOnBackground">#E0E7FF</item>
+        <item name="android:statusBarColor">#312E81</item>
+    </style>
+
+    <style name="RosewoodEleganceTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#881337</item>
+        <item name="colorPrimaryVariant">#4C0519</item>
+        <item name="colorSecondary">#FBCFE8</item>
+        <item name="colorSecondaryVariant">#F472B6</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#FDF2F8</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">#4C0519</item>
+    </style>
+
+
+    <style name="DarkModeEliteTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#0F172A</item>
+        <item name="colorPrimaryVariant">#1E293B</item>
+        <item name="colorSecondary">#64748B</item>
+        <item name="colorSecondaryVariant">#94A3B8</item>
+        <item name="colorOnPrimary">#E2E8F0</item>
+        <item name="colorSurface">#020617</item>
+        <item name="colorOnBackground">#F1F5F9</item>
+        <item name="android:statusBarColor">#1E293B</item>
+    </style>
+
+    <style name="LemonFreshTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#FACC15</item>
+        <item name="colorPrimaryVariant">#CA8A04</item>
+        <item name="colorSecondary">#16A34A</item>
+        <item name="colorSecondaryVariant">#22C55E</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorSurface">#FEFCE8</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">#CA8A04</item>
+    </style>
+
+
+
+    <style name="DefaultTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary Colors -->
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryVariant">@color/default_primary_variant</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary Colors -->
+        <item name="colorSecondary">@color/default_secondary</item>
+        <item name="colorSecondaryVariant">@color/default_secondary_variant</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Background Colors -->
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">@color/default_primary_variant</item>
+
+        <!-- Surface and Error Colors -->
+        <item name="colorSurface">@color/default_surface</item>
+        <item name="colorError">@color/default_error</item>
+        <item name="strokeColor">@color/default_error</item>
+    </style>
+
+
+
+    <!-- Soft Lavender -->
+    <style name="SoftLavenderTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#CE93D8</item>
+        <item name="colorPrimaryVariant">#4A148C</item>
+        <item name="colorSecondary">#E1BEE7</item>
+        <item name="colorSecondaryVariant">#F3E5F5</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#F3E5F5</item>
+        <item name="colorOnBackground">#000000</item>
+        <item name="android:statusBarColor">#4A148C</item>
+
+    </style>
+
+
+    <!-- Neon Green -->
+    <style name="NeonGreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#00C853</item>
+        <item name="colorPrimaryVariant">#004D40</item>
+
+        <item name="colorSecondary">#69F0AE</item>
+        <item name="colorSecondaryVariant">#E8F5E9</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorOnBackground">#000000</item>
+
+        <item name="colorSurface">#E8F5E9</item>
+        <item name="android:statusBarColor">#004D40</item>
+
+    </style>
+
+
+
 
 
 

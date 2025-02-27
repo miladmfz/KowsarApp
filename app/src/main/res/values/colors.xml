@@ -7,6 +7,7 @@
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="gray_secondary">#A9A9A9</color>
 
     <color name="overlay_dark_10">#1A000000</color>
     <color name="overlay_dark_20">#33000000</color>

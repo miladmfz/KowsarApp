@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.activity.search;
+package com.kits.kowsarapp.activity.find;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -15,15 +15,15 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.databinding.SearchActivityConfigBinding;
 import com.kits.kowsarapp.model.base.NumberFunctions;
-import com.kits.kowsarapp.model.search.Search_DBH;
+import com.kits.kowsarapp.model.find.Find_DBH;
 
 
 import java.text.DecimalFormat;
 
 
-public class Search_ConfigActivity extends AppCompatActivity {
+public class Find_ConfigActivity extends AppCompatActivity {
 
-    private Search_DBH dbh;
+    private Find_DBH dbh;
     private CallMethod callMethod;
     private SearchActivityConfigBinding binding;
 
@@ -45,7 +45,7 @@ public class Search_ConfigActivity extends AppCompatActivity {
 
      void Config() {
         callMethod = new CallMethod(this);
-        dbh = new Search_DBH(this, callMethod.ReadString("DatabaseName"));
+        dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
 
     }
 
@@ -88,7 +88,7 @@ public class Search_ConfigActivity extends AppCompatActivity {
 
 
             if (callMethod.ReadString("ActivationCode").equals("111111")) {
-                Intent intent = new Intent(this, Search_RegistrationActivity.class);
+                Intent intent = new Intent(this, Find_RegistrationActivity.class);
                 startActivity(intent);
             }else {
                 LoginSetting();
@@ -124,7 +124,7 @@ public class Search_ConfigActivity extends AppCompatActivity {
                         if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).length()>5) {
                             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
 
-                                Intent intent = new Intent(Search_ConfigActivity.this, Search_RegistrationActivity.class);
+                                Intent intent = new Intent(Find_ConfigActivity.this, Find_RegistrationActivity.class);
                                 startActivity(intent);
                             } else {
                                 callMethod.showToast("رمز عبور صیحیح نیست");
@@ -148,7 +148,7 @@ public class Search_ConfigActivity extends AppCompatActivity {
 
             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
 
-                Intent intent = new Intent(this, Search_RegistrationActivity.class);
+                Intent intent = new Intent(this, Find_RegistrationActivity.class);
                 startActivity(intent);
             }else {
                 callMethod.showToast("رمز عبور صیحیح نیست");

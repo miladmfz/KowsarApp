@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.activity.search;
+package com.kits.kowsarapp.activity.find;
 
 
 
@@ -24,23 +24,23 @@ import com.google.android.material.navigation.NavigationView;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.search.Search_Replication;
+import com.kits.kowsarapp.application.find.Find_Replication;
 import com.kits.kowsarapp.model.base.NumberFunctions;
-import com.kits.kowsarapp.model.search.Search_DBH;
+import com.kits.kowsarapp.model.find.Find_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.search.Search_APIInterface;
+import com.kits.kowsarapp.webService.find.Find_APIInterface;
 import com.kits.kowsarapp.R;
 
 import java.util.Locale;
 
 
-public class Search_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    Search_APIInterface apiInterface;
+public class Find_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    Find_APIInterface apiInterface;
 
     Base_Action action;
     CallMethod callMethod;
     Toolbar toolbar;
-    Search_DBH dbh;
+    Find_DBH dbh;
     NavigationView navigationView;
     TextView tv_versionname;
     TextView tv_dbname;
@@ -50,14 +50,14 @@ public class Search_NavActivity extends AppCompatActivity implements NavigationV
     private boolean doubleBackToExitPressedOnce = false;
     private Intent intent;
 
-    private Search_Replication search_replication;
+    private Find_Replication search_replication;
 
     //************************************************************
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search_activity_nav);
+        setContentView(R.layout.find_activity_nav);
 
         init();
 
@@ -70,10 +70,10 @@ public class Search_NavActivity extends AppCompatActivity implements NavigationV
 
         action = new Base_Action(this);
         callMethod = new CallMethod(this);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Search_APIInterface.class);
+        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
-        dbh = new Search_DBH(this, callMethod.ReadString("DatabaseName"));
-        search_replication = new Search_Replication(this);
+        dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
+        search_replication = new Find_Replication(this);
 
         LinearLayoutCompat ll_activity_main = findViewById(R.id.sea_main_activity);
 
@@ -130,7 +130,7 @@ public class Search_NavActivity extends AppCompatActivity implements NavigationV
 
                 builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
                     callMethod.showToast("کد بازاریاب را وارد کنید");
-                    intent = new Intent(this, Search_ConfigActivity.class);
+                    intent = new Intent(this, Find_ConfigActivity.class);
                     startActivity(intent);
                 });
 
@@ -151,7 +151,7 @@ public class Search_NavActivity extends AppCompatActivity implements NavigationV
 
             builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
                 callMethod.showToast("کد بازاریاب را وارد کنید");
-                intent = new Intent(this, Search_ConfigActivity.class);
+                intent = new Intent(this, Find_ConfigActivity.class);
                 startActivity(intent);
             });
 
@@ -179,10 +179,10 @@ public class Search_NavActivity extends AppCompatActivity implements NavigationV
 
             if(dbh.ReadConfig("BrokerStack").equals("0")){
 
-                intent = new Intent(Search_NavActivity.this, Search_ConfigActivity.class);
+                intent = new Intent(Find_NavActivity.this, Find_ConfigActivity.class);
                 startActivity(intent);
             }else{
-                intent = new Intent(Search_NavActivity.this, Search_SearchActivity.class);
+                intent = new Intent(Find_NavActivity.this, Find_SearchActivity.class);
                 startActivity(intent);
             }
         });
@@ -224,7 +224,7 @@ public class Search_NavActivity extends AppCompatActivity implements NavigationV
 //            startActivity(intent);
 
         } else if (id == R.id.nav_cfg) {
-            intent = new Intent(this, Search_ConfigActivity.class);
+            intent = new Intent(this, Find_ConfigActivity.class);
             startActivity(intent);
         }
         DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);

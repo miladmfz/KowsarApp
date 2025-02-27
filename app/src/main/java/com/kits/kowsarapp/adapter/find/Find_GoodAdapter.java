@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.adapter.search;
+package com.kits.kowsarapp.adapter.find;
 
 
 import android.annotation.SuppressLint;
@@ -14,52 +14,52 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Column;
-import com.kits.kowsarapp.model.search.Search_DBH;
-import com.kits.kowsarapp.model.search.Search_Good;
-import com.kits.kowsarapp.viewholder.search.Search_GoodItemViewHolder;
+import com.kits.kowsarapp.model.find.Find_DBH;
+import com.kits.kowsarapp.model.find.Find_Good;
+import com.kits.kowsarapp.viewholder.find.Find_GoodItemViewHolder;
 import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.search.Search_APIInterface;
+import com.kits.kowsarapp.webService.find.Find_APIInterface;
 
 import java.util.ArrayList;
 
 
-public class Search_GoodAdapter extends RecyclerView.Adapter<Search_GoodItemViewHolder> {
+public class Find_GoodAdapter extends RecyclerView.Adapter<Find_GoodItemViewHolder> {
     private final Context mContext;
     CallMethod callMethod;
-    private final ArrayList<Search_Good> goods;
-    Search_DBH dbh;
+    private final ArrayList<Find_Good> goods;
+    Find_DBH dbh;
 
-    Search_APIInterface apiInterface;
+    Find_APIInterface apiInterface;
     public boolean multi_select;
     ArrayList<Column> Columns;
 
 
-    public Search_GoodAdapter(ArrayList<Search_Good> goods, Context context) {
+    public Find_GoodAdapter(ArrayList<Find_Good> goods, Context context) {
         this.mContext = context;
         this.goods = goods;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Search_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.dbh = new Find_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.Columns = dbh.GetColumns("id", "", "1");
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Search_APIInterface.class);
+        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
         Log.e("kowsar colimn size " , Columns.size()+"");
         Log.e("kowsar goods size " , goods.size()+"");
     }
 
     @NonNull
     @Override
-    public Search_GoodItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Find_GoodItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
 
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.search_good_item_card, parent, false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.find_good_item_card, parent, false);
 
 
-        return new Search_GoodItemViewHolder(view, mContext);
+        return new Find_GoodItemViewHolder(view, mContext);
     }
 
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull final Search_GoodItemViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(@NonNull final Find_GoodItemViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
 
         holder.bind(Columns, goods.get(position), mContext, callMethod);
@@ -77,7 +77,7 @@ public class Search_GoodAdapter extends RecyclerView.Adapter<Search_GoodItemView
 
 
     @Override
-    public void onViewDetachedFromWindow(@NonNull Search_GoodItemViewHolder holder) {
+    public void onViewDetachedFromWindow(@NonNull Find_GoodItemViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         if (holder.call.isExecuted()) {
             holder.call.cancel();

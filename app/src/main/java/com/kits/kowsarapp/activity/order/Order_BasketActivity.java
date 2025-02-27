@@ -29,8 +29,10 @@ import com.kits.kowsarapp.adapter.order.Order_GoodBasketAdapter;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
+import com.kits.kowsarapp.application.order.Order_Print;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
+import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
@@ -48,18 +50,24 @@ public class Order_BasketActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     Order_APIInterface apiInterface;
+    Order_BasketInfo basketInfo;
+
     CallMethod callMethod;
-    TextView Buy_row, Buy_amount;
+    TextView Buy_row, Buy_amount,tv_totalprice,tv_notresive,tv_resive;
+
     Intent intent;
     Order_GoodBasketAdapter adapter;
     Order_Action order_action;
     ArrayList<Good> goods = new ArrayList<>();
     Button total_delete;
-    Button final_buy_test;
+    Button btn_ordertofactor,btn_peyment;
+
     LottieAnimationView prog;
     LottieAnimationView img_lottiestatus;
     TextView tv_lottiestatus;
     String State = "0";
+    Order_Print order_print;
+
 
     @SuppressLint("ObsoleteSdkInt")
     public static ContextWrapper changeLanguage(Context context, String lang) {
@@ -99,6 +107,9 @@ public class Order_BasketActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.DefaultTheme));
+
+
         setContentView(R.layout.order_activity_basket);
 
 
@@ -123,6 +134,8 @@ public class Order_BasketActivity extends AppCompatActivity {
 
         callMethod = new CallMethod(Order_BasketActivity.this);
         order_action = new Order_Action(Order_BasketActivity.this);
+        order_print = new Order_Print(Order_BasketActivity.this);
+
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
         CoordinatorLayout ll_activity = findViewById(R.id.order_basket_activity);
@@ -138,12 +151,24 @@ public class Order_BasketActivity extends AppCompatActivity {
         Buy_row = findViewById(R.id.ord_basket_a_total_row_buy);
         Buy_amount = findViewById(R.id.ord_basket_a_total_amount_buy);
         total_delete = findViewById(R.id.ord_basket_a_total_delete);
-        final_buy_test = findViewById(R.id.ord_basket_a_test);
+        btn_ordertofactor = findViewById(R.id.ord_basket_a_ordertofactor);
         recyclerView = findViewById(R.id.ord_basket_a_R1);
 
         prog = findViewById(R.id.ord_basket_a_prog);
         img_lottiestatus = findViewById(R.id.ord_basket_a_lottie);
         tv_lottiestatus = findViewById(R.id.ord_basket_a_tvstatus);
+
+
+
+        tv_totalprice = findViewById(R.id.ord_basket_a_total_price);
+        tv_notresive = findViewById(R.id.ord_basket_a_total_notresive);
+        tv_resive = findViewById(R.id.ord_basket_a_total_resive);
+        btn_peyment  = findViewById(R.id.ord_basket_a_payment);
+
+
+
+
+
 
         Toolbar toolbar = findViewById(R.id.ord_basket_a_toolbar);
 
@@ -160,23 +185,19 @@ public class Order_BasketActivity extends AppCompatActivity {
 
         GetOrder();
 
-        final_buy_test.setOnClickListener(view -> {
-
+        btn_ordertofactor.setOnClickListener(view -> {
             if (State.equals("4")) {
-
-               // print.GetHeader_Data("");
-
+               order_print.GetHeader_Data("");
             } else {
-
-
                 order_action.BasketInfoExplainBeforOrder();
-
-
-
             }
         });
 
 
+        btn_peyment.setOnClickListener(view -> {
+
+            order_action.BasketInfopayment(basketInfo);
+        });
 
 
         total_delete.setOnClickListener(v -> {
@@ -239,6 +260,34 @@ public class Order_BasketActivity extends AppCompatActivity {
             }
         });
     }
+    public void setupbasketview(){
+        State = basketInfo.getInfoState();
+        Buy_row.setText(callMethod.NumberRegion(basketInfo.getCountGood()));
+        Buy_amount.setText(callMethod.NumberRegion(basketInfo.getSumFacAmount()));
+
+        tv_totalprice.setText(callMethod.NumberRegion(String.valueOf(Integer.parseInt(basketInfo.getSumPrice())+Integer.parseInt(basketInfo.getSumTaxAndMayor()))));
+        tv_notresive.setText(callMethod.NumberRegion(basketInfo.getNotReceived()));
+        tv_resive.setText(callMethod.NumberRegion(basketInfo.getReceived()));
+
+        if (Integer.parseInt(basketInfo.getFactorCode())>0){
+            if (Integer.parseInt(basketInfo.getNotReceived())>0){
+                if (callMethod.ReadBoolan("PaymentWithDevice")) {
+                    btn_peyment.setVisibility(View.VISIBLE);
+                }else{
+                    btn_peyment.setVisibility(View.GONE);
+                }
+            }else{
+                btn_peyment.setVisibility(View.GONE);
+            }
+        }else{
+            btn_peyment.setVisibility(View.GONE);
+        }
+
+
+        if (State.equals("4")) {
+            btn_ordertofactor.setText(R.string.textvalue_setreserveorder);
+        }
+    }
 
 
     private void callrecycler() {
@@ -252,7 +301,7 @@ public class Order_BasketActivity extends AppCompatActivity {
         } else {
             for (Good good : goods) {
                 if (good.getFactorCode().equals("0")) {
-                    final_buy_test.setVisibility(View.VISIBLE);
+                    btn_ordertofactor.setVisibility(View.VISIBLE);
                     total_delete.setVisibility(View.VISIBLE);
                 }
             }
@@ -267,19 +316,16 @@ public class Order_BasketActivity extends AppCompatActivity {
 
     public void RefreshState() {
         GetOrder();
-        Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
+        //Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
+        Call<RetrofitResponse> call2 = apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
+
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    State = response.body().getGoods().get(0).getInfoState();
-
-                    Buy_row.setText(callMethod.NumberRegion(response.body().getGoods().get(0).getCountGood()));
-                    Buy_amount.setText(callMethod.NumberRegion(response.body().getGoods().get(0).getSumFacAmount()));
-                    if (State.equals("4")) {
-                        final_buy_test.setText(R.string.textvalue_setreserveorder);
-                    }
+                    basketInfo = response.body().getBasketInfos().get(0);
+                    setupbasketview();
                 }
             }
 
