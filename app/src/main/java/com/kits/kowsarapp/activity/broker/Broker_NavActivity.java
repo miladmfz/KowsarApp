@@ -61,7 +61,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
     Broker_APIInterface broker_apiInterface;
     CallMethod callMethod;
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
     ArrayList<GoodGroup> menugrp;
     LinearLayoutCompat llsumfactor;
     Toolbar toolbar;
@@ -80,7 +80,6 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     Button btn_test;
     TextView tv_test, tv_test2;
     WorkManager workManager;
-    private Broker_Action broker_action;
     private Base_Action base_action;
 
     private boolean doubleBackToExitPressedOnce = false;
@@ -133,15 +132,14 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     public void Config() {
 
 
-        broker_action = new Broker_Action(this);
         base_action= new Base_Action(this);
         callMethod = new CallMethod(this);
         workManager = WorkManager.getInstance(Broker_NavActivity.this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         broker_replication = new Broker_Replication(this);
 
-        dbh.ClearSearchColumn();
-        dbh.DatabaseCreate();
+        broker_dbh.ClearSearchColumn();
+        broker_dbh.DatabaseCreate();
 
 
         toolbar = findViewById(R.id.b_main_a_toolbar);
@@ -158,7 +156,6 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         tv_versionname = hView.findViewById(R.id.header_versionname);
         tv_dbname = hView.findViewById(R.id.header_dbname);
         tv_brokercode = hView.findViewById(R.id.header_brokercode);
-        btn_changedb = hView.findViewById(R.id.header_changedb);
         btn_changedb = hView.findViewById(R.id.header_changedb);
 
         customer = findViewById(R.id.b_main_a_customer);
@@ -181,15 +178,9 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
     @SuppressLint("SetTextI18n")
     public void CheckConfig() {
-
-
-
-        if (!dbh.ReadConfig("BrokerCode").equals("0")) {
-
-            tv_brokercode.setText(" کد بازاریاب : " + NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
-            if (dbh.ReadConfig("BrokerStack").equals("0")) {
-
-
+        if (!broker_dbh.ReadConfig("BrokerCode").equals("0")) {
+            tv_brokercode.setText(" کد بازاریاب : " + NumberFunctions.PerisanNumber(broker_dbh.ReadConfig("BrokerCode")));
+            if (broker_dbh.ReadConfig("BrokerStack").equals("0")) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
                 builder.setTitle("انباری تعریف نشده");
                 builder.setMessage("آیا مایل به تغییر کد بازاریاب می باشید ؟");
@@ -209,8 +200,6 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             }
         } else {
 
-
-
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
             builder.setTitle("عدم وجود کد بازاریاب");
             builder.setMessage("آیا مایل به تعریف کد بازاریاب می باشید ؟");
@@ -220,21 +209,12 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
                 intent = new Intent(this, Broker_ConfigActivity.class);
                 startActivity(intent);
             });
-
             builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
                 callMethod.showToast("برای ادامه کار به کد بازاریاب نیازمندیم");
             });
-
             AlertDialog dialog = builder.create();
             dialog.show();
-
-
-
-
-
         }
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -259,7 +239,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         tv_versionname.setText(NumberFunctions.PerisanNumber(BuildConfig.VERSION_NAME));
         tv_dbname.setText(callMethod.ReadString("PersianCompanyNameUse"));
         toolbar.setTitle(callMethod.ReadString("PersianCompanyNameUse"));
-        menugrp = dbh.getmenuGroups();
+        menugrp = broker_dbh.getmenuGroups();
 
 
         navigationView.getMenu().clear();
@@ -318,8 +298,12 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("DatabaseName", "");
+            callMethod.EditString("IpConfig", "");
             callMethod.EditString("AppType", "");
-
+            callMethod.EditString("DbName", "");
+            callMethod.EditString("ActivationCode", "");
+            callMethod.EditString("SecendServerURL", "");
+            callMethod.EditString("FactorDbName", "");
             intent = new Intent(this, Base_SplashActivity.class);
             finish();
             startActivity(intent);
@@ -446,8 +430,8 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             llsumfactor.setVisibility(View.GONE);
         } else {
             llsumfactor.setVisibility(View.VISIBLE);
-            customer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            sumfac.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            customer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
+            sumfac.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
     }
 

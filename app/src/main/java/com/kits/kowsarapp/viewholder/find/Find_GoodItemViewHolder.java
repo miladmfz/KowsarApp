@@ -1,10 +1,15 @@
 package com.kits.kowsarapp.viewholder.find;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +20,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.activity.find.Find_SearchActivity;
+
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.find.Find_Action;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -24,6 +32,8 @@ import com.kits.kowsarapp.model.find.Find_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.find.Find_APIInterface;
 
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,22 +50,17 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
     private final ImageView img;
     public MaterialCardView rltv;
 
-    boolean multi_select1;
-
-    public TextView tv_line_name;
-    public TextView tv_line_maxsellprice;
-    public TextView tv_line_amount;
-
 
     private final Context mContext;
     CallMethod callMethod;
 
-    Find_DBH dbh;
-
-    Find_APIInterface apiInterface;
+    Find_DBH find_dbh;
+    Find_APIInterface find_apiInterface;
     public Call<RetrofitResponse> call;
 
+    Find_Action find_action;
     ArrayList<Column> Columns;
+    private Button btnadd;
 
 
     public Find_GoodItemViewHolder(View itemView, Context context) {
@@ -63,13 +68,15 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
         this.mContext = context;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Find_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.Columns = dbh.GetColumns("id", "", "1");
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
+        this.find_dbh = new Find_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.find_action = new Find_Action(mContext);
+        this.Columns = find_dbh.GetColumns("id", "", "1");
+        this.find_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
-        mainline = itemView.findViewById(R.id.sea_good_c_mainline);
-        img = itemView.findViewById(R.id.sea_good_c_img);
-        rltv = itemView.findViewById(R.id.sea_good_c_prosearch);
+        mainline = itemView.findViewById(R.id.find_good_c_mainline);
+        img = itemView.findViewById(R.id.find_good_c_img);
+        rltv = itemView.findViewById(R.id.find_good_c_prosearch);
+        btnadd = itemView.findViewById(R.id.find_good_c_btn);
 
     }
 
@@ -114,6 +121,93 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 mainline.addView(extra_TextView);
             }
         }
+
+
+        if (callMethod.ReadBoolan("disableSelectedFeild")){
+            btnadd.setVisibility(View.GONE);
+        }else{
+            btnadd.setVisibility(View.VISIBLE);
+        }
+
+
+
+        btnadd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                good.setGoodFieldValue("SelectedFeild",good.getGoodFieldValue("SelectedFeild"));
+
+                final Dialog dialog = new Dialog(mContext);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.find_selectedfeild);
+
+
+                Button explain_btn = dialog.findViewById(R.id.find_select_c_btn);
+                final TextView goodname_tv = dialog.findViewById(R.id.find_select_c_tv);
+                final EditText selectedfeild_et = dialog.findViewById(R.id.find_select_c_et);
+
+
+                goodname_tv.setText(good.getGoodFieldValue("GoodName"));
+                selectedfeild_et.setText(good.getGoodFieldValue("SelectedFeild"));
+                selectedfeild_et.selectAll();
+
+
+
+                dialog.show();
+                selectedfeild_et.requestFocus();
+                selectedfeild_et.postDelayed(() -> {
+                    InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.showSoftInput(selectedfeild_et, InputMethodManager.SHOW_IMPLICIT);
+                }, 500);
+
+
+
+
+                explain_btn.setOnClickListener(view -> {
+                    find_action.showdialogProg();
+                    String safeInput = selectedfeild_et.getText().toString().replaceAll("[;'\"--#/*]", "");
+
+
+                    Call<RetrofitResponse> call2 = find_apiInterface.SetSelectedFeild(
+                            "SetSelectedFeild",
+                            good.getGoodFieldValue("GoodCode"),
+                            NumberFunctions.EnglishNumber(safeInput)
+                    );
+
+                    call2.enqueue(new Callback<RetrofitResponse>() {
+                        @Override
+                        public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                            good.setGoodFieldValue("SelectedFeild",NumberFunctions.EnglishNumber(safeInput));
+                            if (response.isSuccessful()) {
+                                Find_SearchActivity activity = (Find_SearchActivity) mContext;
+                                activity.refresh();
+                                find_action.dialogdissmiss();
+
+                                assert response.body() != null;
+                                dialog.dismiss();
+                                callMethod.showToast("ثبت گردید");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+
+                            dialog.dismiss();
+                            callMethod.showToast("ثبت نگردید");
+
+                        }
+                    });
+                });
+
+
+
+
+
+            }
+        });
+
+
+
     }
 
 
@@ -121,7 +215,6 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
 
     public void callimage(Find_Good good){
-
         if (!good.getGoodImageName().equals("")) {
             Glide.with(img)
                     .asBitmap()
@@ -149,7 +242,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                     .into(img);
             img.setVisibility(View.VISIBLE);
 
-            call = apiInterface.GetImage("getImage",good.getGoodFieldValue("GoodCode"),"0","150");
+            call = find_apiInterface.GetImagefind("getImage",good.getGoodFieldValue("GoodCode"),0,150);
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(Call<RetrofitResponse> call2, Response<RetrofitResponse> response) {

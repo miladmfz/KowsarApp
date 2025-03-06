@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ocr_stacklocation_explain"
+    android:id="@+id/find_selectedfeild"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
@@ -10,9 +10,9 @@
     android:layoutDirection="rtl"
     android:orientation="vertical"
     android:gravity="center">
-+
+
     <TextView
-        android:id="@+id/ocr_stacklocation_goodname_tv"
+        android:id="@+id/find_select_c_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -21,13 +21,13 @@
         android:gravity="center"
         android:inputType="text"
         android:textColor="@color/primaryTextColor"
+        android:textColorHint="@color/secondaryTextColor"
         android:textSize="16sp"
         android:singleLine="true"
         android:text="نام کالا" />
 
-
     <EditText
-        android:id="@+id/ocr_stacklocation_explain_et"
+        android:id="@+id/find_select_c_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
@@ -41,9 +41,8 @@
         android:maxLines="4"
         android:gravity="center" />
 
-
     <Button
-        android:id="@+id/ocr_stacklocation_explain_btn"
+        android:id="@+id/find_select_c_btn"
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="50dp"

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,11 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
         holder.sellprice_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getMaxSellPrice().substring(0,ocr_goods.get(position).getMaxSellPrice().indexOf("."))));
         holder.amount_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getStackAmount().substring(0,ocr_goods.get(position).getStackAmount().indexOf("."))));
         holder.stacklocation_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getStackLocation()));
-        Log.e("kowsar","10 getGoodImageName"+ position );
+
+        holder.goodnameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        holder.sellprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        holder.amount_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        holder.stacklocation_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
 
         if (!ocr_goods.get(position).getGoodImageName().equals("")) {
 

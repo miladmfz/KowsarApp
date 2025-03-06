@@ -23,6 +23,7 @@ public class Ocr_Good implements Serializable {
     @SerializedName("AppOCRFactorRowCode")private String AppOCRFactorRowCode;
     @SerializedName("ShortageAmount")private String ShortageAmount;
     @SerializedName("CachedBarCode")private String CachedBarCode;
+    @SerializedName("BarCodePrintState")private String BarCodePrintState;
 
     @SerializedName("StackLocation")
     private String StackLocation;
@@ -101,7 +102,24 @@ public class Ocr_Good implements Serializable {
     private String MaxSellPrice;
     @SerializedName("GoodExplain2")
     private String GoodExplain2;
+    @SerializedName("MinAmount")
+    private String MinAmount;
 
+    public String getBarCodePrintState() {
+        return BarCodePrintState;
+    }
+
+    public void setBarCodePrintState(String barCodePrintState) {
+        BarCodePrintState = barCodePrintState;
+    }
+
+    public String getMinAmount() {
+        return MinAmount;
+    }
+
+    public void setMinAmount(String minAmount) {
+        MinAmount = minAmount;
+    }
 
     public String getStackLocation() {
         return StackLocation;

@@ -11,6 +11,7 @@
 
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/find_config_a_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -41,7 +42,7 @@
             >
 
             <Button
-                android:id="@+id/sea_config_a_btn_to_reg"
+                android:id="@+id/find_config_a_btn_to_reg"
                 android:layout_margin="5dp"
                 android:text="@string/config_change"
                 android:textStyle="bold"
@@ -50,8 +51,6 @@
                 app:backgroundTint="@color/green_600"
                 app:strokeColor="@color/grey_1000"
                 app:strokeWidth="1dp"
-
-
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="8dp"
@@ -61,8 +60,43 @@
                 android:textColor="@color/white"
                 app:iconGravity="start"
                 app:iconSize="24dp"
-                 />
+                />
 
+
+
+
+            <Button
+                android:id="@+id/find_config_a_to_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/config_returnhome"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_weight="0.5"
+                app:backgroundTint="@color/green_500"
+                app:strokeColor="@color/grey_1000"
+                app:strokeWidth="1dp"
+                style="?attr/materialButtonOutlinedStyle"
+                android:visibility="gone"
+                />
+            <Button
+                android:id="@+id/find_config_a_repcolumn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="بارگیری مجدد تنظیمات پیشفرض"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_weight="0.5"
+                app:backgroundTint="@color/cyan_500"
+                app:strokeColor="@color/grey_1000"
+                app:strokeWidth="1dp"
+                style="?attr/materialButtonOutlinedStyle"
+                android:visibility="gone"
+                />
 
 
 
@@ -91,21 +125,21 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical|start"
                         android:text="@string/config_broker"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp" />
 
                     <!-- Value -->
                     <TextView
-                        android:id="@+id/sea_config_a_broker"
+                        android:id="@+id/find_config_a_broker"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
                         android:background="@drawable/bg_round"
                         android:padding="8dp"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp" />
 
 
@@ -123,21 +157,21 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="آدرس سرور :"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:gravity="center_vertical|start"
                         android:paddingStart="8dp" />
 
                     <!-- Value -->
                     <TextView
-                        android:id="@+id/sea_config_a_serverurl"
+                        android:id="@+id/find_config_a_serverurl"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/bg_round"
                         android:padding="8dp"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -154,21 +188,21 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/config_delay"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:gravity="center_vertical|start"
                         android:paddingStart="8dp" />
 
                     <!-- Value -->
                     <TextView
-                        android:id="@+id/sea_config_a_delay"
+                        android:id="@+id/find_config_a_delay"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/bg_round"
                         android:padding="8dp"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -185,21 +219,21 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/config_item"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:gravity="center_vertical|start"
                         android:paddingStart="8dp" />
 
                     <!-- Value -->
                     <TextView
-                        android:id="@+id/sea_config_a_grid"
+                        android:id="@+id/find_config_a_grid"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/bg_round"
                         android:padding="8dp"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -216,21 +250,21 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="سایز عنوان ها"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:gravity="center_vertical|start"
                         android:paddingStart="8dp" />
 
                     <!-- Value: Title Size -->
                     <TextView
-                        android:id="@+id/sea_config_a_titlesize"
+                        android:id="@+id/find_config_a_titlesize"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/bg_round"
                         android:padding="8dp"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -246,21 +280,21 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="سایز اطلاعات"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:gravity="center_vertical|start"
                         android:paddingStart="8dp" />
 
                     <!-- Value: Body Size -->
                     <TextView
-                        android:id="@+id/sea_config_a_bodysize"
+                        android:id="@+id/find_config_a_bodysize"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/bg_round"
                         android:padding="8dp"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -282,22 +316,147 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
-                    android:text="بسته شدن کیبورد"
-                    android:textColor="@color/black"
+                    android:text="انتخاب کلی متن تایپ شده بعد از جستجو "
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp" />
 
                 <!-- Switch -->
                 <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/sea_config_a_keyboardrunnable"
+                    android:id="@+id/find_config_a_selectallaftersearch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:enabled="false"
                     android:layout_gravity="center"
-                                           />
+                    />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp">
+
+                <!-- Label Text -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:text="بسته شدن کیبورد"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
+
+                <!-- Switch -->
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/find_config_a_keyboardrunnable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp">
+
+                <!-- Label Text -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:text="غیر فعال بودن تغییر توضیحات"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
+
+                <!-- Switch -->
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/find_config_a_editselected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp">
+
+                <!-- Label Text -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:text="نمایش تمام صفحه"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
+
+                <!-- Switch -->
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/find_config_a_showallpage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp">
+
+                <!-- Label Text -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:text="قفل کردن قسمت جستجو"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
+
+                <!-- Switch -->
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/find_config_a_searchlock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>

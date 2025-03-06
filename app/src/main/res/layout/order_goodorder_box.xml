@@ -140,12 +140,12 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:text="@string/goodorder_addcard"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp"
             android:textStyle="bold"
             app:backgroundTint="#D7BE9F"
             app:icon="@drawable/ic_add_shopping_black"
-            app:iconTint="@color/black"
+            app:iconTint="@color/colorPrimaryDark"
             app:strokeColor="#B96838"
             app:strokeWidth="1dp" />
 

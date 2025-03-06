@@ -235,7 +235,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="@string/reservebox_setreservebtn"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:backgroundTint="#D7BE9F"

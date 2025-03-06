@@ -63,7 +63,7 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:text="@string/basketinfo_setexplain"
-        android:textColor="@color/black"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
         app:backgroundTint="#D5BC9D"
         app:strokeColor="#B96838" />

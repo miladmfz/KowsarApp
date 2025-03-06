@@ -2,7 +2,7 @@
 <resources>
 
 
-    <string name="app_name"> کوثر</string>
+    <string name="app_name">کوثر سامانه</string>
 
     <string name="navigation_drawer_open">کشوی ناوبری را باز کنید</string>
     <string name="navigation_drawer_close">کشوی ناوبری را ببندید</string>
@@ -153,17 +153,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     <string name="Kowsar_log">192.168.1.20:60005</string>
 
     <string name="new_printer">اتصال به پرینتر</string>
@@ -291,5 +280,21 @@
     <string name="good_buy_delete">حذف از سبد</string>
     <string name="Customer_new"> مشتری جدید</string>
     <string name="UnitRadio">درصد تخفیف</string>
+
+    <string-array name="themes_array">
+        <item>Default</item>
+        <item>BlueHarmonyTheme</item>
+        <item>MintGreenTheme</item>
+        <item>SunsetGlowTheme</item>
+        <item>CyberPurpleTheme</item>
+        <item>ElegantGoldTheme</item>
+        <item>OceanBreezeTheme</item>
+        <item>NeonFutureTheme</item>
+        <item>RosewoodEleganceTheme</item>
+        <item>DarkModeEliteTheme</item>
+        <item>LemonFreshTheme</item>
+        <item>SoftLavender</item>
+        <item>NeonGreen</item>
+    </string-array>
 
 </resources>

@@ -20,7 +20,7 @@
         android:text="@string/customerfactorheader"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/colorPrimaryDark"
         android:focusable="true" />
 
     <!-- Input Fields Container -->
@@ -45,7 +45,7 @@
                 android:gravity="center"
                 android:text="@string/amount"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/b_buymulti_amount"
@@ -78,7 +78,7 @@
                 android:gravity="center"
                 android:text="@string/UnitRadio"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/b_buymulti_unitratio"

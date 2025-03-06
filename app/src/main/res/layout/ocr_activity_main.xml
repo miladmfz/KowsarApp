@@ -4,31 +4,26 @@
     android:id="@+id/scrollView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    android:background="@color/grey_50"
+    android:orientation="vertical">
 
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/ocr_main_a_appbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/ocr_main_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
                 android:background="?attr/colorPrimary"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:title="@string/app_name"
-                app:titleTextColor="@color/white">
-
-
-            </androidx.appcompat.widget.Toolbar>
+                app:titleTextColor="@color/white"/>
 
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -37,52 +32,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_card"
+            android:elevation="4dp"
+            android:padding="16dp">
 
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/ocr_main_a_btn1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:textColor="#ffffff"
-                android:textSize="42sp"
+                android:layout_marginVertical="8dp"
+                android:text="دکمه اول"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:drawablePadding="8dp"
                 app:backgroundTint="@color/green_700"
-                app:rippleColor="@color/deep_purple_300"
-                app:strokeColor="@color/grey_1000"
-                app:strokeWidth="1dp" />
+                app:cornerRadius="8dp"
+                app:rippleColor="@color/deep_purple_300"/>
 
             <com.google.android.material.button.MaterialButton
 
                 android:id="@+id/ocr_main_a_btn2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginVertical="8dp"
+                android:text="دکمه دوم"
                 android:textColor="@color/grey_1000"
-                android:textSize="42sp"
+                android:textSize="18sp"
                 app:backgroundTint="@color/green_100"
-                app:rippleColor="@color/deep_purple_300"
-                app:strokeColor="@color/grey_1000"
-                app:strokeWidth="1dp" />
+                app:cornerRadius="8dp"
+                app:rippleColor="@color/deep_purple_300"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/ocr_main_a_btn3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_marginVertical="8dp"
+                android:text="دکمه سوم"
                 android:textColor="@color/grey_1000"
-                android:textSize="42sp"
+                android:textSize="18sp"
                 app:backgroundTint="@color/white"
-                app:rippleColor="@color/deep_purple_300"
-                app:strokeColor="@color/grey_1000"
-                app:strokeWidth="1dp" />
+                app:cornerRadius="8dp"
+                app:rippleColor="@color/deep_purple_300"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

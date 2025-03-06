@@ -103,13 +103,11 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
         binding.baseAppVersion.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : " + BuildConfig.VERSION_NAME));
         for (Activation singleactive : activations) {
-
             try {
                 CreateView(singleactive);
             }catch (Exception e){
                 callMethod.Log(e.getMessage());
             }
-
         }
 
 
@@ -121,7 +119,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                 }
             }
             if (exist<1){
-
                 Call<RetrofitResponse> call1 = apiInterface.Activation(
                         Objects.requireNonNull(binding.baseAppTvGetcode.getText()).toString(),"1");
                 call1.enqueue(new Callback<RetrofitResponse>() {
@@ -129,9 +126,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
                             assert response.body() != null;
-
                             activation = response.body().getActivations().get(0);
-
                             if (Integer.parseInt(activation.getErrCode())>0){
                                 callMethod.showToast(activation.getErrDesc());
                             }else{
@@ -142,24 +137,15 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                             }
                         }
                     }
-
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                         Log.e("kowsar",t.getMessage());
-
                     }
                 });
-
-
             }else{
                 callMethod.showToast("این کد وارد شده است");
             }
-
-
-
         });
-
-
     }
 
     public void DownloadRequest(Activation activation) {
@@ -167,6 +153,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
 
         String downloadurl="http://5.160.152.173:60005/api/kits/GetDb?Code="+activation.getActivationCode();
+        //String downloadurl="http://itmali.ir/api/kits/GetDb?Code="+activation.getActivationCode();
 
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)
@@ -240,7 +227,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                         callMethod.EditString("IpConfig", "");
                         callMethod.EditString("AppType", activation.getAppType());
                         callMethod.EditString("DbName", activation.getDbName());
-
                         callMethod.EditString("ActivationCode", activation.getActivationCode());
 
                         if (activation.getSecendServerURL() == null || activation.getSecendServerURL().isEmpty()) {

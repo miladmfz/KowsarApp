@@ -89,11 +89,9 @@ public class Broker_Action extends Base_Action {
         Log.e("kowsar - SellPriceType =",good.getGoodFieldValue("SellPriceType"));
 
         if (callMethod.ReadBoolan("SellPriceTypeDeactive")) {
-            Log.e("kowsar SellPriceTypeDeactive","true");
 
 
             if (good.getGoodFieldValue("SellPriceType").equals("0")) { // nerkh forosh motlagh
-                Log.e("kowsar SellPriceType","true");
 
 
                 dialog.setContentView(R.layout.broker_buysabet_box);
@@ -225,7 +223,6 @@ public class Broker_Action extends Base_Action {
 
 
             } else { // nerkh forosh nesbi
-                Log.e("kowsar SellPriceType","false");
                 dialog.setContentView(R.layout.broker_buynesbi_box);
                 Button boxbuy = dialog.findViewById(R.id.b_buynesbi_btn);
                 final EditText amount = dialog.findViewById(R.id.b_buynesbi_amount);
@@ -420,9 +417,7 @@ public class Broker_Action extends Base_Action {
 
 
         } else {
-            Log.e("kowsar SellPriceTypeDeactive","false");
             if (good.getGoodFieldValue("SellPriceType").equals("0")) { // nerkh forosh motlagh
-                Log.e("kowsar SellPriceType","true");
 
 
                 dialog.setContentView(R.layout.broker_buysabet_box);
@@ -554,7 +549,6 @@ public class Broker_Action extends Base_Action {
 
 
             } else { // nerkh forosh nesbi
-                Log.e("kowsar SellPriceType","false");
                 dialog.setContentView(R.layout.broker_buynesbi_box);
                 Button boxbuy = dialog.findViewById(R.id.b_buynesbi_btn);
                 final EditText amount = dialog.findViewById(R.id.b_buynesbi_amount);
@@ -762,10 +756,14 @@ public class Broker_Action extends Base_Action {
         cursor = dtb.rawQuery("Select PreFactorCode, PreFactorDate, PreFactorExplain, CustomerRef, BrokerRef, " +
                 "(Select sum(FactorAmount) From PreFactorRow r Where r.PrefactorRef=h.PrefactorCode) As rwCount " +
                 "From PreFactor h Where PreFactorCode = " + factor_code, null);
+        String pr11 = CursorToJson(cursor);
+
         JsonElement pr1 = broker_cursorToJson_El(cursor);
         cursor.close();
 
         cursor = dtb.rawQuery("Select GoodRef, FactorAmount, Price From PreFactorRow Where  GoodRef > 0 and  Prefactorref = " + factor_code, null);
+        String pr22 = CursorToJson(cursor);
+
         JsonElement pr2 = broker_cursorToJson_El(cursor);
         cursor.close();
 
@@ -776,7 +774,12 @@ public class Broker_Action extends Base_Action {
         jsonPayload.add("RowDetails", pr2);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonPayload.toString());
 
-        Call<RetrofitResponse> call1 = broker_apiInterface.BrokerOrder(requestBody);
+        //Call<RetrofitResponse> call1 = broker_apiInterface.BrokerOrder(requestBody);
+        Call<RetrofitResponse> call1 = broker_apiInterface.BrokerOrder(
+                "PFQASWED",
+                pr11,
+                pr22
+        );
 
 
         call1.enqueue(new Callback<RetrofitResponse>() {
@@ -961,13 +964,16 @@ public class Broker_Action extends Base_Action {
 
 
     public void addfactordialog(String customer_code) {
+
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.broker_pfexplain_card);
         Button pf_detail_btn = dialog.findViewById(R.id.b_pfexplain_c_btn);
         final EditText pf_detail_detail = dialog.findViewById(R.id.b_pfexplain_c_detail);
         dialog.show();
+
         pf_detail_detail.requestFocus();
+
         pf_detail_detail.postDelayed(() -> {
             InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.showSoftInput(pf_detail_detail, InputMethodManager.SHOW_IMPLICIT);
@@ -992,9 +998,6 @@ public class Broker_Action extends Base_Action {
         });
 
     }
-
-
-
 
     public String broker_cursorToJson(Cursor cursor) {
         JSONArray resultSet = new JSONArray();
@@ -1024,6 +1027,30 @@ public class Broker_Action extends Base_Action {
     }
 
 
+    public String CursorToJson(Cursor cursor) {
+        JSONArray resultSet = new JSONArray();
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    JSONObject rowObject = new JSONObject();
+                    for (int i = 0; i < cursor.getColumnCount(); i++) {
+                        String columnName = cursor.getColumnName(i);
+                        if (columnName != null) {
+                            rowObject.put(columnName, cursor.getString(i));
+                        }
+                    }
+                    resultSet.put(rowObject);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e("CursorToJson", "Error while converting cursor to JSON: " + e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return resultSet.toString();
+    }
 
 
     // تابعی برای تبدیل Cursor به JsonElement

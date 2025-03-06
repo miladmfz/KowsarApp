@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -59,64 +60,57 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
     Ocr_FactorListApi_Adapter adapter;
-    GridLayoutManager gridLayoutManager;
-    RecyclerView rc_factors;
-    AppCompatEditText edtsearch;
+    Ocr_ItemAdapter itemAdapter;
+
     Handler handler;
     Handler counthandler=new Handler();
-    ArrayList<Factor> factors=new ArrayList<>();
-    String srch="";
-    String TotallistCount="0";
-    TextView textView_Count;
-    TextView textView_status;
-    String state="0",StateEdited="0",StateShortage="0";
-    ProgressBar prog;
-
-    Dialog dialog1;
-    SwitchMaterial RadioEdited;
-    SwitchMaterial RadioShortage;
-    Spinner spinnerPath;
-    String path="همه";
-    ArrayList<String> customerpath=new ArrayList<>();
-    Intent intent;
-    NotificationManager notificationManager;
-    String channel_id = "Kowsarmobile";
-    String channel_name = "home";
     CallMethod callMethod;
     Ocr_DBH dbh;
-    int recallcount=0;
-    int ShortageCount=0;
-    int EditedCount=0;
+
+    ArrayList<Factor> factors=new ArrayList<>();
+    ArrayList<Factor> visible_factors=new ArrayList<>();
+    ArrayList<Factor> visible_factors_temp=new ArrayList<>();
+    ArrayList<String> customerpath=new ArrayList<>();
+    ArrayList<String> stacks=new ArrayList<>();
+    ArrayList<Factor> factors_filter_notstart=new ArrayList<>();
+    ArrayList<Factor> all_factors=new ArrayList<>();
+
+
+
+
+
+    Button btn_refresh_list;
+
+
+    LinearLayout factorlist_ll_counter,factorlistActivity_combocheck;
+
+    RecyclerView factor_list_recycler,stacks_list_recycler;
+
+    TextView textView_Count,textView_status;
+
+    ProgressBar prog;
+    GridLayoutManager gridLayoutManager;
+    AppCompatEditText edtsearch;
+    Dialog dialog1;
+    SwitchMaterial RadioEdited,RadioShortage,Radio_start_filter;
+    Spinner spinnerPath;
+    Intent intent;
+    NotificationManager notificationManager;
+
+
+    String channel_id = "Kowsarmobile",channel_name = "home";
+    String Row="10",state="0",StateEdited="0",StateShortage="0",TotallistCount="0",srch="",path="همه";
+
 
 
     private boolean loading = true;
     int pastVisiblesItems=0, visibleItemCount, totalItemCount;
-    public int PageNo=0;
-    String Row="10";
+    int recallcount=0,ShortageCount=0,EditedCount=0 , PageNo=0;
 
-
-
-
-
-
-    LinearLayout ll_counter;
-    LinearLayout ll_stackcombo;
-    RecyclerView rc_stackcombo;
-
-    ArrayList<Factor> visible_factors=new ArrayList<>();
-    ArrayList<Factor> visible_factors_temp=new ArrayList<>();
-
-
-    Ocr_ItemAdapter itemAdapter;
-
-    ArrayList<String> stacks=new ArrayList<>();
 
     private int clickCount = 0;
     private long lastClickTime = 0;
     private static final long DOUBLE_CLICK_TIME_DELTA = 500;
-
-
-
 
 
 
@@ -158,6 +152,9 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
             StateEdited = bundle.getString("StateEdited");
             StateShortage = bundle.getString("StateShortage");
         }
+
+
+
     }
 
     public void Config() {
@@ -171,12 +168,14 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.ocr_apifactor_a_toolbar);
         setSupportActionBar(toolbar);
 
-        rc_factors=findViewById(R.id.ocr_apifactor_a_recyclerView);
-        ll_counter=findViewById(R.id.ocr_apifactor_a_ll_counter);
 
-        rc_stackcombo=findViewById(R.id.ocr_apifactor_a_stackcombo_rc);
-        ll_stackcombo=findViewById(R.id.ocr_apifactor_a_ll_stackcombo);
+        factor_list_recycler=findViewById(R.id.ocr_apifactor_a_recyclerView);
+        factorlist_ll_counter=findViewById(R.id.ocr_apifactor_a_ll_counter);
 
+
+
+        stacks_list_recycler=findViewById(R.id.ocr_apifactor_a_stacks_recyclerView);
+        factorlistActivity_combocheck=findViewById(R.id.ocr_apifactor_a_combocheck);
 
 
         textView_Count=findViewById(R.id.ocr_apifactor_a_count);
@@ -186,16 +185,20 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
         RadioShortage= findViewById(R.id.ocr_apifactor_a_shortage);
         spinnerPath= findViewById(R.id.ocr_apifactor_a_path);
 
+        btn_refresh_list=findViewById(R.id.ocr_apifactor_a_refresh);
+        Radio_start_filter= findViewById(R.id.ocr_apifactor_a_start_filter);
+
+
         if (callMethod.ReadString("StackCategory").equals("همه") && callMethod.ReadString("Category").equals("2")) {
             Row=callMethod.ReadString("RowCall");
-            ll_stackcombo.setVisibility(View.VISIBLE);
+            factorlistActivity_combocheck.setVisibility(View.VISIBLE);
 
         }else{
-            ll_stackcombo.setVisibility(View.GONE);
+            factorlistActivity_combocheck.setVisibility(View.GONE);
         }
 
 
-        ll_counter.setOnClickListener(v -> {
+        factorlist_ll_counter.setOnClickListener(v -> {
             long currentClickTime = System.currentTimeMillis();
 
             if (lastClickTime != 0 && (currentClickTime - lastClickTime) > DOUBLE_CLICK_TIME_DELTA) {
@@ -218,7 +221,32 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
             lastClickTime = currentClickTime;
         });
 
+        btn_refresh_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long currentClickTime = System.currentTimeMillis(); // Zaman click ro ghabl az in sabt mikonim
 
+                // Agar 5 saniye gap bod, click ro reset mikonim
+                if (lastClickTime != 0 && (currentClickTime - lastClickTime) > DOUBLE_CLICK_TIME_DELTA) {
+                    clickCount = 0; // Reset click ha agar be mehr zaman (5 saniye) bemoone
+                }
+
+                clickCount++;
+
+                if (clickCount == 2) {
+
+                    itemAdapter.Clear_selectedItems();
+                    visibleItemCount =  0;
+                    totalItemCount =   0;
+                    pastVisiblesItems =   0;
+                    prog.setVisibility(View.VISIBLE);
+                    loading = false;
+                    RetrofitRequset_List();
+                }
+
+                lastClickTime = currentClickTime; // Update zamani ke click anjam shode
+            }
+        });
 
     }
 
@@ -246,12 +274,12 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void CheckStackList() {
 
         visible_factors_temp.clear();
 
         List<String> selectedItems = itemAdapter.getSelectedItems();
-        Log.e("selectedItems.size_", selectedItems.size()+"");
         if (selectedItems.size()>0) {
 
             for (Factor factor : factors) {
@@ -275,10 +303,6 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
                 callMethod.showToast("فاکتوری موجود نمی باشد");
             }
-            Log.e("Visible Factors", factors.size()+"");
-            Log.e("Selected Items", selectedItems.toString());
-            Log.e("Visible Factors", visible_factors.size()+"");
-
         } else {
 
 
@@ -309,9 +333,9 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
                     itemAdapter=new Ocr_ItemAdapter(Ocr_FactorListApiActivity.this,stacks);
 
-                    rc_stackcombo.setLayoutManager(new GridLayoutManager(Ocr_FactorListApiActivity.this, 1, GridLayoutManager.HORIZONTAL, false
+                    stacks_list_recycler.setLayoutManager(new GridLayoutManager(Ocr_FactorListApiActivity.this, 1, GridLayoutManager.HORIZONTAL, false
                     ));
-                    rc_stackcombo.setAdapter(itemAdapter);
+                    stacks_list_recycler.setAdapter(itemAdapter);
 
                 }
 
@@ -369,7 +393,7 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
 
 
-        rc_factors.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        factor_list_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) { //check for scroll down
@@ -404,6 +428,25 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
 
 
+        Radio_start_filter.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (all_factors.size()>0){
+                factors_filter_notstart.clear();
+                if (isChecked) {
+                    for (Factor factordetail : visible_factors) {
+                        if (factordetail.getAppOCRFactorExplain() != null&&factordetail.getAppOCRFactorExplain().length()>0){
+                        }else{
+                            factors_filter_notstart.add(factordetail);
+                        }
+                    }
+                    visible_factors=factors_filter_notstart;
+
+                } else {
+                    visible_factors=all_factors;
+
+                }
+                CallRecycle();
+            }
+        });
 
 
 
@@ -426,39 +469,95 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
     private void MoreFactor() {
 
+//        prog.setVisibility(View.VISIBLE);
+//
+//        String Body_str  = "";
+//
+//        Body_str =callMethod.CreateJson("State", state, Body_str);
+//        Body_str =callMethod.CreateJson("SearchTarget", srch, Body_str);
+//        Body_str =callMethod.CreateJson("Stack",  callMethod.ReadString("StackCategory"), Body_str);
+//        Body_str =callMethod.CreateJson("path", path, Body_str);
+//        Body_str =callMethod.CreateJson("HasShortage", StateShortage, Body_str);
+//        Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
+//        Body_str =callMethod.CreateJson("Row", Row, Body_str);
+//        Body_str =callMethod.CreateJson("PageNo", String.valueOf(PageNo), Body_str);
+//        Body_str =callMethod.CreateJson("CountFlag", "0", Body_str);
+//        Body_str =callMethod.CreateJson("DbName", "", Body_str);
+//
+//        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+//        call.enqueue(new Callback<RetrofitResponse>() {
+//            @SuppressLint("NotifyDataSetChanged")
+//            @Override
+//            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+//
+//                if(response.isSuccessful()) {
+//                    assert response.body() != null;
+//                    ArrayList<Factor> factor_page = response.body().getFactors();
+//                    factors.addAll(factor_page);
+//                    visible_factors=factors;
+//                    adapter.notifyDataSetChanged();
+//                    String textView_st="تعداد "+adapter.getItemCount()+" از "+TotallistCount+"";
+//                    textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
+//                    CallRecycle();
+//                    prog.setVisibility(View.GONE);
+//                    loading=true;
+//                }
+//            }
+//            @Override
+//            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+//
+//
+//                PageNo--;
+//                callMethod.showToast("فاکتور بیشتری موجود نیست");
+//                prog.setVisibility(View.GONE);
+//                loading = true;
+//            }
+//        });
+
+
+
+
+
+
         prog.setVisibility(View.VISIBLE);
 
-        String Body_str  = "";
+        Call<RetrofitResponse> call;
 
-        Body_str =callMethod.CreateJson("State", state, Body_str);
-        Body_str =callMethod.CreateJson("SearchTarget", srch, Body_str);
-        Body_str =callMethod.CreateJson("Stack",  callMethod.ReadString("StackCategory"), Body_str);
-        Body_str =callMethod.CreateJson("path", path, Body_str);
-        Body_str =callMethod.CreateJson("HasShortage", StateShortage, Body_str);
-        Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
-        Body_str =callMethod.CreateJson("Row", Row, Body_str);
-        Body_str =callMethod.CreateJson("PageNo", String.valueOf(PageNo), Body_str);
-        Body_str =callMethod.CreateJson("CountFlag", "0", Body_str);
-        Body_str =callMethod.CreateJson("DbName", "", Body_str);
 
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+        callMethod.ReadString("ActiveDatabase");
 
+        call=apiInterface.GetOcrFactorList(
+                "GetFactorList",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                String.valueOf(PageNo),
+                callMethod.ReadString("ActiveDatabase")
+        );
         call.enqueue(new Callback<RetrofitResponse>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                 if(response.isSuccessful()) {
+                    prog.setVisibility(View.GONE);
+
                     assert response.body() != null;
                     ArrayList<Factor> factor_page = response.body().getFactors();
                     factors.addAll(factor_page);
                     visible_factors=factors;
+
                     adapter.notifyDataSetChanged();
+
+                    CallRecycle();
                     String textView_st="تعداد "+adapter.getItemCount()+" از "+TotallistCount+"";
                     textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
-                    CallRecycle();
-                    prog.setVisibility(View.GONE);
                     loading=true;
+
                 }
             }
             @Override
@@ -472,12 +571,15 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     public void CallRecycle() {
 
-        adapter = new Ocr_FactorListApi_Adapter(factors,state, Ocr_FactorListApiActivity.this);
+        adapter = new Ocr_FactorListApi_Adapter(visible_factors,state, Ocr_FactorListApiActivity.this);
         if (adapter.getItemCount()==0){
+            prog.setVisibility(View.GONE);
+
             callMethod.showToast("فاکتوری یافت نشد");
         }
 
@@ -486,15 +588,15 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
             textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
         }, 500);
         gridLayoutManager = new GridLayoutManager(this, 1);//grid
-        rc_factors.setLayoutManager(gridLayoutManager);
-        rc_factors.setAdapter(adapter);
-        rc_factors.setItemAnimator(new DefaultItemAnimator());
-        rc_factors.scrollToPosition(pastVisiblesItems);
+        factor_list_recycler.setLayoutManager(gridLayoutManager);
+        factor_list_recycler.setAdapter(adapter);
+        factor_list_recycler.setItemAnimator(new DefaultItemAnimator());
+        factor_list_recycler.scrollToPosition(pastVisiblesItems);
 
         if (Integer.parseInt(callMethod.ReadString("LastTcPrint"))>0){
             for (Factor singlefactor :factors) {
                 if(singlefactor.getAppTcPrintRef().equals(callMethod.ReadString("LastTcPrint")))
-                    rc_factors.scrollToPosition(factors.indexOf(singlefactor));
+                    factor_list_recycler.scrollToPosition(factors.indexOf(singlefactor));
             }
 
         }
@@ -555,7 +657,7 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
     }
 
     public void RetrofitRequset_List() {
-
+/*
         PageNo=0;
         RetrofitRequset_ListCount();
         pastVisiblesItems=0;
@@ -576,7 +678,25 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
 
         Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+*/
+        PageNo=0;
+        textView_status.setVisibility(View.GONE);
+        RetrofitRequset_ListCount();
+        pastVisiblesItems=0;
+        Call<RetrofitResponse> call;
 
+        call=apiInterface.GetOcrFactorList(
+                "GetFactorList",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                "0",
+                callMethod.ReadString("ActiveDatabase")
+        );
         callMethod.Log(call.request().url()+"");
         callMethod.Log(""+call.request().body());
         call.enqueue(new Callback<RetrofitResponse>() {
@@ -593,6 +713,8 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
                     visible_factors.clear();
                     factors= response.body().getFactors();
                     visible_factors=factors;
+                    all_factors=factors;
+
                     callMethod.showToast("بارگیری شد");
 
                     if(factors.size()>0){
@@ -624,6 +746,8 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
                     try {
                         factors.clear();
                         dialog1.dismiss();
+                        prog.setVisibility(View.GONE);
+                        textView_status.setVisibility(View.VISIBLE);
                         textView_status.setText("فاکتوری یافت نشد");
                         textView_Count.setText(NumberFunctions.PerisanNumber("تعداد 0"));
                         adapter.notifyDataSetChanged();
@@ -639,22 +763,37 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
     public void RetrofitRequset_ListCount() {
 
-        String Body_str  = "";
+//        String Body_str  = "";
+//
+//        Body_str =callMethod.CreateJson("State", state, Body_str);
+//        Body_str =callMethod.CreateJson("SearchTarget", srch, Body_str);
+//        Body_str =callMethod.CreateJson("Stack",  callMethod.ReadString("StackCategory"), Body_str);
+//        Body_str =callMethod.CreateJson("path", path, Body_str);
+//        Body_str =callMethod.CreateJson("HasShortage", StateShortage, Body_str);
+//        Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
+//        Body_str =callMethod.CreateJson("Row", Row, Body_str);
+//        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+//        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
+//        Body_str =callMethod.CreateJson("DbName", "", Body_str);
+//
+//        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
-        Body_str =callMethod.CreateJson("State", state, Body_str);
-        Body_str =callMethod.CreateJson("SearchTarget", srch, Body_str);
-        Body_str =callMethod.CreateJson("Stack",  callMethod.ReadString("StackCategory"), Body_str);
-        Body_str =callMethod.CreateJson("path", path, Body_str);
-        Body_str =callMethod.CreateJson("HasShortage", StateShortage, Body_str);
-        Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
-        Body_str =callMethod.CreateJson("Row", Row, Body_str);
-        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
-        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
-        Body_str =callMethod.CreateJson("DbName", "", Body_str);
 
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+        Call<RetrofitResponse> call;
 
 
+        call=apiInterface.GetOcrFactorList(
+                "GetFactorListCount",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                "0",
+                callMethod.ReadString("ActiveDatabase")
+        );
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -672,22 +811,35 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
     public void RetrofitRequset_EditeCount() {
 
-        String Body_str  = "";
+//        String Body_str  = "";
+//
+//        Body_str =callMethod.CreateJson("State", state, Body_str);
+//        Body_str =callMethod.CreateJson("SearchTarget", "0", Body_str);
+//        Body_str =callMethod.CreateJson("Stack",  "همه", Body_str);
+//        Body_str =callMethod.CreateJson("path", "همه", Body_str);
+//        Body_str =callMethod.CreateJson("HasShortage", "0", Body_str);
+//        Body_str =callMethod.CreateJson("IsEdited", "1", Body_str);
+//        Body_str =callMethod.CreateJson("Row", "10000", Body_str);
+//        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+//        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
+//        Body_str =callMethod.CreateJson("DbName", "", Body_str);
+//
+//        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
-        Body_str =callMethod.CreateJson("State", state, Body_str);
-        Body_str =callMethod.CreateJson("SearchTarget", "0", Body_str);
-        Body_str =callMethod.CreateJson("Stack",  "همه", Body_str);
-        Body_str =callMethod.CreateJson("path", "همه", Body_str);
-        Body_str =callMethod.CreateJson("HasShortage", "0", Body_str);
-        Body_str =callMethod.CreateJson("IsEdited", "1", Body_str);
-        Body_str =callMethod.CreateJson("Row", "10000", Body_str);
-        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
-        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
-        Body_str =callMethod.CreateJson("DbName", "", Body_str);
+        Call<RetrofitResponse> call;
 
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
-
-
+        call=apiInterface.GetOcrFactorList(
+                "GetFactorListCount",
+                state,
+                "0",
+                "همه",
+                "همه",
+                "0",
+                "1",
+                "10000",
+                "0",
+                callMethod.ReadString("ActiveDatabase")
+        );
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -702,28 +854,58 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
     }
 
     public void RetrofitRequset_shortageCount() {
-
-
-        Call<RetrofitResponse> call ;
-
-        String Body_str  = "";
-
-        Body_str =callMethod.CreateJson("State", state, Body_str);
-        Body_str =callMethod.CreateJson("SearchTarget", "", Body_str);
-        Body_str =callMethod.CreateJson("Stack",  "همه", Body_str);
-        Body_str =callMethod.CreateJson("path", "همه", Body_str);
-        Body_str =callMethod.CreateJson("HasShortage", "1", Body_str);
-        Body_str =callMethod.CreateJson("IsEdited", "0", Body_str);
-        Body_str =callMethod.CreateJson("Row", "10000", Body_str);
-        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
-        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
-        Body_str =callMethod.CreateJson("DbName", "", Body_str);
-
+//
+//
+//        Call<RetrofitResponse> call ;
+//
+//        String Body_str  = "";
+//
+//        Body_str =callMethod.CreateJson("State", state, Body_str);
+//        Body_str =callMethod.CreateJson("SearchTarget", "", Body_str);
+//        Body_str =callMethod.CreateJson("Stack",  "همه", Body_str);
+//        Body_str =callMethod.CreateJson("path", "همه", Body_str);
+//        Body_str =callMethod.CreateJson("HasShortage", "1", Body_str);
+//        Body_str =callMethod.CreateJson("IsEdited", "0", Body_str);
+//        Body_str =callMethod.CreateJson("Row", "10000", Body_str);
+//        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+//        Body_str =callMethod.CreateJson("CountFlag", "1", Body_str);
+//        Body_str =callMethod.CreateJson("DbName", "", Body_str);
+//
+//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//            call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+//
+//        }else{
+//            call = secendApiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+//        }
+        Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+            call=apiInterface.GetOcrFactorList(
+                    "GetFactorListCount",
+                    state,
+                    "",
+                    "همه",
+                    "همه",
+                    "1",
+                    "0",
+                    "10000",
+                    "0",
+                    callMethod.ReadString("ActiveDatabase")
+            );
 
         }else{
-            call = secendApiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+            call=secendApiInterface.GetOcrFactorList(
+                    "GetFactorListCount",
+                    state,
+                    "",
+                    "همه",
+                    "همه",
+                    "1",
+                    "0",
+                    "10000",
+                    "0",
+                    callMethod.ReadString("ActiveDatabase")
+
+            );
         }
 
 
@@ -743,10 +925,8 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
     public void noti_Messaging(String title, String message,String flag) {
 
         notificationManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel Channel = new NotificationChannel(channel_id, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(Channel);
-        }
+        NotificationChannel Channel = new NotificationChannel(channel_id, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
+        notificationManager.createNotificationChannel(Channel);
         Intent notificationIntent = new Intent(this, Ocr_FactorListApiActivity.class);
         notificationIntent.putExtra("State", "5");
         if(flag.equals("0")){
@@ -781,6 +961,11 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
         finish();
 
     }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+    }
+
 
 
 }

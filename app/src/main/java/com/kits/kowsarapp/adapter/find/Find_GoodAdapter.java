@@ -26,23 +26,20 @@ import java.util.ArrayList;
 public class Find_GoodAdapter extends RecyclerView.Adapter<Find_GoodItemViewHolder> {
     private final Context mContext;
     CallMethod callMethod;
-    private final ArrayList<Find_Good> goods;
-    Find_DBH dbh;
+    private final ArrayList<Find_Good> find_goods;
+    Find_DBH find_dbh;
 
-    Find_APIInterface apiInterface;
-    public boolean multi_select;
+    Find_APIInterface find_apiInterface;
     ArrayList<Column> Columns;
 
 
-    public Find_GoodAdapter(ArrayList<Find_Good> goods, Context context) {
+    public Find_GoodAdapter(ArrayList<Find_Good> find_goods, Context context) {
         this.mContext = context;
-        this.goods = goods;
+        this.find_goods = find_goods;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Find_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.Columns = dbh.GetColumns("id", "", "1");
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
-        Log.e("kowsar colimn size " , Columns.size()+"");
-        Log.e("kowsar goods size " , goods.size()+"");
+        this.find_dbh = new Find_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.Columns = find_dbh.GetColumns("id", "", "1");
+        this.find_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
     }
 
     @NonNull
@@ -62,17 +59,17 @@ public class Find_GoodAdapter extends RecyclerView.Adapter<Find_GoodItemViewHold
     public void onBindViewHolder(@NonNull final Find_GoodItemViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
 
-        holder.bind(Columns, goods.get(position), mContext, callMethod);
+        holder.bind(Columns, find_goods.get(position), mContext, callMethod);
 
 
-        holder.callimage(goods.get(position));
+        holder.callimage(find_goods.get(position));
 
 
     }
 
     @Override
     public int getItemCount() {
-        return goods.size();
+        return find_goods.size();
     }
 
 

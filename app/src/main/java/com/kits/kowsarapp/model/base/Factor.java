@@ -53,10 +53,29 @@ public class Factor {
     private String AppOCRFactorCode;
     @SerializedName("TotalRow")
     private String TotalRow;
+    @SerializedName("MandehBedehkar")
+    private String MandehBedehkar;
 
     @SerializedName("dbname")
     private String dbname;
+    @SerializedName("AppOCRFactorExplain")
+    private String AppOCRFactorExplain;
 
+    public String getAppOCRFactorExplain() {
+        return AppOCRFactorExplain;
+    }
+
+    public void setAppOCRFactorExplain(String appOCRFactorExplain) {
+        AppOCRFactorExplain = appOCRFactorExplain;
+    }
+
+    public String getMandehBedehkar() {
+        return MandehBedehkar;
+    }
+
+    public void setMandehBedehkar(String mandehBedehkar) {
+        MandehBedehkar = mandehBedehkar;
+    }
 
     public String getDbname() {
         return dbname;

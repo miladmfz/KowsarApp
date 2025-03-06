@@ -16,7 +16,7 @@ import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.find.Find_Replication;
 
-import com.kits.kowsarapp.databinding.SearchActivityRegistrationBinding;
+import com.kits.kowsarapp.databinding.FindActivityRegistrationBinding;
 import com.kits.kowsarapp.model.base.Base_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -45,7 +45,8 @@ public class Find_RegistrationActivity extends AppCompatActivity {
     CallMethod callMethod;
     Find_Replication replication;
     Intent intent;
-    SearchActivityRegistrationBinding binding;
+    FindActivityRegistrationBinding binding;
+
     Find_APIInterface apiInterface;
     ArrayList<String> SellBroker_Names = new ArrayList<>();
     ArrayList<SellBroker> SellBrokers = new ArrayList<>();
@@ -53,7 +54,7 @@ public class Find_RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = SearchActivityRegistrationBinding.inflate(getLayoutInflater());
+        binding = FindActivityRegistrationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Config();
@@ -67,6 +68,7 @@ public class Find_RegistrationActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
         replication = new Find_Replication(this);
+
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
         dbhbase = new Base_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
 
@@ -105,7 +107,7 @@ public class Find_RegistrationActivity extends AppCompatActivity {
     public void brokerViewConfig() {
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, SellBroker_Names);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.seaRegistrASpinnerbroker.setAdapter(spinner_adapter);
+        binding.findRegisterASpinnerbroker.setAdapter(spinner_adapter);
         int possellbroker=0;
         for (SellBroker sellBroker:SellBrokers){
             if (sellBroker.getBrokerCode().equals(dbh.ReadConfig("BrokerCode"))){
@@ -113,13 +115,13 @@ public class Find_RegistrationActivity extends AppCompatActivity {
             }
         }
 
-        binding.seaRegistrASpinnerbroker.setSelection(possellbroker);
-        binding.seaRegistrASpinnerbroker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.findRegisterASpinnerbroker.setSelection(possellbroker);
+        binding.findRegisterASpinnerbroker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 dbh.SaveConfig("BrokerCode",SellBrokers.get(position).getBrokerCode());
-                binding.seaRegistrABroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
+                binding.findRegisterABroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
 
             }
 
@@ -132,12 +134,12 @@ public class Find_RegistrationActivity extends AppCompatActivity {
     public void init() {
 
 
-        binding.seaRegistrABroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
-        binding.seaRegistrAGrid.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Grid")));
-        binding.seaRegistrADelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
-        binding.seaRegistrATitlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
-        binding.seaRegistrABodysize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BodySize")));
-        binding.seaRegistrADbname.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PersianCompanyNameUse")));
+        binding.findRegisterABroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
+        binding.findRegisterAGrid.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Grid")));
+        binding.findRegisterADelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
+        binding.findRegisterATitlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
+        binding.findRegisterABodysize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BodySize")));
+        binding.findRegisterADbname.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PersianCompanyNameUse")));
 
         String fullUrl = callMethod.ReadString("ServerURLUse"); // مقدار کامل URL
         String ipAddress = "";
@@ -156,10 +158,10 @@ public class Find_RegistrationActivity extends AppCompatActivity {
         }
 
 
-        binding.seaRegistrAServerurl.setText(ipAddress);
+        binding.findRegisterAServerurl.setText(ipAddress);
 
 
-        binding.seaRegistrAReplicationcolumn.setOnClickListener(v -> {
+        binding.findRegisterAReplicationcolumn.setOnClickListener(v -> {
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
@@ -168,7 +170,6 @@ public class Find_RegistrationActivity extends AppCompatActivity {
 
             builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
                 dbh.deleteColumn();
-                replication.BrokerStack();
                 dbh.DatabaseCreate();
                 replication.DoingReplicate();
             });
@@ -184,11 +185,17 @@ public class Find_RegistrationActivity extends AppCompatActivity {
 
 
 
-        binding.seaRegistrAKeyboardrunnable.setChecked(callMethod.ReadBoolan("keyboardRunnable"));
+        binding.findRegisterAKeyboardrunnable.setChecked(callMethod.ReadBoolan("keyboardRunnable"));
+
+        binding.findRegisterAKeyboardrunnable.setChecked(callMethod.ReadBoolan("keyboardRunnable"));
+        binding.findRegisterAEditselected.setChecked(callMethod.ReadBoolan("disableSelectedFeild"));
+        binding.findRegisterAShowallpage.setChecked(callMethod.ReadBoolan("ShowInFullPage"));
+        binding.findRegisterASearchlock.setChecked(callMethod.ReadBoolan("LockSearchPage"));
+        binding.findRegisterASelectallaftersearch.setChecked(callMethod.ReadBoolan("SelectAllAfterSearch"));
 
 
 
-        binding.seaRegistrAKeyboardrunnable.setOnCheckedChangeListener((compoundButton, b) -> {
+        binding.findRegisterAKeyboardrunnable.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("keyboardRunnable")) {
                 callMethod.EditBoolan("keyboardRunnable", false);
                 callMethod.showToast("خیر");
@@ -199,20 +206,65 @@ public class Find_RegistrationActivity extends AppCompatActivity {
             }
         });
 
+        binding.findRegisterASelectallaftersearch.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("SelectAllAfterSearch")) {
+                callMethod.EditBoolan("SelectAllAfterSearch", false);
+                callMethod.showToast("خیر");
 
-        binding.seaRegistrABtn.setOnClickListener(view -> {
-            callMethod.EditString("Grid", NumberFunctions.EnglishNumber(binding.seaRegistrAGrid.getText().toString()));
-            callMethod.EditString("Delay", NumberFunctions.EnglishNumber(binding.seaRegistrADelay.getText().toString()));
-            callMethod.EditString("TitleSize", NumberFunctions.EnglishNumber(binding.seaRegistrATitlesize.getText().toString()));
-            callMethod.EditString("BodySize", NumberFunctions.EnglishNumber(binding.seaRegistrABodysize.getText().toString()));
-            String newIp = binding.seaRegistrAServerurl.getText().toString(); // مقدار جدید وارد شده توسط کاربر
+            } else {
+                callMethod.EditBoolan("SelectAllAfterSearch", true);
+                callMethod.showToast("بله");
+            }
+        });
+        binding.findRegisterAShowallpage.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShowInFullPage")) {
+                callMethod.EditBoolan("ShowInFullPage", false);
+                callMethod.showToast("خیر");
+
+            } else {
+                callMethod.EditBoolan("ShowInFullPage", true);
+                callMethod.showToast("بله");
+            }
+        });
+        binding.findRegisterASearchlock.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("LockSearchPage")) {
+                callMethod.EditBoolan("LockSearchPage", false);
+                callMethod.showToast("خیر");
+
+            } else {
+                callMethod.EditBoolan("LockSearchPage", true);
+                callMethod.showToast("بله");
+            }
+        });
+
+
+
+        binding.findRegisterAEditselected.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("disableSelectedFeild")) {
+                callMethod.EditBoolan("disableSelectedFeild", false);
+                callMethod.showToast("خیر");
+
+            } else {
+                callMethod.EditBoolan("disableSelectedFeild", true);
+                callMethod.showToast("بله");
+            }
+        });
+
+
+        binding.findRegisterABtn.setOnClickListener(view -> {
+            callMethod.EditString("Grid", NumberFunctions.EnglishNumber(binding.findRegisterAGrid.getText().toString()));
+            callMethod.EditString("Delay", NumberFunctions.EnglishNumber(binding.findRegisterADelay.getText().toString()));
+            callMethod.EditString("TitleSize", NumberFunctions.EnglishNumber(binding.findRegisterATitlesize.getText().toString()));
+            callMethod.EditString("BodySize", NumberFunctions.EnglishNumber(binding.findRegisterABodysize.getText().toString()));
+            callMethod.EditString("PhoneNumber", NumberFunctions.EnglishNumber(binding.findRegisterAPhonenumber.getText().toString()));
+            String newIp = binding.findRegisterAServerurl.getText().toString(); // مقدار جدید وارد شده توسط کاربر
             if (isValidIp(newIp)) {
                 // جایگزین کردن فقط IP جدید در آدرس اصلی
                 String newUrl = replaceIpInUrl(fullUrl, newIp);
                 callMethod.EditString("ServerURLUse", newUrl); // ذخیره آدرس جدید
                 dbhbase.UpdateUrl(callMethod.ReadString("ActivationCode"),newUrl);
-                callMethod.showToast(" ذخیره شد");
-                if(!dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.seaRegistrABroker.getText().toString()))){
+                callMethod.showToast("آدرس ذخیره شد");
+                if(!dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.findRegisterABroker.getText().toString()))){
                     Registration();
                 }else {
                     finish();
@@ -224,6 +276,7 @@ public class Find_RegistrationActivity extends AppCompatActivity {
 
 
         });
+
 
 
     }
@@ -259,40 +312,14 @@ public class Find_RegistrationActivity extends AppCompatActivity {
     }
 
     public void Registration() {
-
-
-
-            UserInfo UserInfoNew = new UserInfo();
-            UserInfoNew.setBrokerCode(NumberFunctions.EnglishNumber(binding.seaRegistrABroker.getText().toString()));
-            callMethod.EditString("BrokerCode", NumberFunctions.EnglishNumber(binding.seaRegistrABroker.getText().toString()));
-            dbh.SavePersonalInfo(UserInfoNew);
-            dbh.DatabaseCreate();
-
-            replication.BrokerStack();
-
+        UserInfo UserInfoNew = new UserInfo();
+        UserInfoNew.setBrokerCode(NumberFunctions.EnglishNumber(binding.findRegisterABroker.getText().toString()));
+        callMethod.EditString("BrokerCode", NumberFunctions.EnglishNumber(binding.findRegisterABroker.getText().toString()));
+        dbh.SavePersonalInfo(UserInfoNew);
+        dbh.DatabaseCreate();
 
     }
 
-    void deleteRecursive(File fileOrDirectory) {
-        if (fileOrDirectory.isDirectory())
-            for (File child : fileOrDirectory.listFiles())
-                deleteRecursive(child);
-
-        fileOrDirectory.delete();
-        callMethod.EditString("PersianCompanyNameUse", "");
-        callMethod.EditString("EnglishCompanyNameUse", "");
-        callMethod.EditString("ServerURLUse", "");
-        callMethod.EditString("DatabaseName", "");
-        callMethod.EditString("ActivationCode", "");
-        intent = new Intent(this, Base_SplashActivity.class);
-        finish();
-        startActivity(intent);
-
-    }
-
-    private boolean rename(File from, File to) {
-        return Objects.requireNonNull(from.getParentFile()).exists() && from.exists() && from.renameTo(to);
-    }
 
     @Override
     protected void onDestroy() {

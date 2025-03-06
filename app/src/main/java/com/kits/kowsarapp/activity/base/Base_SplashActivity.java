@@ -30,6 +30,7 @@ import com.kits.kowsarapp.activity.order.Order_NavActivity;
 import com.kits.kowsarapp.activity.find.Find_NavActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.model.base.Base_DBH;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 
 import java.io.File;
@@ -43,7 +44,8 @@ public class Base_SplashActivity extends AppCompatActivity {
     Intent intent;
     CallMethod callMethod;
     Handler handler;
-    Broker_DBH dbh, dbhbase;
+    Base_DBH dbhbase;
+
     WorkManager workManager;
     int i = 0;
 
@@ -84,7 +86,6 @@ public class Base_SplashActivity extends AppCompatActivity {
     @SuppressLint("SdCardPath")
     public void init() {
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
 
         if (callMethod.ReadString("ServerURLUse").equals("")) {
             callMethod.EditString("DatabaseName", "");
@@ -100,7 +101,6 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("SellPriceTypeDeactivate", true);
             callMethod.EditBoolan("ShowDetail", true);
             callMethod.EditBoolan("LineView", false);
-            callMethod.EditBoolan("keyboardRunnable", false);
             callMethod.EditBoolan("kowsarService", false);
             callMethod.EditBoolan("ShowCustomerCredit", true);
             //endregion
@@ -108,36 +108,51 @@ public class Base_SplashActivity extends AppCompatActivity {
 
             //region $ ocr
             callMethod.EditString("Deliverer", "پیش فرض");
-            callMethod.EditString("Category", "0");
+            callMethod.EditString("PrinterName", "");
             callMethod.EditString("StackCategory", "همه");
+            callMethod.EditString("FactorDbName", "");
+
+            callMethod.EditString("Category", "0");
             callMethod.EditString("ConditionPosition", "0");
             callMethod.EditString("LastTcPrint", "0");
-            callMethod.EditBoolan("ArabicText", true);
-            callMethod.EditString("FactorDbName", "");
             callMethod.EditString("JobPersonRef", "0");
             callMethod.EditString("ActiveDatabase","0");
+            callMethod.EditString("RowCall", "200");
+            callMethod.EditString("AccessCount", "5");
+
+            callMethod.EditBoolan("ShowSumAmountHint", true);
+            callMethod.EditBoolan("ArabicText", true);
             callMethod.EditBoolan("ShowAmount", true);
             callMethod.EditBoolan("AutoSend", true);
             callMethod.EditBoolan("PrintBarcode", true);
             callMethod.EditBoolan("JustScanner", true);
-            callMethod.EditBoolan("SendTimeType", true);
-            callMethod.EditString("RowCall", "200");
-            callMethod.EditString("PrinterName", "");
-            callMethod.EditString("AccessCount", "5");
+
 
             //endregion
 
             //region $ order
-            callMethod.EditString("AppBasketInfoCode", "0");
+
+
             callMethod.EditString("ObjectType", "");
-            callMethod.EditBoolan("ReserveActive", false);
-            callMethod.EditBoolan("CanFreeTable", false);
             callMethod.EditString("PosName", "");
+
+            callMethod.EditString("AppBasketInfoCode", "0");
             callMethod.EditString("PosCode", "0");
+
             callMethod.EditBoolan("PosPayment", false);
             callMethod.EditBoolan("PaymentWithDevice", false);
-
+            callMethod.EditBoolan("ReserveActive", false);
+            callMethod.EditBoolan("CanFreeTable", false);
             //endregion
+
+            //region $ find
+            callMethod.EditBoolan("ShowInFullPage", false);
+            callMethod.EditBoolan("LockSearchPage", false);
+            callMethod.EditBoolan("SelectAllAfterSearch", false);
+            callMethod.EditBoolan("disableSelectedFeild", false);
+            //endregion
+
+
 
             //region $ AllApp
             callMethod.EditString("LANG", "");
@@ -148,6 +163,9 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("RealAmount", false);
             callMethod.EditBoolan("ActiveStack", false);
             callMethod.EditBoolan("GoodAmount", false);
+
+            callMethod.EditBoolan("keyboardRunnable", false);
+
 
 
             callMethod.EditBoolan("FirstStart", false);
@@ -161,7 +179,7 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditString("DbName", "");
             callMethod.EditString("AppType", "");
 
-            dbhbase = new Broker_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
+            dbhbase = new Base_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
             dbhbase.CreateActivationDb();
             //endregion
 

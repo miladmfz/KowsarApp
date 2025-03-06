@@ -17,6 +17,11 @@ public class Find_Good implements Serializable {
     private Integer GoodSubCode;
     @SerializedName("GoodName")
     private String GoodName;
+
+    @SerializedName("SelectedFeild")
+    private String SelectedFeild;
+    @SerializedName("StackLocation")
+    private String StackLocation;
     @SerializedName("ActiveStack")
     private String ActiveStack;
     @SerializedName("GoodExplain1")
@@ -237,6 +242,7 @@ public class Find_Good implements Serializable {
     private boolean Check;
 
 
+
     public String getGoodImageName() {
         return GoodImageName;
     }
@@ -265,6 +271,14 @@ public class Find_Good implements Serializable {
         String iKey = AKey.toLowerCase();
         String Res = "";
         switch (iKey) {
+            case "selectedfeild":
+                if (SelectedFeild == null) Res = "";
+                else Res = SelectedFeild;
+                break;
+            case "stacklocation":
+                if (StackLocation == null) Res = "";
+                else Res = StackLocation;
+                break;
             case "goodname":
                 if (GoodName == null) Res = "";
                 else Res = GoodName;
@@ -729,6 +743,12 @@ public class Find_Good implements Serializable {
         switch (iKey) {
             case "goodname":
                 GoodName = Res;
+                break;
+            case "stacklocation":
+                StackLocation = Res;
+                break;
+            case "selectedfeild":
+                SelectedFeild = Res;
                 break;
             case "goodcode":
                 GoodCode = Integer.parseInt(Res);

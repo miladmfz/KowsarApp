@@ -41,14 +41,17 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
     private EditText edtsearch;
     Handler handler;
     ArrayList<Factor> factors = new ArrayList<>();
+    public ArrayList<String[]> Multi_sign = new ArrayList<>();
+    public ArrayList<String> Multi_barcode = new ArrayList<>();
+
+
     String IsSent, signature = "1", srch = "";
     TextView textView_Count;
     int width = 1;
 
 
     FloatingActionButton fab;
-    public ArrayList<String[]> Multi_sign = new ArrayList<>();
-    public ArrayList<String> Multi_barcode = new ArrayList<>();
+
     Menu item_multi;
     Intent intent;
     CallMethod callMethod;

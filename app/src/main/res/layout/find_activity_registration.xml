@@ -10,6 +10,7 @@
 
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/find_register_a_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -46,7 +47,7 @@
 
 
                 <Button
-                    android:id="@+id/sea_registr_a_btn"
+                    android:id="@+id/find_register_a_btn"
                     android:layout_width="match_parent"
                     android:text="@string/reg_save"
                     android:layout_margin="5dp"
@@ -83,21 +84,21 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical|start"
                         android:text="اسم مجموعه:"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp" />
 
                     <!-- Value -->
                     <TextView
-                        android:id="@+id/sea_registr_a_dbname"
+                        android:id="@+id/find_register_a_dbname"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/bg_round"
                         android:padding="8dp"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         tools:ignore="LabelFor" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -121,7 +122,7 @@
 
                         <!-- Button: تنظیمات پیشفرض -->
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/sea_registr_a_replicationcolumn"
+                            android:id="@+id/find_register_a_replicationcolumn"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
@@ -161,13 +162,13 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="@string/config_broker"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
                         <!-- EditText -->
                         <EditText
-                            android:id="@+id/sea_registr_a_broker"
+                            android:id="@+id/find_register_a_broker"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
@@ -175,7 +176,7 @@
                             android:padding="8dp"
                             android:gravity="center_vertical"
                             android:inputType="numberDecimal"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             tools:ignore="LabelFor" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -193,20 +194,20 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="نام بازاریاب"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
                         <!-- Spinner -->
                         <Spinner
-                            android:id="@+id/sea_registr_a_spinnerbroker"
+                            android:id="@+id/find_register_a_spinnerbroker"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
                             android:background="@drawable/bg_round"
                             android:padding="8dp"
                             android:gravity="center"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -234,7 +235,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical|start"
                             android:text="آدرس سرور :"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:layout_weight="1"
 
@@ -243,13 +244,13 @@
                         <!-- Input: Config Grid -->
                         <EditText
 
-                            android:id="@+id/sea_registr_a_serverurl"
+                            android:id="@+id/find_register_a_serverurl"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_round"
                             android:padding="8dp"
-                            android:inputType="numberDecimal"
-                            android:textColor="@color/black"
+                            android:inputType="text"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:layout_weight="2"
                             android:textDirection="ltr"
@@ -273,7 +274,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical|start"
                             android:text="@string/config_item"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:layout_weight="1"
 
@@ -282,14 +283,14 @@
                         <!-- Input: Config Grid -->
                         <EditText
 
-                            android:id="@+id/sea_registr_a_grid"
+                            android:id="@+id/find_register_a_grid"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_round"
                             android:padding="8dp"
                             android:inputType="numberDecimal"
                             android:maxLength="1"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:layout_weight="2"
 
@@ -307,7 +308,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical|start"
                             android:text="@string/config_delay"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp"
                             android:layout_weight="1"
@@ -315,13 +316,13 @@
 
                         <!-- Input: Config Delay -->
                         <EditText
-                            android:id="@+id/sea_registr_a_delay"
+                            android:id="@+id/find_register_a_delay"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_round"
                             android:padding="8dp"
                             android:inputType="text"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:gravity="center"
                             android:layout_weight="2"
@@ -348,20 +349,20 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="سایز اطلاعات"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
                         <!-- Input: Body Size -->
                         <EditText
-                            android:id="@+id/sea_registr_a_bodysize"
+                            android:id="@+id/find_register_a_bodysize"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
                             android:background="@drawable/bg_round"
                             android:padding="8dp"
                             android:inputType="text"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:gravity="center" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -379,26 +380,93 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="سایز عنوان ها"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
                         <!-- Input: Title Size -->
                         <EditText
-                            android:id="@+id/sea_registr_a_titlesize"
+                            android:id="@+id/find_register_a_titlesize"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
                             android:background="@drawable/bg_round"
                             android:padding="8dp"
                             android:inputType="text"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:gravity="center" />
 
                         <!-- Label: Body Size -->
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_card"
+                    android:elevation="4dp"
+                    android:visibility="gone">
+
+                    <!-- Label Text -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|start"
+                        android:text="@string/config_real_amount"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="16sp"
+                        android:paddingStart="8dp" />
+
+                    <!-- Switch -->
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/find_register_a_real_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:enabled="false"
+                        android:layout_gravity="center"
+                        />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_card"
+                    android:elevation="4dp">
+
+                    <!-- Label Text -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|start"
+                        android:text="انتخاب کلی متن تایپ شده بعد از جستجو "
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="16sp"
+                        android:paddingStart="8dp" />
+
+                    <!-- Switch -->
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/find_register_a_selectallaftersearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:enabled="true"
+                        android:layout_gravity="center"
+                        />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -419,22 +487,148 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical|start"
                         android:text="بسته شدن کیبورد"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:paddingStart="8dp" />
 
                     <!-- Switch -->
                     <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/sea_registr_a_keyboardrunnable"
+                        android:id="@+id/find_register_a_keyboardrunnable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:enabled="true"
                         android:layout_gravity="center"
-                                                   />
+                        />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_card"
+                    android:elevation="4dp">
+
+                    <!-- Label Text -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|start"
+                        android:text="غیر فعال بودن تغییر توضیحات"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="16sp"
+                        android:paddingStart="8dp" />
+
+                    <!-- Switch -->
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/find_register_a_editselected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:enabled="true"
+                        android:layout_gravity="center"
+                        />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
 
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_card"
+                    android:elevation="4dp">
+
+                    <!-- Label Text -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|start"
+                        android:text="نمایش تمام صفحه"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="16sp"
+                        android:paddingStart="8dp" />
+
+                    <!-- Switch -->
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/find_register_a_showallpage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:enabled="true"
+                        android:layout_gravity="center"
+                        />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_card"
+                    android:elevation="4dp">
+
+                    <!-- Label Text -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|start"
+                        android:text="قفل کردن قسمت جستجو"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="16sp"
+                        android:paddingStart="8dp" />
+
+                    <!-- Switch -->
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/find_register_a_searchlock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:enabled="true"
+                        android:layout_gravity="center"
+                        />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:padding="5dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_weight="0.5"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="شماره تلفن همراه" />
+
+                    <EditText
+                        android:layout_weight="0.5"
+                        android:id="@+id/find_register_a_phonenumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        android:inputType="text"
+                        tools:ignore="LabelFor"
+                        android:gravity="center" />
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.core.widget.NestedScrollView>

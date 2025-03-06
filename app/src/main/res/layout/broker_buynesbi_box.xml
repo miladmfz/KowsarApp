@@ -19,7 +19,7 @@
         android:text="@string/customerfactorheader"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_marginBottom="16dp" />
 
     <!-- Input Fields -->
@@ -43,7 +43,7 @@
                 android:gravity="center"
                 android:text="@string/amount"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/b_buynesbi_amount"
@@ -74,7 +74,7 @@
                 android:gravity="center"
                 android:text="@string/off_for_sale"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/b_buynesbi_scale"
@@ -105,7 +105,7 @@
                 android:gravity="center"
                 android:text="@string/boxbuy_price"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/b_buynesbi_price"
@@ -136,7 +136,7 @@
                 android:gravity="center"
                 android:text="@string/boxbuy_maxprice"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <TextView
                 android:id="@+id/b_buynesbi_maxprice"
@@ -146,7 +146,7 @@
                 android:background="@drawable/bg_round"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!-- Total Price Display -->
@@ -164,7 +164,7 @@
                 android:gravity="center"
                 android:text="@string/boxbuy_total"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <TextView
                 android:id="@+id/b_buynesbi_sumprice"
@@ -174,7 +174,7 @@
                 android:background="@drawable/bg_round"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!-- Has Amount Display -->
@@ -192,7 +192,7 @@
                 android:gravity="center"
                 android:text="@string/boxbuy_hasamount"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <TextView
                 android:id="@+id/b_buynesbi_facamount"
@@ -202,7 +202,7 @@
                 android:background="@drawable/bg_round"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorPrimaryDark" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 

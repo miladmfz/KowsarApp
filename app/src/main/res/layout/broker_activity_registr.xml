@@ -83,7 +83,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="اسم مجموعه:"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp" />
@@ -96,7 +96,7 @@
                             android:background="@drawable/bg_round"
                             android:padding="8dp"
                             android:gravity="center"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             tools:ignore="LabelFor" />
 
@@ -184,7 +184,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|start"
                                 android:text="@string/config_broker"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp" />
 
@@ -198,7 +198,7 @@
                                 android:padding="8dp"
                                 android:gravity="center_vertical"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 tools:ignore="LabelFor" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -216,7 +216,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|start"
                                 android:text="نام بازاریاب"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp" />
 
@@ -229,7 +229,7 @@
                                 android:background="@drawable/bg_round"
                                 android:padding="8dp"
                                 android:gravity="center"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -258,7 +258,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical|start"
                                 android:text="@string/config_item"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:layout_weight="1"
 
@@ -274,7 +274,7 @@
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
                                 android:maxLength="1"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:layout_weight="2"
 
@@ -292,7 +292,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical|start"
                                 android:text="@string/config_delay"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp"
                                 android:layout_weight="1"
@@ -306,7 +306,7 @@
                                 android:background="@drawable/bg_round"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:gravity="center"
                                 android:layout_weight="2"
@@ -333,7 +333,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|start"
                                 android:text="سایز اطلاعات"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp" />
 
@@ -346,7 +346,7 @@
                                 android:background="@drawable/bg_round"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:gravity="center" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -364,7 +364,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|start"
                                 android:text="سایز عنوان ها"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp" />
 
@@ -377,7 +377,7 @@
                                 android:background="@drawable/bg_round"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/black"
+                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
                                 android:gravity="center" />
 
@@ -409,7 +409,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -442,7 +442,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="سرویس کوثر"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -474,7 +474,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="بروز رسانی خودکار"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -507,7 +507,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="نمایش خطی کالا"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -540,7 +540,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="@string/config_off"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -573,7 +573,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="بسته شدن کیبورد"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -605,7 +605,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="نمایش خصوصیات"
-                            android:textColor="@color/black"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 

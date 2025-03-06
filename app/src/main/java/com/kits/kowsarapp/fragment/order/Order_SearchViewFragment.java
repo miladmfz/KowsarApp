@@ -49,7 +49,7 @@ import retrofit2.http.Query;
 public class Order_SearchViewFragment extends Fragment {
 
     CallMethod callMethod;
-    Order_APIInterface apiInterface;
+    Order_APIInterface order_apiInterface;
     View view;
     RecyclerView rc_grp;
     RecyclerView rc_good;
@@ -100,7 +100,7 @@ public class Order_SearchViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         callMethod = new CallMethod(requireActivity());
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
         dbh = new Order_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
 
         fragmentManager = requireActivity().getSupportFragmentManager();
@@ -142,7 +142,9 @@ public class Order_SearchViewFragment extends Fragment {
 
 
     void allgrp() {
-        Call<RetrofitResponse> call = apiInterface.GetOrdergroupList("GetOrdergroupList", Parent_GourpCode);
+        //Call<RetrofitResponse> call = order_apiInterface.GetOrdergroupList("GetOrdergroupList", Parent_GourpCode);
+        Call<RetrofitResponse> call = order_apiInterface.Getgrp("GoodGroupInfo", Parent_GourpCode);
+
         callMethod.Log(call.request().url().toString());
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -173,14 +175,20 @@ public class Order_SearchViewFragment extends Fragment {
 
 
 
-        String RequestBody_str  = "";
+//        String RequestBody_str  = "";
+//
+//        RequestBody_str =callMethod.CreateJson("Where", Where, "");
+//        RequestBody_str =callMethod.CreateJson("GroupCode", good_GourpCode, RequestBody_str);
+//        RequestBody_str =callMethod.CreateJson("AppBasketInfoRef", callMethod.ReadString("AppBasketInfoCode"), RequestBody_str);
+//
+//
+//        Call<RetrofitResponse> call = order_apiInterface.GetOrderGoodList(callMethod.RetrofitBody(RequestBody_str));
 
-        RequestBody_str =callMethod.CreateJson("Where", Where, "");
-        RequestBody_str =callMethod.CreateJson("GroupCode", good_GourpCode, RequestBody_str);
-        RequestBody_str =callMethod.CreateJson("AppBasketInfoRef", callMethod.ReadString("AppBasketInfoCode"), RequestBody_str);
+        call = order_apiInterface.GetGoodFromGroup("GetOrderGoodList",
+                Where,
+                good_GourpCode,
+                callMethod.ReadString("AppBasketInfoCode"));
 
-
-        Call<RetrofitResponse> call = apiInterface.GetOrderGoodList(callMethod.RetrofitBody(RequestBody_str));
 
 
         call.enqueue(new Callback<RetrofitResponse>() {

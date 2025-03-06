@@ -91,7 +91,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="@string/config_broker"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp" />
@@ -105,7 +105,7 @@
                     android:gravity="center"
                     android:background="@drawable/bg_round"
                     android:padding="8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp" />
 
 
@@ -124,7 +124,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="@string/config_delay"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp" />
@@ -138,7 +138,7 @@
                     android:gravity="center"
                     android:background="@drawable/bg_round"
                     android:padding="8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp" />
 
 
@@ -163,7 +163,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="@string/config_item"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp" />
@@ -177,7 +177,7 @@
                     android:gravity="center"
                     android:background="@drawable/bg_round"
                     android:padding="8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp" />
 
 
@@ -198,7 +198,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="سایز عنوان ها"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp" />
@@ -212,7 +212,7 @@
                     android:gravity="center"
                     android:background="@drawable/bg_round"
                     android:padding="8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp" />
 
 
@@ -233,7 +233,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="سایز اطلاعات"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp" />
@@ -247,7 +247,7 @@
                     android:gravity="center"
                     android:background="@drawable/bg_round"
                     android:padding="8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp" />
 
 
@@ -281,7 +281,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="بروزرسانی خودکار"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp" />
 
@@ -318,7 +318,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="نمایش خطی کالا"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp" />
 
@@ -355,7 +355,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="@string/config_off"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp" />
 
@@ -390,7 +390,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="بسته شدن کیبورد"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp" />
 
@@ -426,7 +426,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|start"
                     android:text="نمایش خصوصیات"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16sp"
                     android:paddingStart="8dp" />
 

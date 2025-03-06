@@ -93,7 +93,8 @@ public class Broker_Replication {
             tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی تنظیم جدول"));
             GoodTypeReplication();
         } else {
-            Call<RetrofitResponse> call1 = broker_apiInterface.GetMaxRepLog("MaxRepLogCode");
+//            Call<RetrofitResponse> call1 = broker_apiInterface.GetMaxRepLog("MaxRepLogCode");
+            Call<RetrofitResponse> call1 = broker_apiInterface.MaxRepLogCode("MaxRepLogCode");
             callMethod.Log(call1.request().toString()+"");
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
@@ -115,23 +116,23 @@ public class Broker_Replication {
 
     }
 
-    public void DoingReplicateAuto() {
-
-        Call<RetrofitResponse> call1 = broker_apiInterface.GetMaxRepLog("MaxRepLogCode");
-        call1.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                dbh.SaveConfig("MaxRepLogCode", response.body().getText());
-                RetrofitReplicateAuto(0);
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-            }
-        });
-
-    }
+//    public void DoingReplicateAuto() {
+//
+//        Call<RetrofitResponse> call1 = broker_apiInterface.GetMaxRepLog("MaxRepLogCode");
+//        call1.enqueue(new Callback<RetrofitResponse>() {
+//            @Override
+//            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+//                dbh.SaveConfig("MaxRepLogCode", response.body().getText());
+//                RetrofitReplicateAuto(0);
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+//
+//            }
+//        });
+//
+//    }
 
     public void dialog() {
         dialog.setContentView(R.layout.broker_spinner_box);
@@ -696,7 +697,8 @@ public class Broker_Replication {
 
     public void GroupCodeDefult() {
 
-        Call<RetrofitResponse> call1 = broker_apiInterface.DbSetupvalue("DbSetupvalue", "AppBroker_DefaultGroupCode");
+//        Call<RetrofitResponse> call1 = broker_apiInterface.DbSetupvalue("DbSetupvalue", "AppBroker_DefaultGroupCode");
+        Call<RetrofitResponse> call1 = broker_apiInterface.info("kowsar_info", "AppBroker_DefaultGroupCode");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -720,7 +722,8 @@ public class Broker_Replication {
     }
 
     public void MenuBroker() {
-        Call<RetrofitResponse> call1 = broker_apiInterface.GetMenuBroker("GetMenuBroker");
+        //Call<RetrofitResponse> call1 = broker_apiInterface.GetMenuBroker("GetMenuBroker");
+        Call<RetrofitResponse> call1 = broker_apiInterface.MenuBroker("GetMenuBroker");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

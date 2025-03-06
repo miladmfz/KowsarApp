@@ -14,7 +14,15 @@
 
     >
 
+    <EditText
+        android:id="@+id/ocr_goodscan_b_ed"
 
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/edittest1"
+        android:layout_margin="2dp"
+        android:visibility="visible"
+        android:hint="جستجو ..."/>
     <TextView
         android:id="@+id/ocr_goodscan_b_status"
         android:layout_width="match_parent"

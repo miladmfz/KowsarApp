@@ -37,7 +37,6 @@ import java.io.File;
 public class Base_AboutUsActivity extends AppCompatActivity {
     CallMethod callMethod;
     Broker_DBH dbh;
-
     DefaultActivityAboutusBinding binding;
 
     @Override

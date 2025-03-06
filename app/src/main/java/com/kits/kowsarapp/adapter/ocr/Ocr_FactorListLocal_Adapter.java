@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -88,6 +89,35 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
     public void onBindViewHolder(@NonNull final facViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
 
+        if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
+                callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+
+
+            if (factors.get(position).getDbname().equals(callMethod.ReadString("DbName"))){
+                holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
+            }else {
+                holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.purple_100));
+
+            }
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+
+            holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
+        }else{
+
+            holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        }
+
+
+
+
+
+
+
+
+
+
         holder.fac_customer.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustName()));
         holder.fac_customercode.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustomerCode()));
         holder.fac_code.setText(NumberFunctions.PerisanNumber(factors.get(position).getFactorPrivateCode()));
@@ -100,7 +130,8 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
             holder.fac_signature.setText("ناموجود");
         }
 
-        if (factors.get(position).getIsSent().equals("True")) {
+        //if (factors.get(position).getIsSent().equals("True")) {
+        if (factors.get(position).getIsSent().equals("1")) {
             holder.fac_status.setVisibility(View.VISIBLE);
             holder.fac_status.setText("تاییدیه ارسال شده");
         } else {
@@ -181,15 +212,22 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                 {
 
                     callMethod.EditString("FactorDbName", factors.get(position).getDbname());
-                    if (factors.get(position).getIsSent().equals("False")) {
+//                    if (factors.get(position).getIsSent().equals("False")) {
+                    if (factors.get(position).getIsSent().equals("0")) {
+//                        Call<RetrofitResponse> call;
+//
+//                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//                            call =apiInterface.OcrDeliverd("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+//                        }else {
+//                            call =secendApiInterface.OcrDeliverd("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+//                        }
                         Call<RetrofitResponse> call;
 
                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                            call =apiInterface.OcrDeliverd("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+                            call =apiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
                         }else {
-                            call =secendApiInterface.OcrDeliverd("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+                            call =secendApiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
                         }
-
 
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
@@ -217,9 +255,6 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
         });
 
         holder.fac_send.setOnClickListener(view -> {
-
-
-
             if (!factors.get(position).getSignatureImage().equals("")) {
                 callMethod.EditString("FactorDbName", factors.get(position).getDbname());
                 new AlertDialog.Builder(mContext)
@@ -232,8 +267,6 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                         .setNegativeButton("خیر", (dialogInterface, i) -> {                   })
                         .show();
             }
-
-
         });
         holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_baseline_attach_file_24));
         holder.fac_rltv.setChecked(factors.get(position).isCheck());
@@ -292,6 +325,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
         private final Button fac_send;
         private final Button fac_dlt;
         MaterialCardView fac_rltv;
+        LinearLayoutCompat fac_rltv_ll;
 
         facViewHolder(View itemView) {
             super(itemView);
@@ -307,6 +341,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
             fac_view = itemView.findViewById(R.id.ocr_factorlocal_c_view);
             fac_send = itemView.findViewById(R.id.ocr_factorlocal_c_send);
             fac_dlt = itemView.findViewById(R.id.ocr_factorlocal_c_dlt);
+            fac_rltv_ll = itemView.findViewById(R.id.ocr_factorlocal_c_ll_main);
 
             fac_rltv = itemView.findViewById(R.id.ocr_factorlocal_card);
         }

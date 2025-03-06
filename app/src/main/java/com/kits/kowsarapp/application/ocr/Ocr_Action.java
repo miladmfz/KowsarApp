@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,12 +32,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfigActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.adapter.ocr.Ocr_GoodScan_Adapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.base.Factor;
+import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.Job;
 import com.kits.kowsarapp.model.base.JobPerson;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -73,9 +78,10 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     String date = "";
     TextView ed_pack_h_date;
     Dialog dialog, dialogProg;
-    ArrayList<String> sendtimearray = new ArrayList<>();
     TextView tv_rep;
     Ocr_Print print;
+    Handler handler;
+    ArrayList<Ocr_Good> Empty_goods = new ArrayList<>();
 
     public Ocr_Action(Context mcontxt) {
         this.mContext = mcontxt;
@@ -98,7 +104,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         tv_rep.setVisibility(View.GONE);
         dialogProg.show();
     }
-
+    public void dialogProg_dismiss() {
+        dialogProg.dismiss();
+    }
     public void factor_detail(Factor factor) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -157,18 +165,21 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         tv_AppControler.setText(NumberFunctions.PerisanNumber(factor.getAppControler()));
 
 
-        if (factor.getIsEdited().equals("True")) {
+//        if (factor.getIsEdited().equals("True")) {
+        if (factor.getIsEdited().equals("1")) {
             tv_IsEdited.setText("دارد");
         } else {
             tv_IsEdited.setText("ندارد");
         }
-        if (factor.getIsEdited().equals("True")) {
+//        if (factor.getIsEdited().equals("True")) {
+        if (factor.getIsEdited().equals("1")) {
             tv_HasSignature.setText("دارد");
         } else {
             tv_HasSignature.setText("ندارد");
         }
 
-        if (factor.getAppIsDelivered().equals("False")) {
+//        if (factor.getAppIsDelivered().equals("False")) {
+        if (factor.getAppIsDelivered().equals("0")) {
             btn_1.setVisibility(View.GONE);
         } else {
             btn_1.setVisibility(View.VISIBLE);
@@ -340,60 +351,6 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                     }
 
 
-                    if (callMethod.ReadBoolan("SendTimeType")) {
-
-                        sendtimearray.clear();
-                        sendtimearray.add("");
-                        sendtimearray.add("صبح");
-                        sendtimearray.add("ظهر");
-                        sendtimearray.add("شب");
-
-                        LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(
-                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                70
-                        );
-
-                        params.setMargins(30, 30, 30, 30);
-                        LinearLayoutCompat ll_new = new LinearLayoutCompat(mContext.getApplicationContext());
-                        ll_new.setLayoutParams(params);
-                        ll_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                        ll_new.setOrientation(LinearLayoutCompat.HORIZONTAL);
-                        ll_new.setWeightSum(2);
-
-
-                        TextView Tv_new = new TextView(mContext.getApplicationContext());
-                        Tv_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-                        Tv_new.setText("نحوه ارسال :");
-                        Tv_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-
-
-                        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(mContext,
-                                android.R.layout.simple_spinner_item, sendtimearray);
-                        spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner spinner_sendtime = new Spinner(mContext.getApplicationContext());
-                        spinner_sendtime.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-                        spinner_sendtime.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                        spinner_sendtime.setAdapter(spinner_adapter);
-                        spinner_sendtime.setSelection(0);
-
-                        spinner_sendtime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                sendtime = sendtimearray.get(position);
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-                            }
-                        });
-                        ll_new.addView(Tv_new);
-                        ll_new.addView(spinner_sendtime);
-                        ll_pack_h_main.addView(ll_new);
-
-
-                    }
-
-
                 }
             }
 
@@ -437,7 +394,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                 // TODO qoqnos shod 1-2-3
                 // TODO gostaresh shod 3-4-5
 
-                 if (!job.getText().equals("برای انتخاب کلیک کنید")) {
+                if (!job.getText().equals("برای انتخاب کلیک کنید")) {
                     if (job.getJobCode().equals("1")) {
                         coltrol_s = job.getText();
                     }
@@ -481,38 +438,65 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
+//                        Call<RetrofitResponse> call2;
+//
+//
+//                        String Body_str  = "";
+//
+//                        Body_str =callMethod.CreateJson("OcrFactorCode", factor.getAppOCRFactorCode(), Body_str);
+//                        Body_str =callMethod.CreateJson("Reader", reader_s, Body_str);
+//                        Body_str =callMethod.CreateJson("Controler", coltrol_s, Body_str);
+//                        Body_str =callMethod.CreateJson("Packer", pack_s, Body_str);
+//                        Body_str =callMethod.CreateJson("PackDeliverDate", NumberFunctions.EnglishNumber(date), Body_str);
+//                        Body_str =callMethod.CreateJson("PackCount", packCount, Body_str);
+//                        Body_str =callMethod.CreateJson("AppDeliverDate", sendtime, Body_str);
+//
+//
+//                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//                            call2 = apiInterface.SetPackDetail(
+//                                    callMethod.RetrofitBody(Body_str)
+//                            );
+//
+//                        }else{
+//                            call2 = secendApiInterface.SetPackDetail(
+//                                    callMethod.RetrofitBody(Body_str)
+//                            );
+//
+//                        }
                         Call<RetrofitResponse> call2;
-
-
-                        String Body_str  = "";
-
-                        Body_str =callMethod.CreateJson("OcrFactorCode", factor.getAppOCRFactorCode(), Body_str);
-                        Body_str =callMethod.CreateJson("Reader", reader_s, Body_str);
-                        Body_str =callMethod.CreateJson("Controler", coltrol_s, Body_str);
-                        Body_str =callMethod.CreateJson("Packer", pack_s, Body_str);
-                        Body_str =callMethod.CreateJson("PackDeliverDate", NumberFunctions.EnglishNumber(date), Body_str);
-                        Body_str =callMethod.CreateJson("PackCount", packCount, Body_str);
-                        Body_str =callMethod.CreateJson("AppDeliverDate", sendtime, Body_str);
-
-
                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                            call2 = apiInterface.SetPackDetail(
-                                    callMethod.RetrofitBody(Body_str)
-                            );
+                            call2=apiInterface.SetPackDetail(
+                                    "SetPackDetail",
+                                    factor.getAppOCRFactorCode(),
+                                    reader_s,
+                                    coltrol_s,
+                                    pack_s,
+                                    NumberFunctions.EnglishNumber(date),
+                                    packCount
 
+                            );
                         }else{
-                            call2 = secendApiInterface.SetPackDetail(
-                                    callMethod.RetrofitBody(Body_str)
-                            );
+                            call2=secendApiInterface.SetPackDetail(
+                                    "SetPackDetail",
+                                    factor.getAppOCRFactorCode(),
+                                    reader_s,
+                                    coltrol_s,
+                                    pack_s,
+                                    NumberFunctions.EnglishNumber(date),
+                                    packCount
 
+                            );
                         }
 
                         call2.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 dialog.dismiss();
+//                                if (!callMethod.ReadString("Category").equals("5")) {
+//                                    OcrPrintPacker(factor);
+//                                }
                                 if (!callMethod.ReadString("Category").equals("5")) {
-                                    OcrPrintPacker(factor);
+                                    print.Printing(factor,Empty_goods,packCount,"0");
                                 }
                             }
 
@@ -558,6 +542,45 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         dialog.show();
     }
+    public void checkSumAmounthint(Factor factor) {
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.ocr_checkamount);
+        EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
+        MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
+
+        edamount.setText(factor.getSumAmount());
+        edamount.setEnabled(false);
+        btncheckamount.setVisibility(View.GONE);
+
+        dialog.show();
+
+
+    }
+
+    public void checkSumAmount(Factor factor) {
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.ocr_checkamount);
+        EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
+        MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
+
+
+        btncheckamount.setOnClickListener(v -> {
+            if (NumberFunctions.EnglishNumber(edamount.getText().toString()).equals(factor.getSumAmount())) {
+                Pack_detail(factor);
+            }else {
+                callMethod.showToast("تعداد وارد شده صحیح نیست");
+            }
+        });
+        dialog.show();
+
+
+    }
+
+
     public void good_detail(String GoodCode) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -568,14 +591,29 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         TextView tv_good_3 = dialog.findViewById(R.id.ocr_gooddetail_b_tv3);
         TextView tv_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_tv4);
         TextView tv_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_tv5);
+
+
+        TextView lb_good_1 = dialog.findViewById(R.id.ocr_gooddetail_b_lb1);
+        TextView lb_good_2 = dialog.findViewById(R.id.ocr_gooddetail_b_lb2);
+        TextView lb_good_3 = dialog.findViewById(R.id.ocr_gooddetail_b_lb3);
+        TextView lb_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_lb4);
+        TextView lb_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_lb5);
+
+
+
         LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.ocr_gooddetail_ll1_tv1);
 
 
         Call<RetrofitResponse> call;
+//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//            call=apiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
+//        }else{
+//            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
+//        }
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
+            call=apiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
         }else{
-            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
+            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
         }
         callMethod.Log(GoodCode);
         call.enqueue(new Callback<RetrofitResponse>() {
@@ -586,14 +624,68 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                     assert response.body() != null;
                     ArrayList<Ocr_Good> ocr_goods = response.body().getOcr_Goods();
 
-                    tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
-                    tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
-                    tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
-                    // TODO
-                    /*
-                    tv_good_4.setText(NumberFunctions.PerisanNumber(goods.get(0).getPageNo()));
-                    tv_good_5.setText(NumberFunctions.PerisanNumber(goods.get(0).getFormNo()));
-*/
+
+                    if (!callMethod.ReadBoolan("ShowAmount")){
+                        ll_amonut.setVisibility(View.GONE);
+                    }
+
+                    if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
+                            callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+
+                        if (callMethod.ReadString("sds").equals("PakhshQOQNOOS")){
+
+                            lb_good_1.setText("موجودی کل");
+                            lb_good_2.setText("قطع");
+                            lb_good_3.setText("نوع جلد");
+                            lb_good_4.setText("پشت جلد");
+                            lb_good_5.setText("شماره قفسه");
+
+
+                        }else if (callMethod.ReadString("sds").equals("Afarinegan")){
+
+                            lb_good_1.setText("موجودی کل");
+                            lb_good_2.setText("قطع");
+                            lb_good_3.setText("نوع جلد");
+                            lb_good_4.setText("پشت جلد");
+                            lb_good_5.setText("شماره قفسه");
+
+
+                        }
+
+
+
+                        tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
+                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
+                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
+                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getPageNo()));
+                        tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodExplain2()));
+
+
+
+                    } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+                        lb_good_1.setText("موجودی کل");
+                        lb_good_2.setText("قطع");
+                        lb_good_3.setText("نوع جلد");
+                        lb_good_4.setText("پشت جلد");
+                        lb_good_5.setText("شماره قفسه");
+
+                        tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
+                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
+                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
+                        tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
+
+                    }else{
+                        lb_good_1.setText("موجودی کل");
+                        lb_good_2.setText("قطع");
+                        lb_good_3.setText("نوع جلد");
+                        lb_good_4.setText("پشت جلد");
+                        lb_good_5.setText("شماره قفسه");
+
+                        tv_good_1.setText(ocr_goods.get(0).getTotalAvailable());
+                        tv_good_2.setText(ocr_goods.get(0).getSize());
+                        tv_good_3.setText(ocr_goods.get(0).getCoverType());
+                    }
+
                 }
             }
 
@@ -642,6 +734,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     public void GoodScanDetail(ArrayList<Ocr_Good> goodspass, String state, String barcodescan) {
 
         ArrayList<Ocr_Good> Currctgoods = new ArrayList<>();
+        ArrayList<Ocr_Good> CurrctgoodsForBarcode = new ArrayList<>();
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -649,17 +742,20 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         RecyclerView goodscan_recycler = dialog.findViewById(R.id.ocr_goodscan_b_recyclerView);
         Button goodscan_btn = dialog.findViewById(R.id.ocr_goodscan_b_btn);
         TextView goodscan_tvstatus = dialog.findViewById(R.id.ocr_goodscan_b_status);
+        EditText ed_goodscan = dialog.findViewById(R.id.ocr_goodscan_b_ed);
 
 
         if (goodspass.size() > 0) {
             for (Ocr_Good good : goodspass) {
                 if (state.equals("0")){
-                    if (good.getAppRowIsControled().equals("False")) {
+                    //if (good.getAppRowIsControled().equals("False")) {
+                    if (good.getAppRowIsControled().equals("0")) {
                         Currctgoods.add(good);
                     }
                 }
                 if (state.equals("1")) {
-                    if (good.getAppRowIsPacked().equals("False")) {
+                    //if (good.getAppRowIsPacked().equals("False")) {
+                    if (good.getAppRowIsPacked().equals("0")) {
                         Currctgoods.add(good);
                     }
                 }
@@ -679,6 +775,106 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         }
 
         goodscan_btn.setOnClickListener(view -> dialog.dismiss());
+        ed_goodscan.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+
+
+                    @Override
+                    public void afterTextChanged( Editable editable) {
+
+                        dialogProg();
+                        handler.removeCallbacksAndMessages(null);
+                        handler.postDelayed(() -> {
+
+
+                            CurrctgoodsForBarcode.clear();
+                            if (goodspass.size() > 0) {
+                                for (Ocr_Good good : goodspass) {
+                                    if (state.equals("0"))
+                                        if (good.getAppRowIsControled().equals("0")) {
+                                            CurrctgoodsForBarcode.add(good);
+                                        }
+                                    if (state.equals("1"))
+                                        if (good.getAppRowIsPacked().equals("0")) {
+                                            CurrctgoodsForBarcode.add(good);
+                                        }
+                                }
+                                if (CurrctgoodsForBarcode.size() == 1) {
+
+                                    if (state.equals("0")){
+
+                                        Call<RetrofitResponse> call;
+                                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                        }else{
+                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                        }
+
+                                        call.enqueue(new Callback<RetrofitResponse>() {
+                                            @Override
+                                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                                if (response.isSuccessful()) {
+
+                                                    Intent intent = new Intent(mContext, Ocr_ConfirmActivity.class);
+                                                    intent.putExtra("ScanResponse", barcodescan);
+                                                    intent.putExtra("State", "0");
+                                                    ((Activity) mContext).finish();
+                                                    mContext.startActivity(intent);
+                                                }
+                                            }
+                                            @Override
+                                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                                Log.e("kowsar_onFailure", t.getMessage());
+                                            }
+                                        });
+
+                                    }else if (state.equals("1"))
+                                    {
+
+                                        Call<RetrofitResponse> call;
+                                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                        }else{
+                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                        }
+                                        call.enqueue(new Callback<RetrofitResponse>() {
+                                            @Override
+                                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                                if (response.isSuccessful()) {
+
+                                                    Intent intent = new Intent(mContext, Ocr_ConfirmActivity.class);
+                                                    intent.putExtra("ScanResponse", barcodescan);
+                                                    intent.putExtra("State", "1");
+                                                    ((Activity) mContext).finish();
+                                                    mContext.startActivity(intent);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                                Log.e("kowsar_onFailure", t.getMessage());
+                                            }
+                                        });
+
+                                    }
+                                }
+                            }
+
+                        },  Integer.parseInt(callMethod.ReadString("Delay")));
+
+
+                    }
+
+                }
+        );
 
         dialog.show();
     }
@@ -690,6 +886,32 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         dialog.setContentView(R.layout.default_loginconfig);
         EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
         MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);
+        ed_password.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(final Editable editable) {
+
+                        if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).length()>5) {
+                            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
+
+                                Intent intent = new Intent(mContext, Ocr_ConfigActivity.class);
+                                mContext.startActivity(intent);
+                            } else {
+                                callMethod.showToast("رمز عبور صیحیح نیست");
+                            }
+
+                        }
+                    }
+                });
+
         btn_login.setOnClickListener(v -> {
             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
                 Intent intent = new Intent(mContext, Ocr_ConfigActivity.class);
@@ -729,7 +951,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
         });
 
-        
+
     }
 
 
@@ -738,30 +960,18 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         app_info();
         dialogProg();
 
-
-        Call<RetrofitResponse> call2;
-
-
-        String Body_str  = "";
-        Body_str =callMethod.CreateJson("barcode", factor_code, Body_str);
-
-        Body_str =callMethod.CreateJson("ImageStr", signatureimage, Body_str);
+        Call<String> call;
 
 
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2 = apiInterface.SaveOcrImage(
-                    callMethod.RetrofitBody(Body_str)
-            );
-
-        }else{
-            call2 = secendApiInterface.SaveOcrImage(
-                    callMethod.RetrofitBody(Body_str)
-            );
-
+            call =apiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
+        }else {
+            call =secendApiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
         }
-        call2.enqueue(new Callback<RetrofitResponse>() {
+
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 callMethod.showToast("فاکتور ارسال گردید");
 
                 dbh.Insert_IsSent(factor_code);
@@ -777,67 +987,117 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             }
 
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
-                Log.e("test",t.getMessage());
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+
             }
         });
 
 
-    }
-    public void OcrPrintPacker(Factor factor) {
+//
+//
+//        Call<RetrofitResponse> call2;
+//
+//
+//        String Body_str  = "";
+//        Body_str =callMethod.CreateJson("barcode", factor_code, Body_str);
+//
+//        Body_str =callMethod.CreateJson("ImageStr", signatureimage, Body_str);
+//
+//
+//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//            call2 = apiInterface.SaveOcrImage(
+//                    callMethod.RetrofitBody(Body_str)
+//            );
+//
+//        }else{
+//            call2 = secendApiInterface.SaveOcrImage(
+//                    callMethod.RetrofitBody(Body_str)
+//            );
+//
+//        }
 
 
+//        call2.enqueue(new Callback<RetrofitResponse>() {
+//            @Override
+//            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+//                callMethod.showToast("فاکتور ارسال گردید");
+//
+//                dbh.Insert_IsSent(factor_code);
+//
+//                Intent bag = new Intent(mContext, Ocr_FactorListLocalActivity.class);
+//                bag.putExtra("IsSent", "0");
+//                bag.putExtra("signature", "0");
+//                dialogProg.dismiss();
+//                ((Activity) mContext).finish();
+//                ((Activity) mContext).overridePendingTransition(0, 0);
+//                mContext.startActivity(bag);
+//                ((Activity) mContext).overridePendingTransition(0, 0);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+//                Log.e("test",t.getMessage());
+//            }
+//        });
 
-        String Body_str  = "";
-
-        Body_str =callMethod.CreateJson("FactorCode", factor.getFactorCode(), Body_str);
-        Body_str =callMethod.CreateJson("StackCategory", callMethod.ReadString("StackCategory"), Body_str);
-        Body_str =callMethod.CreateJson("Sender", callMethod.ReadString("Deliverer"), Body_str);
-
-        Call<RetrofitResponse> call = apiInterface.OcrPrintPacker(callMethod.RetrofitBody(Body_str));
-
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    ((Activity) mContext).finish();
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                ((Activity) mContext).finish();
-            }
-        });
-
-    }
-    public void OcrPrintControler(Factor factor) {
-
-
-
-        String Body_str  = "";
-
-        Body_str =callMethod.CreateJson("FactorCode", factor.getFactorCode(), Body_str);
-        Body_str =callMethod.CreateJson("StackCategory", callMethod.ReadString("StackCategory"), Body_str);
-        Body_str =callMethod.CreateJson("Sender", callMethod.ReadString("Deliverer"), Body_str);
-
-        Call<RetrofitResponse> call = apiInterface.OcrPrintControler(callMethod.RetrofitBody(Body_str));
-
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    ((Activity) mContext).finish();
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                ((Activity) mContext).finish();
-            }
-        });
 
     }
+
+//
+//    public void OcrPrintPacker(Factor factor) {
+//
+//
+//
+//        String Body_str  = "";
+//
+//        Body_str =callMethod.CreateJson("FactorCode", factor.getFactorCode(), Body_str);
+//        Body_str =callMethod.CreateJson("StackCategory", callMethod.ReadString("StackCategory"), Body_str);
+//        Body_str =callMethod.CreateJson("Sender", callMethod.ReadString("Deliverer"), Body_str);
+//
+//        Call<RetrofitResponse> call = apiInterface.OcrPrintPacker(callMethod.RetrofitBody(Body_str));
+//
+//        call.enqueue(new Callback<RetrofitResponse>() {
+//            @Override
+//            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+//                if (response.isSuccessful()) {
+//                    ((Activity) mContext).finish();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+//                ((Activity) mContext).finish();
+//            }
+//        });
+//
+//    }
+//    public void OcrPrintControler(Factor factor) {
+//
+//
+//
+//        String Body_str  = "";
+//
+//        Body_str =callMethod.CreateJson("FactorCode", factor.getFactorCode(), Body_str);
+//        Body_str =callMethod.CreateJson("StackCategory", callMethod.ReadString("StackCategory"), Body_str);
+//        Body_str =callMethod.CreateJson("Sender", callMethod.ReadString("Deliverer"), Body_str);
+//
+//        Call<RetrofitResponse> call = apiInterface.OcrPrintControler(callMethod.RetrofitBody(Body_str));
+//
+//        call.enqueue(new Callback<RetrofitResponse>() {
+//            @Override
+//            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+//                if (response.isSuccessful()) {
+//                    ((Activity) mContext).finish();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+//                ((Activity) mContext).finish();
+//            }
+//        });
+//
+//    }
 
     public void GoodStackLocation(Ocr_Good ocr_good) {
 

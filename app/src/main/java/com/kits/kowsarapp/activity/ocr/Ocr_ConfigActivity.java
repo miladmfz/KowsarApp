@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -54,37 +55,37 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
     Ocr_APIInterface secendApiInterface;
     CallMethod callMethod;
     Ocr_DBH dbh;
-    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson;
-    String stackcategory="همه";
-    String workcategory="0";
+    ImageInfo imageInfo;
+
     ArrayList<String> jobsstr=new ArrayList<>();
     ArrayList<String> jobpersonsstr=new ArrayList<>();
     ArrayList<Integer> jobpersonsref_int=new ArrayList<>();
     ArrayList<String> stacks=new ArrayList<>();
-    TextView ed_Deliverer;
-    TextView tv_laststack;
-    LinearLayoutCompat ll_Stack;
-    MaterialButton btn_config;
-    EditText ed_titlesize;
-    SwitchMaterial sm_arabictext;
-    ImageInfo imageInfo;
-
-
-
-    Spinner spinnerActiveDatabase,spinnerprintername;
-    String selected_PrinterName="بدون پرینتر";
-
-
-
     ArrayList<String> printers_name=new ArrayList<>();
-
     ArrayList<String> ActiveDatabase_array=new ArrayList<>();
-    TextView tv_Deliverer,tv_lastprinter,tv_delay,tv_accesscount;
-    EditText ed_rowcall,ed_bodysize;
-
     List<Ocr_SpinnerItem> works = new ArrayList<>();
 
-    SwitchMaterial sm_showamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner;
+
+
+
+    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson,spinnerActiveDatabase,spinnerprintername;
+
+
+
+    Button btn_config;
+    EditText ed_titlesize,ed_rowcall,ed_bodysize;
+    TextView tv_Deliverer,tv_lastprinter,tv_delay,tv_accesscount,tv_laststack;
+
+    SwitchMaterial sm_showamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext;
+    LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack;
+
+
+
+
+    String stackcategory="همه";
+    String workcategory="0";
+    String selected_PrinterName="بدون پرینتر";
+
 
 
 
@@ -118,14 +119,12 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         works.add(new Ocr_SpinnerItem(1,"اسکن بارکد"));
         works.add(new Ocr_SpinnerItem(2,"جمع کننده انبار"));
         works.add(new Ocr_SpinnerItem(3,"بررسی مجدد انبار"));
-        works.add(new Ocr_SpinnerItem(7,"توضیحات بسته بندی"));
         works.add(new Ocr_SpinnerItem(4,"ارسال"));
         works.add(new Ocr_SpinnerItem(5,"مدیریت"));
         works.add(new Ocr_SpinnerItem(6,"جانمایی انبار"));
 
         btn_config =findViewById(R.id.ocr_config_a_btn);
 
-        ll_Stack=findViewById(R.id.ocr_config_a_line_stack);
 
 
         spinnerPath=findViewById(R.id.ocr_config_a_spinnerstacks);
@@ -160,6 +159,10 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_justscanner = findViewById(R.id.ocr_config_a_justscanner);
 
 
+        ll_spinner_Stack=findViewById(R.id.ocr_config_a_line_stack_spinner);
+        ll_tv_Stack=findViewById(R.id.ocr_config_a_line_stack_tv);
+
+
         ImageView img_logo = findViewById(R.id.ocr_config_a_logo);
 
         Glide.with(img_logo)
@@ -187,7 +190,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
     public void init() {
         GetDataIsPersian();
-        ed_Deliverer.setText(callMethod.ReadString("Deliverer"));
+        tv_Deliverer.setText(callMethod.ReadString("Deliverer"));
         tv_laststack.setText(callMethod.ReadString("StackCategory"));
         tv_lastprinter.setText(callMethod.ReadString("PrinterName"));
 
@@ -203,8 +206,8 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_showamount.setChecked(callMethod.ReadBoolan("ShowAmount"));
         sm_autosend.setChecked(callMethod.ReadBoolan("AutoSend"));
         sm_printbarcode.setChecked(callMethod.ReadBoolan("PrintBarcode"));
-        sm_sendtimetype.setChecked(callMethod.ReadBoolan("SendTimeType"));
         sm_justscanner.setChecked(callMethod.ReadBoolan("JustScanner"));
+        sm_sumamounthint.setChecked(callMethod.ReadBoolan("ShowSumAmountHint"));
 
 
         btn_config.setOnClickListener(v -> {
@@ -252,15 +255,6 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                 callMethod.showToast("بله");
             }
         });
-        sm_sendtimetype.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (callMethod.ReadBoolan("SendTimeType")) {
-                callMethod.EditBoolan("SendTimeType", false);
-                callMethod.showToast("خیر");
-            } else {
-                callMethod.EditBoolan("SendTimeType", true);
-                callMethod.showToast("بله");
-            }
-        });
 
         sm_justscanner.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("JustScanner")) {
@@ -268,6 +262,15 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                 callMethod.showToast("خیر");
             } else {
                 callMethod.EditBoolan("JustScanner", true);
+                callMethod.showToast("بله");
+            }
+        });
+        sm_sumamounthint.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShowSumAmountHint")) {
+                callMethod.EditBoolan("ShowSumAmountHint", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("ShowSumAmountHint", true);
                 callMethod.showToast("بله");
             }
         });
@@ -296,7 +299,8 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
 
 
-        Call<RetrofitResponse> call =apiInterface.GetStackCategory("GetStackCategory");
+//        Call<RetrofitResponse> call =apiInterface.GetStackCategory("GetStackCategory");
+        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -403,9 +407,12 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 workcategory=String.valueOf(position);
                 if(position==2){
-                    ll_Stack.setVisibility(View.VISIBLE);
+                    ll_spinner_Stack.setVisibility(View.VISIBLE);
+                    ll_tv_Stack.setVisibility(View.VISIBLE);
                 }else {
-                    ll_Stack.setVisibility(View.GONE);
+                    ll_spinner_Stack.setVisibility(View.GONE);
+                    ll_tv_Stack.setVisibility(View.GONE);
+
                 }
                 GetJob("Ocr"+position);
 
@@ -448,7 +455,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                 if (position>0) {
 
                     callMethod.EditString("JobPersonRef",String.valueOf(jobpersonsref_int.get(position)));
-                    ed_Deliverer.setText(jobpersonsstr.get(position));
+                    tv_Deliverer.setText(jobpersonsstr.get(position));
                 }
             }
             @Override
@@ -468,7 +475,9 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         spinnerjob.setAdapter(null);
         spinnerjobperson.setAdapter(null);
 
-        Call<RetrofitResponse> call =apiInterface.GetJob("GetJob",where);
+//        Call<RetrofitResponse> call =apiInterface.GetJob("GetJob",where);
+        Call<RetrofitResponse> call =apiInterface.GetJob("TestJob",where);
+
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -499,7 +508,9 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
     public void GetDataIsPersian() {
 
-        Call<RetrofitResponse> call =apiInterface.DbSetupvalue("DbSetupvalue","DataIsPersian");
+        //Call<RetrofitResponse> call =apiInterface.DbSetupvalue("DbSetupvalue","DataIsPersian");
+        Call<RetrofitResponse> call =apiInterface.GetDataDbsetup("kowsar_info","DataIsPersian");
+
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

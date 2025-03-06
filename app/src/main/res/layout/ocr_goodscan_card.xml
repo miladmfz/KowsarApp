@@ -56,7 +56,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
                         android:textSize="16sp"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/colorPrimaryDark"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -80,7 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
                         android:textSize="16sp"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/colorPrimaryDark"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -103,51 +103,36 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
                         android:textSize="16sp"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/colorPrimaryDark"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+                <Button
+                    android:id="@+id/ocr_goodscan_c_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:text="انتخاب"
+                    android:textColor="@color/white"
+                    app:backgroundTint="@color/green_600"
+                    app:strokeColor="@color/grey_300"
+                    app:strokeWidth="1dp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
             <ImageView
                 android:id="@+id/ocr_goodscan_c_image"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="0.4"
                 android:background="@drawable/no_photo"
-                android:scaleType="centerCrop"
-                android:layout_marginStart="8dp" />
+                android:scaleType="centerCrop" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
 
-        <Button
-            android:id="@+id/ocr_goodscan_c_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:text="انتخاب"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/green_600"
-            app:strokeColor="@color/grey_300"
-            app:strokeWidth="1dp"
-            style="?attr/materialButtonOutlinedStyle" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:visibility="invisible"
-            app:backgroundTint="@color/white"
-            app:strokeColor="@color/grey_300"
-            app:strokeWidth="1dp"
-            style="?attr/materialButtonOutlinedStyle" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -21,6 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:id="@+id/ocr_factoronline_c_ll_main"
+
         android:layout_weight="1">
 
 
@@ -70,6 +72,44 @@
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/ocr_factoronline_c_ll_ocrexplain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:text="جمع آوری:"
+                android:textColor="#FF0000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/ocr_factoronline_c_ocrexplain"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.7"
+                android:textColor="#FF0000"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+
+
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ocr_factoronline_c_ll_explain"

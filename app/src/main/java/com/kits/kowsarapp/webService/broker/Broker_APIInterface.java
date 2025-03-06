@@ -6,6 +6,8 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -17,7 +19,117 @@ public interface Broker_APIInterface {
     String Kowsar_Url = "Kowsar/";
 
 
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetAppPrinter(
+            @Field("tag") String tag
+    );
 
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> AppBrokerPrint(
+            @Field("tag") String tag,
+            @Field("Image") String Image,
+            @Field("Code") String Code,
+            @Field("PrinterName") String PrinterName,
+            @Field("PrintCount") String PrintCount
+    );
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetImageFromKsr(
+            @Field("tag") String tag
+            , @Field("KsrImageCode") String KsrImageCode
+    );
+
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetImageCustom(
+            @Field("tag") String tag
+            , @Field("ClassName") String ClassName
+            , @Field("ObjectRef") String ObjectRef
+            , @Field("Scale") String Scale
+    );
+
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> BrokerStack(
+            @Field("tag") String tag
+            , @Field("BrokerRef") String BrokerRef
+    );
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> MenuBroker(
+            @Field("tag") String tag
+    );
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> info(
+            @Field("tag") String tag,
+            @Field("Where") String Where
+    );
+
+
+
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> MaxRepLogCode(
+            @Field("tag") String tag
+    );
+
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetGoodType(
+            @Field("tag") String tag
+    );
+
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetColumnList(
+            @Field("tag") String tag
+            , @Field("Type") String Type
+            , @Field("AppType") String AppType
+            , @Field("IncludeZero") String IncludeZero
+    );
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> RetrofitReplicate(
+            @Field("tag") String tag
+            , @Field("code") String code
+            , @Field("table") String table
+            , @Field("Where") String Where
+            , @Field("reptype") String reptype
+            , @Field("Reprow") String Reprow
+    );
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> BrokerOrder(
+            @Field("tag") String tag
+            , @Field("PFHDQASW") String PFHDQASW
+            , @Field("PFDTQASW") String PFDTQASW
+
+    );
+
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetSellBroker(@Field("tag") String tag);
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> UpdateLocation(@Field("tag") String tag, @Field("GpsLocations") String GpsLocations);
+
+
+/*
 
 
     @GET(Broker_Url+"BrokerStack")
@@ -113,7 +225,7 @@ public interface Broker_APIInterface {
 
 
 
-
+*/
 
 /*
 
@@ -151,5 +263,6 @@ public interface Broker_APIInterface {
     );
 
 */
+
 }
 

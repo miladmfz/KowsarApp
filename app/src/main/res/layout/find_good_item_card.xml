@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sea_good_c_prosearch"
+    android:id="@+id/find_good_c_prosearch"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/sea_good_c_img"
+                        android:id="@+id/find_good_c_img"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:layout_gravity="center"
@@ -49,15 +49,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:id="@+id/sea_good_c_mainline">
+                    android:id="@+id/find_good_c_mainline">
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/find_good_c_btn"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:visibility="gone"
-
-                    />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:gravity="center"
+                    android:text="انتخاب"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:backgroundTint="@color/green_400"
+                    app:iconTint="@color/white" />
             </LinearLayout>
 
 

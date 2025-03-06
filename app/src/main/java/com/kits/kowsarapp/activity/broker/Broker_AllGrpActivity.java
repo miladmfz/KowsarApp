@@ -29,7 +29,7 @@ public class Broker_AllGrpActivity extends AppCompatActivity {
 
     Broker_APIInterface broker_apiInterface;
     CallMethod callMethod;
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
     Toolbar toolbar;
     RecyclerView rc;
 
@@ -57,8 +57,8 @@ public class Broker_AllGrpActivity extends AppCompatActivity {
     public void Config() {
         callMethod = new CallMethod(this);
         String databaseName = callMethod.ReadString("DatabaseName");
-        dbh = new Broker_DBH(this, databaseName);
-        dbh.ClearSearchColumn();
+        broker_dbh = new Broker_DBH(this, databaseName);
+        broker_dbh.ClearSearchColumn();
 
         toolbar = findViewById(R.id.b_allgrp_a_toolbar);
         setSupportActionBar(toolbar);
@@ -73,10 +73,10 @@ public class Broker_AllGrpActivity extends AppCompatActivity {
     public void init() {
         List<Category> categories = new ArrayList<>();
 
-        List<GoodGroup> groupHeaders = dbh.getAllGroups(dbh.ReadConfig("GroupCodeDefult"));
+        List<GoodGroup> groupHeaders = broker_dbh.getAllGroups(broker_dbh.ReadConfig("GroupCodeDefult"));
         for (GoodGroup groupHeader : groupHeaders) {
             List<Product> products = new ArrayList<>();
-            List<GoodGroup> groupRows = dbh.getAllGroups(groupHeader.getGoodGroupFieldValue("groupcode"));
+            List<GoodGroup> groupRows = broker_dbh.getAllGroups(groupHeader.getGoodGroupFieldValue("groupcode"));
             for (GoodGroup groupRow : groupRows) {
                 Product product = new Product(
                         groupRow.getGoodGroupFieldValue("Name"),

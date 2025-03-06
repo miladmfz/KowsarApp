@@ -93,6 +93,7 @@
         <activity android:name=".activity.find.Find_RegistrationActivity" />
         <activity android:name=".activity.find.Find_ConfigActivity" />
         <activity android:name=".activity.find.Find_NavActivity" />
+        <activity android:name=".activity.find.Find_ScanCodeActivity" />
 
 
 

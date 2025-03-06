@@ -20,7 +20,7 @@
         android:text="@string/customerfactorheader"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/colorPrimaryDark"
         android:padding="8dp" />
 
     <!-- Amount Input -->

@@ -212,10 +212,12 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("DatabaseName", "");
-            callMethod.EditString("ActivationCode", "");
-
+            callMethod.EditString("IpConfig", "");
             callMethod.EditString("AppType", "");
-
+            callMethod.EditString("DbName", "");
+            callMethod.EditString("ActivationCode", "");
+            callMethod.EditString("SecendServerURL", "");
+            callMethod.EditString("FactorDbName", "");
             intent = new Intent(this, Base_SplashActivity.class);
             finish();
             startActivity(intent);

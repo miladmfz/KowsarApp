@@ -3,6 +3,7 @@ package com.kits.kowsarapp.activity.find;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -23,7 +24,7 @@ import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.find.Find_GoodAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.databinding.SearchActivitySearchBinding;
+import com.kits.kowsarapp.databinding.FindActivitySearchBinding;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.find.Find_DBH;
@@ -57,7 +58,7 @@ public class Find_SearchActivity extends AppCompatActivity {
     Find_APIInterface find_apiInterface;
 
     CallMethod callMethod;
-    SearchActivitySearchBinding binding;
+    FindActivitySearchBinding binding;
     private Integer grid;
     private Handler keyboardHandler = new Handler();
 
@@ -66,7 +67,7 @@ public class Find_SearchActivity extends AppCompatActivity {
 
     private Runnable keyboardRunnable = () -> {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(binding.seaSearchAEdtsearch.getWindowToken(),
+        imm.hideSoftInputFromWindow(binding.findSearchAEdtsearch.getWindowToken(),
                 0
         );
     };
@@ -78,15 +79,26 @@ public class Find_SearchActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
     }
+    public void intent() {
+        Bundle data = getIntent().getExtras();
+        assert data != null;
+        AutoSearch = data.getString("scan");
 
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        enableImmersiveMode(); // فعالسازی حالت Immersive
+
+        intent();
+        Config();
+
+        if (callMethod.ReadBoolan("ShowInFullPage")){
+            enableImmersiveMode(); // فعالسازی حالت Immersive
+        }
 
 
-        binding = SearchActivitySearchBinding.inflate(getLayoutInflater());
+        binding = FindActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
 
@@ -97,7 +109,7 @@ public class Find_SearchActivity extends AppCompatActivity {
         TextView repw = dialog1.findViewById(R.id.b_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
-        Config();
+
 
 
         try {
@@ -123,16 +135,20 @@ public class Find_SearchActivity extends AppCompatActivity {
 
 
 
-        binding.seaSearchAEdtsearch.setOnLongClickListener(v -> {
-            binding.seaSearchAEdtsearch.selectAll();
+        binding.findSearchAEdtsearch.setOnLongClickListener(v -> {
+            binding.findSearchAEdtsearch.selectAll();
             return false;
         });
 
+        binding.findSearchABtnscan.setOnClickListener(view -> {
+            Intent intent = new Intent(this, Find_ScanCodeActivity.class);
+            startActivity(intent);
+            finish();
+        });
+        binding.findSearchAEdtsearch.setFocusable(true);
+        binding.findSearchAEdtsearch.requestFocus();
 
-        binding.seaSearchAEdtsearch.setFocusable(true);
-        binding.seaSearchAEdtsearch.requestFocus();
-
-        binding.seaSearchAEdtsearch.addTextChangedListener(
+        binding.findSearchAEdtsearch.addTextChangedListener(
                 new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -147,28 +163,24 @@ public class Find_SearchActivity extends AppCompatActivity {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
 
-
                             AutoSearch = NumberFunctions.EnglishNumber(editable.toString());
-                            GetDataFromDataBase();
-                            binding.seaSearchAEdtsearch.setFocusable(true);
-                            binding.seaSearchAEdtsearch.requestFocus();
-                            binding.seaSearchAEdtsearch.selectAll();
+                            allgood();
+
+                            if(callMethod.ReadBoolan("SelectAllAfterSearch")){
+                                binding.findSearchAEdtsearch.setFocusable(true);
+                                binding.findSearchAEdtsearch.requestFocus();
+                                binding.findSearchAEdtsearch.selectAll();
+                            }
 
                             if (callMethod.ReadBoolan("keyboardRunnable")) {
                                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.showSoftInput(binding.seaSearchAEdtsearch, InputMethodManager.SHOW_IMPLICIT);
-
-
+                                imm.showSoftInput(binding.findSearchAEdtsearch, InputMethodManager.SHOW_IMPLICIT);
                                 keyboardHandler.removeCallbacks(keyboardRunnable);
                                 keyboardHandler.postDelayed(keyboardRunnable,
                                         200
                                 );
-
                             }
-
                         }, Integer.parseInt(callMethod.ReadString("Delay")));
-
-
                     }
                 });
         allgood();
@@ -186,30 +198,24 @@ public class Find_SearchActivity extends AppCompatActivity {
 
     }
 
-    public void GetDataFromDataBase() {
-        find_goods.clear();
-
-        loading = true;
-        allgood();
-
-
-
-    }
-
-
-
     public void allgood() {
 
-        String Body_str  = "";
-        Body_str =callMethod.CreateJson("SearchTarget", AutoSearch, Body_str);
-        Call<RetrofitResponse> call = find_apiInterface.GetGoodList(callMethod.RetrofitBody(Body_str));
+//        String Body_str  = "";
+//        Body_str =callMethod.CreateJson("SearchTarget", AutoSearch, Body_str);
+//        Call<RetrofitResponse> call = find_apiInterface.GetGoodList(callMethod.RetrofitBody(Body_str));
+//
 
+        find_goods.clear();
+        loading = true;
+        binding.findSearchAProg.setVisibility(View.VISIBLE);
+        Call<RetrofitResponse> call = find_apiInterface.GetGoodList ("GetFindGoodList", AutoSearch);
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     loading = false;
-                    find_goods = response.body().getSearch_Goods();
+                    assert response.body() != null;
+                    find_goods = response.body().getFind_Goods();
                     adapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
 
                     CallRecyclerView();
@@ -220,10 +226,9 @@ public class Find_SearchActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<RetrofitResponse> call, Throwable t) {
                 loading = false;
-
-                Toast toast = Toast.makeText(Find_SearchActivity.this, "کالایی یافت نشد", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 10, 10);
-                toast.show();
+                find_goods.clear();
+                adapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
+                CallRecyclerView();
             }
         });
 
@@ -231,6 +236,10 @@ public class Find_SearchActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void refresh() {
+        adapter.notifyDataSetChanged();
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     public void CallRecyclerView() {
@@ -238,18 +247,18 @@ public class Find_SearchActivity extends AppCompatActivity {
 
 
         if (adapter.getItemCount() == 0) {
-            binding.seaSearchATvstatus.setText("کالایی یافت نشد");
-            binding.seaSearchATvstatus.setVisibility(View.VISIBLE);
-            binding.seaSearchALottie.setVisibility(View.VISIBLE);
+            binding.findSearchATvstatus.setText("کالایی یافت نشد");
+            binding.findSearchATvstatus.setVisibility(View.VISIBLE);
+            binding.findSearchALottie.setVisibility(View.VISIBLE);
         } else {
-            binding.seaSearchALottie.setVisibility(View.GONE);
-            binding.seaSearchATvstatus.setVisibility(View.GONE);
+            binding.findSearchALottie.setVisibility(View.GONE);
+            binding.findSearchATvstatus.setVisibility(View.GONE);
         }
         gridLayoutManager = new GridLayoutManager(this, grid);
-        binding.seaSearchAAllgood.setLayoutManager(gridLayoutManager);
-        binding.seaSearchAAllgood.setAdapter(adapter);
-        binding.seaSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
-        binding.seaSearchAProg.setVisibility(View.GONE);
+        binding.findSearchAAllgood.setLayoutManager(gridLayoutManager);
+        binding.findSearchAAllgood.setAdapter(adapter);
+        binding.findSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
+        binding.findSearchAProg.setVisibility(View.GONE);
     }
 
 
@@ -290,16 +299,6 @@ public class Find_SearchActivity extends AppCompatActivity {
                     }
                 });
 
-
-
-
-
-
-
-
-
-
-
         btn_login.setOnClickListener(v -> {
 
             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
@@ -316,6 +315,7 @@ public class Find_SearchActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (callMethod.ReadBoolan("LockSearchPage")){
         backPressCount++;
         if (backPressCount >= 3) {
             // نمایش دیالوگ رمز
@@ -325,18 +325,10 @@ public class Find_SearchActivity extends AppCompatActivity {
 
         }
         new Handler().postDelayed(() -> backPressCount = 0, 2000);
+        }else{
+            finish();
+        }
     }
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (backPressCount < 3) {
-//            Intent intent = new Intent(this, SearchActivity.class);
-//            finish();
-//            startActivity(intent);
-//        }
-//
-//    }
 
 
 

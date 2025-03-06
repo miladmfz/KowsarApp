@@ -13,8 +13,9 @@ public class RetrofitResponse {
     @SerializedName("Goods")
     private ArrayList<Good> Goods;
 
-    @SerializedName("SearchGoods")
+    @SerializedName("FindGoods")
     private ArrayList<Find_Good> find_Goods;
+
     @SerializedName("OcrGoods")
     private ArrayList<Ocr_Good> Ocr_Goods;
     @SerializedName("Customers")
@@ -111,11 +112,11 @@ public class RetrofitResponse {
         this.posDrivers = posDrivers;
     }
 
-    public ArrayList<Find_Good> getSearch_Goods() {
+    public ArrayList<Find_Good> getFind_Goods() {
         return find_Goods;
     }
 
-    public void setSearch_Goods(ArrayList<Find_Good> find_Goods) {
+    public void setFind_Goods(ArrayList<Find_Good> find_Goods) {
         this.find_Goods = find_Goods;
     }
 

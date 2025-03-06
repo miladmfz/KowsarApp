@@ -32,7 +32,7 @@
             android:inputType="numberPassword"
             android:padding="12dp"
             android:background="@drawable/bg_round"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimaryDark"
             android:textColorHint="@color/grey_600" />
 
         <!-- Login Button -->

@@ -109,6 +109,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
         callMethod = new CallMethod(this);
         dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+        ocr_action= new Ocr_Action(this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         main_layout = findViewById(R.id.ocr_factordetail_a_layout);
@@ -125,31 +126,32 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
         if(bitmap_factor_base64.equals("")){
 
-
+//
+//
+//            Call<RetrofitResponse> call;
+//
+//
+//            String Body_str  = "";
+//
+//            Body_str =callMethod.CreateJson("barcode", BarcodeScan, Body_str);
+//            Body_str =callMethod.CreateJson("Step", "0", Body_str);
+//            Body_str =callMethod.CreateJson("orderby", "GoodName", Body_str);
+//
+//
+//
+//            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//                call = apiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
+//            }else{
+//                call = secendApiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
+//            }
 
             Call<RetrofitResponse> call;
-
-
-            String Body_str  = "";
-
-            Body_str =callMethod.CreateJson("barcode", BarcodeScan, Body_str);
-            Body_str =callMethod.CreateJson("Step", "0", Body_str);
-            Body_str =callMethod.CreateJson("orderby", "GoodName", Body_str);
-
-
-
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call = apiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
-            }else{
-                call = secendApiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
+                call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
+            }else {
+                call =secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
             }
 
-//            Call<RetrofitResponse> call;
-//            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//                call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
-//            }else {
-//                call =secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
-//            }
 
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
@@ -157,7 +159,9 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
                     if(response.isSuccessful()){
 
                         assert response.body() !=null;
-                        factor=response.body().getFactors().get(0);
+//                        factor=response.body().getFactors().get(0);
+                        factor=response.body().getFactor();
+
                         if(factor.getFactorCode().equals("0"))
                         {
 
@@ -401,7 +405,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
             good_amount_tv.setGravity(Gravity.CENTER);
 
             TextView good_totalprice_tv = new TextView(getApplicationContext());
-            good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getPrice())*Integer.valueOf(g.getFacAmount()))));
+            good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getSumPrice()))));
             good_totalprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
             good_totalprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
             good_totalprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));

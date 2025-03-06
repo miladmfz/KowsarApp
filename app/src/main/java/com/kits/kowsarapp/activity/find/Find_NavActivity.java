@@ -21,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
@@ -50,7 +51,7 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
     private boolean doubleBackToExitPressedOnce = false;
     private Intent intent;
 
-    private Find_Replication search_replication;
+    private Find_Replication find_replication;
 
     //************************************************************
 
@@ -73,14 +74,19 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
         dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
-        search_replication = new Find_Replication(this);
+        find_replication = new Find_Replication(this);
 
-        LinearLayoutCompat ll_activity_main = findViewById(R.id.sea_main_activity);
+        if (callMethod.ReadString("ActivationCode").equals("888888")){
+            dbh.DatabaseCreate();
+            find_replication.DoingReplicate();
+        }
 
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+
+        LinearLayoutCompat ll_activity_main = findViewById(R.id.find_main_activity);
+        DrawerLayout drawer = findViewById(R.id.find_nav_drawer_layout);
 
 
-        toolbar = findViewById(R.id.MainActivity_toolbar);
+        toolbar = findViewById(R.id.find_main_a_toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -93,7 +99,7 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
         tv_dbname = hView.findViewById(R.id.header_dbname);
         tv_brokercode = hView.findViewById(R.id.header_brokercode);
         btn_changedb = hView.findViewById(R.id.header_changedb);
-        btn0=findViewById(R.id.sea_main_btn0);
+        btn0=findViewById(R.id.find_main_a_btn0);
 
 
 
@@ -103,7 +109,7 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
         Config();
 
 
-        //tv_versionname.setText(NumberFunctions.PerisanNumber(BuildConfig));
+        tv_versionname.setText(NumberFunctions.PerisanNumber(BuildConfig.VERSION_NAME));
 
         tv_dbname.setText(callMethod.ReadString("PersianCompanyNameUse"));
         toolbar.setTitle(callMethod.ReadString("PersianCompanyNameUse"));
@@ -113,78 +119,23 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("DatabaseName", "");
+            callMethod.EditString("IpConfig", "");
+            callMethod.EditString("AppType", "");
+            callMethod.EditString("DbName", "");
+            callMethod.EditString("ActivationCode", "");
+            callMethod.EditString("SecendServerURL", "");
+            callMethod.EditString("FactorDbName", "");
             intent = new Intent(this, Base_SplashActivity.class);
             finish();
             startActivity(intent);
         });
 
-        if (Integer.parseInt(dbh.ReadConfig("BrokerCode")) != 0) {
-
-            tv_brokercode.setText(" کد بازاریاب : " + NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
-            if (dbh.ReadConfig("BrokerStack").equals("0")) {
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
-                builder.setTitle("انباری تعریف نشده");
-                builder.setMessage("آیا مایل به تغییر کد بازاریاب می باشید ؟");
-
-                builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                    callMethod.showToast("کد بازاریاب را وارد کنید");
-                    intent = new Intent(this, Find_ConfigActivity.class);
-                    startActivity(intent);
-                });
-
-                builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
-                    // code to handle negative button click
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        } else {
-
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
-            builder.setTitle("عدم وجود کد بازاریاب");
-            builder.setMessage("آیا مایل به تعریف کد بازاریاب می باشید ؟");
-
-            builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                callMethod.showToast("کد بازاریاب را وارد کنید");
-                intent = new Intent(this, Find_ConfigActivity.class);
-                startActivity(intent);
-            });
-
-            builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
-                callMethod.showToast("برای ادامه کار به کد بازاریاب نیازمندیم");
-            });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-
-
-
-
-        }
-
-
         btn0.setText("جستجو");
 
-
-
-
-
         btn0.setOnClickListener(v -> {
-
-            if(dbh.ReadConfig("BrokerStack").equals("0")){
-
-                intent = new Intent(Find_NavActivity.this, Find_ConfigActivity.class);
-                startActivity(intent);
-            }else{
-                intent = new Intent(Find_NavActivity.this, Find_SearchActivity.class);
-                startActivity(intent);
-            }
+            intent = new Intent(Find_NavActivity.this, Find_SearchActivity.class);
+            intent.putExtra("scan", "");
+            startActivity(intent);
         });
 
 
@@ -201,7 +152,7 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.find_nav_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (doubleBackToExitPressedOnce) {
@@ -227,7 +178,7 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
             intent = new Intent(this, Find_ConfigActivity.class);
             startActivity(intent);
         }
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.find_nav_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;

@@ -31,7 +31,7 @@
                 android:layout_weight="1"
                 android:text="کد مشتری:"
                 android:textSize="14sp"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold" />
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_weight="1"
                 android:text="نام مشتری:"
                 android:textSize="14sp"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold" />
 
             <TextView
@@ -85,7 +85,7 @@
                 android:layout_weight="1"
                 android:text="مدیر مشتری:"
                 android:textSize="14sp"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold" />
 
             <TextView
@@ -112,7 +112,7 @@
                 android:layout_weight="1"
                 android:text="شماره تلفن:"
                 android:textSize="14sp"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold" />
 
             <TextView
@@ -138,7 +138,7 @@
                 android:layout_weight="1"
                 android:text="آدرس:"
                 android:textSize="14sp"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold" />
 
             <TextView
@@ -165,7 +165,7 @@
                 android:layout_weight="1"
                 android:text="بستانکاری:"
                 android:textSize="14sp"
-                android:textColor="@color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold"
                 android:gravity="start" />
 

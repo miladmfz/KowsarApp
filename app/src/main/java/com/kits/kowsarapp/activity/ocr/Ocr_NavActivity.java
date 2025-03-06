@@ -46,8 +46,7 @@ public class Ocr_NavActivity extends AppCompatActivity implements NavigationView
     Toolbar toolbar;
     Ocr_Action action;
     NavigationView navigationView;
-    TextView tv_versionname;
-    TextView tv_dbname;
+    TextView tv_versionname,tv_dbname;
     Button btn_changedb;
 
     @Override
@@ -100,10 +99,11 @@ public void Config() {
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("DatabaseName", "");
+            callMethod.EditString("IpConfig", "");
+            callMethod.EditString("AppType", "");
+            callMethod.EditString("DbName", "");
             callMethod.EditString("ActivationCode", "");
             callMethod.EditString("SecendServerURL", "");
-            callMethod.EditString("DbName", "");
-            callMethod.EditString("AppType", "");
             callMethod.EditString("FactorDbName", "");
             intent = new Intent(this, Base_SplashActivity.class);
             finish();

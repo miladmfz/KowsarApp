@@ -575,7 +575,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
             holder.btn_explainedit.setOnClickListener(v -> order_action.EditBasketInfoExplain(basketInfos.get(position)));
         }
         else {
-            holder.tv_name.setTextColor(R.color.black);
+            holder.tv_name.setTextColor(R.color.colorPrimaryDark);
 
             holder.btn_select.setOnClickListener(v -> {
 
@@ -1427,7 +1427,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 //        } 
 //        else {
 //
-//            holder.tv_name.setTextColor(R.color.black);
+//            holder.tv_name.setTextColor(R.color.colorPrimaryDark);
 //
 //            holder.btn_select.setOnClickListener(v -> {
 //

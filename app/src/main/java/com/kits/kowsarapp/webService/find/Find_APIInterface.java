@@ -5,6 +5,7 @@ import com.kits.kowsarapp.model.base.RetrofitResponse;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -12,61 +13,62 @@ import retrofit2.http.Query;
 
 public interface Find_APIInterface {
 
-    String Search_Url = "Search/";
-    String Kowsar_Url = "Kowsar/";
 
-
-
-    @GET(Kowsar_Url+"GetImage")
-    Call<RetrofitResponse> GetImage(
-            @Query("tag") String tag,
-            @Query("ObjectRef") String ObjectRef,
-            @Query("IX") String IX,
-            @Query("Scale") String Scale
+    @GET("kits/Activation")
+    Call<RetrofitResponse> Activation(
+            @Query("ActivationCode") String ActivationCode,
+            @Query("Flag") String Flag
     );
-    @GET(Kowsar_Url+"GetSellBroker")
-    Call<RetrofitResponse> GetSellBroker(
-            @Query("tag") String tag
-    );
-
-    @GET(Kowsar_Url+"GetGoodType")
-
-    Call<RetrofitResponse> GetGoodType(
-            @Query("tag") String tag
-    );
-
-
-
-    @POST(Search_Url+"GetGoodList")
+    @POST("index.php")
     @FormUrlEncoded
-    Call<RetrofitResponse> GetGoodList(@Body RequestBody requestBody );
+    Call <RetrofitResponse> GetImagefind(@Field("tag") String tag,
+                                     @Field("ObjectRef") String ObjectRef,
+                                     @Field("IX") Integer IX,
+                                     @Field("Scale") Integer Scale);
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetGoodList(@Field("tag") String tag,
+                                       @Field("SearchTarget") String SearchTarget
+    );
 
-
-
-
-    @GET(Search_Url+"BrokerStack")
-
+    @POST("index.php")
+    @FormUrlEncoded
     Call<RetrofitResponse> BrokerStack(
-            @Query("tag") String tag
-            , @Query("BrokerRef") String BrokerRef
+            @Field("tag") String tag
+            , @Field("BrokerRef") String BrokerRef
+    );
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetSellBroker(@Field("tag") String tag);
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetGoodType(
+            @Field("tag") String tag
     );
 
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetGoodSelectedById(
+            @Field("tag") String tag,
+            @Field("GoodCode") String GoodCode
+    );
 
-
-
-    @GET(Search_Url+"GetColumnList")
-
+    @POST("index.php")
+    @FormUrlEncoded
     Call<RetrofitResponse> GetColumnList(
-            @Query("tag") String tag
-            , @Query("Type") String Type
-            , @Query("AppType") String AppType
-            , @Query("IncludeZero") String IncludeZero
+            @Field("tag") String tag
+            , @Field("Type") String Type
+            , @Field("AppType") String AppType
+            , @Field("IncludeZero") String IncludeZero
     );
 
-
-
-
-
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> SetSelectedFeild(@Field("tag") String tag,
+                                            @Field("GoodCode") String GoodCode,
+                                            @Field("SelectedFeild") String SelectedFeild
+    );
 
 
 

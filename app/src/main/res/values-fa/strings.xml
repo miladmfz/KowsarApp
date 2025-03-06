@@ -152,18 +152,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     <string name="Kowsar_log">192.168.1.20:60005</string>
 
     <string name="new_printer">اتصال به پرینتر</string>
@@ -292,6 +280,21 @@
     <string name="Customer_new"> مشتری جدید</string>
     <string name="UnitRadio">درصد تخفیف</string>
 
+    <string-array name="themes_array">
+        <item>Default</item>
+        <item>BlueHarmonyTheme</item>
+        <item>MintGreenTheme</item>
+        <item>SunsetGlowTheme</item>
+        <item>CyberPurpleTheme</item>
+        <item>ElegantGoldTheme</item>
+        <item>OceanBreezeTheme</item>
+        <item>NeonFutureTheme</item>
+        <item>RosewoodEleganceTheme</item>
+        <item>DarkModeEliteTheme</item>
+        <item>LemonFreshTheme</item>
+        <item>SoftLavender</item>
+        <item>NeonGreen</item>
+    </string-array>
 
 
 

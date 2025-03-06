@@ -33,6 +33,7 @@ import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
@@ -49,7 +50,7 @@ import retrofit2.Response;
 
 public class Ocr_Print {
 
-    ArrayList<Good> goods = new ArrayList<>();
+    ArrayList<Ocr_Good> goods = new ArrayList<>();
 
     private final Context mContext;
     Ocr_APIInterface apiInterface;
@@ -73,6 +74,16 @@ public class Ocr_Print {
     TextView tv_rep;
     ImageInfo imageInfo;
 
+
+
+    String hideamount = "0";
+
+
+
+
+
+
+
     public Ocr_Print(Context mContext) {
         this.mContext = mContext;
         this.il = 0;
@@ -88,7 +99,13 @@ public class Ocr_Print {
         printerconter = 0;
 
     }
-
+    public void Printing(Factor factor , ArrayList<Ocr_Good> mgoods, String packCount, String hide) {
+        factorData=factor;
+        goods=mgoods;
+        packs=packCount;
+        hideamount=hide;
+        GetAppPrinterList();
+    }
     public void dialogProg() {
         dialogProg.setContentView(R.layout.broker_spinner_box);
         tv_rep = dialogProg.findViewById(R.id.b_spinner_text);
@@ -98,6 +115,65 @@ public class Ocr_Print {
 
     }
 
+    public void GetAppPrinterList() {
+
+        dialogProg();
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
+        }else{
+            call=secendApiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
+        }
+
+
+
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    printerconter = 0;
+                    AppPrinters = response.body().getAppPrinters();
+
+                    if (callMethod.ReadString("Category").equals("2")) {
+                        for (AppPrinter appPrinter : AppPrinters) {
+                            Log.e("test_name", appPrinter.getPrinterName());
+                            if (appPrinter.getWhereClause().equals(callMethod.ReadString("StackCategory"))) {
+                                printerconter++;
+                                targetprinter = appPrinter;
+                                printDialogView();
+                            }
+
+                        }
+                    } else if (callMethod.ReadString("Category").equals("3")) {
+                        for (AppPrinter appPrinter : AppPrinters) {
+                            if (appPrinter.getWhereClause().equals("")) {
+                                printerconter++;
+                                targetprinter = appPrinter;
+                                printDialogView();
+                            }
+
+                        }
+                    }
+
+                    if (printerconter == 0) {
+                        dialogProg.dismiss();
+                        ((Activity) mContext).finish();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                Log.e("test", "3");
+                dialogProg.dismiss();
+                ((Activity) mContext).finish();
+
+            }
+        });
+        Log.e("test","4");
+    }
 
 
 
@@ -124,7 +200,6 @@ public class Ocr_Print {
     }
 
 
-    @SuppressLint("RtlHardcoded")
     public void CreateViewConfirm() {
 
 
@@ -145,7 +220,6 @@ public class Ocr_Print {
         boby_good_layout.setOrientation(LinearLayoutCompat.VERTICAL);
         boby_good_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         boby_good_layout.setGravity(Gravity.CENTER);
-
 
 
 
@@ -195,25 +269,34 @@ public class Ocr_Print {
         CustName.setPadding(0, 0, 0, 15);
 
         TextView FactorPrivateCode = new TextView(mContext);
-        FactorPrivateCode.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " +factorData.getFactorPrivateCode()));
+        FactorPrivateCode.setText(NumberFunctions.PerisanNumber(factorData.getFactorPrivateCode()));
         FactorPrivateCode.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         FactorPrivateCode.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
         FactorPrivateCode.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
-        FactorPrivateCode.setGravity(Gravity.RIGHT);
+        FactorPrivateCode.setGravity(Gravity.CENTER);
         FactorPrivateCode.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         FactorPrivateCode.setPadding(0, 0, 0, 15);
 
         TextView FactorDate = new TextView(mContext);
-
-        // TODO doros kardane in feild va ezafe kardan be php
-        //FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate() +"       "+factorData.getMandehBedehkar()));
-        FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate() ));
+        FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate()));
         FactorDate.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         FactorDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")) );
         FactorDate.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
         FactorDate.setGravity(Gravity.RIGHT);
         FactorDate.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         FactorDate.setPadding(0, 0, 0, 15);
+
+        TextView FactorDate1 = new TextView(mContext);
+        FactorDate1.setText(NumberFunctions.PerisanNumber(" کد مسیر :   "+factorData.getErsall()));
+        FactorDate1.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+        FactorDate1.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")) );
+        FactorDate1.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+        FactorDate1.setGravity(Gravity.RIGHT);
+        FactorDate1.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        FactorDate1.setPadding(0, 0, 0, 15);
+
+
+
 
         TextView TotalRow = new TextView(mContext);
         TotalRow.setText(NumberFunctions.PerisanNumber(" تعداد جلد :   " +factorData.getSumAmount()));
@@ -269,10 +352,13 @@ public class Ocr_Print {
 
 
 
-        int GoodList_Counter = 0;
-        for (Good gooddetail : goods) {
 
-            if(gooddetail.getShortageAmount()>0 && gooddetail.getAppRowIsControled().equals("0")){
+
+
+        int GoodList_Counter = 0;
+        for (Ocr_Good gooddetail : goods) {
+
+            if(Integer.parseInt(gooddetail.getShortageAmount())>0 && gooddetail.getAppRowIsControled().equals("0")){
 
                 GoodList_Counter++;
 
@@ -314,14 +400,12 @@ public class Ocr_Print {
                 detail.setWeightSum(9);
                 detail.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
 
-                TextView ghafase = new TextView(App.getContext());
-                // TODO doros kardane in feild va ezafe kardan be php
-                //ghafase.setText(NumberFunctions.PerisanNumber(gooddetail.getFormNo()));
-                ghafase.setText(NumberFunctions.PerisanNumber("gooddetail.getFormNo()"));
-                ghafase.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
-                ghafase.setTextSize(14);
-                ghafase.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
-                ghafase.setGravity(Gravity.CENTER);
+//                TextView ghafase = new TextView(App.getContext());
+//                ghafase.setText(NumberFunctions.PerisanNumber(gooddetail.getFormNo()));
+//                ghafase.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
+//                ghafase.setTextSize(14);
+//                ghafase.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+//                ghafase.setGravity(Gravity.CENTER);
 
                 TextView good_amount_tv = new TextView(App.getContext());
                 good_amount_tv.setText(NumberFunctions.PerisanNumber(gooddetail.getFacAmount()));
@@ -347,7 +431,7 @@ public class Ocr_Print {
 //                ViewPager_sell2.setBackgroundResource(R.color.colorPrimaryDark);
 
                 detail.removeAllViews();
-                detail.addView(ghafase);
+//                detail.addView(ghafase);
                 detail.addView(good_amount_tv);
                 detail.addView(ShortageAmount);
 
@@ -372,14 +456,16 @@ public class Ocr_Print {
 
 
 
-
-
-
         Tag_layout.addView(CustName);
         Tag_layout.addView(FactorPrivateCode);
+        Tag_layout.addView(FactorDate1);
         Tag_layout.addView(FactorDate);
-        Tag_layout.addView(TotalRow);
+        if(hideamount.equals("0")){
+            Tag_layout.addView(TotalRow);
+        }
+
         Tag_layout.addView(Stack);
+
 
         if (GoodList_Counter>0){
             Header_GoodList.addView(Header_ghafase);
@@ -398,13 +484,13 @@ public class Ocr_Print {
 
 
 
-
-
         Body_Tag_layout.addView(Tag_layout);
+
+
         main_layout.addView(img_explain);
 
 
-//        if (callMethod.ReadBoolan("PrintBarcode")){
+        //        if (callMethod.ReadBoolan("PrintBarcode")){
 //            // Barcode view ro tolid mikonim
 //            ImageView barcodeImageView = new ImageView(App.getContext());
 //            barcodeImageView.setLayoutParams(new LinearLayoutCompat.LayoutParams(
@@ -467,7 +553,7 @@ public class Ocr_Print {
 
                 if (response.body().getText().equals("Done")) {
                     dialogProg.dismiss();
-                    ((Activity) mContext).finish();
+                    //((Activity) mContext).finish();
                 }
             }
 
@@ -495,6 +581,11 @@ public class Ocr_Print {
         Tag_layout.setOrientation(LinearLayoutCompat.VERTICAL);
         Tag_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         Tag_layout.setGravity(Gravity.CENTER);
+
+
+
+
+
 
         LinearLayoutCompat Body_Tag_layout = new LinearLayoutCompat(mContext);
         Body_Tag_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width - 8, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -538,7 +629,6 @@ public class Ocr_Print {
 
         TextView FactorPrivateCode = new TextView(mContext);
         FactorPrivateCode.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " +factorData.getFactorPrivateCode()));
-
         FactorPrivateCode.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         FactorPrivateCode.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
         FactorPrivateCode.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
@@ -546,11 +636,19 @@ public class Ocr_Print {
         FactorPrivateCode.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         FactorPrivateCode.setPadding(0, 0, 0, 15);
 
-        TextView FactorDate = new TextView(mContext);
-        // TODO doros kardane in feild va ezafe kardan be php
 
-        //FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate() +"       "+factorData.getMandehBedehkar()));
-        FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate()));
+        TextView FactorDate = new TextView(mContext);
+
+        if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
+                callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+            FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate() +"       "+factorData.getErsall()));
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+            FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate() +"       "+factorData.getMandehBedehkar()));
+        }else{
+            FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate()));
+        }
+
+
         FactorDate.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         FactorDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")) );
         FactorDate.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
@@ -575,6 +673,8 @@ public class Ocr_Print {
         tv_Count.setGravity(Gravity.CENTER);
         tv_Count.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         tv_Count.setPadding(0, 0, 0, 30);
+
+
 
 
 
@@ -654,6 +754,7 @@ public class Ocr_Print {
         v.draw(c);
         return b;
     }
+
 
 
 }

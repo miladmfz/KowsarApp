@@ -39,7 +39,7 @@
                     android:layout_weight="1"
                     android:text="نوع کالا"
                     android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimaryDark"
                     android:gravity="center_vertical" />
 
                 <!-- Spinner -->

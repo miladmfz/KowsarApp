@@ -5,9 +5,23 @@
     <color name="colorAccent">#FF3030</color>
 
 
+    <color name="backgroundColor">#F5F5F5</color> <!-- Rang background baraye input -->
+    <color name="primaryTextColor">#212121</color> <!-- Rang matn asli -->
+    <color name="secondaryTextColor">#757575</color> <!-- Rang matn hint ya sekondari -->
+    <color name="primaryColor">#4CAF50</color> <!-- Rang button -->
+
+
     <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
+
     <color name="gray_secondary">#A9A9A9</color>
+    <!-- رنگ‌های تم پیش‌فرض -->
+    <color name="default_primary">#6200EE</color>
+    <color name="default_primary_variant">#3700B3</color>
+    <color name="default_secondary">#03DAC6</color>
+    <color name="default_secondary_variant">#018786</color>
+    <color name="default_text">#000000</color>
+    <color name="default_surface">#FFFFFF</color>
+    <color name="default_error">#B00020</color>
 
     <color name="overlay_dark_10">#1A000000</color>
     <color name="overlay_dark_20">#33000000</color>

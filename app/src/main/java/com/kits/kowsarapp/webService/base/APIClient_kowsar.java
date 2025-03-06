@@ -9,8 +9,9 @@ public class APIClient_kowsar {
 
     private static Retrofit t = null;
 
+    private static final String BASE_URL_log = "http://5.160.152.173:60005/api/";
 
-    private static final String BASE_URL_log = "http://192.168.1.20:60005/api/";
+    //private static final String BASE_URL_log = "http://itmali.ir/api/";
 
     public static Retrofit getCleint_log() {
         if (t == null) {
