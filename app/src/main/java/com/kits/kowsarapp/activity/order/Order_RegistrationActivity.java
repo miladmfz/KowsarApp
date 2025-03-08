@@ -64,6 +64,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
 
     private static final String[] themeNames = {
             "پیش‌فرض",
+            "کوثر زرین",
             "آبی هماهنگ",
             "سبز نعناعی",
             "درخشش غروب",
@@ -79,7 +80,9 @@ public class Order_RegistrationActivity extends AppCompatActivity {
     };
     private static final int[][] themeColors = {
             // DefaultTheme
-            {Color.parseColor("#FFFFFF"), Color.parseColor("#E0E0E0"), Color.parseColor("#F5F5F5")}, // Default
+
+            {Color.parseColor("#FFFFFF"), Color.parseColor("#E0E0E0"), Color.parseColor("#F5F5F5")}, // Defaultare
+            {Color.parseColor("#FFD700"), Color.parseColor("#B8860B"), Color.parseColor("#1E3A8A")}, // Golden & Royal Blue Theme
             {Color.parseColor("#1E3A8A"), Color.parseColor("#3B82F6"), Color.parseColor("#E0F2FE")}, // BlueHarmonyTheme
             {Color.parseColor("#2DD4BF"), Color.parseColor("#99F6E4"), Color.parseColor("#F0FDFA")}, // MintGreenTheme
             {Color.parseColor("#F97316"), Color.parseColor("#FB923C"), Color.parseColor("#FFF7ED")}, // SunsetGlowTheme
@@ -95,6 +98,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
     };
     private static final int[] themeArray = {
             R.style.DefaultTheme,
+            R.style.RoyalGoldTheme,
             R.style.BlueHarmonyTheme,
             R.style.MintGreenTheme,
             R.style.SunsetGlowTheme,

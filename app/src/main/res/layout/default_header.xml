@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="10dp"
-    android:background="@drawable/nav_header"
-    android:layoutDirection="rtl">
+    android:background="@drawable/headernew"
+    >
+
 
     <Button
         android:id="@+id/header_changedb"
@@ -14,47 +14,71 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/header_versionname"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp"
         android:text="تغییر نرم افزار"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:backgroundTint="@color/deep_orange_500"
+        app:backgroundTint="#B8860B"
         app:iconTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.052"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@color/grey_1000"
-        app:strokeWidth="1dp" />
+        app:strokeWidth="1dp"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/header_versionname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/header_dbname"
-        android:layout_marginStart="20sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="10sp"
+        android:layout_marginTop="5dp"
+
+        android:text="header_versionname"
+        android:textColor="#B8860B"
+        android:textSize="14sp"
         android:textStyle="bold"
-
-        />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_changedb"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/header_dbname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/header_brokercode"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="2dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+
+        android:layout_marginTop="5dp"
+        android:text="header_dbname"
+        android:textColor="#B8860B"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.06"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_brokercode"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/header_brokercode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="20dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="5dp"
+        android:text=" "
+        android:textColor="#B8860B"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.067"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_versionname"
+        tools:ignore="MissingConstraints" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

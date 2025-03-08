@@ -282,6 +282,8 @@
 
     <string-array name="themes_array">
         <item>Default</item>
+        <item>RoyalGoldTheme</item>
+
         <item>BlueHarmonyTheme</item>
         <item>MintGreenTheme</item>
         <item>SunsetGlowTheme</item>

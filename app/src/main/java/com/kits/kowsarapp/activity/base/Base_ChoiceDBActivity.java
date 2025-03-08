@@ -18,12 +18,17 @@ import com.downloader.PRDownloaderConfig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.downloader.Status;
 import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.adapter.base.Base_AllApp;
+import com.kits.kowsarapp.adapter.broker.Broker_GoodAdapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
@@ -54,14 +59,19 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     CallMethod callMethod;
     Activation activation;
     Base_DBH base_dbh;
+
+    Dialog dialog;
+    Base_AllApp adapter;
+    GridLayoutManager gridLayoutManager;
+
+    ArrayList<Activation> activations;
     TextView tv_rep;
     TextView tv_step;
-    Dialog dialog;
-    ArrayList<Activation> activations;
     Button btn_prog;
     Intent intent;
     int downloadId;
     DefaultActivityDbBinding binding;
+    RecyclerView re_allapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +93,12 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     @SuppressLint("SdCardPath")
     public void Config() {
         callMethod = new CallMethod(this);
-        dialog = new Dialog(this);
         activation = new Activation();
         apiInterface = APIClient_kowsar.getCleint_log().create(Kowsar_APIInterface.class);
         base_dbh = new Base_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
         base_dbh.CreateActivationDb();
 
+        dialog = new Dialog(this);
         dialog.setContentView(R.layout.broker_spinner_box);
         tv_rep = dialog.findViewById(R.id.b_spinner_text);
         tv_step = dialog.findViewById(R.id.b_spinner_step);
@@ -102,15 +112,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         activations = base_dbh.getActivation();
 
         binding.baseAppVersion.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : " + BuildConfig.VERSION_NAME));
-        for (Activation singleactive : activations) {
-            try {
-                CreateView(singleactive);
-            }catch (Exception e){
-                callMethod.Log(e.getMessage());
-            }
-        }
-
-
         binding.baseAppRegistercode.setOnClickListener(v -> {
             int exist=0;
             for (Activation singleactive : activations) {
@@ -146,279 +147,19 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                 callMethod.showToast("این کد وارد شده است");
             }
         });
-    }
 
-    public void DownloadRequest(Activation activation) {
-        btn_prog.setOnClickListener(view -> DownloadRequest(activation));
+        callMethod.Log("activations = " +activations.size()+"");
 
+        adapter = new Base_AllApp(activations, this);
+        callMethod.Log("adapter = " +adapter.getItemCount()+"");
+        gridLayoutManager = new GridLayoutManager(this, 1);
+        binding.baseAppAllapp.setLayoutManager(gridLayoutManager);
+        binding.baseAppAllapp.setAdapter(adapter);
+        binding.baseAppAllapp.setItemAnimator(new DefaultItemAnimator());
 
-        String downloadurl="http://5.160.152.173:60005/api/kits/GetDb?Code="+activation.getActivationCode();
-        //String downloadurl="http://itmali.ir/api/kits/GetDb?Code="+activation.getActivationCode();
-
-        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
-                .setDatabaseEnabled(true)
-                .build();
-
-        PRDownloader.initialize(getApplicationContext(), config);
-
-        // Setting timeout globally for the download network requests:
-        PRDownloaderConfig config1 = PRDownloaderConfig.newBuilder()
-                .setReadTimeout(30_000)
-                .setConnectTimeout(30_000)
-                .build();
-        PRDownloader.initialize(getApplicationContext(), config1);
-
-
-        downloadId = PRDownloader.download(
-                        downloadurl,
-                        activation.getDatabaseFolderPath(),
-                        "KowsarDbTemp.sqlite"
-                )
-
-                .build()
-                .setOnStartOrResumeListener(() -> {
-                    dialog.show();
-                    dialog.setCancelable(false);
-                })
-                .setOnPauseListener(() -> {
-
-                })
-                .setOnCancelListener(() -> {
-                    File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
-                    DownloadTemp.delete();
-                })
-
-                .setOnProgressListener(progress -> {
-                    tv_rep.setText("در حال بارگیری...");
-                    tv_step.setVisibility(View.VISIBLE);
-                    tv_step.setText(NumberFunctions.PerisanNumber((((progress.currentBytes) * 100) / progress.totalBytes) + "/100"));
-                })
-
-                .start(new OnDownloadListener() {
-                    @SuppressLint("SdCardPath")
-                    @Override
-
-                    public void onDownloadComplete() {
-
-                        File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
-                        File CompletefILE = new File(activation.getDatabaseFolderPath() + "/KowsarDb.sqlite");
-                        DownloadTemp.renameTo(CompletefILE);
-                        callMethod.EditString("DatabaseName", activation.getDatabaseFilePath());
-
-                        if (activation.getAppType().equals("1")){ // broker
-                            Broker_DBH broker_dbh = new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                            broker_dbh.DatabaseCreate();
-                            broker_dbh.InitialConfigInsert();
-                        }else if (activation.getAppType().equals("2")){ // ocr
-                            Ocr_DBH ocr_dbh = new Ocr_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                            ocr_dbh.DatabaseCreate();
-                        }else if (activation.getAppType().equals("3")){ // order
-                            Order_DBH order_dbh = new Order_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                            order_dbh.DatabaseCreate();
-                        }else if (activation.getAppType().equals("4")){ // search
-                            Find_DBH search_dbh = new Find_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                            search_dbh.DatabaseCreate();
-                        }
-
-
-                        callMethod.EditString("PersianCompanyNameUse", activation.getPersianCompanyName());
-                        callMethod.EditString("EnglishCompanyNameUse", activation.getEnglishCompanyName());
-                        callMethod.EditString("ServerURLUse", activation.getServerURL());
-                        callMethod.EditString("IpConfig", "");
-                        callMethod.EditString("AppType", activation.getAppType());
-                        callMethod.EditString("DbName", activation.getDbName());
-                        callMethod.EditString("ActivationCode", activation.getActivationCode());
-
-                        if (activation.getSecendServerURL() == null || activation.getSecendServerURL().isEmpty()) {
-                            callMethod.EditString("SecendServerURL", activation.getServerURL());
-                        }else{
-                            callMethod.EditString("SecendServerURL", activation.getSecendServerURL());
-                        }
-
-                        intent = new Intent(App.getContext(), Base_SplashActivity.class);
-                        startActivity(intent);
-                        finish();
-                        dialog.dismiss();
-                    }
-
-
-                    @Override
-                    public void onError(Error error) {
-                        btn_prog.setVisibility(View.VISIBLE);
-                        File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
-                        DownloadTemp.delete();
-                        tv_step.setText("مشکل ارتباطی لطفا دوباره امتحان کنید");
-
-                    }
-                });
 
     }
 
-    @SuppressLint({"SetTextI18n", "SdCardPath"})
-    public void CreateView(Activation singleactive) {
-
-
-        LinearLayoutCompat ll_main = new LinearLayoutCompat(this);
-        LinearLayoutCompat ll_tv = new LinearLayoutCompat(this);
-        LinearLayoutCompat ll_btn = new LinearLayoutCompat(this);
-        TextView tv_PersianCompanyName = new TextView(this);
-        TextView tv_apptype = new TextView(this);
-        TextView tv_EnglishCompanyName = new TextView(this);
-        TextView tv_ServerURL = new TextView(this);
-        MaterialButton btn_login = new MaterialButton(this);
-        MaterialButton btn_update = new MaterialButton(this);
-        MaterialButton btn_gap = new MaterialButton(this);
-        LinearLayoutCompat.LayoutParams margin_10 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        LinearLayoutCompat.LayoutParams margin_5 = new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-
-        ll_main.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        ll_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, (float) 0.3));
-        ll_btn.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, (float) 0.7));
-        tv_PersianCompanyName.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        tv_apptype.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        tv_EnglishCompanyName.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        tv_ServerURL.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        btn_login.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, (float) 0.3));
-        btn_update.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, (float) 0.3));
-        btn_gap.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, (float) 0.4));
-
-        tv_PersianCompanyName.setTextColor(getResources().getColor(R.color.grey_800));
-        tv_apptype.setTextColor(getResources().getColor(R.color.grey_800));
-        tv_EnglishCompanyName.setTextColor(getResources().getColor(R.color.grey_800));
-        tv_ServerURL.setTextColor(getResources().getColor(R.color.grey_800));
-
-        ll_main.setOrientation(LinearLayoutCompat.HORIZONTAL);
-        ll_tv.setOrientation(LinearLayoutCompat.VERTICAL);
-        ll_btn.setOrientation(LinearLayoutCompat.HORIZONTAL);
-
-
-        margin_10.setMargins(10, 10, 10, 10);
-        margin_5.setMargins(5, 5, 5, 5);
-
-
-        ll_main.setBackgroundResource(R.color.grey_20);
-        tv_PersianCompanyName.setBackgroundResource(R.color.grey_20);
-        tv_apptype.setBackgroundResource(R.color.grey_20);
-        tv_EnglishCompanyName.setBackgroundResource(R.color.grey_20);
-        tv_ServerURL.setBackgroundResource(R.color.grey_20);
-
-        btn_gap.setBackgroundResource(R.color.white);
-
-        tv_PersianCompanyName.setTextSize(26);
-        tv_apptype.setTextSize(18);
-        tv_EnglishCompanyName.setTextSize(16);
-        tv_ServerURL.setTextSize(20);
-        btn_login.setTextSize(18);
-        btn_update.setTextSize(18);
-
-        ll_main.setPadding(20, 20, 20, 20);
-        ll_btn.setPadding(0, 20, 0, 0);
-
-        ll_main.setWeightSum(1);
-        ll_btn.setWeightSum(1);
-
-        btn_gap.setVisibility(View.INVISIBLE);
-
-        tv_PersianCompanyName.setText(NumberFunctions.PerisanNumber(singleactive.getPersianCompanyName()));
-
-        if (singleactive.getAppType().equals("1")){ // broker
-            tv_apptype.setText("نوع نرم افزار : بازاریابی");
-        }else if (singleactive.getAppType().equals("2")){ // ocr
-            tv_apptype.setText("نوع نرم افزار : جمع آوری و توضیع");
-        }else if (singleactive.getAppType().equals("3")){ // order
-            tv_apptype.setText("نوع نرم افزار : سفارشگیری");
-        }else if (singleactive.getAppType().equals("4")){ // find
-            tv_apptype.setText("نوع نرم افزار :  کالایاب");
-        }
-
-
-        tv_EnglishCompanyName.setText("نام پوشه عکس : " + singleactive.getEnglishCompanyName());
-
-        String fullUrl = singleactive.getServerURL(); // مقدار کامل URL
-        String ipAddress = "";
-
-        if (fullUrl != null && fullUrl.startsWith("http")) {
-            // جدا کردن پروتکل و مسیر اضافی
-            String temp = fullUrl.replace("http://", "").replace("https://", "");
-            // جدا کردن فقط IP
-            int colonIndex = temp.indexOf(':');
-            if (colonIndex != -1) {
-                ipAddress = temp.substring(0, colonIndex); // بخش IP قبل از ':'
-            } else {
-                int slashIndex = temp.indexOf('/');
-                ipAddress = (slashIndex != -1) ? temp.substring(0, slashIndex) : temp;
-            }
-        }
-
-
-
-        tv_ServerURL.setText("آدرس سرور : " + ipAddress);
-        btn_login.setText("ورود");
-        btn_update.setText("اصلاح");
-
-
-        btn_login.setOnClickListener(v -> {
-
-
-            if (!new File(singleactive.getDatabaseFilePath()).exists()) {
-                DownloadRequest(singleactive);
-            } else {
-                callMethod.EditString("PersianCompanyNameUse", singleactive.getPersianCompanyName());
-                callMethod.EditString("EnglishCompanyNameUse", singleactive.getEnglishCompanyName());
-                callMethod.EditString("ServerURLUse", singleactive.getServerURL());
-                callMethod.EditString("DatabaseName", singleactive.getDatabaseFilePath());
-                callMethod.EditString("ActivationCode", singleactive.getActivationCode());
-                callMethod.EditString("AppType", singleactive.getAppType());
-
-                intent = new Intent(this, Base_SplashActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-
-        btn_update.setOnClickListener(v -> {
-
-            Call<RetrofitResponse> call1 = apiInterface.Activation(
-
-                    singleactive.getActivationCode(),"0"
-            );
-            call1.enqueue(new Callback<RetrofitResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        activation = response.body().getActivations().get(0);
-                        base_dbh.InsertActivation(activation);
-                        finish();
-                        startActivity(getIntent());
-
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-//                    callMethod.ErrorLog(t.getMessage());
-                }
-            });
-        });
-
-        ll_btn.addView(btn_login);
-        ll_btn.addView(btn_gap);
-        ll_btn.addView(btn_update);
-
-        ll_tv.addView(tv_PersianCompanyName);
-        ll_tv.addView(tv_apptype);
-        ll_tv.addView(tv_EnglishCompanyName);
-        ll_tv.addView(tv_ServerURL);
-
-        ll_tv.addView(ll_btn, margin_5);
-
-        ll_main.addView(ll_tv);
-
-        binding.baseAppLine.addView(ll_main, margin_10);
-    }
 
     @SuppressLint("HardwareIds")
     public void FirstActivation(Activation activation) {
@@ -491,13 +232,4 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    protected void onDestroy() {
-        if (PRDownloader.getStatus(downloadId) == Status.RUNNING) {
-            PRDownloader.cancel(downloadId);
-        }
-        super.onDestroy();
-
-    }
 }

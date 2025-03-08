@@ -5,7 +5,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash11"
+    android:background="@drawable/backnew"
     android:layoutDirection="rtl"
     android:gravity="center"
     android:layout_gravity="center"
@@ -17,7 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
-        app:lottie_rawRes="@raw/commerce"
+        app:lottie_rawRes="@raw/loadingnew"
         app:lottie_autoPlay="true"
-        app:lottie_loop="true" />
+        app:lottie_loop="true"
+        android:layout_gravity="bottom"/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

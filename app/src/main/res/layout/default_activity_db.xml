@@ -25,6 +25,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="30dp"
             android:gravity="center"
+            android:textStyle="bold"
             android:text="Software version"/>
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -93,8 +94,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@color/orange_800"
-                android:orientation="vertical" />
+                android:orientation="vertical" >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/base_app_allapp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_margin="2sp"
+                    android:visibility="visible"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </ScrollView>
 
 

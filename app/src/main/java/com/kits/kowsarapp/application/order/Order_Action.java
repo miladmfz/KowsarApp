@@ -451,12 +451,18 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         dialog.setContentView(R.layout.default_loginconfig);
         EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
         MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);
+
         btn_login.setOnClickListener(v -> {
-            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
+            if (callMethod.ReadString("ActivationCode").equals("444444")){
                 Intent intent = new Intent(mContext, Order_RegistrationActivity.class);
                 mContext.startActivity(intent);
-            }else {
-                callMethod.showToast("رمز عبور صیحیح نیست");
+            }else{
+                if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
+                    Intent intent = new Intent(mContext, Order_RegistrationActivity.class);
+                    mContext.startActivity(intent);
+                }else {
+                    callMethod.showToast("رمز عبور صیحیح نیست");
+                }
             }
         });
         dialog.show();

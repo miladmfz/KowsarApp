@@ -138,8 +138,11 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         broker_replication = new Broker_Replication(this);
 
-        broker_dbh.ClearSearchColumn();
         broker_dbh.DatabaseCreate();
+        try {
+            broker_dbh.ClearSearchColumn();
+        }catch (Exception ignored){
+        }
 
 
         toolbar = findViewById(R.id.b_main_a_toolbar);

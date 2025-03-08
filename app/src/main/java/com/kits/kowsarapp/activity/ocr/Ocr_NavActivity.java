@@ -65,6 +65,7 @@ public void Config() {
     callMethod = new CallMethod(this);
     action = new Ocr_Action(this);
     dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+    dbh.DatabaseCreate();
 
     toolbar = findViewById(R.id.ocr_main_a_toolbar);
     setSupportActionBar(toolbar);

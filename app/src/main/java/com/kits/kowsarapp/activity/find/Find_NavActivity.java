@@ -75,9 +75,9 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
 
         dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
         find_replication = new Find_Replication(this);
+        dbh.DatabaseCreate();
 
         if (callMethod.ReadString("ActivationCode").equals("888888")){
-            dbh.DatabaseCreate();
             find_replication.DoingReplicate();
         }
 

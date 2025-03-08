@@ -54,17 +54,17 @@ public class Base_DBH extends SQLiteOpenHelper {
 
         getWritableDatabase().execSQL("Update Activation set " +
 
-                "PersianCompanyName = '" + activation.getPersianCompanyName() + "' " +
-                "EnglishCompanyName = '" + activation.getEnglishCompanyName() + "' " +
-                "ServerURL = '" + activation.getServerURL() + "' " +
-                "SQLiteURL = '" + activation.getSQLiteURL() + "' " +
-                "MaxDevice = '" + activation.getMaxDevice() + "' " +
-                "UsedDevice = '" + activation.getUsedDevice() + "' " +
-                "ServerIp = '" + activation.getServerIp() + "' " +
-                "ServerPort = '" + activation.getServerPort() + "' " +
-                "ServerPathApi = '" + activation.getServerPathApi() + "' " +
-                "SecendServerURL = '" + activation.getSecendServerURL() + "' " +
-                "DbName = '" + activation.getDbName() + "' " +
+                "PersianCompanyName = '" + activation.getPersianCompanyName() + "' ," +
+                "EnglishCompanyName = '" + activation.getEnglishCompanyName() + "' ," +
+                "ServerURL = '" + activation.getServerURL() + "' ," +
+                "SQLiteURL = '" + activation.getSQLiteURL() + "' ," +
+                "MaxDevice = '" + activation.getMaxDevice() + "' ," +
+                "UsedDevice = '" + activation.getUsedDevice() + "' ," +
+                "ServerIp = '" + activation.getServerIp() + "' ," +
+                "ServerPort = '" + activation.getServerPort() + "' ," +
+                "ServerPathApi = '" + activation.getServerPathApi() + "' ," +
+                "SecendServerURL = '" + activation.getSecendServerURL() + "' ," +
+                "DbName = '" + activation.getDbName() + "' ," +
                 "AppType = '" + activation.getAppType() + "' " +
                 "Where ActivationCode= '" + activation.getActivationCode() + "'");
     }

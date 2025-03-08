@@ -32,7 +32,10 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.find.Find_Replication;
 import com.kits.kowsarapp.application.order.Order_Action;
+import com.kits.kowsarapp.model.find.Find_DBH;
+import com.kits.kowsarapp.model.order.Order_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
@@ -42,7 +45,8 @@ import java.util.Locale;
 public class Order_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     Order_APIInterface apiInterface;
 
-    Order_Action action;
+    Order_Action order_action;
+    Order_DBH dbh;
     CallMethod callMethod;
     Toolbar toolbar;
     NavigationView navigationView;
@@ -109,10 +113,12 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
     public void Config() {
 
 
-        action = new Order_Action(this);
+        order_action = new Order_Action(this);
         callMethod = new CallMethod(this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        dbh = new Order_DBH(this, callMethod.ReadString("DatabaseName"));
 
+        dbh.DatabaseCreate();
 
         LinearLayoutCompat ll_activity_main = findViewById(R.id.ord_main_a_layout);
 
@@ -250,7 +256,7 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             startActivity(intent);
 
         } else if (id == R.id.order_nav_cfg) {
-            action.LoginSetting();
+            order_action.LoginSetting();
 
 
         }
