@@ -1,24 +1,16 @@
 package com.kits.kowsarapp.viewholder.base;
 
-import static com.kits.kowsarapp.R.drawable.orderlogo;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
-import android.util.Base64;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,29 +21,21 @@ import com.downloader.PRDownloaderConfig;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
-import com.kits.kowsarapp.activity.broker.Broker_PFOpenActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.ImageInfo;
-import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.base.Base_DBH;
-import com.kits.kowsarapp.model.base.Column;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.find.Find_DBH;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.model.order.Order_DBH;
-import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.base.APIClient_kowsar;
 import com.kits.kowsarapp.webService.base.Kowsar_APIInterface;
-import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -115,21 +99,21 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
         switch (activation.getAppType()) {
             case "1":  // broker
                 tv_apptype.setText("بازاریابی");
-                img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.brokerlogo));
+                img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.img_broker_logo));
                 break;
             case "2":  // ocr
                 tv_apptype.setText("جمع آوری و توضیع");
-                img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ocrlogo));
+                img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.img_logo_ocr));
 
                 break;
             case "3":  // order
                 tv_apptype.setText("سفارشگیری");
-                img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.orderlogo));
+                img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.img_order_logo));
 
                 break;
             case "4":  // find
                 tv_apptype.setText("کالایاب");
-                img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.finglogo));
+                img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.img_find_logo));
 
                 break;
         }

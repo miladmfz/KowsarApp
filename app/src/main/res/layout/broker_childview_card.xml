@@ -30,7 +30,7 @@
         android:layout_gravity="center|right"
 
         android:layout_marginRight="10dp"
-        android:src="@drawable/ic_baseline_category_24"
+        android:src="@drawable/ic_category"
         tools:ignore="RtlHardcoded" />
 
 

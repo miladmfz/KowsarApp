@@ -252,7 +252,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         navigationView.getMenu().clear();
 
         for (GoodGroup goodGroup : menugrp) {
-            navigationView.getMenu().add(NumberFunctions.PerisanNumber(goodGroup.getGoodGroupFieldValue("Name"))).setIcon(R.drawable.grpmenu).setOnMenuItemClickListener(item -> {
+            navigationView.getMenu().add(NumberFunctions.PerisanNumber(goodGroup.getGoodGroupFieldValue("Name"))).setIcon(R.drawable.ic_grpmenu).setOnMenuItemClickListener(item -> {
                 intent = new Intent(this, Broker_SearchActivity.class);
                 intent.putExtra("scan", "");
                 intent.putExtra("id", goodGroup.getGoodGroupFieldValue("GroupCode"));

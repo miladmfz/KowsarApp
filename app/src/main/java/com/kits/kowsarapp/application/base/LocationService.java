@@ -9,7 +9,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
@@ -74,7 +73,7 @@ public class LocationService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultintent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channelId);
-        builder.setSmallIcon(R.drawable.jpgnew);
+        builder.setSmallIcon(R.drawable.img_logo_kits_jpg);
         builder.setContentTitle(getString(R.string.app_name));
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         builder.setContentText("Kowsar Service");

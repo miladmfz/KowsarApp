@@ -1511,7 +1511,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                 .setContentTitle(title)
                 .setContentText(message)
                 .setOnlyAlertOnce(false)
-                .setSmallIcon(R.drawable.jpgnew)
+                .setSmallIcon(R.drawable.img_logo_kits_jpg)
                 .setContentIntent(contentIntent);
 
         notificationManager.notify(1, notcompat.build());

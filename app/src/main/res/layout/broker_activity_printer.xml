@@ -28,7 +28,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/qic_action_add"
+                android:drawableLeft="@drawable/img_broker_qic_action_add"
                 android:text="@string/new_printer"
                 android:layout_margin="3dp"
                 android:textSize="16sp"
@@ -46,7 +46,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_weight="1"
-                android:drawableRight="@drawable/qic_action_print"
+                android:drawableRight="@drawable/img_broker_qic_action_print"
                 android:text="@string/print"
                 android:layout_margin="3dp"
                 android:textSize="16sp"
@@ -121,7 +121,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/qic_action_cancel" />
+                    android:src="@drawable/img_broker_qic_action_cancel" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/qic_action_print" />
+                    android:src="@drawable/img_broker_qic_action_print" />
 
                 <TextView
                     android:layout_width="wrap_content"

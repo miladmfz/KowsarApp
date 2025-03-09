@@ -84,31 +84,31 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
                     searchQuery = NumberFunctions.EnglishNumber(editable.toString());
                     goods = broker_dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
 
-                    int backgroundResourceId = itemPosition.equals("1") ?
-                            R.drawable.bg_round_green_history_line : R.drawable.bg_round_green_history;
-
-                    binding.bBaskethistoryARow.setBackground(ContextCompat.getDrawable(
-                            App.getContext(), backgroundResourceId));
-                    // update the list view with the new data
+//                    int backgroundResourceId = itemPosition.equals("1") ?
+//                            R.drawable.bg_round_green_history_line : R.drawable.bg_round_green_history;
+//
+//                    binding.bBaskethistoryARow.setBackground(ContextCompat.getDrawable(
+//                            App.getContext(), backgroundResourceId));
+//                    // update the list view with the new data
                     broker_basketItemHistoryAdapter.updateList(goods, itemPosition);
                 }, Integer.parseInt(callMethod.ReadString("Delay")));
             }
         });
         // set listener for the list item
-        binding.bBaskethistoryARow.setOnClickListener(view -> {
-            int backgroundResourceId;
-            if (itemPosition.equals("1")) {
-                itemPosition = "0";
-                backgroundResourceId = R.drawable.bg_round_green_history_line;
-            } else {
-                itemPosition = "1";
-                backgroundResourceId = R.drawable.bg_round_green_history;
-            }
-            binding.bBaskethistoryARow.setBackground(ContextCompat.getDrawable(
-                    this, backgroundResourceId));
-
-            broker_basketItemHistoryAdapter.updateList(goods, itemPosition);
-        });
+//        binding.bBaskethistoryARow.setOnClickListener(view -> {
+//            int backgroundResourceId;
+//            if (itemPosition.equals("1")) {
+//                itemPosition = "0";
+//                backgroundResourceId = R.drawable.bg_round_green_history_line;
+//            } else {
+//                itemPosition = "1";
+//                backgroundResourceId = R.drawable.bg_round_green_history;
+//            }
+//            binding.bBaskethistoryARow.setBackground(ContextCompat.getDrawable(
+//                    this, backgroundResourceId));
+//
+//            broker_basketItemHistoryAdapter.updateList(goods, itemPosition);
+//        });
 
         goods = broker_dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
 

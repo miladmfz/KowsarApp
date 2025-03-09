@@ -944,7 +944,7 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
                 .setContentTitle(title)
                 .setContentText(message)
                 .setOnlyAlertOnce(false)
-                .setSmallIcon(R.drawable.jpgnew)
+                .setSmallIcon(R.drawable.img_logo_kits_jpg)
                 .setContentIntent(contentIntent);
 
         notificationManager.notify(1, notcompat.build());

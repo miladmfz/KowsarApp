@@ -120,7 +120,7 @@
                     android:gravity="center"
                     android:layout_weight="0.8"
 
-                    android:background="@drawable/baseline_refresh_24"
+                    android:background="@drawable/ic_refresh_24"
                     android:textColor="?attr/colorOnBackground"
                     />
             </LinearLayout>
@@ -200,6 +200,6 @@
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:fabSize="normal"
-        android:src="@drawable/ic_baseline_attach_file_24" />
+        android:src="@drawable/ic_attach_file" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

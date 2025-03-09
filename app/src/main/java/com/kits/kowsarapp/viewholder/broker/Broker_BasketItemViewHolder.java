@@ -100,9 +100,9 @@ public class Broker_BasketItemViewHolder extends RecyclerView.ViewHolder {
 
 
         if (ws == 1 || ws == 2||ws == -1 || ws == -2) {
-            rltv.setBackgroundResource(R.drawable.bg_round_red);
+            rltv.setBackgroundResource(R.drawable.bg_broker_basket_red);
         } else {
-            rltv.setBackgroundResource(R.drawable.bg_round_green);
+            rltv.setBackgroundResource(R.drawable.bg_broker_basket_green);
         }
 
     }

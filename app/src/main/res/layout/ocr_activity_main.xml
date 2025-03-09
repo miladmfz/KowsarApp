@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_card"
             android:elevation="4dp"
             android:padding="16dp">
 

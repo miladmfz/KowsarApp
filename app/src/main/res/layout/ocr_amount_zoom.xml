@@ -32,7 +32,7 @@
                 android:weightSum="1"
                 android:layout_marginBottom="8dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/divider_bottom">
+                android:background="@drawable/bg_round">
 
                 <TextView
                     android:layout_width="0dp"
@@ -62,7 +62,7 @@
                 android:weightSum="1"
                 android:layout_marginBottom="8dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/divider_bottom">
+                android:background="@drawable/bg_round">
 
                 <TextView
                     android:layout_width="0dp"

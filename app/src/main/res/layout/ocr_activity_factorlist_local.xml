@@ -88,7 +88,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginBottom="20dp"
         android:layout_marginStart="20dp"
-        android:src="@drawable/ic_baseline_attach_file_24"
+        android:src="@drawable/ic_attach_file"
         android:visibility="gone"
         app:backgroundTint="@color/red_800"
         app:borderWidth="0dp"

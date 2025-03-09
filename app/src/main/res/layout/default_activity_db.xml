@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.base.Base_ChoiceDBActivity"
-    android:background="@drawable/gradientbackground"
+    android:background="@drawable/bg_input_activation_gradient"
     android:layoutDirection="rtl"
     >
 
@@ -41,7 +41,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
-                android:background="@drawable/activationinput"
+                android:background="@drawable/bg_activation_editbox"
                 android:textDirection="rtl"
                 android:inputType="number"
                 android:textSize="18sp"

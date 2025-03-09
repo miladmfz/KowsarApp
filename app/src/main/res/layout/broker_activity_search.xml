@@ -220,7 +220,7 @@
                     android:paddingRight="40dp"
                     android:layout_weight="0.2"
                     android:layout_gravity="center"
-                    android:background="@drawable/ic_baseline_qr_code_scanner_24"
+                    android:background="@drawable/ic_qr_code"
                     android:visibility="gone"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 

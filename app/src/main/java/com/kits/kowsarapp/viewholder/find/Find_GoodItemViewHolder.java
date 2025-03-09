@@ -218,7 +218,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
         if (!good.getGoodImageName().equals("")) {
             Glide.with(img)
                     .asBitmap()
-                    .load(R.drawable.white)
+                    .load(R.drawable.img_white)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .fitCenter()
                     .into(img);
@@ -236,7 +236,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
             Glide.with(img)
                     .asBitmap()
-                    .load(R.drawable.white)
+                    .load(R.drawable.img_white)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .fitCenter()
                     .into(img);
@@ -262,7 +262,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                             } else {
                                 Glide.with(img)
                                         .asBitmap()
-                                        .load(R.drawable.no_photo)
+                                        .load(R.drawable.img_base_no_photo)
                                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                                         .fitCenter()
                                         .into(img);

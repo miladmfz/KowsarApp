@@ -11,12 +11,12 @@
 
             <item
                 android:id="@+id/nav_cfg"
-                android:icon="@drawable/ic_config_w"
+                android:icon="@drawable/ic_contact_w"
 
                 android:title="@string/setting" />
             <item
                 android:id="@+id/aboutus"
-                android:icon="@drawable/nav_about_us"
+                android:icon="@drawable/img_base_about_us"
 
                 android:title="@string/aboutus" />
 

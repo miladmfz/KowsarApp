@@ -127,7 +127,7 @@
                 android:layout_height="200dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="0.4"
-                android:background="@drawable/no_photo"
+                android:background="@drawable/img_base_no_photo"
                 android:scaleType="centerCrop" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 

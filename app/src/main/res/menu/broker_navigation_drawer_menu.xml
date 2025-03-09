@@ -28,20 +28,20 @@
 
         <item
             android:id="@+id/b_nav_search_date"
-            android:icon="@drawable/ic_fiber_new_black_24dp"
+            android:icon="@drawable/ic_new_black"
 
             android:title="@string/good_new" />
 
         <item
             android:id="@+id/b_nav_allview"
-            android:icon="@drawable/ic_baseline_category_24"
+            android:icon="@drawable/ic_category"
 
             android:title="@string/good_allview" />
 
         <item
             android:id="@+id/b_nav_buy"
 
-            android:icon="@drawable/ic_ww"
+            android:icon="@drawable/ic_shopping_cart_white_24dp"
             android:title="@string/good_bag"
 
             />
@@ -70,12 +70,12 @@
 
             <item
                 android:id="@+id/b_nav_cfg"
-                android:icon="@drawable/ic_config_w"
+                android:icon="@drawable/ic_contact_w"
 
                 android:title="@string/setting" />
             <item
                 android:id="@+id/b_aboutus"
-                android:icon="@drawable/nav_about_us"
+                android:icon="@drawable/img_base_about_us"
 
                 android:title="@string/aboutus" />
 

@@ -44,7 +44,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/kits"
+                android:src="@drawable/img_base_kits"
                 android:layout_marginBottom="20dp"
                 android:layout_margin="10dp"/>
 
@@ -83,7 +83,7 @@
                 android:textColor="@color/deep_purple_500"
                 android:layout_marginTop="20dp"
                 android:textStyle="bold"
-                android:drawableBottom="@drawable/baseline_download_24"
+                android:drawableBottom="@drawable/ic_download_24"
                 android:drawablePadding="8dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

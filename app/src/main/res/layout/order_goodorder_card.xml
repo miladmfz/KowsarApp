@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/ic_baseline_delete_forever_24"
+                android:background="@drawable/ic_delete"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
     </LinearLayout>

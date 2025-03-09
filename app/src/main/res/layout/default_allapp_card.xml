@@ -149,7 +149,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_weight="0.3"
-                    android:background="@drawable/no_photo"
+                    android:background="@drawable/img_base_no_photo"
                     android:scaleType="centerCrop" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>

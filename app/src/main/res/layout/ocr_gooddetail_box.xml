@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:scaleType="centerCrop"
-                android:background="@drawable/no_photo"
+                android:background="@drawable/img_base_no_photo"
                 android:layout_gravity="center"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="8dp"/>
@@ -76,7 +76,7 @@
                 android:weightSum="1"
                 android:layout_marginBottom="8dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/divider_bottom">
+                android:background="@drawable/bg_round">
 
                 <TextView
                     android:id="@+id/ocr_gooddetail_b_lb1"
@@ -108,7 +108,7 @@
                 android:weightSum="1"
                 android:layout_marginBottom="8dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/divider_bottom">
+                android:background="@drawable/bg_round">
 
                 <TextView
                     android:id="@+id/ocr_gooddetail_b_lb2"
@@ -140,7 +140,7 @@
                 android:weightSum="1"
                 android:layout_marginBottom="8dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/divider_bottom">
+                android:background="@drawable/bg_round">
 
                 <TextView
                     android:id="@+id/ocr_gooddetail_b_lb3"
@@ -172,7 +172,7 @@
                 android:weightSum="1"
                 android:layout_marginBottom="8dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/divider_bottom">
+                android:background="@drawable/bg_round">
 
                 <TextView
                     android:id="@+id/ocr_gooddetail_b_lb4"

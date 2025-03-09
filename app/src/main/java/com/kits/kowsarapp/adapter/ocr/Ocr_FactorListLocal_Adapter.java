@@ -268,7 +268,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                         .show();
             }
         });
-        holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_baseline_attach_file_24));
+        holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_attach_file));
         holder.fac_rltv.setChecked(factors.get(position).isCheck());
         holder.fac_rltv.setOnLongClickListener(view -> {
             Ocr_FactorListLocalActivity activity = (Ocr_FactorListLocalActivity) mContext;
