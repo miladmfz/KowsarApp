@@ -16,22 +16,28 @@
     </style>
 
 
+
     <style name="Theme.Default" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/colorPrimaryDark</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#3B82F6</item> <!-- Lighter Royal Blue -->
+        <item name="colorPrimaryVariant">#215FE8</item> <!-- Slightly deeper Lighter Royal Blue -->
+        <item name="colorSecondary">#FFD700</item> <!-- Brighter Gold -->
+        <item name="colorSecondaryVariant">#DFAA05</item> <!-- Slightly deeper Brighter Gold -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- White text on Primary -->
+        <item name="colorSurface">#F1F5F9</item> <!-- Soft, even lighter background -->
+        <item name="colorOnBackground">#111827</item> <!-- Deep gray for contrast instead of pure black -->
+        <item name="android:statusBarColor">#2563EB</item> <!-- Brighter Blue for Status Bar -->
     </style>
 
-
+    <!--    <style name="Theme.Default" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
+    <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+    <!--        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>-->
+    <!--        <item name="colorAccent">@color/colorAccent</item>-->
+    <!--        <item name="colorOnPrimary">@color/white</item>-->
+    <!--        <item name="colorSecondary">@color/teal_200</item>-->
+    <!--        <item name="colorSecondaryVariant">@color/teal_700</item>-->
+    <!--        <item name="colorOnSecondary">@color/colorPrimaryDark</item>-->
+    <!--        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>-->
+    <!--    </style>-->
 
 
     <style name="BlueHarmonyTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
