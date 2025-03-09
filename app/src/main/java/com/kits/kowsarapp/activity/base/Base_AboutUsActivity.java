@@ -36,7 +36,6 @@ import java.io.File;
 
 public class Base_AboutUsActivity extends AppCompatActivity {
     CallMethod callMethod;
-    Broker_DBH dbh;
     DefaultActivityAboutusBinding binding;
 
     @Override
@@ -57,93 +56,53 @@ public class Base_AboutUsActivity extends AppCompatActivity {
 
             builder.setPositiveButton(R.string.textvalue_yes, (dialogalert, which) -> {
 
+                if (!getPackageManager().canRequestPackageInstalls()) {
+                    // Open the permission settings for the user to enable the permission
+                    Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                    intent1.setData(Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent1, 1);
+                } else {
 
+                    final Dialog dialog = new Dialog(Base_AboutUsActivity.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.default_loginconfig);
+                    EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
+                    MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);
 
+                    ed_password.addTextChangedListener(
+                            new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                }
 
+                                @Override
+                                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                }
 
+                                @Override
+                                public void afterTextChanged(final Editable editable) {
 
+                                    if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).length()>5) {
+                                        if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
 
-
-
-
-
-
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (!getPackageManager().canRequestPackageInstalls()) {
-                        // Open the permission settings for the user to enable the permission
-                        Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
-                        intent1.setData(Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent1, 1);
-                    } else {
-
-                        final Dialog dialog = new Dialog(Base_AboutUsActivity.this);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setContentView(R.layout.default_loginconfig);
-                        EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
-                        MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);
-
-
-
-
-
-
-
-
-
-                        ed_password.addTextChangedListener(
-                                new TextWatcher() {
-                                    @Override
-                                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                                    }
-
-                                    @Override
-                                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                                    }
-
-                                    @Override
-                                    public void afterTextChanged(final Editable editable) {
-
-                                        if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).length()>5) {
-                                            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
-
-                                                Intent intent = new Intent(Base_AboutUsActivity.this, Broker_RegistrationActivity.class);
-                                                startActivity(intent);
-                                            } else {
-                                                callMethod.showToast("رمز عبور صیحیح نیست");
-                                            }
-
+                                            Intent intent = new Intent(Base_AboutUsActivity.this, Broker_RegistrationActivity.class);
+                                            startActivity(intent);
+                                        } else {
+                                            callMethod.showToast("رمز عبور صیحیح نیست");
                                         }
+
                                     }
-                                });
+                                }
+                            });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        btn_login.setOnClickListener(vs -> {
-                            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
-                                DownloadFun();
-                            } else {
-                                callMethod.showToast("رمز عبور صیحیح نیست");
-                            }
-                        });
-                        dialog.show();
-                    }
+                    btn_login.setOnClickListener(vs -> {
+                        if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
+                            DownloadFun();
+                        } else {
+                            callMethod.showToast("رمز عبور صیحیح نیست");
+                        }
+                    });
+                    dialog.show();
                 }
 
             });
@@ -161,7 +120,6 @@ public class Base_AboutUsActivity extends AppCompatActivity {
 
     public void Config() {
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         setSupportActionBar(binding.bAboutusToolbar);
 
     }
@@ -223,10 +181,8 @@ public class Base_AboutUsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (getPackageManager().canRequestPackageInstalls()) {
-                    DownloadFun();
-                }
+            if (getPackageManager().canRequestPackageInstalls()) {
+                DownloadFun();
             }
         }
     }

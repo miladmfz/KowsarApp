@@ -31,24 +31,24 @@ import retrofit2.Callback;
 
 
 public class Broker_BasketItemAdapter extends RecyclerView.Adapter<Broker_BasketItemViewHolder> {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
     private final Broker_APIInterface broker_apiInterface;
     private final ImageInfo image_info;
     private final Context mContext;
     CallMethod callMethod;
     private final ArrayList<Good> goods;
-    private final Broker_DBH dbh;
+    private final Broker_DBH broker_dbh;
     Intent intent;
-    Broker_Action action;
+    Broker_Action broker_action;
 
     public Broker_BasketItemAdapter(ArrayList<Good> goods, Context mContext) {
         this.mContext = mContext;
         this.goods = goods;
         this.callMethod = new CallMethod(mContext);
         this.image_info = new ImageInfo(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
-        action = new Broker_Action(mContext);
+        broker_action = new Broker_Action(mContext);
     }
 
     @NonNull
@@ -64,7 +64,7 @@ public class Broker_BasketItemAdapter extends RecyclerView.Adapter<Broker_Basket
 
 callMethod.Log(goods.get(position).getGoodFieldValue("Shortage"));
         holder.bind(goods.get(position));
-        holder.Action(goods.get(position), mContext, dbh, callMethod, action, image_info);
+        holder.Action(goods.get(position), mContext, broker_dbh, callMethod, broker_action, image_info);
 
 
         if (!image_info.Image_exist(goods.get(position).getGoodFieldValue("KsrImageCode"))) {

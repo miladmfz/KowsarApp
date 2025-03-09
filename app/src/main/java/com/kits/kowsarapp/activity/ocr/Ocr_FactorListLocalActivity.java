@@ -34,8 +34,9 @@ import java.util.Objects;
 
 
 public class Ocr_FactorListLocalActivity extends AppCompatActivity {
-    private Ocr_DBH dbh;
-    Ocr_FactorListLocal_Adapter adapter;
+
+    private Ocr_DBH ocr_dbh;
+    Ocr_FactorListLocal_Adapter ocr_factorListLocal_adapter;
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_header_recycler;
     private EditText edtsearch;
@@ -45,7 +46,7 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
     public ArrayList<String> Multi_barcode = new ArrayList<>();
 
 
-    String IsSent, signature = "1", srch = "";
+    String IsSent, signature = "1", SearchTarget = "";
     TextView textView_Count;
     int width = 1;
 
@@ -61,6 +62,7 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_factorlist_local);
 
         Dialog dialog1 = new Dialog(this);
@@ -94,7 +96,7 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+        ocr_dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
         factor_header_recycler = findViewById(R.id.ocr_localfactor_a_recyclerView);
         fab = findViewById(R.id.ocr_localfactor_a_fab);
@@ -115,9 +117,9 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
 
     public void init(){
 
-        srch = callMethod.ReadString("Last_search");
+        SearchTarget = callMethod.ReadString("Last_search");
 
-        factors = dbh.factorscan(IsSent, srch, signature);
+        factors = ocr_dbh.factorscan(IsSent, SearchTarget, signature);
 
         edtsearch.setText(callMethod.ReadString("Last_search"));
 
@@ -147,15 +149,15 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
                 mySwitch_activestack.setText("همه");
 
             }
-            factors = dbh.factorscan(IsSent, srch, signature);
-            adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
-            if (adapter.getItemCount() == 0) {
+            factors = ocr_dbh.factorscan(IsSent, SearchTarget, signature);
+            ocr_factorListLocal_adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
+            if (ocr_factorListLocal_adapter.getItemCount() == 0) {
                 callMethod.showToast("فاکتوری یافت نشد");
             }
-            textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
+            textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(ocr_factorListLocal_adapter.getItemCount())));
             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
             factor_header_recycler.setLayoutManager(gridLayoutManager);
-            factor_header_recycler.setAdapter(adapter);
+            factor_header_recycler.setAdapter(ocr_factorListLocal_adapter);
             factor_header_recycler.setItemAnimator(new DefaultItemAnimator());
         });
 
@@ -175,19 +177,19 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
 
-                            srch = NumberFunctions.EnglishNumber(dbh.GetRegionText(editable.toString()));
-                            srch=srch.replace(" ","%");
-                            callMethod.EditString("Last_search", srch);
-                            factors = dbh.factorscan(IsSent, srch, signature);
+                            SearchTarget = NumberFunctions.EnglishNumber(ocr_dbh.GetRegionText(editable.toString()));
+                            SearchTarget=SearchTarget.replace(" ","%");
+                            callMethod.EditString("Last_search", SearchTarget);
+                            factors = ocr_dbh.factorscan(IsSent, SearchTarget, signature);
 
-                            adapter = new Ocr_FactorListLocal_Adapter(factors, Ocr_FactorListLocalActivity.this, width);
-                            if (adapter.getItemCount() == 0) {
+                            ocr_factorListLocal_adapter = new Ocr_FactorListLocal_Adapter(factors, Ocr_FactorListLocalActivity.this, width);
+                            if (ocr_factorListLocal_adapter.getItemCount() == 0) {
                                 callMethod.showToast("فاکتوری یافت نشد");
                             }
-                            textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
+                            textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(ocr_factorListLocal_adapter.getItemCount())));
                             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
                             factor_header_recycler.setLayoutManager(gridLayoutManager);
-                            factor_header_recycler.setAdapter(adapter);
+                            factor_header_recycler.setAdapter(ocr_factorListLocal_adapter);
                             factor_header_recycler.setItemAnimator(new DefaultItemAnimator());
 
 
@@ -198,14 +200,14 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
                 });
 
 
-        adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
-        if (adapter.getItemCount() == 0) {
+        ocr_factorListLocal_adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
+        if (ocr_factorListLocal_adapter.getItemCount() == 0) {
             callMethod.showToast("فاکتوری یافت نشد");
         }
-        textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
+        textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(ocr_factorListLocal_adapter.getItemCount())));
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
         factor_header_recycler.setLayoutManager(gridLayoutManager);
-        factor_header_recycler.setAdapter(adapter);
+        factor_header_recycler.setAdapter(ocr_factorListLocal_adapter);
         factor_header_recycler.setItemAnimator(new DefaultItemAnimator());
 
     }
@@ -228,12 +230,12 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
                 factor.setCheck(false);
             }
             Multi_sign.clear();
-            adapter.multi_select = false;
+            ocr_factorListLocal_adapter.multi_select = false;
 
-            adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
+            ocr_factorListLocal_adapter = new Ocr_FactorListLocal_Adapter(factors, this, width);
             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
             factor_header_recycler.setLayoutManager(gridLayoutManager);
-            factor_header_recycler.setAdapter(adapter);
+            factor_header_recycler.setAdapter(ocr_factorListLocal_adapter);
             factor_header_recycler.setItemAnimator(new DefaultItemAnimator());
             fab.setVisibility(View.GONE);
             return true;
@@ -258,7 +260,7 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
             Multi_sign.remove(b);
             if (Multi_sign.size() < 1) {
                 fab.setVisibility(View.GONE);
-                adapter.multi_select = false;
+                ocr_factorListLocal_adapter.multi_select = false;
                 item_multi.findItem(R.id.ocr_menu_multi).setVisible(false);
             }
         }

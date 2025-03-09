@@ -26,26 +26,20 @@ import java.util.List;
 
 public class Broker_AllGrpActivity extends AppCompatActivity {
 
-
-    Broker_APIInterface broker_apiInterface;
     CallMethod callMethod;
     Broker_DBH broker_dbh;
     Toolbar toolbar;
-    RecyclerView rc;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.broker_activity_allgrp);
-
 
         Config();
         try {
             Handler handler = new Handler();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                handler.postDelayed(this::init, 100);
-            }
+            handler.postDelayed(this::init, 100);
         } catch (Exception ignored) {
 
         }
@@ -62,9 +56,6 @@ public class Broker_AllGrpActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.b_allgrp_a_toolbar);
         setSupportActionBar(toolbar);
-
-        rc = findViewById(R.id.b_allgrp_a_rc);
-        broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
 
     }

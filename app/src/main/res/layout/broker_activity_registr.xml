@@ -18,13 +18,11 @@
         >
 
         <androidx.appcompat.widget.Toolbar
+            app:title="تفییر اطلاعات"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
-            app:title="تفییر اطلاعات"
-
-            app:titleTextColor="@color/white"
-            android:background="?attr/colorPrimary">
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary">
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -44,29 +42,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_margin="10dp">
+                    app:titleTextColor="?attr/colorSurface">
 
 
                     <Button
                         android:id="@+id/b_register_a_btn"
                         android:layout_width="match_parent"
-                        android:text="@string/reg_save"
-                        android:layout_margin="5dp"
-                        android:textStyle="bold"
-                        android:layout_weight="0.5"
-                        app:backgroundTint="@color/green_600"
-                        app:strokeColor="@color/grey_1000"
-                        app:strokeWidth="1dp"
                         android:layout_height="60dp"
-                        android:layout_marginBottom="8dp"
-                        app:cornerRadius="12dp"
-                        android:textSize="18sp"
-                        android:backgroundTint="@color/green_500"
-                        android:textColor="@color/white"
-                        app:icon="@drawable/ic_edit_config"
-                        app:iconGravity="start"
-                        app:iconSize="24dp"
-                        />
+                        android:text="@string/registeractivity_save"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:layout_margin="3dp"
+                        android:textSize="20sp"
+                        android:layout_weight="1" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
@@ -83,22 +72,22 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="اسم مجموعه:"
-                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="16sp"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp" />
+                            android:layout_margin="3dp"
+                            android:textColor="?attr/colorOnBackground"
+                            />
 
                         <TextView
                             android:id="@+id/b_register_a_dbname"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/bg_round"
-                            android:padding="8dp"
+                            android:layout_margin="5dp"
                             android:gravity="center"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="16sp"
-                            tools:ignore="LabelFor" />
+                            android:background="@drawable/bg_editbox"
+                            android:textColor="?attr/colorOnBackground"
+                            android:padding="8dp"
+                            />
 
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -132,7 +121,7 @@
                         <Button
                             android:id="@+id/b_register_a_basedelete"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:text="بارگیری مجدد"
                             android:textColor="@color/white"
@@ -184,9 +173,10 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|start"
                                 android:text="@string/config_broker"
-                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
-                                android:paddingStart="8dp" />
+                                android:layout_margin="3dp"
+
+                                android:textColor="?attr/colorOnBackground"/>
 
                             <!-- EditText -->
                             <EditText
@@ -194,11 +184,11 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2"
-                                android:background="@drawable/bg_round"
+                                android:background="@drawable/bg_editbox"
                                 android:padding="8dp"
                                 android:gravity="center_vertical"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 tools:ignore="LabelFor" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -216,9 +206,10 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|start"
                                 android:text="نام بازاریاب"
-                                android:textColor="@color/colorPrimaryDark"
                                 android:textSize="16sp"
-                                android:paddingStart="8dp" />
+                                android:layout_margin="3dp"
+
+                                android:textColor="?attr/colorOnBackground"/>
 
                             <!-- Spinner -->
                             <Spinner
@@ -226,10 +217,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2"
-                                android:background="@drawable/bg_round"
+                                android:background="@drawable/bg_editbox"
                                 android:padding="8dp"
                                 android:gravity="center"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -258,7 +249,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical|start"
                                 android:text="@string/config_item"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:layout_weight="1"
 
@@ -270,11 +261,11 @@
                                 android:id="@+id/b_register_a_grid"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_round"
+                                android:background="@drawable/bg_editbox"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
                                 android:maxLength="1"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:layout_weight="2"
 
@@ -292,7 +283,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical|start"
                                 android:text="@string/config_delay"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp"
                                 android:layout_weight="1"
@@ -303,10 +294,10 @@
                                 android:id="@+id/b_register_a_delay"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_round"
+                                android:background="@drawable/bg_editbox"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:gravity="center"
                                 android:layout_weight="2"
@@ -333,7 +324,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|start"
                                 android:text="سایز اطلاعات"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp" />
 
@@ -343,10 +334,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2"
-                                android:background="@drawable/bg_round"
+                                android:background="@drawable/bg_editbox"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:gravity="center" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -364,7 +355,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|start"
                                 android:text="سایز عنوان ها"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp" />
 
@@ -374,10 +365,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="2"
-                                android:background="@drawable/bg_round"
+                                android:background="@drawable/bg_editbox"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:gravity="center" />
 
@@ -409,7 +400,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -421,6 +412,7 @@
                             android:checked="true"
                             android:enabled="true"
                             android:layout_gravity="center"
+
                             />
 
 
@@ -442,7 +434,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="سرویس کوثر"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -474,7 +466,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="بروز رسانی خودکار"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -507,7 +499,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="نمایش خطی کالا"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -540,7 +532,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="@string/config_off"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -573,7 +565,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="بسته شدن کیبورد"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -605,7 +597,7 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical|start"
                             android:text="نمایش خصوصیات"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:paddingStart="8dp" />
 
@@ -634,14 +626,15 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="شماره تلفن همراه" />
+                            android:text="شماره تلفن همراه"
+                            android:textColor="?attr/colorOnBackground"/>
 
                         <EditText
                             android:layout_weight="0.5"
                             android:id="@+id/registr_phonenumber"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/edittest1"
+                            android:background="@drawable/bg_editbox"
 
                             android:inputType="text"
                             tools:ignore="LabelFor"
@@ -664,14 +657,15 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="شماره تلفن همراه" />
+                            android:text="شماره تلفن همراه"
+                            android:textColor="?attr/colorOnBackground"/>
 
                         <EditText
                             android:layout_weight="0.5"
                             android:id="@+id/b_register_a_phonenumber"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/edittest1"
+                            android:background="@drawable/bg_editbox"
 
                             android:inputType="text"
                             tools:ignore="LabelFor"
@@ -680,7 +674,139 @@
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            app:cardBackgroundColor="?attr/colorSurface"
+                            app:strokeColor="?attr/colorPrimary"
+                            app:strokeWidth="2dp"
+                            >
+                            <LinearLayout
+                                xmlns:android="http://schemas.android.com/apk/res/android"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:padding="5dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Select Theme:"
+                                    android:layout_marginBottom="5dp"
+                                    android:textSize="18sp" />
+
+                                <Spinner
+                                    android:id="@+id/broker_themeSpinner"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:entries="@array/themes_array"
+                                    android:layout_marginBottom="5dp" />
+
+                                <Button
+                                    android:id="@+id/broker_applyButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Apply Theme"
+                                    android:layout_gravity="center_horizontal" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            app:cardBackgroundColor="?attr/colorSurface"
+                            app:strokeColor="?attr/colorPrimary"
+                            app:strokeWidth="2dp"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_margin="10sp"
+                                android:gravity="center_horizontal"
+                                android:padding="16dp"
+                                android:background="@drawable/bg_card"
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal"
+                                    android:weightSum="2">
+
+                                    <!-- دکمه اصلی -->
+                                    <Button
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text=" Button"
+                                        style="@style/Widget.MaterialComponents.Button"
+                                        android:backgroundTint="?attr/colorPrimary"
+                                        android:textColor="?attr/colorOnPrimary"
+                                        android:layout_margin="3dp"
+                                        android:layout_weight="1"/>
+
+                                    <!-- دکمه ثانویه -->
+                                    <Button
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text=" Button"
+                                        style="@style/Widget.MaterialComponents.Button"
+                                        android:backgroundTint="?attr/colorSecondary"
+                                        android:textColor="?attr/colorOnSecondary"
+                                        android:layout_margin="3dp"
+
+                                        android:layout_weight="1"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal"
+                                    android:weightSum="2">
+
+
+                                    <!-- متن -->
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:layout_margin="3dp"
+                                        android:text="Text"
+                                        android:textColor="?attr/colorOnBackground"
+
+                                        android:layout_weight="1"/>
+                                    <EditText
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="5dp"
+                                        android:hint="Enter text"
+                                        android:gravity="center"
+
+                                        android:background="@drawable/bg_editbox"
+                                        android:textColor="?attr/colorOnBackground"
+                                        android:padding="8dp"
+                                        android:autofillHints=""
+                                        tools:ignore="TextFields"
+                                        android:layout_weight="1"/>
+                                </LinearLayout>
+                                <!-- فیلد متن -->
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
             </androidx.core.widget.NestedScrollView>
         </androidx.appcompat.widget.LinearLayoutCompat>
 

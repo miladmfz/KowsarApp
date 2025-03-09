@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:id="@+id/b_buymulti_box"
-    android:background="@drawable/bg_round_selected"
+    android:background="@drawable/bg_card"
+    android:layout_margin="2dp"
     android:padding="16dp"
     android:layoutDirection="rtl">
 
@@ -20,7 +21,7 @@
         android:text="@string/customerfactorheader"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="?attr/colorOnBackground"
         android:focusable="true" />
 
     <!-- Input Fields Container -->
@@ -45,15 +46,16 @@
                 android:gravity="center"
                 android:text="@string/amount"
                 android:textSize="16sp"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="?attr/colorOnBackground" />
 
             <EditText
                 android:id="@+id/b_buymulti_amount"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="0.4"
-                android:background="@drawable/bg_round"
+                android:background="@drawable/bg_editbox"
                 android:gravity="center"
+                android:textColor="?attr/colorOnBackground"
                 android:hint="@string/amount"
                 android:maxLength="4"
                 android:inputType="number"
@@ -78,14 +80,15 @@
                 android:gravity="center"
                 android:text="@string/UnitRadio"
                 android:textSize="16sp"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="?attr/colorOnBackground" />
 
             <EditText
                 android:id="@+id/b_buymulti_unitratio"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="0.4"
-                android:background="@drawable/bg_round"
+                android:background="@drawable/bg_editbox"
+                android:textColor="?attr/colorOnBackground"
                 android:gravity="center"
                 android:hint="@string/UnitRadio"
                 android:maxLength="4"
@@ -103,16 +106,12 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/detail_buy"
+        android:layout_margin="3dp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/green_600"
-        app:strokeColor="@color/grey_1000"
-        app:strokeWidth="1dp"
-        app:icon="@drawable/ic_add_shopping_black"
-        app:iconTint="@color/white"
-        style="?attr/materialButtonOutlinedStyle" />
+        style="@style/Widget.MaterialComponents.Button"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"
+        />
 </androidx.appcompat.widget.LinearLayoutCompat>

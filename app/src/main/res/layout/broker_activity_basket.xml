@@ -27,11 +27,8 @@
                 android:id="@+id/b_basket_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
-
-
                 android:background="?attr/colorPrimary"
-                app:titleTextColor="@color/white"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="@string/buy_tollbarname">
 
             </androidx.appcompat.widget.Toolbar>
@@ -67,7 +64,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     app:backgroundTint="@color/red_800"
-                    app:strokeColor="@color/grey_1000"
+                    app:strokeColor="?attr/colorOnBackground"
                     app:strokeWidth="1dp" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -84,18 +81,22 @@
                         android:gravity="center"
                         android:text="@string/buy_totalamount"
                         android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/grey_1000"/>
+                        android:layout_margin="3dp"
+                        android:textColor="?attr/colorOnBackground"/>
 
 
                     <TextView
                         android:id="@+id/b_basket_a_total_amount_buy"
+
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:text="@string/buy_totalamount"
+
                         android:layout_weight="0.3"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:textColor="@color/grey_1000" />
+                        android:layout_margin="3dp"
+                        android:textColor="?attr/colorOnBackground"/>
 
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -111,24 +112,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.7"
-
                         android:gravity="center"
-
                         android:text="@string/buy_rows"
                         android:textSize="12sp"
-                        android:textStyle="bold"
-
-                        android:textColor="@color/grey_1000"/>
+                        android:textColor="?attr/colorOnBackground"/>
 
 
                     <TextView
                         android:id="@+id/b_basket_a_total_row_buy"
+                        android:text="@string/buy_rows"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
                         android:gravity="center"
-                        android:textStyle="bold"
-                        android:textColor="@color/grey_1000"/>
+                        android:textColor="?attr/colorOnBackground"/>
 
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -148,7 +145,7 @@
                         android:text="@string/buy_factorname"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:textColor="@color/grey_1000"/>
+                        android:textColor="?attr/colorOnBackground"/>
 
 
                     <TextView
@@ -160,7 +157,7 @@
                         android:layout_gravity="center"
                         android:text="@string/buy_factorname"
                         android:textStyle="bold"
-                        android:textColor="@color/grey_1000"/>
+                        android:textColor="?attr/colorOnBackground"/>
 
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -180,7 +177,7 @@
                         android:text="@string/buy_total"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:textColor="@color/grey_1000"/>
+                        android:textColor="?attr/colorOnBackground"/>
 
 
                     <TextView
@@ -191,7 +188,7 @@
                         android:gravity="center"
                         android:text="@string/buy_total"
                         android:textStyle="bold"
-                        android:textColor="@color/grey_1000"/>
+                        android:textColor="?attr/colorOnBackground"/>
 
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -228,17 +225,14 @@
             android:id="@+id/b_basket_a_test"
             android:layout_width="match_parent"
             android:text="@string/buy_sendfactor"
-
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:layout_margin="5dp"
-            android:textSize="20sp"
             android:gravity="center"
             android:layout_height="70dp"
-            app:backgroundTint="@color/green_700"
-            app:strokeColor="@color/grey_1000"
-            app:strokeWidth="1dp"
-            style="?attr/materialButtonOutlinedStyle" />
+            android:layout_margin="3dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"/>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

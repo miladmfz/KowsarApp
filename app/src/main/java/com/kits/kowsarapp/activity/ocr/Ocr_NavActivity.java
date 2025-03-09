@@ -27,6 +27,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
+import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
@@ -41,10 +42,10 @@ public class Ocr_NavActivity extends AppCompatActivity implements NavigationView
     Button btn1,btn2,btn3;
     Handler handler;
     CallMethod callMethod;
-    Ocr_DBH dbh;
+    Ocr_DBH ocr_dbh;
 
     Toolbar toolbar;
-    Ocr_Action action;
+    Ocr_Action ocr_action;
     NavigationView navigationView;
     TextView tv_versionname,tv_dbname;
     Button btn_changedb;
@@ -52,6 +53,7 @@ public class Ocr_NavActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_nav);
 
         Config();
@@ -63,9 +65,9 @@ public class Ocr_NavActivity extends AppCompatActivity implements NavigationView
 public void Config() {
 
     callMethod = new CallMethod(this);
-    action = new Ocr_Action(this);
-    dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
-    dbh.DatabaseCreate();
+    ocr_action = new Ocr_Action(this);
+    ocr_dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+    ocr_dbh.DatabaseCreate();
 
     toolbar = findViewById(R.id.ocr_main_a_toolbar);
     setSupportActionBar(toolbar);
@@ -163,7 +165,7 @@ public void Config() {
         btn1.setText("تنظیمات");
         btn2.setVisibility(View.GONE);
         btn3.setVisibility(View.GONE);
-        btn1.setOnClickListener(view -> action.LoginSetting());
+        btn1.setOnClickListener(view -> ocr_action.LoginSetting());
 
     }
     public void Scan() {
@@ -366,7 +368,15 @@ public void Config() {
 
         if (id == R.id.ocr_nav_cfg) {
 
-            action.LoginSetting();
+            if (callMethod.ReadString("ActivationCode").equals("333333")) {
+                Intent intent = new Intent(this, Ocr_ConfigActivity.class);
+                startActivity(intent);
+            }else {
+                ocr_action.LoginSetting();
+            }
+
+
+
         }
         DrawerLayout drawer = findViewById(R.id.ocr_nav_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

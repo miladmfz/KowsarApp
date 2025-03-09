@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 
 public class Order_GoodItemViewHolder extends RecyclerView.ViewHolder {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     public ImageView img;
     public MaterialCardView rltv;

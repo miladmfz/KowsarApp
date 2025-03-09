@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:backgroundTint="@color/white"
+
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp">
 
@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="@drawable/bg_card"
             android:padding="16dp">
 
             <!-- Row: تعداد اقلام -->
@@ -38,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="تعداد اقلام"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
@@ -49,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:textSize="20sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -68,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="جمع شده"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
@@ -79,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:textSize="20sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -96,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="کسری"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"/>

@@ -6,9 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layoutDirection="rtl"
-    android:layout_margin="10dp"
-    android:background="@color/white"
-    android:padding="10dp"
+    android:layout_margin="5dp"
     android:orientation="vertical"
     >
 
@@ -17,12 +15,13 @@
         android:layout_height="wrap_content"
         app:cardElevation="4dp"
         app:cardCornerRadius="8dp"
-        android:layout_margin="8dp"
+        android:layout_margin="2dp"
         >
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="@drawable/bg_card"
             android:padding="8dp"
             android:weightSum="1"
             >
@@ -49,14 +48,14 @@
                         android:text="نام کالا:"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/grey_800" />
+                        android:textColor="?attr/colorOnBackground" />
                     <TextView
                         android:id="@+id/ocr_goodscan_c_goodname"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
                         android:textSize="16sp"
-                        android:textColor="@color/colorPrimaryDark"/>
+                        android:textColor="?attr/colorOnBackground"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -73,14 +72,14 @@
                         android:text="تعداد:"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/grey_800" />
+                        android:textColor="?attr/colorOnBackground" />
                     <TextView
                         android:id="@+id/ocr_goodscan_c_factoramount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
                         android:textSize="16sp"
-                        android:textColor="@color/colorPrimaryDark"/>
+                        android:textColor="?attr/colorOnBackground"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -96,30 +95,31 @@
                         android:text="قیمت:"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/grey_800"/>
+                        android:textColor="?attr/colorOnBackground"/>
                     <TextView
                         android:id="@+id/ocr_goodscan_c_goodsellprice"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.6"
                         android:textSize="16sp"
-                        android:textColor="@color/colorPrimaryDark"/>
+                        android:textColor="?attr/colorOnBackground"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <Button
                     android:id="@+id/ocr_goodscan_c_btn"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     android:text="انتخاب"
-                    android:textColor="@color/white"
-                    app:backgroundTint="@color/green_600"
-                    app:strokeColor="@color/grey_300"
-                    app:strokeWidth="1dp" />
+                    android:layout_margin="3dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnPrimary"
+                    />
             </androidx.appcompat.widget.LinearLayoutCompat>
             <ImageView
                 android:id="@+id/ocr_goodscan_c_image"

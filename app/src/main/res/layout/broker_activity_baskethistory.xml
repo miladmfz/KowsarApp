@@ -25,10 +25,10 @@
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
                 android:background="?attr/colorPrimary"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="گزارش فاکتور"
-                app:titleTextColor="@color/white">
+                >
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -75,7 +75,7 @@
                             android:layout_weight="0.5"
                             android:gravity="center"
                             android:text="@string/buyhistory_totalprice"
-                            android:textColor="@color/grey_1000"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
 
                             android:textStyle="bold"
@@ -89,7 +89,7 @@
                             android:layout_weight="0.5"
                             android:gravity="center"
                             android:text="@string/buyhistory_totalprice"
-                            android:textColor="@color/grey_1000"
+                            android:textColor="?attr/colorOnBackground"
                             android:textStyle="bold" />
 
 
@@ -109,7 +109,7 @@
                             android:gravity="center"
 
                             android:text="@string/buyhistory_totalamount"
-                            android:textColor="@color/grey_1000"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -121,7 +121,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
                             android:text="@string/buyhistory_totalamount"
-                            android:textColor="@color/grey_1000"
+                            android:textColor="?attr/colorOnBackground"
                             android:textStyle="bold" />
 
 
@@ -139,7 +139,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
                             android:text="@string/buyhistory_totalrow"
-                            android:textColor="@color/grey_1000"
+                            android:textColor="?attr/colorOnBackground"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -150,7 +150,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
                             android:text="@string/buyhistory_totalrow"
-                            android:textColor="@color/grey_1000"
+                            android:textColor="?attr/colorOnBackground"
                             android:textStyle="bold" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -162,12 +162,13 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="2dp"
                 android:layout_weight="0.3"
-                android:background="@drawable/bg_round_selected"
+                android:background="@drawable/bg_editbox"
                 android:hint="@string/search_et"
                 android:inputType="text"
                 android:paddingStart="10dp"
                 android:paddingEnd="20dp"
                 android:selectAllOnFocus="true"
+                android:textColor="?attr/colorOnBackground"
                 android:singleLine="true" />
 
             <androidx.recyclerview.widget.RecyclerView

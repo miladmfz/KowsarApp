@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     app:strokeWidth="1dp"
-    app:strokeColor="@color/grey_1000"
     app:cardCornerRadius="2dp"
     app:cardElevation="6dp"
     android:layoutDirection="rtl">
@@ -16,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@drawable/bg_card"
         android:layout_margin="5dp">
 
 
@@ -38,7 +38,7 @@
                     android:layout_weight="0.80"
 
                     android:text="@string/good_buy_name"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
                     android:paddingRight="8dp"
                     android:paddingBottom="1dp"
                     android:textSize="18sp"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_weight="0.20"
                     android:textStyle="bold"
                     android:text="@string/good_buy_name" />
@@ -62,7 +62,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey_900" />
+                android:textColor="?attr/colorOnBackground" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                     android:layout_weight="0.25"
 
                     android:text="@string/good_buy_sellprice"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -89,7 +89,7 @@
                     android:layout_weight="0.25"
 
                     android:text="@string/good_buy_sellprice"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -109,7 +109,7 @@
                     android:layout_weight="0.25"
 
                     android:text="@string/good_buy_totalsellprice"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
                     android:text="@string/good_buy_totalsellprice"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -129,7 +129,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey_900" />
+                android:textColor="?attr/colorOnBackground" />
 
 
             <LinearLayout
@@ -145,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="@string/good_buy_maxsellprice"
-                    android:textColor="@color/grey_800"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:gravity="center"
                     android:textStyle="bold" />
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="@string/good_buy_totalmaxsellprice"
-                    android:textColor="@color/grey_800"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:gravity="center"
                     android:textStyle="bold" />
@@ -168,7 +168,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey_900" />
+                android:textColor="?attr/colorOnBackground" />
 
 
 
@@ -190,7 +190,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.4"
                     android:gravity="center"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:text="@string/good_buy_amount"
                     android:textSize="20sp"
 
@@ -217,7 +217,7 @@
         <androidx.viewpager.widget.ViewPager
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@color/grey_900" />
+            android:textColor="?attr/colorOnBackground" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="120dp"
@@ -244,7 +244,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/good_buy_offer"
-                android:textColor="#000000"
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

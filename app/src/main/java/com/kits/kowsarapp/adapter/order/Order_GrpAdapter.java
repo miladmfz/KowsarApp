@@ -40,7 +40,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
     CallMethod callMethod;
     String Parent_GourpCode;
 
-    Order_APIInterface apiInterface;
+    Order_APIInterface order_apiInterface;
     Call<RetrofitResponse> call2;
 
 
@@ -50,7 +50,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
         this.Parent_GourpCode = parentcode;
         this.fragmentTransaction = fragmentTransaction;
         this.callMethod = new CallMethod(mContext);
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        this.order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
     }
 
@@ -90,7 +90,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
         } else {
 
-            call2 = apiInterface.GetImage("getImage", GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"), "TGoodsGrp", "0", "400");
+            call2 = order_apiInterface.GetImage("getImage", GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"), "TGoodsGrp", "0", "400");
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override

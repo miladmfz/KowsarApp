@@ -5,18 +5,16 @@
     android:id="@+id/order_basketitem_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
     android:layoutDirection="rtl"
     android:orientation="vertical"
     app:cardCornerRadius="2dp"
-    app:cardElevation="6dp"
-    app:strokeColor="@color/grey_1000"
-    app:strokeWidth="1dp">
+>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_margin="5dp"
+        android:background="@drawable/bg_card"
         android:orientation="vertical">
 
 
@@ -42,7 +40,8 @@
                     android:text="@string/goodbasketitem_name"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
                     android:id="@+id/ord_basketitem_c_goodname"
@@ -52,7 +51,8 @@
                     android:gravity="center"
                     android:hint="@string/goodbasketitem_goodname"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnBackground"/>
 
 
             </LinearLayout>
@@ -81,7 +81,8 @@
                     android:text="@string/goodbasketitem_amount"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
                     android:id="@+id/ord_basketitem_c_amount"
@@ -125,7 +126,8 @@
                     android:text="@string/goodbasketitem_explain"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
                     android:id="@+id/ord_basketitem_c_explain"
@@ -135,7 +137,8 @@
                     android:gravity="center"
                     android:hint="@string/goodbasketitem_explain"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnBackground"/>
 
 
             </LinearLayout>

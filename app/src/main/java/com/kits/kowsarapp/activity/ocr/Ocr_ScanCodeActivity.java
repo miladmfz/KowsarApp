@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.zxing.Result;
+import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -19,6 +20,7 @@ public class Ocr_ScanCodeActivity extends AppCompatActivity implements ZXingScan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         scannerView = new ZXingScannerView(this);
         setContentView(scannerView);
     }

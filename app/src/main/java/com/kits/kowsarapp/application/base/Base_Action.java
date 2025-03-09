@@ -43,13 +43,11 @@ import retrofit2.Response;
 
 
 public class Base_Action {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     Context mContext;
     CallMethod callMethod;
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
     Intent intent;
-    Cursor cursor;
     Integer il;
     String url;
     Broker_APIInterface broker_apiInterface;
@@ -57,7 +55,7 @@ public class Base_Action {
         this.mContext = mContext;
         this.il = 0;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         url = callMethod.ReadString("ServerURLUse");
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
@@ -146,7 +144,8 @@ public class Base_Action {
         Log.e("Debug isVpnConnection =",getIpAddress(true)+" / "+isVpnConnection()+"");
 
 
-        @SuppressLint("HardwareIds") String android_id = BuildConfig.BUILD_TYPE.equals("release") ?
+        @SuppressLint("HardwareIds")
+        String android_id = BuildConfig.BUILD_TYPE.equals("release") ?
                 Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID) :
                 "debug";
         PersianCalendar calendar1 = new PersianCalendar();
@@ -172,7 +171,7 @@ public class Base_Action {
         Body_str =callMethod.CreateJson("Server_Name", callMethod.ReadString("PersianCompanyNameUse"), Body_str);
         Body_str =callMethod.CreateJson("Factor_Code", callMethod.ReadString("PreFactorCode"), Body_str);
         Body_str =callMethod.CreateJson("StrDate", calendar1.getPersianShortDateTime(), Body_str);
-        Body_str =callMethod.CreateJson("Broker",  dbh.ReadConfig("BrokerCode"), Body_str);
+        Body_str =callMethod.CreateJson("Broker",  broker_dbh.ReadConfig("BrokerCode"), Body_str);
         Body_str =callMethod.CreateJson("Explain", version, Body_str);
         Body_str =callMethod.CreateJson("DeviceAgant", Build.BRAND+" / "+Build.MODEL+" / "+Build.HARDWARE, Body_str);
         Body_str =callMethod.CreateJson("SdkVersion", Build.VERSION.SDK_INT+"", Body_str);
@@ -242,7 +241,6 @@ public class Base_Action {
         return finalAdress;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public boolean isVpnConnection(){
         return Settings.Secure.getInt(this.mContext.getContentResolver(), "vpn_state", 0) == 1 || isvpn1() || isvpn2();
     }
@@ -263,13 +261,11 @@ public class Base_Action {
 
         return false;
     }
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private boolean isvpn2() {
         ConnectivityManager cm = (ConnectivityManager) this.mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         Network activeNetwork = cm.getActiveNetwork();
         NetworkCapabilities caps = cm.getNetworkCapabilities(activeNetwork);
-        boolean vpnInUse = caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN);
-        return vpnInUse;
+        return caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN);
     }
 
 

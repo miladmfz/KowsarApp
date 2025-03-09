@@ -32,12 +32,11 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
     private final Context mContext;
     CallMethod callMethod;
     private final ArrayList<Good> goods;
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
 
     Broker_APIInterface apiInterface;
     final ImageInfo image_info;
     public boolean multi_select;
-    Broker_Action action;
     ArrayList<Column> Columns;
 
 
@@ -46,9 +45,8 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
         this.goods = goods;
         this.callMethod = new CallMethod(mContext);
         this.image_info = new ImageInfo(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.action = new Broker_Action(mContext);
-        this.Columns = dbh.GetColumns("id", "", "1");
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.Columns = broker_dbh.GetColumns("id", "", "1");
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
     }
 

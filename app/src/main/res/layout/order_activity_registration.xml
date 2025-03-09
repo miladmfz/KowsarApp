@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
     android:orientation="vertical"
-    tools:context=".activity.RegistrationActivity"
+    tools:context=".activity.order.Order_RegistrationActivity"
     >
 
 
@@ -21,10 +21,10 @@
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
             android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:title="@string/registeractivity_titlename"
-            app:titleTextColor="?attr/colorOnPrimary">
+            >
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -115,12 +115,12 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="تنظیمات پیشفرض"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
+                            android:layout_margin="3dp"
                             android:textSize="16sp"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="@color/cyan_500"
-                            android:layout_marginEnd="4dp"
+                            android:textStyle="bold"
+                            style="@style/Widget.MaterialComponents.Button"
+                            android:backgroundTint="?attr/colorSecondary"
+                            android:textColor="?attr/colorOnSecondary"
                             />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -713,14 +713,14 @@
                                 android:textSize="18sp" />
 
                             <Spinner
-                                android:id="@+id/themeSpinner"
+                                android:id="@+id/order_themeSpinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:entries="@array/themes_array"
                                 android:layout_marginBottom="5dp" />
 
                             <Button
-                                android:id="@+id/applyButton"
+                                android:id="@+id/order_applyButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Apply Theme"

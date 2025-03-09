@@ -30,34 +30,25 @@ import retrofit2.Call;
 public class Print {
 
 
-
-
     private final Context mContext;
     public Broker_APIInterface broker_apiInterface;
     public Call<RetrofitResponse> call;
     CallMethod callMethod;
-    Broker_DBH dbh;
     Integer il;
     Integer sizetext;
     PersianCalendar persianCalendar;
     Dialog dialog, dialogProg;
-    Dialog dialogprint;
     int printerconter;
     ArrayList<AppPrinter> AppPrinters;
-    int width = 500;
-    LinearLayoutCompat main_layout;
-    Bitmap bitmap_factor;
-    String bitmap_factor_base64 = "";
+
     String PreFac = "";
     TextView tv_rep;
 
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     public Print(Context mContext,String PreFactorCode) {
         this.mContext = mContext;
         this.il = 0;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
         this.persianCalendar = new PersianCalendar();
         this.dialog = new Dialog(mContext);
@@ -91,24 +82,6 @@ public class Print {
         //call = apiInterface.GetAppPrinter("OrderGetAppPrinter");
     }
 
-
-    @SuppressLint("RtlHardcoded")
-    public void printDialogView() {
-
-
-
-    }
-
-
-    public Bitmap loadBitmapFromView(View v) {
-        v.measure(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        Bitmap b = Bitmap.createBitmap(width, v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-
-        Canvas c = new Canvas(b);
-        v.layout(0, 0, width, v.getMeasuredHeight());
-        v.draw(c);
-        return b;
-    }
 
 
 }

@@ -49,14 +49,14 @@ import retrofit2.Response;
 public class Order_BasketActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    Order_APIInterface apiInterface;
-    Order_BasketInfo basketInfo;
+    Order_APIInterface order_apiInterface;
+    Order_BasketInfo order_basketInfo;
 
     CallMethod callMethod;
     TextView Buy_row, Buy_amount,tv_totalprice,tv_notresive,tv_resive;
 
     Intent intent;
-    Order_GoodBasketAdapter adapter;
+    Order_GoodBasketAdapter order_goodBasketAdapter;
     Order_Action order_action;
     ArrayList<Good> goods = new ArrayList<>();
     Button total_delete;
@@ -107,7 +107,8 @@ public class Order_BasketActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.DefaultTheme));
+
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
 
 
         setContentView(R.layout.order_activity_basket);
@@ -136,7 +137,7 @@ public class Order_BasketActivity extends AppCompatActivity {
         order_action = new Order_Action(Order_BasketActivity.this);
         order_print = new Order_Print(Order_BasketActivity.this);
 
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
         CoordinatorLayout ll_activity = findViewById(R.id.order_basket_activity);
         if (callMethod.ReadString("LANG").equals("fa")) {
@@ -196,7 +197,7 @@ public class Order_BasketActivity extends AppCompatActivity {
 
         btn_peyment.setOnClickListener(view -> {
 
-            order_action.BasketInfopayment(basketInfo);
+            order_action.BasketInfopayment(order_basketInfo);
         });
 
 
@@ -207,7 +208,7 @@ public class Order_BasketActivity extends AppCompatActivity {
 
             builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
 
-                Call<RetrofitResponse> call1 = apiInterface.OrderDeleteAll("OrderDeleteAll", callMethod.ReadString("AppBasketInfoCode")
+                Call<RetrofitResponse> call1 = order_apiInterface.OrderDeleteAll("OrderDeleteAll", callMethod.ReadString("AppBasketInfoCode")
 
                 );
                 call1.enqueue(new Callback<RetrofitResponse>() {
@@ -239,7 +240,7 @@ public class Order_BasketActivity extends AppCompatActivity {
     }
 
     private void GetOrder() {
-        Call<RetrofitResponse> call = apiInterface.OrderGet("OrderGet", callMethod.ReadString("AppBasketInfoCode"), "3");
+        Call<RetrofitResponse> call = order_apiInterface.OrderGet("OrderGet", callMethod.ReadString("AppBasketInfoCode"), "3");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -261,16 +262,16 @@ public class Order_BasketActivity extends AppCompatActivity {
         });
     }
     public void setupbasketview(){
-        State = basketInfo.getInfoState();
-        Buy_row.setText(callMethod.NumberRegion(basketInfo.getCountGood()));
-        Buy_amount.setText(callMethod.NumberRegion(basketInfo.getSumFacAmount()));
+        State = order_basketInfo.getInfoState();
+        Buy_row.setText(callMethod.NumberRegion(order_basketInfo.getCountGood()));
+        Buy_amount.setText(callMethod.NumberRegion(order_basketInfo.getSumFacAmount()));
 
-        tv_totalprice.setText(callMethod.NumberRegion(String.valueOf(Integer.parseInt(basketInfo.getSumPrice())+Integer.parseInt(basketInfo.getSumTaxAndMayor()))));
-        tv_notresive.setText(callMethod.NumberRegion(basketInfo.getNotReceived()));
-        tv_resive.setText(callMethod.NumberRegion(basketInfo.getReceived()));
+        tv_totalprice.setText(callMethod.NumberRegion(String.valueOf(Integer.parseInt(order_basketInfo.getSumPrice())+Integer.parseInt(order_basketInfo.getSumTaxAndMayor()))));
+        tv_notresive.setText(callMethod.NumberRegion(order_basketInfo.getNotReceived()));
+        tv_resive.setText(callMethod.NumberRegion(order_basketInfo.getReceived()));
 
-        if (Integer.parseInt(basketInfo.getFactorCode())>0){
-            if (Integer.parseInt(basketInfo.getNotReceived())>0){
+        if (Integer.parseInt(order_basketInfo.getFactorCode())>0){
+            if (Integer.parseInt(order_basketInfo.getNotReceived())>0){
                 if (callMethod.ReadBoolan("PaymentWithDevice")) {
                     btn_peyment.setVisibility(View.VISIBLE);
                 }else{
@@ -292,9 +293,9 @@ public class Order_BasketActivity extends AppCompatActivity {
 
     private void callrecycler() {
 
-        adapter = new Order_GoodBasketAdapter(goods, this);
+        order_goodBasketAdapter = new Order_GoodBasketAdapter(goods, this);
 
-        if (adapter.getItemCount() == 0) {
+        if (order_goodBasketAdapter.getItemCount() == 0) {
             tv_lottiestatus.setText(R.string.textvalue_notfound);
             img_lottiestatus.setVisibility(View.VISIBLE);
             tv_lottiestatus.setVisibility(View.VISIBLE);
@@ -309,7 +310,7 @@ public class Order_BasketActivity extends AppCompatActivity {
             tv_lottiestatus.setVisibility(View.GONE);
         }
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(order_goodBasketAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
     }
@@ -317,14 +318,14 @@ public class Order_BasketActivity extends AppCompatActivity {
     public void RefreshState() {
         GetOrder();
         //Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
-        Call<RetrofitResponse> call2 = apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
+        Call<RetrofitResponse> call2 = order_apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
 
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    basketInfo = response.body().getBasketInfos().get(0);
+                    order_basketInfo = response.body().getBasketInfos().get(0);
                     setupbasketview();
                 }
             }

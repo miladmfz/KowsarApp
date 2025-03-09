@@ -30,12 +30,12 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
 
     private String itemPosition = "0";
     private String searchQuery = "";
-
+    GridLayoutManager gridLayoutManager;
     private CallMethod callMethod;
     private ArrayList<Good> goods = new ArrayList<>();
-    private Broker_DBH dbh;
+    private Broker_DBH broker_dbh;
     private Handler handler;
-    private Broker_BasketItemHistoryAdapter adapter;
+    private Broker_BasketItemHistoryAdapter broker_basketItemHistoryAdapter;
     
     private BrokerActivityBaskethistoryBinding binding;
 
@@ -44,9 +44,10 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = BrokerActivityBaskethistoryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        // create a dialog to show progress while loading data
+
         progressDialog = new Dialog(this);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -61,11 +62,11 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
 
 
 
-    // initialize the activity
+
     public void init() {
         DecimalFormat decimalFormat = new DecimalFormat("0,000");
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
 
         binding.bBaskethistoryAEdtsearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,7 +82,7 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
                 handler.removeCallbacksAndMessages(null);
                 handler.postDelayed(() -> {
                     searchQuery = NumberFunctions.EnglishNumber(editable.toString());
-                    goods = dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
+                    goods = broker_dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
 
                     int backgroundResourceId = itemPosition.equals("1") ?
                             R.drawable.bg_round_green_history_line : R.drawable.bg_round_green_history;
@@ -89,7 +90,7 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
                     binding.bBaskethistoryARow.setBackground(ContextCompat.getDrawable(
                             App.getContext(), backgroundResourceId));
                     // update the list view with the new data
-                    adapter.updateList(goods, itemPosition);
+                    broker_basketItemHistoryAdapter.updateList(goods, itemPosition);
                 }, Integer.parseInt(callMethod.ReadString("Delay")));
             }
         });
@@ -106,21 +107,21 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
             binding.bBaskethistoryARow.setBackground(ContextCompat.getDrawable(
                     this, backgroundResourceId));
 
-            adapter.updateList(goods, itemPosition);
+            broker_basketItemHistoryAdapter.updateList(goods, itemPosition);
         });
 
-        goods = dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
+        goods = broker_dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
 
-        adapter = new Broker_BasketItemHistoryAdapter(goods, itemPosition, this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        broker_basketItemHistoryAdapter = new Broker_BasketItemHistoryAdapter(goods, itemPosition, this);
+        gridLayoutManager = new GridLayoutManager(this, 1);
         binding.bBaskethistoryAR1.setLayoutManager(gridLayoutManager);
-        binding.bBaskethistoryAR1.setAdapter(adapter);
+        binding.bBaskethistoryAR1.setAdapter(broker_basketItemHistoryAdapter);
         binding.bBaskethistoryAR1.setItemAnimator(new DefaultItemAnimator());
 
         binding.bBaskethistoryATotalPriceBuy.setText(NumberFunctions.PerisanNumber(
-                decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorGood"))))));
+                decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorGood"))))));
         binding.bBaskethistoryATotalAmountBuy.setText(NumberFunctions.PerisanNumber(
-                dbh.getFactorSumAmount(callMethod.ReadString("PreFactorGood"))));
+                broker_dbh.getFactorSumAmount(callMethod.ReadString("PreFactorGood"))));
         binding.bBaskethistoryATotalRowBuy.setText(NumberFunctions.PerisanNumber(
                 String.valueOf(goods.size())));
 

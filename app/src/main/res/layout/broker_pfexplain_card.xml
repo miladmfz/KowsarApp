@@ -27,14 +27,15 @@
             android:id="@+id/b_pfexplain_c_detail"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/bg_round"
+            android:background="@drawable/bg_editbox"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
             android:gravity="center"
             android:hint="@string/explain"
             android:textSize="16sp"
             android:singleLine="true"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColor="?attr/colorOnBackground"/>
 
 
         <!-- Login Button -->
@@ -44,13 +45,13 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:layout_gravity="center"
-            android:layout_marginTop="8dp"
             android:text="@string/insert_prefactor"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            app:cornerRadius="12dp"
-            app:backgroundTint="@color/green_600"
-            style="?attr/materialButtonOutlinedStyle" />
+            android:layout_margin="3dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>
 

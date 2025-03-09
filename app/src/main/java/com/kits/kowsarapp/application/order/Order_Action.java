@@ -62,34 +62,40 @@ import retrofit2.Response;
 
 
 public class Order_Action extends Activity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    private final Context mContext;
-    public Order_APIInterface apiInterface;
-    public Call<RetrofitResponse> call;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
+    private final Context mContext;
     CallMethod callMethod;
-    Order_DBH dbh;
     Intent intent;
-    Integer il;
-    PersianCalendar persianCalendar;
-    String date;
     Dialog dialog, dialogProg;
+    PersianCalendar persianCalendar;
     Calendar cldr;
     TimePickerDialog picker;
-    TextView tv_reservestart;
-    TextView tv_reserveend;
-    TextView tv_date;
-    int ehour = 0;
-    int eminutes = 0;
-    int printerconter ;
+
+    Order_Print order_print;
+    Order_DBH order_dbh;
+    Order_APIInterface order_apiInterface;
+
     ArrayList<DistinctValue> values = new ArrayList<>();
     ArrayList<String> values_array = new ArrayList<>();
-    ArrayList<Good> Goods;
+    ArrayList<Good> Goods= new ArrayList<>();
     ArrayList<Good> good_box_items = new ArrayList<>();
     ArrayList<ObjectType> objectTypes = new ArrayList<>();
 
+    public Call<RetrofitResponse> call;
+
+    TextView tv_reservestart;
+    TextView tv_reserveend;
+    TextView tv_date;
     TextView tv_rep;
-    Order_Print order_print;
+
+    Integer ehour = 0;
+    Integer eminutes = 0;
+    Integer printerconter ;
+    Integer il;
+
+    String date;
+
     String payment_type="";
     String totalprice="0";
     String payment_mablagh_tosend="0";
@@ -101,8 +107,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         this.il = 0;
         this.callMethod = new CallMethod(mContext);
 
-        this.dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        this.order_dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
         this.persianCalendar = new PersianCalendar();
         this.dialog = new Dialog(mContext);
         this.dialogProg = new Dialog(mContext);
@@ -297,7 +303,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                     String DecrementValue_str= basketInfo.getDecrementValue().replace("-","");
 
-                    call_payment = apiInterface.Factor_Payment_Cash(
+                    call_payment = order_apiInterface.Factor_Payment_Cash(
                             "Factor_Payment_Cash"
                             ,basketInfo.getFactorCode()
                             ,String.valueOf(Integer.parseInt(basketInfo.getNotReceived())+Integer.parseInt(basketInfo.getShopNaghdReceive()))
@@ -305,7 +311,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                             ,DecrementValue_str
                     );
                 }else{
-                    call_payment = apiInterface.Factor_Payment_Pos(
+                    call_payment = order_apiInterface.Factor_Payment_Pos(
                             "Factor_Payment_Pos"
                             ,basketInfo.getFactorCode()
                             ,callMethod.ReadString("PosCode")
@@ -341,7 +347,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                 if ((!payment_mablagh_incrise.equals("0"))||(!payment_mablagh_decrise.equals("0"))){
 
-                    call_payment_inc_dec = apiInterface.Factor_Payment_Cash(
+                    call_payment_inc_dec = order_apiInterface.Factor_Payment_Cash(
                             "Factor_Payment_Cash"
                             ,basketInfo.getFactorCode()
                             ,NumberFunctions.EnglishNumber(ed_payment_cashtopay.getText().toString().replace(",", ""))
@@ -353,7 +359,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                 }else{
 
                     if (payment_type.equals("cash")){
-                        call_payment = apiInterface.Factor_Payment_Cash(
+                        call_payment = order_apiInterface.Factor_Payment_Cash(
                                 "Factor_Payment_Cash"
                                 ,basketInfo.getFactorCode()
                                 ,NumberFunctions.EnglishNumber(ed_payment_cashtopay.getText().toString().replace(",", ""))
@@ -361,7 +367,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                                 ,"0"
                         );
                     }else{
-                        call_payment = apiInterface.Factor_Payment_Pos(
+                        call_payment = order_apiInterface.Factor_Payment_Pos(
                                 "Factor_Payment_Pos"
                                 ,basketInfo.getFactorCode()
                                 ,callMethod.ReadString("PosCode")
@@ -420,7 +426,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
     public void DeleteReserveDialog(Order_BasketInfo basketInfo) {
         dialogProg();
-        call = apiInterface.OrderInfoReserveDelete(
+        call = order_apiInterface.OrderInfoReserveDelete(
                 "OrderInfoReserveDelete",
                 basketInfo.getAppBasketInfoCode()
         );
@@ -498,7 +504,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         tv_rstmizname.setText(callMethod.NumberRegion(basketInfo.getRstMizName()));
 
 
-        call = apiInterface.OrderReserveList("OrderReserveList", basketInfo.getRstmizCode());
+        call = order_apiInterface.OrderReserveList("OrderReserveList", basketInfo.getRstmizCode());
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -519,7 +525,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         });
 
 
-        call = apiInterface.GetTodeyFromServer("GetTodeyFromServer");
+        call = order_apiInterface.GetTodeyFromServer("GetTodeyFromServer");
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -548,11 +554,11 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                         + tminute.substring(tminute.length() - 2);
 
                 tv_reservestart.setText(callMethod.NumberRegion(Time));
-//                call = apiInterface.DbSetupvalue(
+//                call = order_apiInterface.DbSetupvalue(
 //                        "DbSetupvalue",
 //                        "AppOrder_ValidReserveTime"
 //                );
-                call = apiInterface.kowsar_info(
+                call = order_apiInterface.kowsar_info(
                         "kowsar_info",
                         "AppOrder_ValidReserveTime"
                 );
@@ -662,12 +668,12 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //            Body_str =callMethod.CreateJson("InfoCode", "0", Body_str);
 //
 //
-//            Call<RetrofitResponse> call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+//            Call<RetrofitResponse> call = order_apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
 
 
-            call = apiInterface.OrderInfoInsert(
+            call = order_apiInterface.OrderInfoInsert(
                     "OrderInfoInsert",
-                    dbh.ReadConfig("BrokerCode"),
+                    order_dbh.ReadConfig("BrokerCode"),
                     basketInfo.getRstmizCode(),
                     NumberFunctions.EnglishNumber(ed_personname.getText().toString()),
                     NumberFunctions.EnglishNumber(ed_mobileno.getText().toString()),
@@ -748,7 +754,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         ed_orderbox_goodname.setText(good.getGoodName());
 
-        call = apiInterface.GetDistinctValues("GetDistinctValues", "AppBasket", "Explain", "Where GoodRef=" + good.getGoodCode());
+        call = order_apiInterface.GetDistinctValues("GetDistinctValues", "AppBasket", "Explain", "Where GoodRef=" + good.getGoodCode());
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -792,7 +798,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             }
         });
 
-        call = apiInterface.OrderGet(
+        call = order_apiInterface.OrderGet(
                 "OrderGet",
                 callMethod.ReadString("AppBasketInfoCode"),
                 "3"
@@ -876,9 +882,9 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //                    Body_str =callMethod.CreateJson("RowCode", good.getRowCode(), Body_str);
 //
 //
-//                    call = apiInterface.OrderRowInsert(callMethod.RetrofitBody(Body_str));
+//                    call = order_apiInterface.OrderRowInsert(callMethod.RetrofitBody(Body_str));
                     tv_rep.setText(R.string.textvalue_sendinformation);
-                    Call<RetrofitResponse> call = apiInterface.OrderRowInsert("OrderRowInsert",
+                    Call<RetrofitResponse> call = order_apiInterface.OrderRowInsert("OrderRowInsert",
                             good.getGoodCode()+"",
                             good.getAmount(),
                             good.getMaxSellPrice(),
@@ -943,7 +949,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     public void OrderToFactor() {
         dialogProg();
         tv_rep.setText(R.string.textvalue_sendinformation);
-        Call<RetrofitResponse> call = apiInterface.OrderToFactor(
+        Call<RetrofitResponse> call = order_apiInterface.OrderToFactor(
                 "OrderToFactor",
                 callMethod.ReadString("AppBasketInfoCode")
         );
@@ -995,7 +1001,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //
 //
 //
-//       // call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+//       // call = order_apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
 //
 //
 //        call.enqueue(new Callback<RetrofitResponse>() {
@@ -1020,7 +1026,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //    public void OrderPrintFactor() {
 //        dialogProg();
 //        tv_rep.setText(R.string.textvalue_sendinformation);
-//        Call<RetrofitResponse> call = apiInterface.OrderPrintFactor(
+//        Call<RetrofitResponse> call = order_apiInterface.OrderPrintFactor(
 //                "OrderPrintFactor",
 //                callMethod.ReadString("AppBasketInfoCode")
 //        );
@@ -1030,7 +1036,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
 //                dialogProg.dismiss();
 //
-//                    call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "0");
+//                    call = order_apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "0");
 //                    call.enqueue(new Callback<RetrofitResponse>() {
 //                        @Override
 //                        public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -1076,7 +1082,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //        tv_rep.setText(R.string.textvalue_sendinformation);
 //
 //
-//        call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
+//        call = order_apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
 //        call.enqueue(new Callback<RetrofitResponse>() {
 //            @Override
 //            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -1084,7 +1090,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //                    assert response.body() != null;
 //                    if (response.body().getText().equals("Done")) {
 //
-//                        Call<RetrofitResponse> call_Change = apiInterface.OrderChangeTable(
+//                        Call<RetrofitResponse> call_Change = order_apiInterface.OrderChangeTable(
 //                                "OrderChangeTable",
 //                                callMethod.ReadString("AppBasketInfoCode")
 //                        );
@@ -1166,7 +1172,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             return  false;
         });
 
-        Call<RetrofitResponse> call1 = apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "AppOrder_InfoExplainList");
+        Call<RetrofitResponse> call1 = order_apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "AppOrder_InfoExplainList");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -1232,10 +1238,10 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //
 //
 //
-//             call = apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
-            call = apiInterface.OrderInfoInsert(
+//             call = order_apiInterface.OrderInfoInsert(callMethod.RetrofitBody(Body_str));
+            call = order_apiInterface.OrderInfoInsert(
                     "OrderInfoInsert",
-                    dbh.ReadConfig("BrokerCode"),
+                    order_dbh.ReadConfig("BrokerCode"),
                     basketInfo.getRstmizCode(),
                     basketInfo.getPersonName(),
                     basketInfo.getMobileNo(),
@@ -1303,7 +1309,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             return  false;
         });
 
-        Call<RetrofitResponse> call1 = apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "AppOrder_InfoExplainList");
+        Call<RetrofitResponse> call1 = order_apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "AppOrder_InfoExplainList");
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -1364,8 +1370,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 //                Body_str =callMethod.CreateJson("Explain", NumberFunctions.EnglishNumber(explain_tv.getText().toString()), Body_str);
 //
 //
-//                call = apiInterface.OrderEditInfoExplain(callMethod.RetrofitBody(Body_str));
-                call = apiInterface.OrderEditInfoExplain(
+//                call = order_apiInterface.OrderEditInfoExplain(callMethod.RetrofitBody(Body_str));
+                call = order_apiInterface.OrderEditInfoExplain(
                         "OrderEditInfoExplain",
                         callMethod.ReadString("AppBasketInfoCode"),
                         NumberFunctions.EnglishNumber(explain_tv.getText().toString())

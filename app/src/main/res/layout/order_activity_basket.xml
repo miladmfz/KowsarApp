@@ -28,10 +28,10 @@
                 android:id="@+id/ord_basket_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
                 android:background="?attr/colorPrimary"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="@string/buyactivity_titlename"
-                app:titleTextColor="?attr/colorOnPrimary">
+                >
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_card"
                 android:orientation="vertical"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 >
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -71,7 +71,6 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
                             android:text="مبلغ کل"
-
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             android:textColor="?attr/colorOnBackground" />
 
@@ -102,7 +101,6 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
                             android:text=" مبلغ دریافتی"
-
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             android:textColor="?attr/colorOnBackground" />
 
@@ -238,7 +236,7 @@
                         android:textStyle="bold"
                         android:visibility="gone"
                         app:backgroundTint="@color/red_800"
-                        app:strokeColor="@color/grey_1000"
+                        app:strokeColor="?attr/colorOnBackground"
                         app:strokeWidth="1dp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>

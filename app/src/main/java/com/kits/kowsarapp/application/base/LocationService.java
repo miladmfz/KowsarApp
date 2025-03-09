@@ -34,7 +34,7 @@ import java.util.Objects;
 
 public class LocationService extends Service {
 
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
     CallMethod callMethod = new CallMethod(App.getContext());
     PersianCalendar calendar1 = new PersianCalendar();
 
@@ -51,7 +51,7 @@ public class LocationService extends Service {
 
                 calendar1.setTimeInMillis((Objects.requireNonNull(locationResult.getLastLocation()).getTime() + 12600000));
                 if (calendar1.get(Calendar.HOUR_OF_DAY) > 7 && calendar1.get(Calendar.HOUR_OF_DAY) < 20) {
-                    dbh.UpdateLocationService(locationResult, calendar1.getPersianShortDateTime());
+                    broker_dbh.UpdateLocationService(locationResult, calendar1.getPersianShortDateTime());
                     callMethod.Log("startLocationService");
                 }
             }
@@ -74,7 +74,7 @@ public class LocationService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultintent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channelId);
-        builder.setSmallIcon(R.drawable.logo);
+        builder.setSmallIcon(R.drawable.jpgnew);
         builder.setContentTitle(getString(R.string.app_name));
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         builder.setContentText("Kowsar Service");
@@ -86,14 +86,11 @@ public class LocationService extends Service {
 
         builder.setPriority(NotificationCompat.DEFAULT_ALL);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (notificationManager != null && notificationManager.getNotificationChannel(channelId) == null) {
-                NotificationChannel notificationChannel = new NotificationChannel(channelId, "LocationService", NotificationManager.IMPORTANCE_HIGH);
-                notificationChannel.setDescription("this channel is used by locationservice ");
-                notificationManager.createNotificationChannel(notificationChannel);
-            }
+        if (notificationManager != null && notificationManager.getNotificationChannel(channelId) == null) {
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, "LocationService", NotificationManager.IMPORTANCE_HIGH);
+            notificationChannel.setDescription("this channel is used by locationservice ");
+            notificationManager.createNotificationChannel(notificationChannel);
         }
-
 
 
         LocationRequest locationRequest = new LocationRequest();
@@ -145,9 +142,9 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
 
-        if (dbh == null) {
+        if (broker_dbh == null) {
             CallMethod callMethod = new CallMethod(App.getContext());
-            dbh = new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
+            broker_dbh = new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
         } else {
             callMethod.Log("dbh=null");
 

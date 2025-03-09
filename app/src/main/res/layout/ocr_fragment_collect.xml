@@ -18,7 +18,7 @@
             android:id="@+id/ocr_collect_f_viewpager"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/grey_1000"/>
+            android:background="?attr/colorOnBackground"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </FrameLayout>

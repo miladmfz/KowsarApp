@@ -44,7 +44,7 @@ import retrofit2.Response;
 
 
 public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     private final LinearLayoutCompat mainline;
     private final ImageView img;

@@ -23,13 +23,14 @@ import java.text.DecimalFormat;
 
 public class Find_ConfigActivity extends AppCompatActivity {
 
-    private Find_DBH dbh;
+    private Find_DBH find_dbh;
     private CallMethod callMethod;
     private FindActivityConfigBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = FindActivityConfigBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -40,13 +41,13 @@ public class Find_ConfigActivity extends AppCompatActivity {
 
      void Config() {
         callMethod = new CallMethod(this);
-        dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
+         find_dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
 
     }
 
      void populateViews() {
 
-        binding.findConfigABroker.setText(NumberFunctions.PerisanNumber(dbh.ReadConfig("BrokerCode")));
+        binding.findConfigABroker.setText(NumberFunctions.PerisanNumber(find_dbh.ReadConfig("BrokerCode")));
         binding.findConfigAGrid.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Grid")));
         binding.findConfigADelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
         binding.findConfigATitlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));

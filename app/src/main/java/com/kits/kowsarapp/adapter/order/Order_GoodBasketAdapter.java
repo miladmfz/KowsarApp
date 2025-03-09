@@ -30,19 +30,19 @@ import retrofit2.Response;
 
 
 public class Order_GoodBasketAdapter extends RecyclerView.Adapter<Order_GoodBasketViewHolder> {
-    private final Order_APIInterface apiInterface;
+    private final Order_APIInterface order_apiInterface;
     private final Context mContext;
     private final ArrayList<Good> goods;
     CallMethod callMethod;
-    Order_Action action;
+    Order_Action order_action;
     Call<RetrofitResponse> call;
 
     public Order_GoodBasketAdapter(ArrayList<Good> goods, Context mContext) {
         this.mContext = mContext;
         this.goods = goods;
         this.callMethod = new CallMethod(mContext);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
-        action = new Order_Action(mContext);
+        order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        order_action = new Order_Action(mContext);
     }
 
     @NonNull
@@ -73,9 +73,9 @@ public class Order_GoodBasketAdapter extends RecyclerView.Adapter<Order_GoodBask
         } else {
             holder.ll_explain.setVisibility(View.INVISIBLE);
         }
-        holder.ll_amount.setOnClickListener(v -> action.GoodBoxDialog(goods.get(position), "1"));
-        holder.tv_explain.setOnClickListener(v -> action.GoodBoxDialog(goods.get(position), "1"));
-        holder.tv_goodname.setOnClickListener(v -> action.GoodBoxDialog(goods.get(position), "1"));
+        holder.ll_amount.setOnClickListener(v -> order_action.GoodBoxDialog(goods.get(position), "1"));
+        holder.tv_explain.setOnClickListener(v -> order_action.GoodBoxDialog(goods.get(position), "1"));
+        holder.tv_goodname.setOnClickListener(v -> order_action.GoodBoxDialog(goods.get(position), "1"));
 
 
         if (goods.get(position).getFactorCode().equals("0")) {
@@ -91,7 +91,7 @@ public class Order_GoodBasketAdapter extends RecyclerView.Adapter<Order_GoodBask
             builder.setMessage(R.string.textvalue_ifdelete);
 
             builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                call = apiInterface.DeleteGoodFromBasket(
+                call = order_apiInterface.DeleteGoodFromBasket(
                         "DeleteGoodFromBasket",
                         goods.get(position).getRowCode(),
                         goods.get(position).getAppBasketInfoRef()

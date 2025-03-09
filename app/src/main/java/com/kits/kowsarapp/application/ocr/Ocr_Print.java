@@ -56,7 +56,7 @@ public class Ocr_Print {
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
     CallMethod callMethod;
-    Ocr_DBH dbh;
+    Ocr_DBH ocr_dbh;
     Integer il;
     Integer packCounter;
     String packs = "0";
@@ -74,21 +74,14 @@ public class Ocr_Print {
     TextView tv_rep;
     ImageInfo imageInfo;
 
-
-
     String hideamount = "0";
-
-
-
-
-
 
 
     public Ocr_Print(Context mContext) {
         this.mContext = mContext;
         this.il = 0;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.ocr_dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         this.secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         this.persianCalendar = new PersianCalendar();

@@ -41,7 +41,7 @@ import retrofit2.Response;
 
 
 public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     private final LinearLayoutCompat mainline;
     private final ImageView img;
@@ -58,7 +58,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
     private final Context mContext;
     CallMethod callMethod;
 
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
 
     Broker_APIInterface broker_apiInterface;
     private final ImageInfo image_info;
@@ -73,9 +73,9 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
         this.mContext = context;
         this.callMethod = new CallMethod(mContext);
         this.image_info = new ImageInfo(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.broker_action = new Broker_Action(mContext);
-        this.Columns = dbh.GetColumns("id", "", "1");
+        this.Columns = broker_dbh.GetColumns("id", "", "1");
         this.broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
         mainline = itemView.findViewById(R.id.b_good_c_mainline);
@@ -204,7 +204,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void callimage(Good good){
-        String imagecode = dbh.GetLastksrImageCode(good.getGoodFieldValue("GoodCode"));
+        String imagecode = broker_dbh.GetLastksrImageCode(good.getGoodFieldValue("GoodCode"));
 
         if (image_info.Image_exist(imagecode)) {
             String root = Environment.getExternalStorageDirectory().getAbsolutePath();

@@ -28,20 +28,20 @@ import java.util.ArrayList;
 
 public class Broker_BasketActivity extends AppCompatActivity {
 
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
     ArrayList<Good> goods;
-    Broker_BasketItemAdapter adapter;
+    Broker_BasketItemAdapter broker_basketItemAdapter;
     GridLayoutManager gridLayoutManager;
     CallMethod callMethod;
     BrokerActivityBasketBinding binding;
-    private Broker_Action action;
+    private Broker_Action broker_action;
     private String PreFac = "0";
-    private Broker_DBH dbh;
+    private Broker_DBH broker_dbh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
 
         binding = BrokerActivityBasketBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -63,9 +63,9 @@ public class Broker_BasketActivity extends AppCompatActivity {
     //*****************************************************************
 
     public void Config() {
-        action = new Broker_Action(this);
+        broker_action = new Broker_Action(this);
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         setSupportActionBar(binding.bBasketAToolbar);
 
     }
@@ -73,14 +73,14 @@ public class Broker_BasketActivity extends AppCompatActivity {
     public void init() {
 
 
-        goods = dbh.getAllPreFactorRows("", PreFac);
-        adapter = new Broker_BasketItemAdapter(goods, this);
-        if (adapter.getItemCount() == 0) {
+        goods = broker_dbh.getAllPreFactorRows("", PreFac);
+        broker_basketItemAdapter = new Broker_BasketItemAdapter(goods, this);
+        if (broker_basketItemAdapter.getItemCount() == 0) {
             callMethod.showToast("سبد خرید خالی می باشد");
         }
         gridLayoutManager = new GridLayoutManager(this, 1);
         binding.bBasketAR1.setLayoutManager(gridLayoutManager);
-        binding.bBasketAR1.setAdapter(adapter);
+        binding.bBasketAR1.setAdapter(broker_basketItemAdapter);
         binding.bBasketAR1.setItemAnimator(new DefaultItemAnimator());
         binding.bBasketAR1.setVisibility(View.VISIBLE);
 
@@ -103,9 +103,9 @@ public class Broker_BasketActivity extends AppCompatActivity {
         });
 
 
-        binding.bBasketATotalPriceBuy.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(PreFac)))));
-        binding.bBasketATotalAmountBuy.setText(NumberFunctions.PerisanNumber(dbh.getFactorSumAmount(PreFac)));
-        binding.bBasketATotalCustomerBuy.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(PreFac)));
+        binding.bBasketATotalPriceBuy.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(PreFac)))));
+        binding.bBasketATotalAmountBuy.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorSumAmount(PreFac)));
+        binding.bBasketATotalCustomerBuy.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(PreFac)));
         binding.bBasketATotalRowBuy.setText(NumberFunctions.PerisanNumber(String.valueOf(goods.size())));
 
 
@@ -120,7 +120,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
                     builder.setMessage("آیا مایل به خالی کردن سبد خرید می باشید؟");
 
                     builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                        dbh.DeletePreFactorRow(PreFac, "0");
+                        broker_dbh.DeletePreFactorRow(PreFac, "0");
                         finish();
                         callMethod.showToast("سبد خرید با موفقیت حذف گردید!");
 
@@ -149,7 +149,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
                     builder.setMessage("آیا فاکتور ارسال گردد؟");
 
                     builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-                        action.sendfactor11(PreFac);
+                        broker_action.sendfactor11(PreFac);
                     });
 
                     builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {

@@ -8,16 +8,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="4dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/grey_1000"
     android:checkable="true"
     android:layoutDirection="rtl"
     app:checkedIconTint="@color/red_800">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ocr_stacklocation_line"
+        android:background="@drawable/bg_card"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -59,7 +57,7 @@
             android:layout_height="40dp"
             android:layout_margin="5dp"
             android:gravity="center_horizontal"
-            android:textColor="@color/overlay_dark_90"
+            android:textColor="?attr/colorOnBackground"
             android:textSize="12sp"
             android:textStyle="bold"
             tools:text="goodname" />
@@ -126,13 +124,14 @@
             android:id="@+id/ocr_stacklocation_c_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="6dp"
             android:gravity="center"
             android:text="انتخاب"
-            android:textColor="@color/white"
+            android:layout_margin="5dp"
             android:textSize="16sp"
-            app:backgroundTint="@color/green_400"
-            app:iconTint="@color/white" />
+            android:textStyle="bold"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

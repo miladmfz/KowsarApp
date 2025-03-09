@@ -23,8 +23,8 @@ public class Broker_CustomerAdapter extends RecyclerView.Adapter<Broker_Customer
     ArrayList<Customer> customers;
     String edit;
     String factor_target;
-    Broker_DBH dbh;
-    Broker_Action action;
+    Broker_DBH broker_dbh;
+    Broker_Action broker_action;
 
 
     public Broker_CustomerAdapter(ArrayList<Customer> customers, Context mContext, String edit, String factor_target) {
@@ -33,8 +33,8 @@ public class Broker_CustomerAdapter extends RecyclerView.Adapter<Broker_Customer
         this.edit = edit;
         this.factor_target = factor_target;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.action = new Broker_Action(mContext);
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.broker_action = new Broker_Action(mContext);
 
     }
 
@@ -52,9 +52,9 @@ public class Broker_CustomerAdapter extends RecyclerView.Adapter<Broker_Customer
         holder.bind(customers.get(position));
 
         holder.Action(customers.get(position)
-                , dbh
+                , broker_dbh
                 , callMethod
-                , action
+                , broker_action
                 , edit
                 , factor_target
                 , mContext

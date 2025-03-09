@@ -47,7 +47,6 @@ public class Base_SplashActivity extends AppCompatActivity {
     Base_DBH dbhbase;
 
     WorkManager workManager;
-    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

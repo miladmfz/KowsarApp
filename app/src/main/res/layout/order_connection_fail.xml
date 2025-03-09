@@ -6,7 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/bg_round_dark"
+    android:background="@drawable/bg_round"
     android:layoutDirection="rtl"
     android:orientation="vertical"
     android:padding="2dp">
@@ -30,7 +30,7 @@
             android:layout_margin="5dp"
             android:gravity="center"
             android:text="@string/connectionfail_title"
-            android:textColor="@color/overlay_dark_90"
+            android:textColor="?attr/colorOnBackground"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -58,12 +58,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="5dp"
             android:padding="3dp"
             android:text="@string/connectionfail_gosetting"
-            android:textColor="@color/colorPrimaryDark"
+            android:layout_margin="3dp"
             android:textSize="16sp"
-            app:backgroundTint="#DF5D10" />
+            android:textStyle="bold"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="?attr/colorSecondary"
+            android:textColor="?attr/colorOnSecondary" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

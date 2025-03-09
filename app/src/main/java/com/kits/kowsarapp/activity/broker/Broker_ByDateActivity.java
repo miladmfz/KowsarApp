@@ -37,36 +37,43 @@ import java.util.Objects;
 
 public class Broker_ByDateActivity extends AppCompatActivity {
 
-    public static String scan = "";
-    private final Integer conter = 0;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    public String PageMoreData = "0";
-    public String title = "";
+
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
+
+
     CallMethod callMethod;
-    ArrayList<String[]> Multi_buy = new ArrayList<>();
-    Broker_DBH dbh;
-    Broker_GoodAdapter adapter;
+    Broker_DBH broker_dbh;
+    Broker_GoodAdapter broker_goodAdapter;
     GridLayoutManager gridLayoutManager;
-    int pastVisiblesItems = 0, visibleItemCount, totalItemCount;
-    Menu item_multi;
-    String year;
-    String mount;
-    String day;
-    PersianCalendar calendar1;
-    ArrayList<Good> Multi_Good = new ArrayList<>();
+    PersianCalendar persianCalendar;
     Intent intent;
-    boolean defultenablesellprice;
+    Menu item_multi;
+
+
+    ArrayList<String[]> Multi_buy = new ArrayList<>();
+    ArrayList<Good> Multi_Good = new ArrayList<>();
+    ArrayList<Good> Moregoods = new ArrayList<>();
+    ArrayList<Good> goods = new ArrayList<>();
+
+
+    Integer pastVisiblesItems = 0, visibleItemCount, totalItemCount;
+    Integer conter = 0;
+    Integer grid;
+
+    String year,mount,day;
+    String PageMoreData = "0";
+    String lastDate;
+    String date;
+
+    Boolean defultenablesellprice;
+    Boolean loading = true;
+
     BrokerActivityBydateBinding binding;
-    private ArrayList<Good> Moregoods = new ArrayList<>();
-    private Integer grid;
-    private String date;
-    private boolean loading = true;
-    private String lastDate;
-    private ArrayList<Good> goods = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = BrokerActivityBydateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -97,8 +104,8 @@ public class Broker_ByDateActivity extends AppCompatActivity {
 
     public void Config() {
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        calendar1 = new PersianCalendar();
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        persianCalendar = new PersianCalendar();
 
         setSupportActionBar(binding.bBydateAToolbar);
 
@@ -115,26 +122,26 @@ public class Broker_ByDateActivity extends AppCompatActivity {
     public void init() {
 
 
-        calendar1.setPersianDate(
-                calendar1.getPersianYear(),
-                calendar1.getPersianMonth(),
-                calendar1.getPersianDay() - Integer.parseInt(date)
+        persianCalendar.setPersianDate(
+                persianCalendar.getPersianYear(),
+                persianCalendar.getPersianMonth(),
+                persianCalendar.getPersianDay() - Integer.parseInt(date)
         );
 
         year = "";
         mount = "0";
         day = "0";
 
-        year = year + calendar1.getPersianYear();
+        year = year + persianCalendar.getPersianYear();
 
-        if (String.valueOf(calendar1.getPersianMonth()).equals("11")) {
+        if (String.valueOf(persianCalendar.getPersianMonth()).equals("11")) {
             mount = "12";
-        } else if (String.valueOf(calendar1.getPersianMonth()).equals("00")) {
+        } else if (String.valueOf(persianCalendar.getPersianMonth()).equals("00")) {
             mount = "01";
         } else {
-            mount = mount + (calendar1.getPersianMonth() + 1);
+            mount = mount + (persianCalendar.getPersianMonth() + 1);
         }
-        day = day + (calendar1.getPersianDay());
+        day = day + (persianCalendar.getPersianDay());
         lastDate = year + "/" + mount.substring(mount.length() - 2) + "/" + day.substring(day.length() - 2);
 
 
@@ -146,33 +153,33 @@ public class Broker_ByDateActivity extends AppCompatActivity {
         binding.bBydateABtn.setOnClickListener(view -> {
             goods.clear();
 
-            calendar1 = new PersianCalendar();
+            persianCalendar = new PersianCalendar();
             if (!binding.bBydateADate.getText().toString().equals("")) {
                 date = binding.bBydateADate.getText().toString();
             } else {
                 date = "7";
             }
 
-            calendar1.setPersianDate(
-                    calendar1.getPersianYear(),
-                    calendar1.getPersianMonth(),
-                    calendar1.getPersianDay() - Integer.parseInt(date)
+            persianCalendar.setPersianDate(
+                    persianCalendar.getPersianYear(),
+                    persianCalendar.getPersianMonth(),
+                    persianCalendar.getPersianDay() - Integer.parseInt(date)
             );
 
             year = "";
             mount = "0";
             day = "0";
 
-            year = year + calendar1.getPersianYear();
+            year = year + persianCalendar.getPersianYear();
 
-            if (String.valueOf(calendar1.getPersianMonth()).equals("11")) {
+            if (String.valueOf(persianCalendar.getPersianMonth()).equals("11")) {
                 mount = "12";
-            } else if (String.valueOf(calendar1.getPersianMonth()).equals("00")) {
+            } else if (String.valueOf(persianCalendar.getPersianMonth()).equals("00")) {
                 mount = "01";
             } else {
-                mount = mount + (calendar1.getPersianMonth() + 1);
+                mount = mount + (persianCalendar.getPersianMonth() + 1);
             }
-            day = day + (calendar1.getPersianDay());
+            day = day + (persianCalendar.getPersianDay());
             lastDate = year + "/" + mount.substring(mount.length() - 2) + "/" + day.substring(day.length() - 2);
             GetDataFromDataBase();
 
@@ -214,18 +221,18 @@ public class Broker_ByDateActivity extends AppCompatActivity {
             defultenablesellprice = false;
 
             for (Good good : Multi_Good) {
-                Good goodtempdata = dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
+                Good goodtempdata = broker_dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
 
 
                 if (Multi_Good.get(0).equals(good)) {
-                    if (goodtempdata.getGoodFieldValue("SellPrice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))).equals("")) {
+                    if (goodtempdata.getGoodFieldValue("SellPrice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))).equals("")) {
                         tempvalue = "100.0";
                     } else {
-                        tempvalue = goodtempdata.getGoodFieldValue("Sellprice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode")));
+                        tempvalue = goodtempdata.getGoodFieldValue("Sellprice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode")));
                     }
                 }
 
-                if (!tempvalue.equals(goodtempdata.getGoodFieldValue("Sellprice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))))) {
+                if (!tempvalue.equals(goodtempdata.getGoodFieldValue("Sellprice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))))) {
                     defultenablesellprice = true;
                 }
 
@@ -237,7 +244,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
                 unitratio_mlti.setText(NumberFunctions.PerisanNumber(String.valueOf(100 - Integer.parseInt(tempvalue.substring(0, tempvalue.length() - 2)))));
             }
 
-            tv.setText(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
+            tv.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
             dialog.show();
             amount_mlti.requestFocus();
             amount_mlti.postDelayed(() -> {
@@ -255,12 +262,12 @@ public class Broker_ByDateActivity extends AppCompatActivity {
                     if (Integer.parseInt(AmountMulti) != 0) {
 
                         for (Good good : Multi_Good) {
-                            Good gooddata = dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
+                            Good gooddata = broker_dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
                             String temppercent;
-                            if (gooddata.getGoodFieldValue("SellPrice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))).equals("")) {
+                            if (gooddata.getGoodFieldValue("SellPrice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))).equals("")) {
                                 temppercent = "100.0";
                             } else {
-                                temppercent = gooddata.getGoodFieldValue("Sellprice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode")));
+                                temppercent = gooddata.getGoodFieldValue("Sellprice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode")));
                             }
 
                             if (unitratio_mlti.getText().toString().equals("")) {
@@ -270,13 +277,13 @@ public class Broker_ByDateActivity extends AppCompatActivity {
                             }
                             if (Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) > 0) {
                                 long Pricetemp = (long) Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) - ((long) Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) * Integer.parseInt(temppercent) / 100);
-                                dbh.InsertPreFactorwithPercent(callMethod.ReadString("PreFactorCode"),
+                                broker_dbh.InsertPreFactorwithPercent(callMethod.ReadString("PreFactorCode"),
                                         good.getGoodFieldValue("GoodCode"),
                                         AmountMulti,
                                         String.valueOf(Pricetemp),
                                         "0");
                             } else {
-                                dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"),
+                                broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"),
                                         good.getGoodFieldValue("GoodCode"),
                                         AmountMulti,
                                         "0",
@@ -291,12 +298,12 @@ public class Broker_ByDateActivity extends AppCompatActivity {
                             good.setCheck(false);
                         }
                         Multi_Good.clear();
-                        adapter = new Broker_GoodAdapter(goods, this);
-                        adapter.multi_select = false;
+                        broker_goodAdapter = new Broker_GoodAdapter(goods, this);
+                        broker_goodAdapter.multi_select = false;
                         gridLayoutManager = new GridLayoutManager(this, grid);
                         gridLayoutManager.scrollToPosition(pastVisiblesItems + 2);
                         binding.bBydateARecycler.setLayoutManager(gridLayoutManager);
-                        binding.bBydateARecycler.setAdapter(adapter);
+                        binding.bBydateARecycler.setAdapter(broker_goodAdapter);
                         binding.bBydateARecycler.setItemAnimator(new DefaultItemAnimator());
                         binding.bBydateAFab.setVisibility(View.GONE);
 
@@ -363,13 +370,13 @@ public class Broker_ByDateActivity extends AppCompatActivity {
                 good.setCheck(false);
             }
             Multi_buy.clear();
-            adapter = new Broker_GoodAdapter(goods, this);
-            adapter.multi_select = false;
+            broker_goodAdapter = new Broker_GoodAdapter(goods, this);
+            broker_goodAdapter.multi_select = false;
 
             gridLayoutManager = new GridLayoutManager(this, grid);
             gridLayoutManager.scrollToPosition(pastVisiblesItems + 2);
             binding.bBydateARecycler.setLayoutManager(gridLayoutManager);
-            binding.bBydateARecycler.setAdapter(adapter);
+            binding.bBydateARecycler.setAdapter(broker_goodAdapter);
             binding.bBydateARecycler.setItemAnimator(new DefaultItemAnimator());
             binding.bBydateAFab.setVisibility(View.GONE);
             return true;
@@ -380,8 +387,8 @@ public class Broker_ByDateActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     public void CallRecyclerView() {
-        adapter = new Broker_GoodAdapter(goods, this);
-        if (adapter.getItemCount() == 0) {
+        broker_goodAdapter = new Broker_GoodAdapter(goods, this);
+        if (broker_goodAdapter.getItemCount() == 0) {
             binding.bBydateATvstatus.setText("کالایی یافت نشد");
             binding.bBydateATvstatus.setVisibility(View.VISIBLE);
             binding.bBydateALottie.setVisibility(View.VISIBLE);
@@ -391,13 +398,13 @@ public class Broker_ByDateActivity extends AppCompatActivity {
         }
         gridLayoutManager = new GridLayoutManager(this, grid);
         binding.bBydateARecycler.setLayoutManager(gridLayoutManager);
-        binding.bBydateARecycler.setAdapter(adapter);
+        binding.bBydateARecycler.setAdapter(broker_goodAdapter);
         binding.bBydateARecycler.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void GetDataFromDataBase() {
         Moregoods.clear();
-        Moregoods = dbh.getAllGood_ByDate(lastDate, PageMoreData);
+        Moregoods = broker_dbh.getAllGood_ByDate(lastDate, PageMoreData);
         if (goods.isEmpty()) {
             goods.addAll(Moregoods);
         }
@@ -408,7 +415,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
     public void GetMoreDataFromDataBase() {
         loading = true;
         Moregoods.clear();
-        Moregoods = dbh.getAllGood_ByDate(lastDate, PageMoreData);
+        Moregoods = broker_dbh.getAllGood_ByDate(lastDate, PageMoreData);
 
         if (Moregoods.size() > 0) {
             if (goods.isEmpty()) {
@@ -417,7 +424,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
             if (goods.size() > (Integer.parseInt(callMethod.ReadString("Grid")) * 10)) {
                 goods.addAll(Moregoods);
             }
-            adapter.notifyDataSetChanged();
+            broker_goodAdapter.notifyDataSetChanged();
         } else {
             callMethod.showToast("کالایی بیشتری یافت نشد");
             PageMoreData = String.valueOf(Integer.parseInt(PageMoreData) - 1);
@@ -438,7 +445,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
 
             if (Multi_Good.size() < 1) {
                 binding.bBydateAFab.setVisibility(View.GONE);
-                adapter.multi_select = false;
+                broker_goodAdapter.multi_select = false;
                 item_multi.findItem(R.id.b_menu_multi).setVisible(false);
             }
         }
@@ -450,8 +457,8 @@ public class Broker_ByDateActivity extends AppCompatActivity {
             binding.bBydateALlSumFactor.setVisibility(View.GONE);
         } else {
             binding.bBydateALlSumFactor.setVisibility(View.VISIBLE);
-            binding.bBydateACustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.bBydateASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            binding.bBydateACustomer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
+            binding.bBydateASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
     }
 

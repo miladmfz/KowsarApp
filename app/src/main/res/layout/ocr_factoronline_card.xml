@@ -7,10 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    app:cardCornerRadius="8dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/grey_1000"
-    app:cardElevation="4dp"
     android:clickable="true"
     android:focusable="true"
     android:checkable="true"
@@ -21,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@drawable/bg_card"
         android:id="@+id/ocr_factoronline_c_ll_main"
 
         android:layout_weight="1">
@@ -40,7 +37,7 @@
                 android:layout_weight="0.3"
                 android:gravity="center"
                 android:text="نام :"
-                 
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
@@ -51,7 +48,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.6"
-                 
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center"/>
@@ -62,7 +59,7 @@
                 android:layout_height="34dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.8"
-                 
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:gravity="center"/>
@@ -91,7 +88,8 @@
                 android:text="جمع آوری:"
                 android:textColor="#FF0000"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
 
             <TextView
@@ -127,7 +125,7 @@
                 android:layout_weight="0.3"
                 android:gravity="center"
                 android:text="توضیحات :"
-                 
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
@@ -138,7 +136,7 @@
                 android:layout_height="34dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.7"
-                 
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:gravity="center"/>
@@ -208,18 +206,18 @@
                     android:layout_weight="0.25"
                     android:gravity="center"
                     android:text="کد فاکتور:"
-                     
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/ocr_factoronline_c_privatecode"
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_editbox"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                     
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -233,7 +231,8 @@
                 android:layout_weight="0.6"
                 android:textSize="20sp"
                 android:layout_gravity="center"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="?attr/colorOnBackground"/>
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -260,7 +259,7 @@
                     android:layout_weight="0.25"
                     android:gravity="center"
                     android:text="تاریخ سفارش:"
-                     
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="18sp" />
 
                 <TextView
@@ -270,8 +269,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.5"
                     android:gravity="center"
-                    android:background="@drawable/bg_round_selected"
-                     
+                    android:background="@drawable/bg_editbox"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="18sp"
                     android:textStyle="bold" />
                 <TextView
@@ -281,7 +280,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.5"
                     android:gravity="center"
-                     
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -304,16 +303,13 @@
                 android:layout_gravity="center"
                 android:layout_weight="0.25"
                 android:gravity="center"
-                android:layout_margin="3dp"
                 android:text="نمایش فاکتور"
-
-                 
+                android:layout_margin="3dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/white"
-                app:strokeColor="@color/grey_1000"
-                app:strokeWidth="1dp"
-                style="?attr/materialButtonOutlinedStyle" />
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary" />
 
 
 
@@ -327,7 +323,7 @@
         <androidx.viewpager.widget.ViewPager
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@color/red_900" />
+            android:background="@color/colorPrimary" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

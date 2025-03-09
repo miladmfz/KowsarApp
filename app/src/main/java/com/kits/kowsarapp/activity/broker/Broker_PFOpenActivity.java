@@ -27,7 +27,7 @@ import java.util.Objects;
 public class Broker_PFOpenActivity extends AppCompatActivity {
 
 
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
     private String fac;
     private Intent intent;
     GridLayoutManager gridLayoutManager;
@@ -39,7 +39,7 @@ public class Broker_PFOpenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = BrokerActivityPfopenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -70,7 +70,7 @@ public class Broker_PFOpenActivity extends AppCompatActivity {
 
     public void Config() {
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
 
 
     }
@@ -78,7 +78,7 @@ public class Broker_PFOpenActivity extends AppCompatActivity {
     public void init() {
 
 
-        preFactors = dbh.getAllPrefactorHeaderopen();
+        preFactors = broker_dbh.getAllPrefactorHeaderopen();
         binding.bPfopenAAmount.setText((NumberFunctions.PerisanNumber("" + preFactors.size())));
 
 
@@ -100,7 +100,7 @@ public class Broker_PFOpenActivity extends AppCompatActivity {
         });
 
         binding.bPfopenADeleteempty.setOnClickListener(view -> {
-            dbh.DeleteEmptyPreFactor();
+            broker_dbh.DeleteEmptyPreFactor();
             finish();
             startActivity(getIntent());
         });

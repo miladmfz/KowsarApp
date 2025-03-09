@@ -70,22 +70,23 @@ public class Broker_PrinterActivity extends AppCompatActivity {
     private TextView debugTextView = null; //A hidden TextView where you can test things
     private Button printButton = null; //Guess it :P
     private String PreFac = "0";
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
     LinearLayoutCompat main_layout;
     LinearLayoutCompat title_layout;
     LinearLayoutCompat boby_good_layout;
     LinearLayoutCompat good_layout;
     LinearLayoutCompat total_layout;
     ViewPager ViewPager, ViewPager_chap, ViewPager_rast;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.broker_activity_printer);
 
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         if (rotation == null) {
             rotation = AnimationUtils.loadAnimation(this, R.anim.rotation);
         }
@@ -124,7 +125,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                             intent();
                             goods.clear();
-                            goods = dbh.getAllPreFactorRows("", PreFac);
+                            goods = broker_dbh.getAllPreFactorRows("", PreFac);
                             main_layout = new LinearLayoutCompat(App.getContext());
                             title_layout = new LinearLayoutCompat(App.getContext());
                             boby_good_layout = new LinearLayoutCompat(App.getContext());
@@ -174,7 +175,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
 
                             TextView customername_tv = new TextView(App.getContext());
-                            customername_tv.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + dbh.getFactorCustomer(PreFac)));
+                            customername_tv.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + broker_dbh.getFactorCustomer(PreFac)));
                             customername_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(350, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                             customername_tv.setTextSize(10);
                             customername_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -190,7 +191,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
                             factorcode_tv.setPadding(0, 0, 0, 15);
 
                             TextView factordate_tv = new TextView(App.getContext());
-                            factordate_tv.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + dbh.getFactordate(PreFac)));
+                            factordate_tv.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + broker_dbh.getFactordate(PreFac)));
                             factordate_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(350, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                             factordate_tv.setTextSize(10);
                             factordate_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -204,7 +205,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
                             title_layout.addView(ViewPager);
 
                             TextView total_amount_tv = new TextView(App.getContext());
-                            total_amount_tv.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + dbh.getFactorSumAmount(PreFac)));
+                            total_amount_tv.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + broker_dbh.getFactorSumAmount(PreFac)));
                             total_amount_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(350, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                             total_amount_tv.setTextSize(14);
                             total_amount_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -212,7 +213,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
                             total_amount_tv.setPadding(0, 20, 0, 10);
 
                             TextView total_price_tv = new TextView(App.getContext());
-                            total_price_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.parseInt(dbh.getFactorSum(PreFac))) + " ریال"));
+                            total_price_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(PreFac))) + " ریال"));
                             total_price_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(350, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                             total_price_tv.setTextSize(12);
                             total_price_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));

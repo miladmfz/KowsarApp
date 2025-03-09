@@ -14,14 +14,14 @@
         android:layout_height="wrap_content"
         app:cardElevation="4dp"
         app:cardCornerRadius="8dp"
-        android:layout_margin="5dp"
+        android:layout_margin="2dp"
         >
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#EFEFEF"
-
+            android:background="@drawable/bg_card"
+            android:layout_margin="2dp"
             android:weightSum="1"
             >
 
@@ -43,7 +43,7 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:text="PersianCompanyNameUse"
-                    android:textColor="@color/colorPrimaryDark"/>
+                    android:textColor="?attr/colorOnBackground"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -76,7 +76,7 @@
                             android:text="نوع :"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="@color/grey_800" />
+                            android:textColor="?attr/colorOnBackground" />
                         <TextView
                             android:id="@+id/base_allapp_c_apptype"
                             android:layout_width="0dp"
@@ -85,7 +85,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.6"
                             android:textSize="16sp"
-                            android:textColor="@color/colorPrimaryDark"/>
+                            android:textColor="?attr/colorOnBackground"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -102,7 +102,7 @@
                             android:text="پوشه عکس :"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="@color/grey_800" />
+                            android:textColor="?attr/colorOnBackground" />
                         <TextView
                             android:id="@+id/base_allapp_c_englishname"
                             android:layout_width="0dp"
@@ -111,7 +111,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.6"
                             android:textSize="16sp"
-                            android:textColor="@color/colorPrimaryDark"/>
+                            android:textColor="?attr/colorOnBackground"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -128,7 +128,7 @@
                             android:text="ادرس سرور:"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="@color/grey_800" />
+                            android:textColor="?attr/colorOnBackground" />
                         <TextView
                             android:id="@+id/base_allapp_c_serverurl"
                             android:layout_width="0dp"
@@ -137,7 +137,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.6"
                             android:textSize="16sp"
-                            android:textColor="@color/colorPrimaryDark"/>
+                            android:textColor="?attr/colorOnBackground"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
 

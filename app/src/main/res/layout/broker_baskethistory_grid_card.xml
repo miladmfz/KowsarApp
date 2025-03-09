@@ -9,12 +9,10 @@
     android:layout_margin="5dp"
     android:layoutDirection="rtl"
     android:orientation="vertical"
-    app:cardCornerRadius="2dp"
-    app:cardElevation="6dp"
-    app:strokeColor="@color/grey_1000"
-    app:strokeWidth="1dp">
+>
 
     <LinearLayout
+        android:background="@drawable/bg_card"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:orientation="horizontal"
@@ -38,7 +36,7 @@
                     android:layout_weight="0.80"
 
                     android:text="کد کالا : "
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -51,7 +49,7 @@
                     android:paddingRight="8dp"
                     android:paddingBottom="1dp"
                     android:textSize="14sp"
-
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_weight="0.20"
                     android:textStyle="bold"
                     tools:text="code" />
@@ -69,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.80"
                     android:text="نام کالا : "
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -83,7 +81,7 @@
                     android:paddingRight="8dp"
                     android:paddingBottom="1dp"
                     android:textSize="14sp"
-
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_weight="0.20"
                     android:textStyle="bold"
                     tools:text="goodname" />
@@ -94,7 +92,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey_1000" />
+                android:background="?attr/colorOnBackground" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,7 +105,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
                     android:text="فی خالص :"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -117,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
                     android:text="sdsf"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -135,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
                     android:text="جمع خالص :"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -145,7 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
                     android:text="total"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
 
                     android:textStyle="bold" />
@@ -156,7 +154,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey_1000" />
+                android:background="?attr/colorOnBackground" />
 
 
             <LinearLayout
@@ -170,7 +168,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.80"
                     android:text="فی ناخالص : "
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -180,7 +178,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
                     android:text="max price"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
 
                     android:textStyle="bold" />
@@ -199,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
                     android:text="جمع ناخالص :"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -212,7 +210,7 @@
 
                     android:gravity="right"
                     android:text="max total"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -222,7 +220,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/grey_1000" />
+                android:background="?attr/colorOnBackground" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -238,7 +236,7 @@
                     android:layout_weight="0.3"
 
                     android:text="تعداد : "
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -250,7 +248,7 @@
                     android:layout_weight="0.4"
                     android:background="#FFFFFF"
                     android:gravity="center"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -262,7 +260,7 @@
         <androidx.viewpager.widget.ViewPager
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@color/grey_1000" />
+            android:background="?attr/colorOnBackground" />
 
 
         <androidx.appcompat.widget.LinearLayoutCompat

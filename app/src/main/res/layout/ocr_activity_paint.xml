@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/grey_1000">
+        app:strokeColor="?attr/colorOnBackground">
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -51,14 +51,19 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ocr_paint_a_send"
                     android:layout_width="match_parent"
-                    android:layout_height="100sp"
-                    android:backgroundTint="@color/green_700"
-                    android:strokeColor="@color/grey_1000"/>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:textColor="?attr/colorOnSecondary"
+                    />
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:background="@color/white"
+                    android:background="@drawable/bg_card"
                     android:weightSum="1">
                     <TextView
                         android:layout_width="match_parent"
@@ -67,14 +72,18 @@
                         android:text="توضیحات:"
                         android:textSize="22sp"
                         android:layout_gravity="center"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:textColor="?attr/colorOnBackground"/>
                     <EditText
                         android:id="@+id/ocr_paint_a_explain"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
                         android:layout_gravity="center"
-                        android:gravity="center" />
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:textColor="?attr/colorOnBackground"
+                        />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <com.kits.kowsarapp.adapter.ocr.Ocr_PaintView
@@ -87,7 +96,7 @@
                 <androidx.viewpager.widget.ViewPager
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@color/grey_1000"/>
+                    android:background="?attr/colorOnBackground"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

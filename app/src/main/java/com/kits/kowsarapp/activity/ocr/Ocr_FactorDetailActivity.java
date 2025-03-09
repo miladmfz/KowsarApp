@@ -49,14 +49,14 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
     Ocr_APIInterface apiInterface ;
     Ocr_APIInterface secendApiInterface ;
-    Ocr_DBH dbh ;
+    Ocr_DBH ocr_dbh ;
     LinearLayoutCompat main_layout;
     LinearLayoutCompat title_layout;
     LinearLayoutCompat boby_good_layout;
     LinearLayoutCompat good_layout;
     LinearLayoutCompat total_layout;
     androidx.viewpager.widget.ViewPager ViewPager, ViewPager_chap, ViewPager_rast;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
     ArrayList<Ocr_Good> ocr_goods;
     Factor factor;
     String BarcodeScan;
@@ -65,17 +65,12 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
     Bitmap bitmap_factor;
     int width=1;
     CallMethod callMethod;
-
-
     Ocr_Action ocr_action;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_factordetail);
         Dialog dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -108,7 +103,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+        ocr_dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
         ocr_action= new Ocr_Action(this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
@@ -170,7 +165,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
                         }else {
 
                             ocr_goods=response.body().getOcr_Goods();
-                            dbh.InsertScan(factor.getAppOCRFactorCode(),BarcodeScan,factor.getFactorPrivateCode(),factor.getFactorDate(),factor.getCustName(),factor.getCustomerRef());
+                            ocr_dbh.InsertScan(factor.getAppOCRFactorCode(),BarcodeScan,factor.getFactorPrivateCode(),factor.getFactorDate(),factor.getCustName(),factor.getCustomerRef());
                             CreateView();
                         }
 
@@ -185,7 +180,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
             });
 
         }else {
-            bitmap_factor_base64=dbh.getimagefromfactor(BarcodeScan,"FactorImage");
+            bitmap_factor_base64=ocr_dbh.getimagefromfactor(BarcodeScan,"FactorImage");
 
             ImageView imageView=new ImageView(getApplicationContext());
             imageView.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -464,7 +459,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
 
         bitmap_factor_base64= Base64.encodeToString(byteArray, Base64.DEFAULT);
-        dbh.Insert_factorImage(BarcodeScan,bitmap_factor_base64);
+        ocr_dbh.Insert_factorImage(BarcodeScan,bitmap_factor_base64);
 
 
 

@@ -50,7 +50,6 @@ public class Order_PrintChangeTable {
     public Call<RetrofitResponse> call;
     CallMethod callMethod;
     Order_DBH order_dbh;
-    Intent intent;
     Integer il;
     PersianCalendar persianCalendar;
     Dialog dialog, dialogProg;

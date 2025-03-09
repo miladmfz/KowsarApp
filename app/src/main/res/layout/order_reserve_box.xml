@@ -16,6 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
             android:orientation="vertical">
 
             <TextView
@@ -26,7 +27,8 @@
                 android:layout_margin="5sp"
                 android:gravity="center"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnBackground"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,7 +44,8 @@
                     android:layout_weight="0.8"
                     android:gravity="center"
                     android:text="@string/reservebox_name"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <EditText
 
@@ -52,11 +55,12 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.4"
                     android:autofillHints=""
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_editbox"
                     android:gravity="center"
                     android:hint="@string/reservebox_name"
                     android:textSize="20sp"
-                    tools:ignore="TextFields" />
+                    tools:ignore="TextFields"
+                    android:textColor="?attr/colorOnBackground"/>
 
             </LinearLayout>
 
@@ -75,7 +79,8 @@
                     android:layout_weight="0.8"
                     android:gravity="center"
                     android:text="@string/reservebox_mobile"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <EditText
 
@@ -85,11 +90,12 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.4"
                     android:autofillHints=""
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_editbox"
                     android:gravity="center"
                     android:hint="@string/reservebox_mobile"
                     android:textSize="20sp"
-                    tools:ignore="TextFields" />
+                    tools:ignore="TextFields"
+                    android:textColor="?attr/colorOnBackground"/>
 
             </LinearLayout>
 
@@ -108,7 +114,8 @@
                     android:layout_weight="0.8"
                     android:gravity="center"
                     android:text="@string/reservebox_explain"
-                    tools:ignore="MissingPrefix,NestedWeights" />
+                    tools:ignore="MissingPrefix,NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <EditText
 
@@ -118,11 +125,12 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.4"
                     android:autofillHints=""
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_editbox"
                     android:gravity="center"
                     android:hint="@string/reservebox_explain"
                     android:textSize="20sp"
-                    tools:ignore="TextFields" />
+                    tools:ignore="TextFields"
+                    android:textColor="?attr/colorOnBackground"/>
 
             </LinearLayout>
 
@@ -141,7 +149,8 @@
                     android:layout_weight="0.8"
                     android:gravity="center"
                     android:text="@string/reservebox_starttime"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
 
@@ -150,10 +159,11 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.4"
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_editbox"
                     android:gravity="center"
                     android:hint="@string/reservebox_starttime"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="?attr/colorOnBackground"/>
 
             </LinearLayout>
 
@@ -172,7 +182,8 @@
                     android:layout_weight="0.8"
                     android:gravity="center"
                     android:text="@string/reservebox_endtime"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
                     android:id="@+id/ord_reserve_b_reserveend"
@@ -181,10 +192,11 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.4"
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_editbox"
                     android:gravity="center"
                     android:hint="@string/reservebox_endtime"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="?attr/colorOnBackground"/>
 
             </LinearLayout>
 
@@ -203,7 +215,8 @@
                     android:layout_weight="0.8"
                     android:gravity="center"
                     android:text="@string/reservebox_date"
-                    tools:ignore="NestedWeights" />
+                    tools:ignore="NestedWeights"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
                     android:id="@+id/ord_reserve_b_date"
@@ -212,10 +225,12 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.4"
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_editbox"
                     android:gravity="center"
                     android:hint="@string/reservebox_date"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+
+                    android:textColor="?attr/colorOnBackground"/>
 
             </LinearLayout>
 
@@ -230,17 +245,16 @@
 
                 <Button
                     android:id="@+id/ord_reserve_b_btnsend"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="400dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="@string/reservebox_setreservebtn"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20sp"
+                    android:layout_margin="3dp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    app:backgroundTint="#D7BE9F"
-                    app:strokeColor="#B96838"
-                    app:strokeWidth="1dp" />
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnPrimary" />
 
 
             </LinearLayout>
@@ -251,12 +265,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="5sp"
-                android:background="@color/grey_600"
+                android:background="?attr/colorSecondary"
                 android:gravity="center"
                 android:text="@string/reservebox_tvlisttitle"
-                android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSecondary"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ord_reserve_b_recycler"

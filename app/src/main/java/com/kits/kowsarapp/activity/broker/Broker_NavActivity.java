@@ -1,6 +1,5 @@
 package com.kits.kowsarapp.activity.broker;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +14,7 @@ import androidx.work.WorkManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -58,46 +57,54 @@ import com.kits.kowsarapp.webService.base.APIClient;
 public class Broker_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    Broker_APIInterface broker_apiInterface;
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
+
     CallMethod callMethod;
-    Broker_DBH broker_dbh;
-    ArrayList<GoodGroup> menugrp;
     LinearLayoutCompat llsumfactor;
     Toolbar toolbar;
     NavigationView navigationView;
+    WorkManager workManager;
+    Intent intent;
+
+    Broker_APIInterface broker_apiInterface;
+    Broker_DBH broker_dbh;
+    Base_Action base_action;
+    Broker_Replication broker_replication;
+
+    PersianCalendar persianCalendar = new PersianCalendar();
+
+    ArrayList<GoodGroup> menugrp= new ArrayList<>();
+
+    Button btn_changedb;
+    Button btn_create_factor;
+    Button btn_good_search;
+    Button btn_open_factor;
+    Button btn_all_factor;
+    Button btn_test;
+
+
     TextView tv_versionname;
     TextView tv_dbname;
     TextView tv_brokercode;
-    Button btn_changedb;
-    TextView customer;
-    TextView sumfac;
-    Button create_factor;
-    Button good_search;
-    Button open_factor;
-    Button all_factor;
-    PersianCalendar calendar1 = new PersianCalendar();
-    Button btn_test;
-    TextView tv_test, tv_test2;
-    WorkManager workManager;
-    private Base_Action base_action;
+    TextView tv_customer;
+    TextView tv_sumfac;
+    TextView tv_test;
+    TextView tv_test2;
 
-    private boolean doubleBackToExitPressedOnce = false;
-    private Intent intent;
-    private Broker_Replication broker_replication;
+
+    boolean doubleBackToExitPressedOnce = false;
+
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.P)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.broker_activity_nav);
 
         Config();
         try {
             Handler handler = new Handler();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                handler.postDelayed(this::init, 100);
-            }
+            handler.postDelayed(this::init, 100);
         } catch (Exception e) {
             callMethod.Log(e.getMessage());
         }
@@ -118,7 +125,6 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
     public void GpslocationCall() {
 
-
         if (callMethod.ReadBoolan("kowsarService")) {
             AlarmReceiver alarm = new AlarmReceiver();
             alarm.setAlarm(App.getContext());
@@ -128,9 +134,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void Config() {
-
 
         base_action= new Base_Action(this);
         callMethod = new CallMethod(this);
@@ -147,7 +151,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
         toolbar = findViewById(R.id.b_main_a_toolbar);
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
-        calendar1.setTimeZone(TimeZone.getDefault());
+        persianCalendar.setTimeZone(TimeZone.getDefault());
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.b_nav_a_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -161,15 +165,16 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         tv_brokercode = hView.findViewById(R.id.header_brokercode);
         btn_changedb = hView.findViewById(R.id.header_changedb);
 
-        customer = findViewById(R.id.b_main_a_customer);
-        sumfac = findViewById(R.id.b_main_a_sum_factor);
-        create_factor = findViewById(R.id.b_main_a_create_factor);
-        good_search = findViewById(R.id.b_main_a_good_search);
-        open_factor = findViewById(R.id.b_main_a_open_factor);
-        all_factor = findViewById(R.id.b_main_a_all_factor);
-        btn_test = findViewById(R.id.b_main_a_test_btn);
+        tv_customer = findViewById(R.id.b_main_a_customer);
+        tv_sumfac = findViewById(R.id.b_main_a_sum_factor);
         tv_test = findViewById(R.id.b_main_a_test_tv);
         tv_test2 = findViewById(R.id.b_main_a_test_tv2);
+
+        btn_create_factor = findViewById(R.id.b_main_a_create_factor);
+        btn_good_search = findViewById(R.id.b_main_a_good_search);
+        btn_open_factor = findViewById(R.id.b_main_a_open_factor);
+        btn_all_factor = findViewById(R.id.b_main_a_all_factor);
+        btn_test = findViewById(R.id.b_main_a_test_btn);
 
         llsumfactor = findViewById(R.id.b_main_a_ll_sum_factor);
 
@@ -220,7 +225,6 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void init() {
         noti();
@@ -269,7 +273,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         }
 
 
-        create_factor.setOnClickListener(view -> {
+        btn_create_factor.setOnClickListener(view -> {
             intent = new Intent(this, Broker_CustomerActivity.class);
             intent.putExtra("edit", "0");
             intent.putExtra("id", "0");
@@ -278,7 +282,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         });
 
 
-        good_search.setOnClickListener(view -> {
+        btn_good_search.setOnClickListener(view -> {
             intent = new Intent(this, Broker_SearchActivity.class);
             intent.putExtra("scan", "");
             intent.putExtra("id", "0");
@@ -286,13 +290,13 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             startActivity(intent);
         });
 
-        open_factor.setOnClickListener(view -> {
+        btn_open_factor.setOnClickListener(view -> {
             intent = new Intent(this, Broker_PFOpenActivity.class);
             intent.putExtra("fac", "1");
             startActivity(intent);
         });
 
-        all_factor.setOnClickListener(view -> {
+        btn_all_factor.setOnClickListener(view -> {
             intent = new Intent(this, Broker_PFActivity.class);
             startActivity(intent);
         });
@@ -429,12 +433,12 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
     public void factorState() {
         if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) == 0) {
-            customer.setText("فاکتوری انتخاب نشده");
+            tv_customer.setText("فاکتوری انتخاب نشده");
             llsumfactor.setVisibility(View.GONE);
         } else {
             llsumfactor.setVisibility(View.VISIBLE);
-            customer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            sumfac.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            tv_customer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
+            tv_sumfac.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
     }
 

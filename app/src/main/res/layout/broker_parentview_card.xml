@@ -7,9 +7,7 @@
     android:layoutDirection="rtl"
     android:background="@drawable/bg_round_blue"
     android:layout_margin="2dp"
-
     >
-
 
     <ImageView
         android:id="@+id/b_parentview_c_image"
@@ -17,13 +15,8 @@
         android:layout_height="40dp"
         android:gravity="center"
         android:layout_gravity="center|right"
-
         android:layout_marginRight="10dp"
-
         tools:ignore="RtlHardcoded" />
-
-
-
 
     <TextView
         android:id="@+id/b_parentview_c_tv"
@@ -31,11 +24,10 @@
         android:layout_height="wrap_content"
         android:paddingStart="60dp"
         android:text="@string/detail_buy"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="?attr/colorOnBackground"
         android:gravity="center"
         android:textSize="22dp"
         android:layout_gravity="center|right"
-
         />
 
     <ImageView
@@ -44,10 +36,8 @@
         android:layout_height="55dp"
         android:layout_gravity="center_vertical"
         android:layoutDirection="rtl"
-        android:src="@drawable/ic_keyboard_arrow_down_black_24dp" />
-
-
-
+        android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
+        />
 
 
 </FrameLayout>

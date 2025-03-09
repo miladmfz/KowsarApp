@@ -18,7 +18,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="2dp"
                             app:strokeWidth="1dp"
-                            app:strokeColor="@color/grey_1000">
+                            app:strokeColor="?attr/colorOnBackground">
                                 <androidx.appcompat.widget.LinearLayoutCompat
                                     android:id="@+id/ocr_factordetail_a_layout"
                                     android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                                             android:id="@+id/ocr_factordetail_a_viewpager"
                                             android:layout_width="match_parent"
                                             android:layout_height="2dp"
-                                            android:background="@color/grey_1000"/>
+                                            android:background="?attr/colorOnBackground"/>
                                 </androidx.appcompat.widget.LinearLayoutCompat>
                         </com.google.android.material.card.MaterialCardView>
                 </androidx.appcompat.widget.LinearLayoutCompat>

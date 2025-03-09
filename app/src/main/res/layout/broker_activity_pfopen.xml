@@ -23,11 +23,8 @@
             android:id="@+id/b_pfopen_a_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
-
             android:background="?attr/colorPrimary"
-            android:layout_gravity="center"
-            app:titleTextColor="@color/white"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:title="انتخاب فاکتور">
 
         </androidx.appcompat.widget.Toolbar>
@@ -41,12 +38,12 @@
         android:layout_height="50dp"
         android:layout_marginVertical="8dp"
         android:text="@string/insert_prefactor"
+        android:layout_margin="3dp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        app:cornerRadius="12dp"
-        app:backgroundTint="@color/green_600"
-        style="?attr/materialButtonOutlinedStyle" />
+        style="@style/Widget.MaterialComponents.Button"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -64,7 +61,8 @@
             android:gravity="center"
             android:text="@string/open_amountprefactor"
             android:textStyle="bold"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnBackground"/>
 
         <TextView
             android:id="@+id/b_pfopen_a_amount"
@@ -73,7 +71,8 @@
             android:layout_weight="0.2"
             android:gravity="center"
             android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="?attr/colorOnBackground"/>
 
         <Button
             android:id="@+id/b_pfopen_a_deleteempty"

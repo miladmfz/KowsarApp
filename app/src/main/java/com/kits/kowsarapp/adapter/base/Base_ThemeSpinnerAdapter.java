@@ -1,4 +1,4 @@
-package com.kits.kowsarapp.adapter.order;
+package com.kits.kowsarapp.adapter.base;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,11 +12,11 @@ import androidx.annotation.Nullable;
 
 import com.kits.kowsarapp.R;
 
-public class Order_ThemeSpinnerAdapter extends ArrayAdapter<String> {
+public class Base_ThemeSpinnerAdapter extends ArrayAdapter<String> {
     private final int[][] themeColors; // Array of color combinations
     private final String[] themeNames; // Array of theme names
 
-    public Order_ThemeSpinnerAdapter(Context context, String[] themeNames, int[][] themeColors) {
+    public Base_ThemeSpinnerAdapter(Context context, String[] themeNames, int[][] themeColors) {
         super(context, R.layout.order_spinner_item_theme, themeNames);
         this.themeColors = themeColors;
         this.themeNames = themeNames;

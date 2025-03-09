@@ -35,10 +35,8 @@ public class Order_GoodBoxItemAdapter extends RecyclerView.Adapter<Order_GoodBox
     Context mContext;
     CallMethod callMethod;
     ArrayList<Good> goods;
-    Order_DBH dbh;
 
     Order_APIInterface apiInterface;
-   Order_Action action;
     Call<RetrofitResponse> call;
 
 
@@ -46,8 +44,6 @@ public class Order_GoodBoxItemAdapter extends RecyclerView.Adapter<Order_GoodBox
         this.mContext = context;
         this.goods = goods;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.action = new Order_Action(mContext);
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
     }

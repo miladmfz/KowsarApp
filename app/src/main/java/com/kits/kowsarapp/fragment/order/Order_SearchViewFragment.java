@@ -59,13 +59,13 @@ public class Order_SearchViewFragment extends Fragment {
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     Call<RetrofitResponse> call;
-    Order_GoodAdapter adapter;
+    Order_GoodAdapter order_goodAdapter;
     ArrayList<Good> Goods = new ArrayList<>();
     LottieAnimationView progressBar;
     LottieAnimationView img_lottiestatus;
     TextView tv_lottiestatus;
     Button Btn_GoodToOrder;
-    Order_DBH dbh;
+    Order_DBH order_dbh;
     String Parent_GourpCode;
     String good_GourpCode;
 
@@ -101,7 +101,7 @@ public class Order_SearchViewFragment extends Fragment {
 
         callMethod = new CallMethod(requireActivity());
         order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
-        dbh = new Order_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
+        order_dbh = new Order_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
 
         fragmentManager = requireActivity().getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -123,7 +123,7 @@ public class Order_SearchViewFragment extends Fragment {
                 handler.postDelayed(() -> {
                     searchtarget = NumberFunctions.EnglishNumber(ed_search.getText().toString());
                     Where = "GoodName Like N''%" + searchtarget.replaceAll(" ", "%") + "%'' ";
-                    good_GourpCode=dbh.ReadConfig("GroupCodeDefult");
+                    good_GourpCode=order_dbh.ReadConfig("GroupCodeDefult");
                     allgood();
                 }, Integer.parseInt(callMethod.ReadString("Delay")));
             }
@@ -218,8 +218,8 @@ public class Order_SearchViewFragment extends Fragment {
 
         progressBar.setVisibility(View.GONE);
 
-        adapter = new Order_GoodAdapter(Goods, requireActivity());
-        if (adapter.getItemCount() == 0) {
+        order_goodAdapter = new Order_GoodAdapter(Goods, requireActivity());
+        if (order_goodAdapter.getItemCount() == 0) {
             tv_lottiestatus.setText(R.string.textvalue_notfound);
             img_lottiestatus.setVisibility(View.VISIBLE);
             tv_lottiestatus.setVisibility(View.VISIBLE);
@@ -228,7 +228,7 @@ public class Order_SearchViewFragment extends Fragment {
             tv_lottiestatus.setVisibility(View.GONE);
         }
         rc_good.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
-        rc_good.setAdapter(adapter);
+        rc_good.setAdapter(order_goodAdapter);
         rc_good.setItemAnimator(new DefaultItemAnimator());
 
     }

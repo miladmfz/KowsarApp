@@ -40,7 +40,6 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
     private final Context mContext;
     private final ArrayList<Ocr_Good> ocr_goods;
-    private final Ocr_Action ocrAction;
     CallMethod callMethod;
     String state;
     String barcodescan;
@@ -52,7 +51,6 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
         this.ocr_goods = goods;
         this.state = state;
         this.barcodescan = barcodescan;
-        this.ocrAction = new Ocr_Action(context);
         this.callMethod = new CallMethod(context);
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         this.secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);

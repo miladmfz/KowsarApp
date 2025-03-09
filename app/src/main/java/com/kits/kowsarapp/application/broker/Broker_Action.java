@@ -51,11 +51,11 @@ import retrofit2.Response;
 
 
 public class Broker_Action extends Base_Action {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     Context mContext;
     CallMethod callMethod;
-    Broker_DBH dbh;
+    Broker_DBH broker_dbh;
     Intent intent;
     Cursor cursor;
     Integer il;
@@ -66,7 +66,7 @@ public class Broker_Action extends Base_Action {
         this.mContext = mContext;
         this.il = 0;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         url = callMethod.ReadString("ServerURLUse");
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
@@ -78,7 +78,7 @@ public class Broker_Action extends Base_Action {
         final String[] NewPrice = {""};
         final String[] boxAmount = {""};
 
-        Good good = dbh.getGoodBuyBox(goodcode);
+        Good good = broker_dbh.getGoodBuyBox(goodcode);
         DefaultUnitValue = Integer.parseInt(good.getGoodFieldValue("DefaultUnitValue"));
 
         NewPrice[0] = good.getGoodFieldValue("SellPrice");
@@ -114,7 +114,7 @@ public class Broker_Action extends Base_Action {
                 price.setEnabled(!callMethod.ReadString("SellOff").equals("0"));
 
 
-                factorname.setText(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
+                factorname.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
 
                 price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("SellPrice")))));
 
@@ -180,7 +180,7 @@ public class Broker_Action extends Base_Action {
                         if (!boxAmount[0].equals("")) {
                             if (Integer.parseInt(boxAmount[0]) != 0) {
                                 if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                                    dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
+                                    broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
 
                                     callMethod.showToast("به سبد کالا اضافه شد");
                                     if (!Basketflag.equals("0")) {
@@ -253,7 +253,7 @@ public class Broker_Action extends Base_Action {
                 long percent_param = (long) (100 - (100 * Float.parseFloat(good.getGoodFieldValue("SellPrice")) / Integer.parseInt(good.getGoodFieldValue("MaxSellPrice"))));
                 percent.setText(NumberFunctions.PerisanNumber(percent_param + ""));
 
-                factorname.setText(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
+                factorname.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
                 maxPrice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")))));
                 price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("SellPrice")))));
 
@@ -372,7 +372,7 @@ public class Broker_Action extends Base_Action {
                     if (!boxAmount[0].equals("")) {
                         if (Integer.parseInt(boxAmount[0]) != 0) {
                             if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                                dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
+                                broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
 
                                 callMethod.showToast("به سبد کالا اضافه شد");
                                 if (!Basketflag.equals("0")) {
@@ -440,7 +440,7 @@ public class Broker_Action extends Base_Action {
                 price.setEnabled(!callMethod.ReadString("SellOff").equals("0"));
 
 
-                factorname.setText(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
+                factorname.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
 
                 price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("SellPrice")))));
 
@@ -506,7 +506,7 @@ public class Broker_Action extends Base_Action {
                         if (!boxAmount[0].equals("")) {
                             if (Integer.parseInt(boxAmount[0]) != 0) {
                                 if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                                    dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
+                                    broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
 
                                     callMethod.showToast("به سبد کالا اضافه شد");
                                     if (!Basketflag.equals("0")) {
@@ -579,7 +579,7 @@ public class Broker_Action extends Base_Action {
                 long percent_param = (long) (100 - (100 * Float.parseFloat(good.getGoodFieldValue("SellPrice")) / Integer.parseInt(good.getGoodFieldValue("MaxSellPrice"))));
                 percent.setText(NumberFunctions.PerisanNumber(percent_param + ""));
 
-                factorname.setText(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
+                factorname.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
                 maxPrice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")))));
                 price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("SellPrice")))));
 
@@ -698,7 +698,7 @@ public class Broker_Action extends Base_Action {
                     if (!boxAmount[0].equals("")) {
                         if (Integer.parseInt(boxAmount[0]) != 0) {
                             if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                                dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
+                                broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
 
                                 callMethod.showToast("به سبد کالا اضافه شد");
                                 if (!Basketflag.equals("0")) {
@@ -798,7 +798,7 @@ public class Broker_Action extends Base_Action {
                             int kowsarcode = jo.getInt("PreFactorCode");
                             if (kowsarcode > 0) {
                                 String factorDate = jo.getString("PreFactorDate");
-                                dbh.UpdatePreFactor(factor_code, String.valueOf(kowsarcode), factorDate);
+                                broker_dbh.UpdatePreFactor(factor_code, String.valueOf(kowsarcode), factorDate);
                                 callMethod.EditString("PreFactorCode", "0");
                                 lottieok();
 
@@ -873,7 +873,7 @@ public class Broker_Action extends Base_Action {
 //                    int kowsarcode = jo.getInt("PreFactorCode");
 //                    if (kowsarcode > 0) {
 //                        String factorDate = jo.getString("PreFactorDate");
-//                        dbh.UpdatePreFactor(factor_code, String.valueOf(kowsarcode), factorDate);
+//                        broker_dbh.UpdatePreFactor(factor_code, String.valueOf(kowsarcode), factorDate);
 //                        callMethod.EditString("PreFactorCode", "0");
 //                        lottieok();
 //
@@ -951,7 +951,7 @@ public class Broker_Action extends Base_Action {
         pf_detail_btn.setOnClickListener(view -> {
 
             String detail = NumberFunctions.EnglishNumber(pf_detail_detail.getText().toString());
-            dbh.update_explain(factor_code, detail);
+            broker_dbh.update_explain(factor_code, detail);
             intent = new Intent(mContext, Broker_PFActivity.class);
             ((Activity) mContext).finish();
             ((Activity) mContext).overridePendingTransition(0, 0);
@@ -982,9 +982,9 @@ public class Broker_Action extends Base_Action {
         pf_detail_btn.setOnClickListener(view -> {
             Broker_DBH dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
             String detail = pf_detail_detail.getText().toString();
-            dbh.InsertPreFactorHeader(detail, String.valueOf(customer_code));
+            broker_dbh.InsertPreFactorHeader(detail, String.valueOf(customer_code));
             String prefactor_code = "PreFactorCode";
-            callMethod.EditString(prefactor_code, dbh.GetLastPreFactorHeader().toString());
+            callMethod.EditString(prefactor_code, broker_dbh.GetLastPreFactorHeader().toString());
             lottiereceipt();
             intent = new Intent(mContext, Broker_SearchActivity.class);
             intent.putExtra("scan", "");

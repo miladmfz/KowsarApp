@@ -8,20 +8,17 @@
 
         <item
             android:id="@+id/ocr_nav_search"
-            android:icon="@drawable/b"
             android:title="b"
             android:visible="false"/>
 
 
         <item
             android:id="@+id/ocr_nav_buy_history"
-            android:icon="@drawable/b"
             android:title="b"
             android:visible="false"/>
 
         <item
             android:id="@+id/ocr_nav_rep"
-            android:icon="@drawable/b"
             android:title="b"
             android:visible="false"/>
 
@@ -36,7 +33,6 @@
                 android:title="تنظیمات" />
             <item
                 android:id="@+id/ocr_aboutus"
-                android:icon="@drawable/b"
                 android:title="b"
                 android:visible="false"/>
 

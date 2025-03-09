@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/ocr_gooddetail_box"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
     android:padding="16dp"
-    android:background="@color/white">
+    >
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:backgroundTint="@color/white"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
+>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="@drawable/bg_card"
             android:padding="16dp">
 
             <ImageView
@@ -49,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="شماره قفسه"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
@@ -60,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:textSize="20sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -82,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="موجودی کل"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
@@ -93,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:textSize="20sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -114,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="قطع"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
@@ -125,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:textSize="20sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -146,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="نوع جلد"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
@@ -157,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:textSize="20sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -178,7 +181,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="پشت جلد"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
@@ -189,11 +192,12 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:textSize="20sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
     </androidx.cardview.widget.CardView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

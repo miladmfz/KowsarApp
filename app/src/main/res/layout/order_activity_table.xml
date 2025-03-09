@@ -29,10 +29,10 @@
                 android:id="@+id/ord_table_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
                 android:background="?attr/colorPrimary"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="@string/tableactivity_titlename"
-                app:titleTextColor="@color/white">
+                >
 
 
             </androidx.appcompat.widget.Toolbar>
@@ -70,7 +70,7 @@
                 <androidx.viewpager.widget.ViewPager
                     android:layout_width="2dp"
                     android:layout_height="match_parent"
-                    android:background="@color/grey_900" />
+                    android:textColor="?attr/colorOnBackground" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -83,7 +83,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_card">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -91,7 +92,8 @@
                             android:layout_weight="0.5"
                             android:gravity="center"
                             android:text="@string/tableactivity_tabletype"
-                            android:textSize="22sp" />
+                            android:textSize="22sp"
+                            android:textColor="?attr/colorOnBackground"/>
 
                         <Spinner
                             android:id="@+id/ord_table_a_spinner"
@@ -99,7 +101,10 @@
                             android:layout_height="match_parent"
                             android:layout_weight="0.5"
                             android:gravity="center"
-                            android:scrollbarSize="20sp" />
+                            android:scrollbarSize="20sp"
+                            android:background="@drawable/bg_editbox"
+                            android:layout_margin="2dp"
+                            android:textColor="?attr/colorOnBackground"/>
 
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -139,7 +144,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:textColor="#03a9f4"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="40sp"
 
                         />

@@ -17,6 +17,7 @@
             android:id="@+id/ocr_factordialog_d_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
             android:orientation="vertical">
 
 
@@ -39,7 +40,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="کد فاکتور : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -50,9 +51,9 @@
 
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -60,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="تاریخ : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="19sp" />
 
                     <TextView
@@ -69,9 +70,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="19sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -96,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="کد بایگانی: "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
                     
                     <TextView
@@ -105,9 +106,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
 
                     <TextView
@@ -115,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="کد پرینت : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -124,9 +125,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -151,7 +152,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="منطقه : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -160,17 +161,18 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
 
-                        android:textSize="22sp" />
+                        android:textSize="22sp"
+                        android:textColor="?attr/colorOnBackground"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="کد مشتری : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -179,9 +181,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -206,7 +208,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="نام مشتری : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -215,9 +217,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="18sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -243,7 +245,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="بازایاب : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -252,9 +254,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="18sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -278,7 +280,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="وضعیت فاکتور : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -287,9 +289,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -314,8 +316,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="تاریخ اتمام انبار : "
-                        android:textColor="@color/grey_800"
-                        android:textSize="20sp" />
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="20sp"
+                        />
 
                     <TextView
                         android:id="@+id/ocr_factordialog_d_appcontroldate"
@@ -323,9 +326,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -348,8 +351,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="تاریخ اتمام بسته بندی : "
-                        android:textColor="@color/grey_800"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:textColor="?attr/colorOnBackground"/>
 
                     <TextView
                         android:id="@+id/ocr_factordialog_d_apppackdate"
@@ -357,9 +360,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -383,7 +386,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="اعلام کننده : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -392,9 +395,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -418,7 +421,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="کنترل کننده : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -427,9 +430,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -453,7 +456,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="بسته بند  : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -462,9 +465,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -489,7 +492,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="تحویل دهنده: "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -498,9 +501,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -524,7 +527,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="تعداد : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -533,16 +536,16 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="خروج : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -551,9 +554,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="19sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -581,7 +584,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="اصلاحی : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -590,16 +593,16 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:text="امضا : "
-                        android:textColor="@color/grey_800"
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
 
                     <TextView
@@ -608,9 +611,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
                         android:layout_weight="0.5"
-                        android:background="@drawable/bg_round_greylight"
+                        android:background="@drawable/bg_editbox"
                         android:gravity="center"
-
+                        android:textColor="?attr/colorOnBackground"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -636,24 +639,29 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="لغو تحویل"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp"
-                        android:layout_margin="4dp"
-                        app:backgroundTint="@null"
-                        android:background="@drawable/bg_round_selected"
-                        android:layout_weight="0.5"/>
+                        android:layout_margin="3dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:layout_weight="0.5"
+                        />
 
                     <Button
                         android:id="@+id/ocr_factordialog_d_btn2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="اصلاح اطلاعات"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp"
-                        android:layout_margin="4dp"
-                        app:backgroundTint="@null"
-                        android:background="@drawable/bg_round_selected"
-                        android:layout_weight="0.5"/>
+                        android:layout_margin="3dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="?attr/colorSecondary"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:layout_weight="0.5"
+
+                        />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>

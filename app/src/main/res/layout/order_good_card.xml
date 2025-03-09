@@ -9,15 +9,14 @@
     android:checkable="true"
     android:layoutDirection="rtl"
     android:orientation="vertical"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp"
-    app:strokeColor="@color/grey_1000"
-    app:strokeWidth="1dp">
+>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_card"
+        android:layout_margin="2dp"
         android:orientation="vertical">
 
         <ImageView
@@ -34,14 +33,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="?attr/colorOnBackground"/>
 
         <TextView
             android:id="@+id/ord_gooditem_c_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="?attr/colorOnBackground"/>
 
 
     </LinearLayout>

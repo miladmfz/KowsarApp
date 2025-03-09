@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/order_miztype_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:layoutDirection="rtl"
     android:orientation="vertical"
-    app:cardCornerRadius="2dp"
-    app:cardElevation="6dp"
-    app:strokeWidth="1dp">
+>
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/bg_round_selected"
+        android:layout_margin="2dp"
+        android:background="@drawable/bg_card"
         android:orientation="vertical"
         android:padding="5sp">
 
@@ -27,7 +25,7 @@
             android:gravity="center"
             android:textSize="26sp"
             android:textStyle="bold"
-
+            android:textColor="?attr/colorOnBackground"
             />
     </androidx.appcompat.widget.LinearLayoutCompat>
 

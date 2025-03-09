@@ -40,36 +40,45 @@ import java.util.Objects;
 
 
 public class Broker_SearchActivity extends AppCompatActivity {
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
+
+    Menu item_multi;
+    Dialog dialog1;
+    Intent intent;
+    Handler handler;
+    Handler keyboardHandler = new Handler();
+    CallMethod callMethod;
+    GridLayoutManager gridLayoutManager;
 
 
-    public ArrayList<Good> goods = new ArrayList<>();
+    Broker_GroupLableAdapter broker_groupLableAdapter;
+    Broker_DBH broker_dbh;
+    Broker_GoodAdapter broker_goodAdapter;
+
+
+    public final ArrayList<Good> goods = new ArrayList<>();
+    ArrayList<Good> Multi_Good = new ArrayList<>();
+    ArrayList<Good> Moregoods = new ArrayList<>();
+    ArrayList<GoodGroup> goodGroups= new ArrayList<>();
+
+
     public String id = "0";
     public String title = "";
     public String proSearchCondition = "";
     public String AutoSearch = "";
     public String PageMoreData = "0";
-    ArrayList<GoodGroup> goodGroups;
-    Dialog dialog1;
-    Broker_GroupLableAdapter grp_adapter;
-    Intent intent;
-    Broker_DBH dbh;
-    Handler handler;
-    ArrayList<Good> Multi_Good = new ArrayList<>();
-    DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    Broker_GoodAdapter adapter;
-    GridLayoutManager gridLayoutManager;
-    int pastVisiblesItems = 0, visibleItemCount, totalItemCount;
-    Menu item_multi;
-    CallMethod callMethod;
-    boolean defultenablesellprice;
+
+    Integer pastVisiblesItems = 0, visibleItemCount, totalItemCount;
+    Integer grid;
+
+    Boolean defultenablesellprice;
+    Boolean loading = true;
+
+
     BrokerActivitySearchBinding binding;
-    private ArrayList<Good> Moregoods = new ArrayList<>();
-    private Integer grid;
-    private boolean loading = true;
-    private Handler keyboardHandler = new Handler();
 
     //*************************************************
-    private Runnable keyboardRunnable = () -> {
+    private final Runnable keyboardRunnable = () -> {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(binding.bSearchAEdtsearch.getWindowToken(),
                 0
@@ -79,7 +88,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = BrokerActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -97,7 +106,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
         try {
             Handler handler = new Handler();
             handler.postDelayed(() -> {
-                if (dbh.GetColumnscount().equals("0")) {
+                if (broker_dbh.GetColumnscount().equals("0")) {
                     callMethod.showToast("تنظیم جدول از سمت دیتابیس مشکل دارد");
                     finish();
                     dialog1.dismiss();
@@ -116,7 +125,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         handler = new Handler();
         grid = Integer.parseInt(callMethod.ReadString("Grid"));
     }
@@ -133,17 +142,17 @@ public class Broker_SearchActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void init() {
         if (id.equals("0")) {
-            id = dbh.ReadConfig("GroupCodeDefult");
+            id = broker_dbh.ReadConfig("GroupCodeDefult");
         }
 
         binding.bSearchAToolbar.setTitle(title);
 
 
-        goodGroups = dbh.getAllGroups(id);
-        grp_adapter = new Broker_GroupLableAdapter(goodGroups, this);
+        goodGroups = broker_dbh.getAllGroups(id);
+        broker_groupLableAdapter = new Broker_GroupLableAdapter(goodGroups, this);
         binding.bSearchAGrpRecy.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false));
-        binding.bSearchAGrpRecy.setAdapter(grp_adapter);
-        adapter = new Broker_GoodAdapter(goods, this);
+        binding.bSearchAGrpRecy.setAdapter(broker_groupLableAdapter);
+        broker_goodAdapter = new Broker_GoodAdapter(goods, this);
         if (goodGroups.size() == 0) {
             binding.bSearchAGrpRecy.getLayoutParams().height = 0;
             binding.bSearchAGrp.setVisibility(View.GONE);
@@ -258,17 +267,17 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
             for (Good good : Multi_Good) {
 
-                goodtempdata = dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
+                goodtempdata = broker_dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
 
                 if (Multi_Good.get(0).equals(good)) {
-                    if (goodtempdata.getGoodFieldValue("SellPrice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))).equals("")) {
+                    if (goodtempdata.getGoodFieldValue("SellPrice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))).equals("")) {
                         tempvalue = "100.0";
                     } else {
-                        tempvalue = goodtempdata.getGoodFieldValue("Sellprice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode")));
+                        tempvalue = goodtempdata.getGoodFieldValue("Sellprice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode")));
                     }
                 }
 
-                if (!tempvalue.equals(goodtempdata.getGoodFieldValue("Sellprice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))))) {
+                if (!tempvalue.equals(goodtempdata.getGoodFieldValue("Sellprice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))))) {
                     defultenablesellprice = true;
                 }
 
@@ -280,7 +289,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
                 unitratio_mlti.setText(NumberFunctions.PerisanNumber(String.valueOf(100 - Integer.parseInt(tempvalue.substring(0, tempvalue.length() - 2)))));
             }
 
-            tv.setText(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
+            tv.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
             dialog.show();
             amount_mlti.requestFocus();
             amount_mlti.postDelayed(() -> {
@@ -298,12 +307,12 @@ public class Broker_SearchActivity extends AppCompatActivity {
                     if (Integer.parseInt(AmountMulti) != 0) {
 
                         for (Good good : Multi_Good) {
-                            Good gooddata = dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
+                            Good gooddata = broker_dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
                             String temppercent;
-                            if (gooddata.getGoodFieldValue("SellPrice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))).equals("")) {
+                            if (gooddata.getGoodFieldValue("SellPrice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode"))).equals("")) {
                                 temppercent = "100.0";
                             } else {
-                                temppercent = gooddata.getGoodFieldValue("Sellprice" + dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode")));
+                                temppercent = gooddata.getGoodFieldValue("Sellprice" + broker_dbh.getPricetipCustomer(callMethod.ReadString("PreFactorCode")));
                             }
 
                             if (unitratio_mlti.getText().toString().equals("")) {
@@ -313,13 +322,13 @@ public class Broker_SearchActivity extends AppCompatActivity {
                             }
                             if (Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) > 0) {
                                 long Pricetemp = (long) Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) - ((long) Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) * Integer.parseInt(temppercent) / 100);
-                                dbh.InsertPreFactorwithPercent(callMethod.ReadString("PreFactorCode"),
+                                broker_dbh.InsertPreFactorwithPercent(callMethod.ReadString("PreFactorCode"),
                                         good.getGoodFieldValue("GoodCode"),
                                         AmountMulti,
                                         String.valueOf(Pricetemp),
                                         "0");
                             } else {
-                                dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"),
+                                broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"),
                                         good.getGoodFieldValue("GoodCode"),
                                         AmountMulti,
                                         "0",
@@ -334,12 +343,12 @@ public class Broker_SearchActivity extends AppCompatActivity {
                             good.setCheck(false);
                         }
                         Multi_Good.clear();
-                        adapter = new Broker_GoodAdapter(goods, this);
-                        adapter.multi_select = false;
+                        broker_goodAdapter = new Broker_GoodAdapter(goods, this);
+                        broker_goodAdapter.multi_select = false;
                         gridLayoutManager = new GridLayoutManager(this, grid);
                         gridLayoutManager.scrollToPosition(pastVisiblesItems + 2);
                         binding.bSearchAAllgood.setLayoutManager(gridLayoutManager);
-                        binding.bSearchAAllgood.setAdapter(adapter);
+                        binding.bSearchAAllgood.setAdapter(broker_goodAdapter);
                         binding.bSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
                         binding.bSearchAFab.setVisibility(View.GONE);
 
@@ -407,13 +416,13 @@ public class Broker_SearchActivity extends AppCompatActivity {
                 good.setCheck(false);
             }
             Multi_Good.clear();
-            adapter.multi_select = false;
+            broker_goodAdapter.multi_select = false;
 
-            adapter = new Broker_GoodAdapter(goods, this);
+            broker_goodAdapter = new Broker_GoodAdapter(goods, this);
             gridLayoutManager = new GridLayoutManager(this, grid);
             gridLayoutManager.scrollToPosition(pastVisiblesItems + 2);
             binding.bSearchAAllgood.setLayoutManager(gridLayoutManager);
-            binding.bSearchAAllgood.setAdapter(adapter);
+            binding.bSearchAAllgood.setAdapter(broker_goodAdapter);
             binding.bSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
             binding.bSearchAFab.setVisibility(View.GONE);
             return true;
@@ -433,9 +442,9 @@ public class Broker_SearchActivity extends AppCompatActivity {
         Moregoods.clear();
 
         if (proSearchCondition.equals("")) {
-            Moregoods = dbh.getAllGood(NumberFunctions.EnglishNumber(AutoSearch), id, PageMoreData);
+            Moregoods = broker_dbh.getAllGood(NumberFunctions.EnglishNumber(AutoSearch), id, PageMoreData);
         } else {
-            Moregoods = dbh.getAllGood_Extended(NumberFunctions.EnglishNumber(proSearchCondition), id, PageMoreData);
+            Moregoods = broker_dbh.getAllGood_Extended(NumberFunctions.EnglishNumber(proSearchCondition), id, PageMoreData);
         }
         if (goods.isEmpty()) {
             goods.addAll(Moregoods);
@@ -447,9 +456,9 @@ public class Broker_SearchActivity extends AppCompatActivity {
     public void GetMoreDataFromDataBase() {
         Moregoods.clear();
         if (proSearchCondition.equals("")) {
-            Moregoods = dbh.getAllGood(NumberFunctions.EnglishNumber(AutoSearch), id, PageMoreData);
+            Moregoods = broker_dbh.getAllGood(NumberFunctions.EnglishNumber(AutoSearch), id, PageMoreData);
         } else {
-            Moregoods = dbh.getAllGood_Extended(NumberFunctions.EnglishNumber(proSearchCondition), id, PageMoreData);
+            Moregoods = broker_dbh.getAllGood_Extended(NumberFunctions.EnglishNumber(proSearchCondition), id, PageMoreData);
         }
         if (Moregoods.size() > 0) {
             if (goods.isEmpty()) {
@@ -458,7 +467,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
             if (goods.size() > (Integer.parseInt(callMethod.ReadString("Grid")) * 10)) {
                 goods.addAll(Moregoods);
             }
-            adapter.notifyDataSetChanged();
+            broker_goodAdapter.notifyDataSetChanged();
             binding.bSearchAProg.setVisibility(View.GONE);
             loading = true;
         } else {
@@ -471,10 +480,10 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     public void CallRecyclerView() {
-        adapter.notifyDataSetChanged();
+        broker_goodAdapter.notifyDataSetChanged();
 
 
-        if (adapter.getItemCount() == 0) {
+        if (broker_goodAdapter.getItemCount() == 0) {
             binding.bSearchATvstatus.setText("کالایی یافت نشد");
             binding.bSearchATvstatus.setVisibility(View.VISIBLE);
             binding.bSearchALottie.setVisibility(View.VISIBLE);
@@ -484,7 +493,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
         }
         gridLayoutManager = new GridLayoutManager(this, grid);
         binding.bSearchAAllgood.setLayoutManager(gridLayoutManager);
-        binding.bSearchAAllgood.setAdapter(adapter);
+        binding.bSearchAAllgood.setAdapter(broker_goodAdapter);
         binding.bSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
         binding.bSearchAProg.setVisibility(View.GONE);
     }
@@ -500,7 +509,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
             Multi_Good.remove(good);
             if (Multi_Good.size() < 1) {
                 binding.bSearchAFab.setVisibility(View.GONE);
-                adapter.multi_select = false;
+                broker_goodAdapter.multi_select = false;
                 item_multi.findItem(R.id.b_menu_multi).setVisible(false);
             }
         }
@@ -515,8 +524,8 @@ public class Broker_SearchActivity extends AppCompatActivity {
             binding.bSearchALlSumFactor.setVisibility(View.GONE);
         } else {
             binding.bSearchALlSumFactor.setVisibility(View.VISIBLE);
-            binding.bSearchACustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.bSearchASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            binding.bSearchACustomer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
+            binding.bSearchASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
 
         if (callMethod.ReadBoolan("ActiveStack")) {

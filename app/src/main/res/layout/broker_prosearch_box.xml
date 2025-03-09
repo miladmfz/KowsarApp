@@ -4,7 +4,7 @@
 
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
-    android:background="@drawable/bg_round_selected"
+    android:background="@drawable/bg_editbox"
     android:orientation="vertical"
     android:layout_gravity="center"
     android:gravity="center"
@@ -39,7 +39,7 @@
                     android:layout_weight="1"
                     android:text="نوع کالا"
                     android:textSize="18sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="?attr/colorOnBackground"
                     android:gravity="center_vertical" />
 
                 <!-- Spinner -->
@@ -48,7 +48,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_round"
+                    android:background="@drawable/bg_editbox"
+                    android:textColor="?attr/colorOnBackground"
                     android:padding="8dp"
                     android:gravity="center"
                     android:scrollbarSize="20sp" />

@@ -28,10 +28,10 @@
                 android:id="@+id/ord_search_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
                 android:background="?attr/colorPrimary"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="@string/searchactivity_titlename"
-                app:titleTextColor="@color/white">
+                >
 
 
             </androidx.appcompat.widget.Toolbar>

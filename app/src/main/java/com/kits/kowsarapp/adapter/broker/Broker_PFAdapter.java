@@ -24,16 +24,16 @@ public class Broker_PFAdapter extends RecyclerView.Adapter<Broker_PFViewHolder> 
     private final Context mContext;
     CallMethod callMethod;
     private final ArrayList<PreFactor> PreFactors;
-    private final Broker_DBH dbh;
-    private final Broker_Action action;
+    private final Broker_DBH broker_dbh;
+    private final Broker_Action broker_action;
 
 
     public Broker_PFAdapter(ArrayList<PreFactor> PreFactors, Context mContext) {
         this.mContext = mContext;
         this.PreFactors = PreFactors;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.action = new Broker_Action(mContext);
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.broker_action = new Broker_Action(mContext);
 
     }
 
@@ -50,7 +50,7 @@ public class Broker_PFAdapter extends RecyclerView.Adapter<Broker_PFViewHolder> 
 
 
         holder.bind(PreFactors.get(position));
-        holder.Action(PreFactors.get(position), mContext, dbh, callMethod, action);
+        holder.Action(PreFactors.get(position), mContext, broker_dbh, callMethod, broker_action);
 
 
     }

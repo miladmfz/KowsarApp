@@ -53,8 +53,8 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
     private final Context mContext;
     Intent intent;
     private final ArrayList<Factor> factors;
-    private final Ocr_Action ocrAction;
-    private final Ocr_DBH dbh;
+    private final Ocr_Action ocr_action;
+    private final Ocr_DBH ocr_dbh;
     Dialog dialog ;
     int width;
     public boolean multi_select;
@@ -64,9 +64,9 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
     public Ocr_FactorListLocal_Adapter(ArrayList<Factor> factors, Context context, Integer metrics) {
         this.mContext = context;
         this.factors = factors;
-        this.ocrAction = new Ocr_Action(context);
+        this.ocr_action = new Ocr_Action(context);
         this.callMethod = new CallMethod(context);
-        dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        ocr_dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.ocr_signature);
@@ -154,7 +154,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
             if (!factors.get(position).getSignatureImage().equals("")) {
                 ImageView imageView=dialog.findViewById(R.id.ocr_signature_fromfactor);
                 byte[] imageByteArray1;
-                imageByteArray1 = Base64.decode(dbh.getimagefromfactor(factors.get(position).getFactorBarcode(),"SignatureImage"), Base64.DEFAULT);
+                imageByteArray1 = Base64.decode(ocr_dbh.getimagefromfactor(factors.get(position).getFactorBarcode(),"SignatureImage"), Base64.DEFAULT);
                 imageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth()/2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight()/3, false));
 
                 imageView.setOnClickListener(v1 -> dialog.dismiss());
@@ -233,7 +233,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 if(response.isSuccessful()) {
-                                    dbh.deletescan(factors.get(position).getFactorBarcode());
+                                    ocr_dbh.deletescan(factors.get(position).getFactorBarcode());
                                     intent = new Intent(mContext, Ocr_FactorListLocalActivity.class);
                                     intent.putExtra("IsSent", "0");
                                     intent.putExtra("signature", "0");
@@ -262,7 +262,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                         .setMessage("آیا رسید ارسال گردد؟")
                         .setPositiveButton("بله", (dialogInterface, i) -> {
 
-                            ocrAction.sendfactor(factors.get(position).getFactorBarcode(),factors.get(position).getSignatureImage());
+                            ocr_action.sendfactor(factors.get(position).getFactorBarcode(),factors.get(position).getSignatureImage());
                         })
                         .setNegativeButton("خیر", (dialogInterface, i) -> {                   })
                         .show();

@@ -31,25 +31,27 @@ import java.util.ArrayList;
 
 
 public class Ocr_StackFragment extends Fragment {
-
-    Ocr_APIInterface apiInterface;
-    Ocr_APIInterface secendApiInterface;
-    Ocr_DBH ocr_dbh;
-    ArrayList<String> GoodCodeCheck=new ArrayList<>();
-    LinearLayoutCompat ll_main;
-
     CallMethod callMethod;
-    ArrayList<Ocr_Good> ocr_goods;
-
-    String BarcodeScan;
-
-    int width=1;
     Handler handler;
-    Ocr_Good_StackFragment_Adapter adapter;
-    Ocr_Print print;
     View view;
     Dialog dialogProg;
     RecyclerView rc_good;
+
+    Ocr_Good_StackFragment_Adapter ocr_good_stackFragment_adapter;
+    Ocr_APIInterface apiInterface;
+    Ocr_APIInterface secendApiInterface;
+    Ocr_DBH ocr_dbh;
+    Ocr_Print ocr_print;
+
+
+    ArrayList<String> GoodCodeCheck=new ArrayList<>();
+    ArrayList<Ocr_Good> ocr_goods=new ArrayList<>();
+
+    LinearLayoutCompat ll_main;
+    String BarcodeScan;
+
+    Integer width=1;
+
 
 
     public ArrayList<Ocr_Good> getOcr_goods() {
@@ -82,7 +84,7 @@ public class Ocr_StackFragment extends Fragment {
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
         handler=new Handler();
-        print=new Ocr_Print(requireActivity());
+        ocr_print=new Ocr_Print(requireActivity());
 
         dialogProg = new Dialog(requireActivity());
         dialogProg.setContentView(R.layout.ocr_spinner_box);
@@ -98,10 +100,10 @@ public class Ocr_StackFragment extends Fragment {
     public void callrecycler() {
 
 
-        adapter = new Ocr_Good_StackFragment_Adapter(ocr_goods, requireActivity());
+        ocr_good_stackFragment_adapter = new Ocr_Good_StackFragment_Adapter(ocr_goods, requireActivity());
 
         rc_good.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
-        rc_good.setAdapter(adapter);
+        rc_good.setAdapter(ocr_good_stackFragment_adapter);
         rc_good.setItemAnimator(new DefaultItemAnimator());
 
     }

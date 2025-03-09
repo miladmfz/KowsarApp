@@ -26,7 +26,7 @@
         app:layout_constraintHorizontal_bias="0.052"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@color/grey_1000"
+        app:strokeColor="?attr/colorOnBackground"
         app:strokeWidth="1dp"
         tools:ignore="MissingConstraints" />
 

@@ -28,27 +28,36 @@ import java.util.ArrayList;
 
 
 public class Broker_CustomerActivity extends AppCompatActivity {
-    private Broker_APIInterface broker_apiInterface;
-    private String factor_target = "0";
-    private String edit = "0";
-    private Broker_DBH dbh;
-    private ArrayList<Customer> customers = new ArrayList<>();
-    private ArrayList<Customer> citys = new ArrayList<>();
-    private Broker_CustomerAdapter adapter;
-    private GridLayoutManager gridLayoutManager;
-    private Broker_Replication replication;
-    private String srch = "";
-    private String id = "0";
-    private Intent intent;
-    private ArrayList<String> city_array = new ArrayList<>();
-    private String kodemelli, citycode = "", name, family, address, phone, mobile, email, postcode, zipcode;
-    private boolean activecustomer = true;
-    private CallMethod callMethod;
-    private BrokerActivityCustomerBinding binding;
+
+    Broker_APIInterface broker_apiInterface;
+    CallMethod callMethod;
+    Broker_DBH broker_dbh;
+    Intent intent;
+
+
+    ArrayList<Customer> customers = new ArrayList<>();
+    ArrayList<Customer> citys = new ArrayList<>();
+    ArrayList<String> city_array = new ArrayList<>();
+
+    Broker_CustomerAdapter adapter;
+    GridLayoutManager gridLayoutManager;
+    Broker_Replication broker_replication;
+
+    String srch = "";
+    String id = "0";
+    String kodemelli, citycode = "", name, family, address, phone, mobile, email, postcode, zipcode;
+    String factor_target = "0";
+    String edit = "0";
+
+    boolean activecustomer = true;
+
+
+    BrokerActivityCustomerBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = BrokerActivityCustomerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -69,9 +78,9 @@ public class Broker_CustomerActivity extends AppCompatActivity {
 
     private void Config() {
         callMethod = new CallMethod(this);
-        replication = new Broker_Replication(this);
+        broker_replication = new Broker_Replication(this);
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         setSupportActionBar(binding.bCustomerAToolbar);
     }
 
@@ -138,7 +147,7 @@ public class Broker_CustomerActivity extends AppCompatActivity {
         // replication.replicate_customer();
 
 
-        citys = dbh.city();
+        citys = broker_dbh.city();
         for (Customer citycustomer : citys) {
             city_array.add(citycustomer.getCustomerFieldValue("CityName"));
         }
@@ -165,7 +174,7 @@ public class Broker_CustomerActivity extends AppCompatActivity {
 
         binding.bCustomerANewKodemelliCheck.setOnClickListener(v -> {
 
-            if (dbh.Customer_check(binding.bCustomerANewKodemelli.getText().toString()) > 0) {
+            if (broker_dbh.Customer_check(binding.bCustomerANewKodemelli.getText().toString()) > 0) {
 
                 binding.bCustomerANewKodemelliStatus.setText("کد ملی ثبت شده است");
                 binding.bCustomerANewKodemelliStatus.setTextColor(getResources().getColor(R.color.red_300));
@@ -179,12 +188,12 @@ public class Broker_CustomerActivity extends AppCompatActivity {
 
         binding.bCustomerANewRegisterBtn.setOnClickListener(v -> {
 
-            if (dbh.Customer_check(binding.bCustomerANewKodemelli.getText().toString()) > 0) {
+            if (broker_dbh.Customer_check(binding.bCustomerANewKodemelli.getText().toString()) > 0) {
                 binding.bCustomerANewKodemelliStatus.setText("کد ملی ثبت شده است");
                 binding.bCustomerANewKodemelliStatus.setTextColor(getResources().getColor(R.color.red_300));
             } else {
 
-                if (Integer.parseInt(dbh.ReadConfig("BrokerCode")) > 0) {
+                if (Integer.parseInt(broker_dbh.ReadConfig("BrokerCode")) > 0) {
                     kodemelli = NumberFunctions.EnglishNumber(binding.bCustomerANewKodemelli.getText().toString());
                     name = NumberFunctions.EnglishNumber(binding.bCustomerANewName.getText().toString());
                     family = NumberFunctions.EnglishNumber(binding.bCustomerANewFamily.getText().toString());
@@ -234,7 +243,7 @@ public class Broker_CustomerActivity extends AppCompatActivity {
 
 
     public void allCustomer() {
-        customers = dbh.AllCustomer(srch, activecustomer);
+        customers = broker_dbh.AllCustomer(srch, activecustomer);
         adapter = new Broker_CustomerAdapter(customers, this, edit, factor_target);
         gridLayoutManager = new GridLayoutManager(this, 1);
         binding.bCustomerAR1.setLayoutManager(gridLayoutManager);

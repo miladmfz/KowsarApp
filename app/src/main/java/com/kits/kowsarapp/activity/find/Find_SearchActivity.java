@@ -43,29 +43,28 @@ import retrofit2.Response;
 public class Find_SearchActivity extends AppCompatActivity {
 
 
-    Find_GoodAdapter adapter;
+    Find_GoodAdapter find_goodAdapter;
+    CallMethod callMethod;
+    private final Handler keyboardHandler = new Handler();
+    Dialog dialog1;
+    Handler handler;
+    GridLayoutManager gridLayoutManager;
+
+    Find_DBH find_dbh;
+    Find_APIInterface find_apiInterface;
+
 
     public ArrayList<Find_Good> find_goods = new ArrayList<>();
+    private int backPressCount = 0;
+
     public String id = "0";
     public String title = "";
     public String AutoSearch = "";
-    Dialog dialog1;
-    Handler handler;
-    private int backPressCount = 0;
-    GridLayoutManager gridLayoutManager;
-
-    Find_DBH dbh;
-    Find_APIInterface find_apiInterface;
-
-    CallMethod callMethod;
-    FindActivitySearchBinding binding;
     private Integer grid;
-    private Handler keyboardHandler = new Handler();
 
-    private boolean loading = true;
+    FindActivitySearchBinding binding;
 
-
-    private Runnable keyboardRunnable = () -> {
+    private final Runnable keyboardRunnable = () -> {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(binding.findSearchAEdtsearch.getWindowToken(),
                 0
@@ -89,7 +88,7 @@ public class Find_SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         intent();
         Config();
 
@@ -115,7 +114,7 @@ public class Find_SearchActivity extends AppCompatActivity {
         try {
             Handler handler = new Handler();
             handler.postDelayed(() -> {
-                if (dbh.GetColumnscount().equals("0")) {
+                if (find_dbh.GetColumnscount().equals("0")) {
                     callMethod.showToast("تنظیم جدول از سمت دیتابیس مشکل دارد");
                     finish();
                     dialog1.dismiss();
@@ -189,7 +188,7 @@ public class Find_SearchActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
+        find_dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
         find_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
 
@@ -206,17 +205,17 @@ public class Find_SearchActivity extends AppCompatActivity {
 //
 
         find_goods.clear();
-        loading = true;
+
         binding.findSearchAProg.setVisibility(View.VISIBLE);
         Call<RetrofitResponse> call = find_apiInterface.GetGoodList ("GetFindGoodList", AutoSearch);
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
-                    loading = false;
+
                     assert response.body() != null;
                     find_goods = response.body().getFind_Goods();
-                    adapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
+                    find_goodAdapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
 
                     CallRecyclerView();
 
@@ -225,9 +224,9 @@ public class Find_SearchActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<RetrofitResponse> call, Throwable t) {
-                loading = false;
+
                 find_goods.clear();
-                adapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
+                find_goodAdapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
                 CallRecyclerView();
             }
         });
@@ -238,7 +237,7 @@ public class Find_SearchActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     public void refresh() {
-        adapter.notifyDataSetChanged();
+        find_goodAdapter.notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -246,7 +245,7 @@ public class Find_SearchActivity extends AppCompatActivity {
         //adapter.notifyDataSetChanged();
 
 
-        if (adapter.getItemCount() == 0) {
+        if (find_goodAdapter.getItemCount() == 0) {
             binding.findSearchATvstatus.setText("کالایی یافت نشد");
             binding.findSearchATvstatus.setVisibility(View.VISIBLE);
             binding.findSearchALottie.setVisibility(View.VISIBLE);
@@ -256,7 +255,7 @@ public class Find_SearchActivity extends AppCompatActivity {
         }
         gridLayoutManager = new GridLayoutManager(this, grid);
         binding.findSearchAAllgood.setLayoutManager(gridLayoutManager);
-        binding.findSearchAAllgood.setAdapter(adapter);
+        binding.findSearchAAllgood.setAdapter(find_goodAdapter);
         binding.findSearchAAllgood.setItemAnimator(new DefaultItemAnimator());
         binding.findSearchAProg.setVisibility(View.GONE);
     }

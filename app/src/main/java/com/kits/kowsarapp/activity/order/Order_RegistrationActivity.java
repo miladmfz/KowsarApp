@@ -22,7 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.order.Order_ThemeSpinnerAdapter;
+import com.kits.kowsarapp.adapter.base.Base_ThemeSpinnerAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
 import com.kits.kowsarapp.databinding.OrderActivityRegistrationBinding;
@@ -45,7 +45,7 @@ import retrofit2.Response;
 
 
 public class Order_RegistrationActivity extends AppCompatActivity {
-    private static final String PREFS_NAME = "ThemePrefs";
+
     private static final String THEME_KEY = "selectedTheme";
     private int selectedTheme;
 
@@ -150,7 +150,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.DefaultTheme));
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
 
         binding = OrderActivityRegistrationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -260,6 +260,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
         });
 
     }
+
 
     public void init() {
 
@@ -516,13 +517,22 @@ public class Order_RegistrationActivity extends AppCompatActivity {
         });
 
 
+        themeconfig();
 
-        Spinner themeSpinner = findViewById(R.id.themeSpinner);
 
-        Button applyButton = findViewById(R.id.applyButton);
+    }
+
+
+
+    public void themeconfig() {
+
+
+        Spinner themeSpinner = findViewById(R.id.order_themeSpinner);
+
+        Button applyButton = findViewById(R.id.order_applyButton);
 
         // Set custom adapter
-        Order_ThemeSpinnerAdapter adapter = new Order_ThemeSpinnerAdapter(this, themeNames, themeColors);
+        Base_ThemeSpinnerAdapter adapter = new Base_ThemeSpinnerAdapter(this, themeNames, themeColors);
         themeSpinner.setAdapter(adapter);
 
 
@@ -548,8 +558,9 @@ public class Order_RegistrationActivity extends AppCompatActivity {
             getSharedPreferences("ThemePrefs", MODE_PRIVATE).edit().putInt(THEME_KEY, selectedTheme).apply();
             recreate();
         });
-
     }
+
+
     private int getThemeFromPosition(int position) {
         if (position < 0 || position >= themeArray.length) {
             return R.style.DefaultTheme;

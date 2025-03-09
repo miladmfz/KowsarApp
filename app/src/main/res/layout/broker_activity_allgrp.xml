@@ -22,9 +22,8 @@
             android:id="@+id/b_allgrp_a_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
             android:background="?attr/colorPrimary"
-            app:titleTextColor="@color/white"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:title="دسته بندی">
 
         </androidx.appcompat.widget.Toolbar>

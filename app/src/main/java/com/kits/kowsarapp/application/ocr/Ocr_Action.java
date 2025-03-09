@@ -66,7 +66,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
-    Ocr_DBH dbh;
+    Ocr_DBH ocr_dbh;
     private final Context mContext;
     CallMethod callMethod;
     String coltrol_s = "";
@@ -86,7 +86,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     public Ocr_Action(Context mcontxt) {
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
-        dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        ocr_dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
 
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
 
@@ -974,7 +974,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 callMethod.showToast("فاکتور ارسال گردید");
 
-                dbh.Insert_IsSent(factor_code);
+                ocr_dbh.Insert_IsSent(factor_code);
 
                 Intent bag = new Intent(mContext, Ocr_FactorListLocalActivity.class);
                 bag.putExtra("IsSent", "0");

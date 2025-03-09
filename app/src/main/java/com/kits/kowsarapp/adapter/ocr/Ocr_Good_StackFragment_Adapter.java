@@ -40,14 +40,14 @@ import retrofit2.Response;
 
 
 public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Good_StackFragment_Adapter.GoodViewHolder>{
+
     private final Context mContext;
-    DecimalFormat decimalFormat= new DecimalFormat("0,000");
     private List<Ocr_Good> ocr_goods;
     Call<RetrofitResponse> call2;
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
 
-    Ocr_Action action;
+    Ocr_Action ocr_action;
     CallMethod callMethod;
 
 
@@ -56,7 +56,7 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
     {
         this.mContext = context;
         this.ocr_goods = ocr_goods;
-        this.action = new Ocr_Action(context);
+        this.ocr_action = new Ocr_Action(context);
         this.callMethod = new CallMethod(context);
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         this.secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
@@ -154,7 +154,7 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
 
 
         holder.btnadd.setOnClickListener(view -> {
-            action.GoodStackLocation(ocr_goods.get(position));
+            ocr_action.GoodStackLocation(ocr_goods.get(position));
 
 
         });

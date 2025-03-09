@@ -18,14 +18,14 @@ import com.kits.kowsarapp.activity.ocr.Ocr_FactorListApiActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ocr_ItemAdapter extends RecyclerView.Adapter<Ocr_ItemAdapter.ViewHolder> {
+public class Ocr_StacksAdapter extends RecyclerView.Adapter<Ocr_StacksAdapter.ViewHolder> {
 
     private final Context mContext;
 
     private List<String> items;
     private List<String> selectedItems = new ArrayList<>(); // List baraye zakhire item haye entekhab shode
 
-    public Ocr_ItemAdapter(Context context, List<String> items) {
+    public Ocr_StacksAdapter(Context context, List<String> items) {
 
         this.items = items;
         this.mContext = context;

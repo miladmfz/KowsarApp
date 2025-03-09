@@ -36,24 +36,29 @@ import java.util.ArrayList;
 
 
 public class Broker_DetailActivity extends AppCompatActivity {
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
-    private String id;
-    Good gooddetail;
-    Broker_APIInterface broker_apiInterface;
-    private Intent intent;
     CallMethod callMethod;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    Broker_DBH dbh;
-    ArrayList<Column> Columns;
-    ArrayList<Good> imagelists;
-    Broker_Action action;
+    Broker_DBH broker_dbh;
+    Intent intent;
+
+    Broker_Action broker_action;
+    Broker_APIInterface broker_apiInterface;
+    Good gooddetail;
+
+    ArrayList<Column> Columns= new ArrayList<>();
+    ArrayList<Good> imagelists= new ArrayList<>();
+
+
+    String id;
+
 
     BrokerActivityDetailBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
 
         binding = BrokerActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -83,11 +88,11 @@ public class Broker_DetailActivity extends AppCompatActivity {
 
     public void Config() {
         callMethod = new CallMethod(this);
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        action = new Broker_Action(this);
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_action = new Broker_Action(this);
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
-        Columns = dbh.GetColumns(id, "", "0");
-        gooddetail = dbh.getGoodByCode(id);
+        Columns = broker_dbh.GetColumns(id, "", "0");
+        gooddetail = broker_dbh.getGoodByCode(id);
         setSupportActionBar(binding.bDetailAToolbar);
     }
 
@@ -99,8 +104,8 @@ public class Broker_DetailActivity extends AppCompatActivity {
             binding.bDetailALlSumFactor.setVisibility(View.GONE);
         } else {
             binding.bDetailALlSumFactor.setVisibility(View.VISIBLE);
-            binding.bDetailACustomer.setText(NumberFunctions.PerisanNumber(dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.bDetailASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            binding.bDetailACustomer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
+            binding.bDetailASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
 
         for (Column Column : Columns) {
@@ -113,7 +118,7 @@ public class Broker_DetailActivity extends AppCompatActivity {
         }
 
         Log.e("test",gooddetail.getGoodFieldValue("GoodCode"));
-        imagelists = dbh.GetksrImageCodes(gooddetail.getGoodFieldValue("GoodCode"));
+        imagelists = broker_dbh.GetksrImageCodes(gooddetail.getGoodFieldValue("GoodCode"));
         SliderView();
 
         if (gooddetail.getGoodFieldValue("ActiveStack").equals("1")){
@@ -126,7 +131,7 @@ public class Broker_DetailActivity extends AppCompatActivity {
             if (gooddetail.getGoodFieldValue("ActiveStack").equals("1")) {
 
                 if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                    action.buydialog(gooddetail.getGoodFieldValue("GoodCode"), "0");
+                    broker_action.buydialog(gooddetail.getGoodFieldValue("GoodCode"), "0");
                 } else {
                     intent = new Intent(this, Broker_PFOpenActivity.class);
                     intent.putExtra("fac", "0");

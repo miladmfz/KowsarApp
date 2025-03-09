@@ -36,28 +36,27 @@ import java.util.Locale;
 
 
 public class Find_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    Find_APIInterface apiInterface;
 
-    Base_Action action;
     CallMethod callMethod;
     Toolbar toolbar;
-    Find_DBH dbh;
+    Find_DBH find_dbh;
     NavigationView navigationView;
     TextView tv_versionname;
     TextView tv_dbname;
     TextView tv_brokercode;
     Button btn_changedb;
-    TextView btn0;
+    Button btn0;
     private boolean doubleBackToExitPressedOnce = false;
     private Intent intent;
 
-    private Find_Replication find_replication;
+    Find_Replication find_replication;
 
     //************************************************************
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.find_activity_nav);
 
         init();
@@ -69,13 +68,11 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
     public void Config() {
 
 
-        action = new Base_Action(this);
         callMethod = new CallMethod(this);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
-        dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
+        find_dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
         find_replication = new Find_Replication(this);
-        dbh.DatabaseCreate();
+        find_dbh.DatabaseCreate();
 
         if (callMethod.ReadString("ActivationCode").equals("888888")){
             find_replication.DoingReplicate();

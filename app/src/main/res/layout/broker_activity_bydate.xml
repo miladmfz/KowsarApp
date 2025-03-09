@@ -25,11 +25,8 @@
                 android:id="@+id/b_bydate_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
-
                 android:background="?attr/colorPrimary"
-                app:titleTextColor="@color/white"
-
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title=" جدید ترین ها">
 
 
@@ -64,7 +61,8 @@
                     android:text="@string/customerfactorheader"
                     android:textSize="14sp"
                     android:layout_weight="0.7"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
                     android:id="@+id/b_bydate_a_customer"
@@ -72,7 +70,8 @@
                     android:layout_height="match_parent"
                     android:textSize="18sp"
                     android:layout_weight="0.3"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textColor="?attr/colorOnBackground"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -86,14 +85,16 @@
                     android:text="@string/totalfactorheader"
                     android:textSize="14sp"
                     android:layout_weight="0.7"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textColor="?attr/colorOnBackground"/>
                 <TextView
                     android:id="@+id/b_bydate_a_sum_factor"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:textSize="18sp"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textColor="?attr/colorOnBackground"/>
 
 
 
@@ -117,6 +118,8 @@
                 android:inputType="number"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:background="@drawable/bg_editbox"
+                android:textColor="?attr/colorOnBackground"
                 />
 
             <Button
@@ -125,12 +128,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:text="اعمال روز"
-                style="?attr/materialButtonOutlinedStyle"
-                app:backgroundTint="#0B8CC6"
-                app:strokeColor="@color/grey_1000"
-                app:strokeWidth="1dp"
-                android:textColor="@color/white"
-                android:lines="1" />
+android:layout_margin="3dp"
+android:textSize="16sp"
+android:textStyle="bold"
+style="@style/Widget.MaterialComponents.Button"
+android:backgroundTint="?attr/colorPrimary"
+android:textColor="?attr/colorOnPrimary"
+                />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -160,7 +164,7 @@
             android:layout_height="wrap_content"
             android:textSize="40sp"
             android:layout_gravity="center"
-            android:textColor="#03a9f4"
+            android:textColor="?attr/colorOnBackground"
 
             />
 
@@ -173,8 +177,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="30dp"
-        app:backgroundTint="@color/red_800"
+        android:layout_margin="3dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        style="@style/Widget.MaterialComponents.Button"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"
         android:visibility="gone"
         android:src="@drawable/ic_add_shopping_white" />
 

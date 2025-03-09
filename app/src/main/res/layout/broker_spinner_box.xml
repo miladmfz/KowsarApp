@@ -8,7 +8,7 @@
     android:id="@+id/b_spinner_prog"
     android:layout_margin="16dp"
     android:padding="16dp"
-    android:background="@drawable/bg_round_card"
+    android:background="@drawable/bg_card"
     android:layoutDirection="rtl"
     android:elevation="8dp">
 
@@ -32,7 +32,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:textSize="18sp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="?attr/colorOnBackground"
         android:paddingBottom="8dp" />
 
     <!-- Step Text -->

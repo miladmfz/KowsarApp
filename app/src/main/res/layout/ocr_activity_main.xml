@@ -21,9 +21,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="@string/app_name"
-                app:titleTextColor="@color/white"/>
+                />
 
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -44,12 +44,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="8dp"
                 android:text="دکمه اول"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:drawablePadding="8dp"
-                app:backgroundTint="@color/green_700"
-                app:cornerRadius="8dp"
-                app:rippleColor="@color/deep_purple_300"/>
+                android:layout_margin="3dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
+                />
 
             <com.google.android.material.button.MaterialButton
 
@@ -58,11 +59,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="8dp"
                 android:text="دکمه دوم"
-                android:textColor="@color/grey_1000"
-                android:textSize="18sp"
-                app:backgroundTint="@color/green_100"
-                app:cornerRadius="8dp"
-                app:rippleColor="@color/deep_purple_300"/>
+                android:layout_margin="3dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorSecondary"
+                android:textColor="?attr/colorOnSecondary"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/ocr_main_a_btn3"
@@ -70,11 +72,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="8dp"
                 android:text="دکمه سوم"
-                android:textColor="@color/grey_1000"
-                android:textSize="18sp"
-                app:backgroundTint="@color/white"
-                app:cornerRadius="8dp"
-                app:rippleColor="@color/deep_purple_300"/>
+                android:layout_margin="3dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorSecondary"
+                android:textColor="?attr/colorOnSecondary"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

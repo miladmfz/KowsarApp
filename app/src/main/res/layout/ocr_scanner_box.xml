@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:id="@+id/ocr_scanner_box"
-    android:background="@color/grey_40"
+    android:background="@drawable/bg_round"
     android:layoutDirection="rtl">
 
 
@@ -20,8 +20,8 @@
         android:gravity="center"
         android:singleLine="true"
         android:focusable="true"
-        android:textColor="@color/colorPrimaryDark"
-        android:background="@color/white"
+        android:textColor="?attr/colorOnBackground"
+        android:background="@drawable/bg_card"
         android:textSize="20sp"
         android:hint="بارکد اسکن شود"
         >

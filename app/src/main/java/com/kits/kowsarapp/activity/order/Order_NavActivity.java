@@ -31,6 +31,7 @@ import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
+import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.find.Find_Replication;
 import com.kits.kowsarapp.application.order.Order_Action;
@@ -43,10 +44,11 @@ import java.util.Locale;
 
 
 public class Order_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    Order_APIInterface apiInterface;
 
+    Order_APIInterface order_apiInterface;
     Order_Action order_action;
-    Order_DBH dbh;
+    Order_DBH order_dbh;
+
     CallMethod callMethod;
     Toolbar toolbar;
     NavigationView navigationView;
@@ -54,11 +56,13 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
     TextView tv_dbname;
     TextView tv_brokercode;
     Button btn_changedb;
+
     TextView Getmizlist_btn0;
     TextView Getmizlist_btn1;
     TextView Getmizlist_btn2;
     TextView Getmizlist_btn3;
     TextView Getmizlist_btn4;
+
     private boolean doubleBackToExitPressedOnce = false;
     private Intent intent;
 
@@ -100,7 +104,7 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.DefaultTheme));
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
 
         setContentView(R.layout.order_activity_nav);
 
@@ -115,10 +119,10 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
 
         order_action = new Order_Action(this);
         callMethod = new CallMethod(this);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
-        dbh = new Order_DBH(this, callMethod.ReadString("DatabaseName"));
+        order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        order_dbh = new Order_DBH(this, callMethod.ReadString("DatabaseName"));
 
-        dbh.DatabaseCreate();
+        order_dbh.DatabaseCreate();
 
         LinearLayoutCompat ll_activity_main = findViewById(R.id.ord_main_a_layout);
 
@@ -256,8 +260,13 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             startActivity(intent);
 
         } else if (id == R.id.order_nav_cfg) {
-            order_action.LoginSetting();
 
+            if (callMethod.ReadString("ActivationCode").equals("444444")) {
+                Intent intent = new Intent(this, Order_RegistrationActivity.class);
+                startActivity(intent);
+            }else {
+                order_action.LoginSetting();
+            }
 
         }
         DrawerLayout drawer = findViewById(R.id.order_nav_drawer_layout);

@@ -51,18 +51,21 @@ import retrofit2.Response;
 
 public class Order_TableActivity extends AppCompatActivity {
 
-    public String State = "0";
-    public String EditTable = "0";
-    public String mizType = "";
+
     CallMethod callMethod;
-    Order_APIInterface apiInterface;
+    Order_APIInterface order_apiInterface;
     Intent intent;
     RecyclerView recyclerView_object, recyclerView_Table;
     ArrayList<Order_BasketInfo> basketInfos = new ArrayList<>();
     ArrayList<ObjectType> objectTypes = new ArrayList<>();
-    Order_RstMizAdapter adapter;
     ArrayList<String> InfoState_array = new ArrayList<>();
+
+    Order_RstMizAdapter order_rstMizAdapter;
     Spinner spinner;
+
+    public String State = "0";
+    public String EditTable = "0";
+    public String mizType = "";
 
     LinearLayout init_ll;
     LottieAnimationView progressBar;
@@ -105,7 +108,7 @@ public class Order_TableActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.DefaultTheme));
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
 
         setContentView(R.layout.order_activity_table);
         intent();
@@ -132,7 +135,7 @@ public class Order_TableActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(App.getContext());
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
         CoordinatorLayout ll_activity = findViewById(R.id.order_table_activity);
         if (callMethod.ReadString("LANG").equals("fa")) {
@@ -208,7 +211,7 @@ public class Order_TableActivity extends AppCompatActivity {
 
 
        // Call<RetrofitResponse> call1 = apiInterface.OrderMizList(callMethod.RetrofitBody(Body_str));
-        Call<RetrofitResponse> call1 = apiInterface.OrderMizList("OrderMizList", State,callMethod.ReadString("ObjectType"));
+        Call<RetrofitResponse> call1 = order_apiInterface.OrderMizList("OrderMizList", State,callMethod.ReadString("ObjectType"));
 
 
         call1.enqueue(new Callback<RetrofitResponse>() {
@@ -240,7 +243,7 @@ public class Order_TableActivity extends AppCompatActivity {
 
     public void init() {
 
-        Call<RetrofitResponse> call1 = apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "RstMiz_MizType");
+        Call<RetrofitResponse> call1 = order_apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "RstMiz_MizType");
         callMethod.Log(call1.request().url().toString());
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -278,9 +281,9 @@ public class Order_TableActivity extends AppCompatActivity {
 
     private void callrecycler() {
         progressBar.setVisibility(View.GONE);
-        adapter = new Order_RstMizAdapter(basketInfos, EditTable, Order_TableActivity.this);
+        order_rstMizAdapter = new Order_RstMizAdapter(basketInfos, EditTable, Order_TableActivity.this);
 
-        if (adapter.getItemCount() == 0) {
+        if (order_rstMizAdapter.getItemCount() == 0) {
             tv_lottiestatus.setText(R.string.textvalue_notfound);
             img_lottiestatus.setVisibility(View.VISIBLE);
             tv_lottiestatus.setVisibility(View.VISIBLE);
@@ -289,7 +292,7 @@ public class Order_TableActivity extends AppCompatActivity {
             tv_lottiestatus.setVisibility(View.GONE);
         }
         recyclerView_Table.setLayoutManager(new GridLayoutManager(this, 1));
-        recyclerView_Table.setAdapter(adapter);
+        recyclerView_Table.setAdapter(order_rstMizAdapter);
         recyclerView_Table.setItemAnimator(new DefaultItemAnimator());
 
     }

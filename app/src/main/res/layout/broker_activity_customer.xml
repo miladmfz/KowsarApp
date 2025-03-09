@@ -19,9 +19,8 @@
             android:id="@+id/b_customer_a_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_weight="1"
             android:background="?attr/colorPrimary"
-            app:titleTextColor="@color/white"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:title="@string/customer_toolbarname">
 
             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -66,7 +65,7 @@
                 android:textColorHint="@color/grey_40"
 
                 android:inputType="text"
-                android:background="@drawable/bg_round_selected"
+                android:background="@drawable/bg_editbox"
                 android:layout_weight="0.3" />
 
             <Button
@@ -79,7 +78,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 app:backgroundTint="@color/green_600"
-                app:strokeColor="@color/grey_1000"
+                app:strokeColor="?attr/colorOnBackground"
                 app:strokeWidth="1dp"
                 style="?attr/materialButtonOutlinedStyle"
                 android:visibility="gone" />
@@ -153,7 +152,7 @@
                     android:text="تایید کد ملی"
                     android:textColor="@color/white"
                     app:backgroundTint="@color/green_600"
-                    app:strokeColor="@color/grey_1000"
+                    app:strokeColor="?attr/colorOnBackground"
                     app:strokeWidth="1dp"
                     style="?attr/materialButtonOutlinedStyle" />
 
@@ -427,7 +426,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 app:backgroundTint="@color/green_600"
-                app:strokeColor="@color/grey_1000"
+                app:strokeColor="?attr/colorOnBackground"
                 app:strokeWidth="1dp"
                 style="?attr/materialButtonOutlinedStyle" />
 

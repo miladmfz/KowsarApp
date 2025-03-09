@@ -24,11 +24,10 @@
                 android:id="@+id/find_main_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
                 android:background="?attr/colorPrimary"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="@string/app_name"
-                app:titleTextColor="@color/white">
+                >
 
 
             </androidx.appcompat.widget.Toolbar>
@@ -76,20 +75,19 @@
                     android:orientation="vertical"
                     android:visibility="visible">
 
-                    <TextView
+
+                    <Button
                         android:id="@+id/find_main_a_btn0"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="#03A9F4"
-                        android:gravity="center"
                         android:text=""
-                        android:textColor="@color/white"
-                        app:rippleColor="@color/deep_purple_300"
-                        app:strokeColor="@color/grey_1000"
-                        app:strokeWidth="1dp"
-                        android:autoSizeTextType="uniform" />
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:layout_margin="3dp"
+                        android:textSize="20sp"
+                        android:layout_weight="1"
+                        />
 
 
                 </androidx.appcompat.widget.LinearLayoutCompat>

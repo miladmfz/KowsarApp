@@ -23,10 +23,8 @@
                 android:id="@+id/ocr_apifactor_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
-                app:titleTextColor="@color/white"
                 android:background="?attr/colorPrimary"
-                android:layout_gravity="center"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="انتخاب فاکتور">
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/ocr_apifactor_a_start_filter"
@@ -58,11 +56,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="جستجو"
-                android:background="@drawable/bg_round_selected"
+                android:background="@drawable/bg_editbox"
                 android:singleLine="true"
                 android:selectAllOnFocus="true"
                 android:inputType="text"
-                android:layout_weight="0.28"/>
+                android:layout_weight="0.28"
+                android:textColor="?attr/colorOnBackground"/>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:layout_width="match_parent"
@@ -72,7 +71,7 @@
                 android:textSize="18sp"
                 android:layout_marginRight="10dp"
                 android:id="@+id/ocr_apifactor_a_shortage"
-
+                android:textColor="?attr/colorOnBackground"
                 />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -82,7 +81,7 @@
                 android:text="اصلاحی"
                 android:textSize="18sp"
                 android:id="@+id/ocr_apifactor_a_edited"
-
+                android:textColor="?attr/colorOnBackground"
                 />
 
 
@@ -110,7 +109,7 @@
                     android:layout_weight="0.2"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="@color/grey_1000"
+                    android:textColor="?attr/colorOnBackground"
                     />
                 <Button
                     android:id="@+id/ocr_apifactor_a_refresh"
@@ -122,7 +121,7 @@
                     android:layout_weight="0.8"
 
                     android:background="@drawable/baseline_refresh_24"
-                    android:textColor="@color/grey_1000"
+                    android:textColor="?attr/colorOnBackground"
                     />
             </LinearLayout>
 
@@ -134,8 +133,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_weight="0.6"
-                android:background="@color/grey_5"
-                android:textColor="@color/overlay_dark_90"
+                android:background="@drawable/bg_editbox"
+                android:textColor="?attr/colorOnBackground"
                 android:scrollbarSize="20sp" />
 
 
@@ -186,7 +185,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_margin="10dp"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="?attr/colorOnBackground"
             />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

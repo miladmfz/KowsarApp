@@ -27,16 +27,12 @@ public class Broker_ConfigActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = BrokerActivityConfigBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Initialize variables and configurations
         Config();
-
-        // Populate views with data
         populateViews();
-
-        // Set listeners for buttons
         setButtonListeners();
     }
 
@@ -67,7 +63,7 @@ public class Broker_ConfigActivity extends AppCompatActivity {
         binding.bConfigAToReg.setOnClickListener(view -> {
 
 
-            if (callMethod.ReadString("ActivationCode").equals("111111")) {
+            if (callMethod.ReadString("ActivationCode").equals("111111") ||callMethod.ReadString("ActivationCode").equals("555555")) {
                 Intent intent = new Intent(this, Broker_RegistrationActivity.class);
                 startActivity(intent);
             }else {
@@ -77,6 +73,7 @@ public class Broker_ConfigActivity extends AppCompatActivity {
         });
     }
     public void LoginSetting() {
+
 
 
         final Dialog dialog = new Dialog(this);

@@ -32,9 +32,8 @@ public class Order_GoodAdapter extends RecyclerView.Adapter<Order_GoodItemViewHo
     private final ArrayList<Good> goods;
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
     CallMethod callMethod;
-    Order_DBH dbh;
-    Order_APIInterface apiInterface;
-    Order_Action action;
+
+    Order_Action order_action;
     public Call<RetrofitResponse> call;
 
 
@@ -42,9 +41,7 @@ public class Order_GoodAdapter extends RecyclerView.Adapter<Order_GoodItemViewHo
         this.mContext = context;
         this.goods = goods;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.action = new Order_Action(mContext);
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        this.order_action = new Order_Action(mContext);
 
     }
 
@@ -69,7 +66,7 @@ public class Order_GoodAdapter extends RecyclerView.Adapter<Order_GoodItemViewHo
 
         holder.tv_name.setText(callMethod.NumberRegion(goods.get(position).getGoodName()));
         holder.tv_price.setText(callMethod.NumberRegion(decimalFormat.format(Integer.parseInt(goods.get(position).getMaxSellPrice()))));
-        holder.rltv.setOnClickListener(v -> action.GoodBoxDialog(goods.get(position), "0"));
+        holder.rltv.setOnClickListener(v -> order_action.GoodBoxDialog(goods.get(position), "0"));
         holder.callimage(goods.get(position));
 
 

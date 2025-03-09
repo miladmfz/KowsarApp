@@ -32,7 +32,7 @@ import java.text.DecimalFormat;
 
 public class Broker_BasketItemViewHolder extends RecyclerView.ViewHolder {
 
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
     private final TextView goodnameTextView;
     private final TextView maxsellpriceTextView;
     private final TextView priceTextView;

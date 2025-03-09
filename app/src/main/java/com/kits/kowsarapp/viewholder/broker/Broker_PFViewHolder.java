@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 
 public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
     public TextView fac_code;
     public TextView fac_date;
     public TextView fac_time;

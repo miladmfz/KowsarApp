@@ -2,6 +2,7 @@ package com.kits.kowsarapp.activity.ocr;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -10,7 +11,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +24,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.kits.kowsarapp.adapter.base.Base_ThemeSpinnerAdapter;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
@@ -48,9 +53,8 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
 
-    Ocr_DBH dbh ;
     ArrayList<String[]> arraygood_shortage = new ArrayList<>();
-    ArrayList<Ocr_Good> ocr_goods;
+    ArrayList<Ocr_Good> ocr_goods= new ArrayList<>();
     ArrayList<Ocr_Good> ocr_goods_scan=new ArrayList<>();
 
 
@@ -76,19 +80,16 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
     public String searchtarget = "";
 
 
-
-
     LottieAnimationView progressBar;
     LottieAnimationView img_lottiestatus;
     Call<RetrofitResponse> call;
     TextView tv_lottiestatus;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_confirm);
 
         Dialog dialog1 = new Dialog(this);
@@ -126,7 +127,7 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+
         action = new Ocr_Action(this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
@@ -483,5 +484,8 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
 
         super.onWindowFocusChanged(hasFocus);
     }
+
+
+
 
 }

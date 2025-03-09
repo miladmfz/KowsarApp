@@ -16,8 +16,6 @@
 
 
 
-
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="0.2"
-                    android:background="@drawable/bg_round_selected"
+                    android:background="@drawable/bg_editbox"
                     android:hint="@string/search_et"
                     android:inputType="text"
                     android:paddingStart="5dp"
@@ -47,7 +45,8 @@
                     tools:ignore="LabelFor"
                     android:padding="10px"
                     android:layoutDirection="rtl"
-                    android:textDirection="rtl"/>
+                    android:textDirection="rtl"
+                    android:textColor="?attr/colorOnBackground"/>
                 <Button
                     android:id="@+id/find_search_a_btnscan"
                     android:layout_margin="5dp"
@@ -106,8 +105,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="40sp"
                 android:layout_gravity="center"
-                android:textColor="#03a9f4"
-
+                android:textColor="?attr/colorOnBackground"
                 />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

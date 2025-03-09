@@ -11,7 +11,6 @@
     android:orientation="vertical"
     app:cardCornerRadius="2dp"
     app:cardElevation="6dp"
-    app:strokeColor="@color/grey_1000"
     app:strokeWidth="1dp"
     tools:ignore="MissingDefaultResource">
 
@@ -20,6 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/bg_card"
+        android:layout_margin="2dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -33,7 +34,7 @@
                 android:layout_weight="0.80"
                 android:gravity="center"
                 android:text="@string/detail_goodname"
-                android:textColor="#000000"
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -48,7 +49,8 @@
                 android:paddingBottom="1dp"
                 android:text="@string/detail_goodname"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnBackground"/>
 
 
         </LinearLayout>
@@ -74,7 +76,7 @@
                     android:layout_weight="0.5"
                     android:gravity="center"
                     android:text="@string/amount"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textStyle="bold" />
 
                 <TextView
@@ -86,7 +88,7 @@
                     android:background="#FFFFFF"
                     android:gravity="center"
                     android:text="@string/amount"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="14sp" />
 
 
@@ -105,7 +107,7 @@
                     android:layout_weight="0.5"
                     android:gravity="center"
                     android:text="@string/deatil_goodcode"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -115,7 +117,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:gravity="center"
-
+                    android:textColor="?attr/colorOnBackground"
                     android:text="@string/deatil_goodcode"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -137,7 +139,7 @@
                     android:layout_weight="0.7"
                     android:gravity="center"
                     android:text="@string/boxbuy_total"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -147,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:text="@string/boxbuy_total"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnBackground"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -166,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
                 android:text="@string/boxbuy_total"
-                android:textColor="#000000"
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="16sp"
 
                 android:textStyle="bold"
@@ -177,7 +179,7 @@
         <androidx.viewpager.widget.ViewPager
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/grey_1000" />
+            android:background="?attr/colorOnBackground" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

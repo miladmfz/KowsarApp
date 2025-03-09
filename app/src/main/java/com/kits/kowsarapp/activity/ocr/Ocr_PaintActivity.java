@@ -51,16 +51,18 @@ public class Ocr_PaintActivity extends AppCompatActivity {
     String BarcodeScan;
     String bitmap_signature_base;
     Bitmap bitmap_signature;
-    Ocr_DBH dbh ;
-    Ocr_Action action;
+    Ocr_DBH ocr_dbh ;
+    Ocr_Action ocr_action;
     LinearLayoutCompat main_layout;
     LinearLayoutCompat paint_layout;
     List<Uri> list_imageUri=new ArrayList<>();
+    ArrayList<String> Multi_barcode = new ArrayList<>();
+
+
     Intent intent;
     String bitmap_factor_base64;
     ImageView imagefactor;
     int width=1;
-    ArrayList<String> Multi_barcode = new ArrayList<>();
 
     String ImageOcrPath="";
     Uri photoURI;
@@ -72,6 +74,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_paint);
 
         Dialog dialog1 = new Dialog(this);
@@ -143,7 +146,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                     imagefactor.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                     imagefactor.setPadding(0, 0, 0, 0);
 
-                    bitmap_factor_base64=dbh.getimagefromfactor(s,"FactorImage");
+                    bitmap_factor_base64=ocr_dbh.getimagefromfactor(s,"FactorImage");
 
                     byte[] imageByteArray1 = Base64.decode(bitmap_factor_base64, Base64.DEFAULT);
                     imagefactor.setImageBitmap(Bitmap.createScaledBitmap(
@@ -166,13 +169,13 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                     byte[] byteArray = byteArrayOutputStream.toByteArray();
                     bitmap_signature_base= Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-                    dbh.Insert_signature(s,bitmap_signature_base);
+                    ocr_dbh.Insert_signature(s,bitmap_signature_base);
                     main_layout.removeAllViews();
                 }
-                 callMethod.showToast("با موفقیت ثبت گردید");
+                callMethod.showToast("با موفقیت ثبت گردید");
                 finish();
             }else {
-                bitmap_factor_base64=dbh.getimagefromfactor(BarcodeScan,"FactorImage");
+                bitmap_factor_base64=ocr_dbh.getimagefromfactor(BarcodeScan,"FactorImage");
                 TextView Deliverer = new TextView(getApplicationContext());
                 Deliverer.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Deliverer")));
                 Deliverer.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -232,7 +235,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                 bitmap_signature.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
                 byte[] byteArray = byteArrayOutputStream.toByteArray();
                 bitmap_signature_base= Base64.encodeToString(byteArray, Base64.DEFAULT);
-                dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
+                ocr_dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
 
                 Button button1 =  new Button(getApplicationContext());
                 button1.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -241,7 +244,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                 button1.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
                 button1.setTextColor(getColor(R.color.white));
                 button1.setPadding(0, 5, 0, 5);
-                button1.setOnClickListener(v -> action.sendfactor(BarcodeScan,bitmap_signature_base));
+                button1.setOnClickListener(v -> ocr_action.sendfactor(BarcodeScan,bitmap_signature_base));
                 Button btn_pic=  new Button(getApplicationContext());
                 btn_pic.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                 btn_pic.setBackgroundResource(R.color.green_900);
@@ -284,9 +287,9 @@ public class Ocr_PaintActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
+        ocr_dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
 
-        action =new Ocr_Action(Ocr_PaintActivity.this);
+        ocr_action =new Ocr_Action(Ocr_PaintActivity.this);
 
         main_layout= findViewById(R.id.ocr_paint_a_mainlayout);
         paint_layout= findViewById(R.id.ocr_paint_a_paint);
@@ -345,7 +348,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                     bitmap_signature.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream .toByteArray();
                     bitmap_signature_base= Base64.encodeToString(byteArray, Base64.DEFAULT);
-                    dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
+                    ocr_dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
 
                     Button button=  new Button(getApplicationContext());
                     button.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -354,7 +357,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                     button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
                     button.setTextColor(getColor(R.color.white));
                     button.setPadding(0, 10, 0, 10);
-                    button.setOnClickListener(v -> action.sendfactor(BarcodeScan,bitmap_signature_base));
+                    button.setOnClickListener(v -> ocr_action.sendfactor(BarcodeScan,bitmap_signature_base));
                     main_layout.addView(button,0);
 
                 } else {
@@ -376,7 +379,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                     bitmap_signature.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream .toByteArray();
                     bitmap_signature_base= Base64.encodeToString(byteArray, Base64.DEFAULT);
-                    dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
+                    ocr_dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
 
                     Button button=  new Button(getApplicationContext());
                     button.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -385,7 +388,7 @@ public class Ocr_PaintActivity extends AppCompatActivity {
                     button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
                     button.setTextColor(getColor(R.color.white));
                     button.setPadding(0, 10, 0, 10);
-                    button.setOnClickListener(v -> action.sendfactor(BarcodeScan,bitmap_signature_base));
+                    button.setOnClickListener(v -> ocr_action.sendfactor(BarcodeScan,bitmap_signature_base));
                     main_layout.addView(button,0);
 
                 }
@@ -396,33 +399,33 @@ public class Ocr_PaintActivity extends AppCompatActivity {
 
         if(requestCode == 2 ){
 
-                main_layout.removeViewAt(0);
-                main_layout.removeViewAt(0);
+            main_layout.removeViewAt(0);
+            main_layout.removeViewAt(0);
 
-                ImageView imageView1 = new ImageView(getApplicationContext());
-                imageView1.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                imageView1.setImageURI(photoURI);
-                File file =  new File(ImageOcrPath);
-                file.delete();
+            ImageView imageView1 = new ImageView(getApplicationContext());
+            imageView1.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+            imageView1.setImageURI(photoURI);
+            File file =  new File(ImageOcrPath);
+            file.delete();
 
-                main_layout.addView(imageView1,0);
+            main_layout.addView(imageView1,0);
 
-                bitmap_signature=loadBitmapFromView(main_layout);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap_signature.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream .toByteArray();
-                bitmap_signature_base= Base64.encodeToString(byteArray, Base64.DEFAULT);
-            dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
+            bitmap_signature=loadBitmapFromView(main_layout);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap_signature.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            bitmap_signature_base= Base64.encodeToString(byteArray, Base64.DEFAULT);
+            ocr_dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
 
             Button button=  new Button(this);
-                button.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                button.setBackgroundResource(R.color.green_900);
-                button.setText("تایید و ارسال");
-                button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-                button.setTextColor(getColor(R.color.white));
-                button.setPadding(0, 10, 0, 10);
-                button.setOnClickListener(v -> action.sendfactor(BarcodeScan,bitmap_signature_base));
-                main_layout.addView(button,0);
+            button.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+            button.setBackgroundResource(R.color.green_900);
+            button.setText("تایید و ارسال");
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+            button.setTextColor(getColor(R.color.white));
+            button.setPadding(0, 10, 0, 10);
+            button.setOnClickListener(v -> ocr_action.sendfactor(BarcodeScan,bitmap_signature_base));
+            main_layout.addView(button,0);
 
 
         }

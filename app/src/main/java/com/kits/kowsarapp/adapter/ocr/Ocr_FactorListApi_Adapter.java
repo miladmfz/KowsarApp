@@ -47,12 +47,10 @@ public class Ocr_FactorListApi_Adapter extends RecyclerView.Adapter<Ocr_FactorLi
     String state ;
     CallMethod callMethod;
 
-    Ocr_DBH dbh;
     public Ocr_FactorListApi_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
         this.ocr_action =new Ocr_Action(context);
-        this.dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.state = State;
         this.factors = retrofitFactors;
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);

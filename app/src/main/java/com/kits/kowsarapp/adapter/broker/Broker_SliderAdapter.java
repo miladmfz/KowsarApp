@@ -38,7 +38,7 @@ import retrofit2.Response;
 
 
 public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter.GoodViewHolder> {
-    Broker_APIInterface apiInterface;
+    Broker_APIInterface broker_apiInterface;
     private final ArrayList<Good> goods;
     private final Context mcontext;
     private final Boolean image_zoom;
@@ -55,7 +55,7 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
         this.callMethod = new CallMethod(mcontext);
         image_info = new ImageInfo(mcontext);
         url = callMethod.ReadString("ServerURLUse");
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
+        broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
     }
 
 
@@ -98,7 +98,7 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
                             false)
             );
 
-            Call<RetrofitResponse> call2 = apiInterface.GetImageFromKsr("GetImageFromKsr", goods.get(position).getGoodFieldValue("KsrImageCode")
+            Call<RetrofitResponse> call2 = broker_apiInterface.GetImageFromKsr("GetImageFromKsr", goods.get(position).getGoodFieldValue("KsrImageCode")
             );
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @Override

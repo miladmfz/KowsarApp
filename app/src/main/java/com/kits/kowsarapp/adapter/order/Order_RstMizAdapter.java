@@ -48,9 +48,9 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
     private final Context mContext;
     CallMethod callMethod;
     ArrayList<Order_BasketInfo> basketInfos;
-    Order_APIInterface apiInterface;
+    Order_APIInterface order_apiInterface;
     Intent intent;
-    Order_DBH dbh;
+    Order_DBH order_dbh;
     String date;
     Call<RetrofitResponse> call;
     Order_Action order_action;
@@ -68,9 +68,9 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
         this.order_action = new Order_Action(mContext);
         this.order_print = new Order_Print(mContext);
         this.order_printChangeTable = new Order_PrintChangeTable(mContext);
-        this.dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
-        call = apiInterface.GetTodeyFromServer("GetTodeyFromServer");
+        this.order_dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        call = order_apiInterface.GetTodeyFromServer("GetTodeyFromServer");
         this.changeTable = changeflag;
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -209,7 +209,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                 if (basketInfos.get(position).getInfoState().equals("0") || basketInfos.get(position).getInfoState().equals("3")) {
 
                     if (basketInfos.get(position).getIsReserved().equals("1")) {
-                        call = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "1", basketInfos.get(position).getReserve_AppBasketInfoCode());
+                        call = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "1", basketInfos.get(position).getReserve_AppBasketInfoCode());
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -246,7 +246,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                             }
                         });
                     } else {
-                        call = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), "", "", "", "0", "", "", basketInfos.get(position).getToday(), "1", "0");
+                        call = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), "", "", "", "0", "", "", basketInfos.get(position).getToday(), "1", "0");
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -312,9 +312,9 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     case "1":
                         Call<RetrofitResponse> call1;
                         if (basketInfos.get(position).getIsReserved().equals("1")) {
-                            call1 = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
+                            call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
                         } else {
-                            call1 = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
+                            call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
                         }
 
 
@@ -356,7 +356,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     case "2":
 
                         if (callMethod.ReadBoolan("PaymentWithDevice")){
-                            Call<RetrofitResponse> call2 = apiInterface.OrderGetSummmary("OrderGetSummmary", basketInfos.get(position).getAppBasketInfoCode());
+                            Call<RetrofitResponse> call2 = order_apiInterface.OrderGetSummmary("OrderGetSummmary", basketInfos.get(position).getAppBasketInfoCode());
                             call2.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -369,9 +369,9 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                                             Call<RetrofitResponse> call1;
                                             if (basketInfos.get(position).getIsReserved().equals("1")) {
-                                                call1 = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
+                                                call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
                                             } else {
-                                                call1 = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
+                                                call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
                                             }
 
 
@@ -425,9 +425,9 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                         }else{
                             Call<RetrofitResponse> call2;
                             if (basketInfos.get(position).getIsReserved().equals("1")) {
-                                call2 = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
+                                call2 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
                             } else {
-                                call2 = apiInterface.OrderInfoInsert("OrderInfoInsert", dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
+                                call2 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
                             }
 
 
@@ -495,7 +495,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
 
 
-                        call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
+                        call = order_apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -591,8 +591,8 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                 String extraexplain = mContext.getString(R.string.textvalue_transfertext) + callMethod.ReadString("RstMizName") + mContext.getString(R.string.textvalue_transfer_to) + basketInfos.get(position).getRstMizName() + ") ";
 
-                call = apiInterface.OrderInfoInsert("OrderInfoInsert",
-                        dbh.ReadConfig("BrokerCode"),
+                call = order_apiInterface.OrderInfoInsert("OrderInfoInsert",
+                        order_dbh.ReadConfig("BrokerCode"),
                         callMethod.ReadString("RstmizCode"),
                         callMethod.ReadString("PersonName"),
                         callMethod.ReadString("MobileNo"),
@@ -613,7 +613,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                                 callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                             } else {
                                 callMethod.EditString("InfoExplain", callMethod.ReadString("InfoExplain") + extraexplain);
-                                call = apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
+                                call = order_apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
                                 call.enqueue(new Callback<RetrofitResponse>() {
                                     @Override
                                     public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -1511,7 +1511,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                 .setContentTitle(title)
                 .setContentText(message)
                 .setOnlyAlertOnce(false)
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.jpgnew)
                 .setContentIntent(contentIntent);
 
         notificationManager.notify(1, notcompat.build());

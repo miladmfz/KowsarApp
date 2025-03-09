@@ -27,7 +27,6 @@ public class Broker_BasketItemHistoryAdapter extends RecyclerView.Adapter<Broker
     String itemposition;
     Broker_APIInterface apiInterface;
     ImageInfo image_info;
-    Broker_DBH dbh;
     Broker_Action action;
     private String itemPosition;
 
@@ -37,7 +36,6 @@ public class Broker_BasketItemHistoryAdapter extends RecyclerView.Adapter<Broker
         this.itemposition = Itemposition;
         this.callMethod = new CallMethod(mContext);
         this.image_info = new ImageInfo(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
         action = new Broker_Action(mContext);
 

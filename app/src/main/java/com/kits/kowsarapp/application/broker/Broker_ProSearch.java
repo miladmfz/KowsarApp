@@ -29,27 +29,29 @@ import java.util.ArrayList;
 public class Broker_ProSearch {
 
     private final Context mContext;
-
-    private final Broker_DBH dbh;
-
-    Broker_APIInterface broker_apiInterface;
-
-    String Where;
-    Spinner spinner;
-    ArrayList<Column> Goodtype;
-    ArrayList<String> Goodtype_array = new ArrayList<>();
-    ArrayList<Column> Columns;
     LinearLayoutCompat layout_view;
     MaterialButton btn_search;
     Dialog dialog;
     CallMethod callMethod;
+    Spinner spinner;
 
+
+    private final Broker_DBH broker_dbh;
+    Broker_APIInterface broker_apiInterface;
+
+    ArrayList<Column> Goodtype= new ArrayList<>();
+    ArrayList<String> Goodtype_array = new ArrayList<>();
+    ArrayList<Column> Columns= new ArrayList<>();
+
+    String Where;
+
+    
     public Broker_ProSearch(Context context) {
         this.mContext = context;
         this.Where = "";
         callMethod = new CallMethod(mContext);
 
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
 
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
@@ -68,7 +70,7 @@ public class Broker_ProSearch {
 
         int i = 0;
         int j = 0;
-        Goodtype = dbh.GetAllGoodType();
+        Goodtype = broker_dbh.GetAllGoodType();
         for (Column Column_Goodtype : Goodtype) {
             Goodtype_array.add(Column_Goodtype.getColumnFieldValue("goodtype"));
             if (Integer.parseInt(Column_Goodtype.getColumnFieldValue("IsDefault")) == 1) {
@@ -106,7 +108,7 @@ public class Broker_ProSearch {
     public void pro_c(String Goodtype) {
 
         try {
-            Columns = dbh.GetColumns("", Goodtype, "3");
+            Columns = broker_dbh.GetColumns("", Goodtype, "3");
         } catch (Exception E) {
 
         }
@@ -139,7 +141,7 @@ public class Broker_ProSearch {
                 extra_EditText.setId(Integer.parseInt(Column.getColumnFieldValue("sortorder")));
                 extra_EditText.setHint(Column.getColumnFieldValue("ColumnCode"));
                 extra_EditText.setText(Column.getColumnFieldValue("Condition"));
-                extra_EditText.setBackgroundResource(R.drawable.bg_round_selected);
+                extra_EditText.setBackgroundResource(R.drawable.bg_editbox);
                 extra_EditText.setId(View.generateViewId());
                 extra_EditText.setPadding(2, 2, 2, 2);
                 extra_EditText.setGravity(Gravity.CENTER);
@@ -175,7 +177,7 @@ public class Broker_ProSearch {
                                     Column.setSearch(NumberFunctions.EnglishNumber(et.getText().toString()));
                                     Column.setCondition(NumberFunctions.EnglishNumber(et.getText().toString()));
 
-                                    dbh.UpdateSearchColumn(Column);
+                                    broker_dbh.UpdateSearchColumn(Column);
 
                                 }
                             }
@@ -194,22 +196,22 @@ public class Broker_ProSearch {
                     if (Column.getColumnType().equals("0")) {
                         if (!Column.getColumnName().equals("")) {
                             if (!Column.getColumnFieldValue("columndefinition").equals(""))
-                                Where = Where + " And Replace(Replace(" + Column.getColumnFieldValue("columndefinition") + ",char(1740),char(1610)),char(1705),char(1603)) Like '%" + dbh.GetRegionText(search) + "%'  ";
+                                Where = Where + " And Replace(Replace(" + Column.getColumnFieldValue("columndefinition") + ",char(1740),char(1610)),char(1705),char(1603)) Like '%" + broker_dbh.GetRegionText(search) + "%'  ";
                             else
-                                Where = Where + " And Replace(Replace(" + Column.getColumnFieldValue("ColumnName") + ",char(1740),char(1610)),char(1705),char(1603)) Like '%" + dbh.GetRegionText(search) + "%' ";
+                                Where = Where + " And Replace(Replace(" + Column.getColumnFieldValue("ColumnName") + ",char(1740),char(1610)),char(1705),char(1603)) Like '%" + broker_dbh.GetRegionText(search) + "%' ";
                         } else {
-                            String search_condition = " Replace(Replace('%" + dbh.GetRegionText(Column.getColumnFieldValue("search")) + "%',char(1740),char(1610)),char(1705),char(1603)) ";
+                            String search_condition = " Replace(Replace('%" + broker_dbh.GetRegionText(Column.getColumnFieldValue("search")) + "%',char(1740),char(1610)),char(1705),char(1603)) ";
                             Where = Where + " And " + Column.getColumnFieldValue("columndefinition");
                             Where = Where.replace("SearchCondition", search_condition);
                         }
                     } else {
                         if (!Column.getColumnName().equals("")) {
                             if (!Column.getColumnFieldValue("columndefinition").equals(""))
-                                Where = Where + " And " + Column.getColumnFieldValue("columndefinition") + " Like '%" + dbh.GetRegionText(search) + "%'  ";
+                                Where = Where + " And " + Column.getColumnFieldValue("columndefinition") + " Like '%" + broker_dbh.GetRegionText(search) + "%'  ";
                             else
-                                Where = Where + " And " + Column.getColumnFieldValue("ColumnName") + " Like '%" + dbh.GetRegionText(search) + "%' ";
+                                Where = Where + " And " + Column.getColumnFieldValue("ColumnName") + " Like '%" + broker_dbh.GetRegionText(search) + "%' ";
                         } else {
-                            String search_condition = " '%" + dbh.GetRegionText(Column.getColumnFieldValue("search")) + "%' ";
+                            String search_condition = " '%" + broker_dbh.GetRegionText(Column.getColumnFieldValue("search")) + "%' ";
                             Where = Where + " And " + Column.getColumnFieldValue("columndefinition");
                             Where = Where.replace("SearchCondition", search_condition);
                         }

@@ -58,37 +58,46 @@ import retrofit2.Response;
 
 
 public class Ocr_CollectFragment extends Fragment {
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
+
+    CallMethod callMethod;
+    Handler handler;
+    Intent intent;
+    View view;
+    Dialog dialogProg;
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
-    Ocr_DBH dbh ;
+    Ocr_DBH ocr_dbh ;
     Ocr_Action ocr_action;
+    Ocr_Print ocr_print;
+    Factor factor;
+
+    ArrayList<Ocr_Good> ocr_goods=new ArrayList<>();
+    ArrayList<Ocr_Good> ocr_goods_visible=new ArrayList<>();
+    ArrayList<Ocr_Good> ocr_goods_scan=new ArrayList<>();
+
+    ArrayList<String[]> arraygood_shortage = new ArrayList<>();
     ArrayList<String> GoodCodeCheck=new ArrayList<>();
-    
+    ArrayList<String> Array_GoodCodesCheck = new ArrayList<>();
+
     LinearLayoutCompat ll_main;
     LinearLayoutCompat ll_title;
     LinearLayoutCompat ll_good_body_detail;
     LinearLayoutCompat ll_good_body;
     LinearLayoutCompat ll_factor_summary;
     LinearLayoutCompat ll_send_confirm;
-    CallMethod callMethod;
+    LinearLayoutCompat ll_shortage_print;
 
     ViewPager ViewPager;
+
     Button btn_send;
     Button btn_confirm;
     Button btn_shortage;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    ArrayList<Ocr_Good> ocr_goods;
-    ArrayList<Ocr_Good> ocr_goods_visible=new ArrayList<>();
-    ArrayList<Ocr_Good> ocr_goods_scan=new ArrayList<>();
+    Button btn_set_stack;
+    Button btn_print;
 
-    Factor factor;
-    String BarcodeScan;
-    Ocr_Print ocr_print;
 
-    Intent intent;
-    int width=1;
-    Handler handler;
     TextView tv_company;
     TextView tv_customername;
     TextView tv_factorcode;
@@ -97,29 +106,17 @@ public class Ocr_CollectFragment extends Fragment {
     TextView tv_phone;
     TextView tv_total_amount;
     TextView tv_total_price;
-    View view;
-    Dialog dialogProg;
+    TextView tv_appocrfactorexplain;
+    TextView tv_factorexplain;
+
     String state;
     String TcPrintRef;
+    String BarcodeScan;
 
-
-
-
-
-    int firsttry = 0;
-
-    ArrayList<String[]> arraygood_shortage = new ArrayList<>();
-    ArrayList<String> Array_GoodCodesCheck = new ArrayList<>();
-
+    Integer width=1;
+    Integer firsttry = 0;
     Integer lastCunter = 0;
-
-    int row_counter;
-
-
-    LinearLayoutCompat ll_shortage_print;
-
-    TextView tv_appocrfactorexplain,tv_factorexplain;
-    Button btn_set_stack,btn_print;
+    Integer row_counter;
 
 
     public String getState() {
@@ -170,7 +167,7 @@ public class Ocr_CollectFragment extends Fragment {
 
         try {
         callMethod = new CallMethod(requireActivity());
-        dbh = new Ocr_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
+        ocr_dbh = new Ocr_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
         ocr_action = new Ocr_Action(requireActivity());
 
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);

@@ -25,7 +25,7 @@
         <androidx.viewpager.widget.ViewPager
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@color/grey_900" />
+            android:textColor="?attr/colorOnBackground" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,18 +36,17 @@
 
             <Button
                 android:id="@+id/ord_fragment_good_to_order"
-                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="3dp"
                 android:gravity="center"
                 android:text="@string/fragment_good_to_order"
+                android:layout_margin="3dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:backgroundTint="#D5BC9D"
-                app:strokeColor="#B96838"
-                app:strokeWidth="1dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
 
                 />
 
@@ -56,11 +55,12 @@
                 android:id="@+id/ord_fragment_good_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5sp"
-                android:background="@drawable/bg_round_selected"
+                android:layout_margin="2sp"
+                android:background="@drawable/bg_editbox"
                 android:padding="5sp"
                 android:textSize="30sp"
-                tools:ignore="Autofill,LabelFor,TextFields" />
+                tools:ignore="Autofill,LabelFor,TextFields"
+                android:textColor="?attr/colorOnBackground"/>
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/ord_fragment_good_prog"
@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#BD622B"
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="40sp"
 
                 />

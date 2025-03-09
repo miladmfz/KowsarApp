@@ -7,44 +7,30 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.downloader.Error;
-import com.downloader.OnDownloadListener;
-import com.downloader.PRDownloader;
-import com.downloader.PRDownloaderConfig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.downloader.Status;
-import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.base.Base_AllApp;
-import com.kits.kowsarapp.adapter.broker.Broker_GoodAdapter;
+import com.kits.kowsarapp.adapter.base.Base_AllAppAdapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
 import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.base.Base_DBH;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
-import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
-import com.kits.kowsarapp.model.ocr.Ocr_DBH;
-import com.kits.kowsarapp.model.order.Order_DBH;
-import com.kits.kowsarapp.model.find.Find_DBH;
 import com.kits.kowsarapp.webService.base.APIClient_kowsar;
 import com.kits.kowsarapp.webService.base.Kowsar_APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -61,17 +47,16 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     Base_DBH base_dbh;
 
     Dialog dialog;
-    Base_AllApp adapter;
+    Base_AllAppAdapter base_allAppAdapter;
     GridLayoutManager gridLayoutManager;
 
     ArrayList<Activation> activations;
     TextView tv_rep;
     TextView tv_step;
     Button btn_prog;
-    Intent intent;
-    int downloadId;
+
+
     DefaultActivityDbBinding binding;
-    RecyclerView re_allapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +77,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     //*****************************************************************************************
     @SuppressLint("SdCardPath")
     public void Config() {
+
         callMethod = new CallMethod(this);
         activation = new Activation();
         apiInterface = APIClient_kowsar.getCleint_log().create(Kowsar_APIInterface.class);
@@ -150,11 +136,11 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
         callMethod.Log("activations = " +activations.size()+"");
 
-        adapter = new Base_AllApp(activations, this);
-        callMethod.Log("adapter = " +adapter.getItemCount()+"");
+        base_allAppAdapter = new Base_AllAppAdapter(activations, this);
+
         gridLayoutManager = new GridLayoutManager(this, 1);
         binding.baseAppAllapp.setLayoutManager(gridLayoutManager);
-        binding.baseAppAllapp.setAdapter(adapter);
+        binding.baseAppAllapp.setAdapter(base_allAppAdapter);
         binding.baseAppAllapp.setItemAnimator(new DefaultItemAnimator());
 
 

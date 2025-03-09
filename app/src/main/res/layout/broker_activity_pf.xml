@@ -21,8 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
             app:title="انتخاب فاکتور"
-            app:titleTextColor="@color/white"
             >
 
         </androidx.appcompat.widget.Toolbar>
@@ -46,7 +46,8 @@
             android:gravity="center"
             android:text="@string/factor_in_use"
             android:textSize="16sp"
-            android:textStyle="bold"  />
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnBackground"/>
 
 
         <TextView
@@ -56,21 +57,21 @@
             android:layout_weight="0.3"
             android:gravity="center"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnBackground"/>
 
 
         <Button
             android:id="@+id/b_pf_a_addfactor"
             android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
             android:text="@string/insert_prefactor"
-            android:textSize="14sp"
+            android:layout_margin="3dp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
-            app:cornerRadius="8dp"
-            app:backgroundTint="@color/green_600"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
             />
 
 
@@ -78,14 +79,13 @@
             android:id="@+id/b_pf_a_refresh"
             android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
             android:text="@string/refresh"
-            android:textSize="14sp"
+            android:layout_margin="3dp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
-            app:cornerRadius="8dp"
-            app:backgroundTint="@color/blue_600"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="?attr/colorSecondary"
+            android:textColor="?attr/colorOnSecondary"
             />
 
 
@@ -98,12 +98,13 @@
         android:layout_height="50dp"
         android:layout_marginVertical="8dp"
         android:hint="@string/search_et"
-        android:background="@drawable/bg_round_selected"
+        android:background="@drawable/bg_editbox"
         android:gravity="center_vertical|start"
         android:paddingHorizontal="12dp"
         android:textSize="16sp"
         android:inputType="text"
-        android:singleLine="true"  />
+        android:singleLine="true"
+        android:textColor="?attr/colorOnBackground"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/b_pf_a_recyclerView"

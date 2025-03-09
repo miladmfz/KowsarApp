@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp"
-    android:background="@drawable/rounded_card"
+    android:background="@drawable/bg_card"
     android:elevation="4dp"
+    android:layout_margin="5dp"
     android:layoutDirection="rtl"
     android:orientation="vertical"
     android:gravity="center">
-+
+
     <TextView
         android:id="@+id/ocr_stacklocation_goodname_tv"
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         android:padding="12dp"
         android:gravity="center"
         android:inputType="text"
-        android:textColor="@color/primaryTextColor"
+        android:textColor="?attr/colorOnBackground"
         android:textSize="16sp"
         android:singleLine="true"
         android:text="نام کالا" />
@@ -32,9 +33,9 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         android:padding="12dp"
-        android:background="@drawable/bg_round_input"
+        android:background="@drawable/bg_editbox"
         android:hint="توضیحات کالا را وارد کنید"
-        android:textColor="@color/primaryTextColor"
+        android:textColor="?attr/colorOnBackground"
         android:textColorHint="@color/secondaryTextColor"
         android:textSize="16sp"
         android:inputType="text"
@@ -44,14 +45,15 @@
 
     <Button
         android:id="@+id/ocr_stacklocation_explain_btn"
-        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:text="اعمال"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/primaryColor"
-        app:cornerRadius="8dp" />
+        android:layout_margin="3dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        style="@style/Widget.MaterialComponents.Button"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

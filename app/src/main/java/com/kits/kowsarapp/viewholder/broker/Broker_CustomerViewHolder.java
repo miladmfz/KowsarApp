@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
 
 public class Broker_CustomerViewHolder extends RecyclerView.ViewHolder {
 
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     private final TextView cus_code;
     private final TextView cus_name;

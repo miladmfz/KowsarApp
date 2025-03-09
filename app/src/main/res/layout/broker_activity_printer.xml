@@ -30,9 +30,14 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/qic_action_add"
                 android:text="@string/new_printer"
-                android:textSize="@dimen/textSizeMedium"
-                android:padding="@dimen/gapMedium"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
+
+                />
 
             <Button
                 android:id="@+id/b_printer_a_print"
@@ -43,9 +48,12 @@
                 android:layout_weight="1"
                 android:drawableRight="@drawable/qic_action_print"
                 android:text="@string/print"
-                android:textSize="@dimen/textSizeMedium"
-                android:padding="@dimen/gapMedium"
-                android:layout_margin="3dp" />
+                android:layout_margin="3dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary" />
         </LinearLayout>
 
         <LinearLayout

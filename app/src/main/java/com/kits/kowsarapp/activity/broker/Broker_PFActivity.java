@@ -36,8 +36,8 @@ public class Broker_PFActivity extends AppCompatActivity {
     private Handler handler;
 
     private ArrayList<PreFactor> preFactors = new ArrayList<>();
-    private Broker_DBH dbh;
-    Broker_PFAdapter adapter;
+    private Broker_DBH broker_dbh;
+    Broker_PFAdapter broker_pfAdapter;
     GridLayoutManager gridLayoutManager;
     CallMethod callMethod;
 
@@ -48,7 +48,7 @@ public class Broker_PFActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = BrokerActivityPfBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -82,7 +82,7 @@ public class Broker_PFActivity extends AppCompatActivity {
         handler = new Handler();
         callMethod = new CallMethod(this);
         pfcode = Integer.parseInt(callMethod.ReadString("PreFactorCode"));
-        dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         Toolbar toolbar = findViewById(R.id.b_pf_a_toolbar);
         setSupportActionBar(toolbar);
 
@@ -135,11 +135,11 @@ public class Broker_PFActivity extends AppCompatActivity {
 
 
     public void callfactor() {
-        preFactors = dbh.getAllPrefactorHeader(search_target);
-        adapter = new Broker_PFAdapter(preFactors, this);
+        preFactors = broker_dbh.getAllPrefactorHeader(search_target);
+        broker_pfAdapter = new Broker_PFAdapter(preFactors, this);
         gridLayoutManager = new GridLayoutManager(this, 1);
         binding.bPfARecyclerView.setLayoutManager(gridLayoutManager);
-        binding.bPfARecyclerView.setAdapter(adapter);
+        binding.bPfARecyclerView.setAdapter(broker_pfAdapter);
         binding.bPfARecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 

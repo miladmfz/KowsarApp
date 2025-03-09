@@ -46,8 +46,8 @@ public class Order_SearchActivity extends AppCompatActivity {
 
 
     CallMethod callMethod;
-    Order_APIInterface apiInterface;
-    Order_DBH dbh;
+    Order_APIInterface order_apiInterface;
+    Order_DBH order_dbh;
     Intent intent;
     TextView textCartItemCount;
 
@@ -58,12 +58,7 @@ public class Order_SearchActivity extends AppCompatActivity {
     Toolbar toolbar;
     int width = 1;
 
-
     OrderActivitySearchBinding binding;
-
-
-
-
 
 
     @SuppressLint("ObsoleteSdkInt")
@@ -104,7 +99,7 @@ public class Order_SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = OrderActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -127,8 +122,8 @@ public class Order_SearchActivity extends AppCompatActivity {
 
     public void Config() {
         callMethod = new CallMethod(App.getContext());
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
-        dbh = new Order_DBH(this, callMethod.ReadString("DatabaseName"));
+        order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        order_dbh = new Order_DBH(this, callMethod.ReadString("DatabaseName"));
 
         if (callMethod.ReadString("LANG").equals("fa")) {
             binding.orderSearchActivity.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -178,7 +173,7 @@ public class Order_SearchActivity extends AppCompatActivity {
 
     public void GetFirstData() {
 
-        callGrpfragment(dbh.ReadConfig("GroupCodeDefult"));
+        callGrpfragment(order_dbh.ReadConfig("GroupCodeDefult"));
 
     }
 
@@ -189,7 +184,7 @@ public class Order_SearchActivity extends AppCompatActivity {
                 textCartItemCount.setVisibility(View.GONE);
             }
             //Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
-            Call<RetrofitResponse> call2 = apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
+            Call<RetrofitResponse> call2 = order_apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
 
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @Override
@@ -226,7 +221,7 @@ public class Order_SearchActivity extends AppCompatActivity {
 
         MenuItem menuItem = menu.findItem(R.id.order_basket_menu);
         View actionView = menuItem.getActionView();
-        textCartItemCount = actionView.findViewById(R.id.cart_badge);
+        textCartItemCount = actionView.findViewById(R.id.order_cart_badge);
         RefreshState();
         actionView.setOnClickListener(v -> {
             onOptionsItemSelected(menuItem);

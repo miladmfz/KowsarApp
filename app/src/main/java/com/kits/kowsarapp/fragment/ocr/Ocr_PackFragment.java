@@ -52,32 +52,44 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Ocr_PackFragment extends Fragment{
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
+    CallMethod callMethod;
+    ViewPager ViewPager;
+    View view;
+    Intent intent;
+    Handler handler;
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
     Ocr_DBH dbh;
     Ocr_Action action;
+    Factor factor;
+    Ocr_Print print;
+
+
+
     ArrayList<String[]> arraygood_shortage = new ArrayList<>();
+    ArrayList<Ocr_Good> empty_goods_visible = new ArrayList<>();
+    ArrayList<String> Array_GoodCodesCheck = new ArrayList<>();
+    ArrayList<Ocr_Good> ocr_goods= new ArrayList<>();
+
+
+
     LinearLayoutCompat ll_main;
     LinearLayoutCompat ll_title;
     LinearLayoutCompat ll_good_body_detail;
     LinearLayoutCompat ll_good_body;
     LinearLayoutCompat ll_factor_summary;
     LinearLayoutCompat ll_send_confirm;
-    CallMethod callMethod;
-    ViewPager ViewPager;
+    LinearLayoutCompat ll_shortage_print;
+
     Button btn_send;
     Button btn_confirm;
     Button btn_shortage;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    ArrayList<Ocr_Good> ocr_goods;
-    Factor factor;
-    String BarcodeScan;
-    Integer lastCunter = 0;
-    Intent intent;
-    int width = 1;
-    Handler handler;
+    Button  btn_print;
+
+
     TextView tv_company;
     TextView tv_customername;
     TextView tv_factorcode;
@@ -86,21 +98,13 @@ public class Ocr_PackFragment extends Fragment{
     TextView tv_phone;
     TextView tv_total_amount;
     TextView tv_total_price;
-    View view;
-
-    LinearLayoutCompat ll_shortage_print;
-
-    Button  btn_print;
-
-
     TextView tv_factorexplain;
-    ArrayList<Ocr_Good> empty_goods_visible = new ArrayList<>();
 
-    ArrayList<String> Array_GoodCodesCheck = new ArrayList<>();
 
-    int firsttry = 0;
-
-    Ocr_Print print;
+    String BarcodeScan;
+    Integer lastCunter = 0;
+    Integer width = 1;
+    Integer firsttry = 0;
 
 
     @Override

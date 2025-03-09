@@ -26,12 +26,11 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/b_detail_a_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="@string/detail_toolbarname"
-                app:titleTextColor="@color/white">
+                >
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -57,7 +56,8 @@
                     android:layout_weight="0.7"
                     android:gravity="center"
                     android:text="@string/customerfactorheader"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
                     android:id="@+id/b_detail_a_customer"
@@ -65,7 +65,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:gravity="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textColor="?attr/colorOnBackground"/>
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -83,7 +84,8 @@
                     android:layout_weight="0.7"
                     android:gravity="center"
                     android:text="@string/totalfactorheader"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorOnBackground"/>
 
                 <TextView
                     android:id="@+id/b_detail_a_sum_factor"
@@ -91,7 +93,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:gravity="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textColor="?attr/colorOnBackground"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -120,21 +123,16 @@
 
             <Button
                 android:id="@+id/b_detail_a_btnbuy"
-                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_weight="0.75"
                 android:text="@string/detail_buy"
-                android:textColor="#ffffff"
-                android:textSize="25sp"
-                app:backgroundTint="@color/green_600"
-                app:icon="@drawable/ic_add_shopping_black"
-                app:iconTint="@color/white"
-                app:strokeColor="@color/grey_1000"
-                app:strokeWidth="1dp"
-
-
+                android:layout_margin="3dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
                 />
 
 
@@ -145,10 +143,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-            app:cardCornerRadius="3dp"
-            app:cardElevation="4dp"
-            app:strokeColor="@color/grey_1000"
-            app:strokeWidth="1dp">
+
+            >
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/b_detail_a_line_property"
@@ -160,10 +156,12 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/grey_60"
+                    android:background="@drawable/bg_card"
+                    android:backgroundTint="?attr/colorSecondary"
+
                     android:padding="5dp"
                     android:text="@string/detail_good"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorOnSecondary"
                     android:textSize="26sp" />
 
 

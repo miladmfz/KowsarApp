@@ -18,7 +18,7 @@ import java.text.DecimalFormat;
 ;
 
 public class Broker_PFOpenViewHolder extends RecyclerView.ViewHolder {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     public TextView fac_code;
     public TextView fac_date;

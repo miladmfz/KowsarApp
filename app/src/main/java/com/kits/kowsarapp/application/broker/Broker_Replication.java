@@ -46,7 +46,7 @@ public class Broker_Replication {
     private final Context mContext;
     private final SQLiteDatabase database;
     private final Integer RepRowCount = 100;
-    private final Broker_DBH dbh;
+    private final Broker_DBH broker_dbh;
     ArrayList<KowsarLocation> locations = new ArrayList<>();
     KowsarLocation location;
 
@@ -72,7 +72,7 @@ public class Broker_Replication {
     public Broker_Replication(Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(mContext);
-        this.dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
+        this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.image_info = new ImageInfo(mContext);
         url = callMethod.ReadString("ServerURLUse");
         database = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
@@ -89,7 +89,7 @@ public class Broker_Replication {
         SendGpsLocation();
 
 
-        if (dbh.GetColumnscount().equals("0")) {
+        if (broker_dbh.GetColumnscount().equals("0")) {
             tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی تنظیم جدول"));
             GoodTypeReplication();
         } else {
@@ -102,7 +102,7 @@ public class Broker_Replication {
 
                     assert response.body() != null;
                     callMethod.Log(response.body().getText()+"");
-                    dbh.SaveConfig("MaxRepLogCode", Objects.requireNonNull(response.body()).getText());
+                    broker_dbh.SaveConfig("MaxRepLogCode", Objects.requireNonNull(response.body()).getText());
                     RetrofitReplicate(0);
                 }
 
@@ -122,7 +122,7 @@ public class Broker_Replication {
 //        call1.enqueue(new Callback<RetrofitResponse>() {
 //            @Override
 //            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-//                dbh.SaveConfig("MaxRepLogCode", response.body().getText());
+//                broker_dbh.SaveConfig("MaxRepLogCode", response.body().getText());
 //                RetrofitReplicateAuto(0);
 //            }
 //
@@ -151,16 +151,16 @@ public class Broker_Replication {
     }
 
     public void RetrofitReplicate(Integer replevel) {
-        dbh.closedb();
+        broker_dbh.closedb();
         replicatelevel = replevel;
-        replicationModels = dbh.GetReplicationTable();
+        replicationModels = broker_dbh.GetReplicationTable();
         if (replicatelevel < replicationModels.size()) {
             ReplicationModel replicatedetail = replicationModels.get(replicatelevel);
             tv_rep.setText(NumberFunctions.PerisanNumber(replicationModels.size() + "/" + replicatedetail.getReplicationCode() + "در حال بروز رسانی"));
-            tableDetails = dbh.GetTableDetail(replicatedetail.getClientTable());
+            tableDetails = broker_dbh.GetTableDetail(replicatedetail.getClientTable());
             FinalStep = 0;
             LastRepCode = String.valueOf(replicatedetail.getLastRepLogCode());
-            UserInfo userInfo = dbh.LoadPersonalInfo();
+            UserInfo userInfo = broker_dbh.LoadPersonalInfo();
 
             Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
                     String.valueOf(replicatedetail.getLastRepLogCode()),
@@ -334,7 +334,7 @@ public class Broker_Replication {
 
                                 if (Integer.parseInt(LastRepCode) < 0) {
 
-                                    database.execSQL("Update ReplicationTable Set LastRepLogCode = " + dbh.ReadConfig("MaxRepLogCode") + " Where ServerTable = '" + replicatedetail.getServerTable() + "' ");
+                                    database.execSQL("Update ReplicationTable Set LastRepLogCode = " + broker_dbh.ReadConfig("MaxRepLogCode") + " Where ServerTable = '" + replicatedetail.getServerTable() + "' ");
 
                                     RetrofitReplicate(replicatelevel);
                                 } else {
@@ -365,17 +365,17 @@ public class Broker_Replication {
 
 
     public void RetrofitReplicateAuto(Integer replevel) {
-        dbh.closedb();
-        replicationModels = dbh.GetReplicationTable();
+        broker_dbh.closedb();
+        replicationModels = broker_dbh.GetReplicationTable();
         if (replevel < replicationModels.size()) {
             ReplicationModel replicatedetail = replicationModels.get(replevel);
-            tableDetails = dbh.GetTableDetail(replicatedetail.getClientTable());
+            tableDetails = broker_dbh.GetTableDetail(replicatedetail.getClientTable());
 
             FinalStep = 0;
             LastRepCode = String.valueOf(replicatedetail.getLastRepLogCode());
 
 
-            String where = replicatedetail.getCondition().replace("BrokerCondition", dbh.ReadConfig("BrokerCode"));
+            String where = replicatedetail.getCondition().replace("BrokerCondition", broker_dbh.ReadConfig("BrokerCode"));
 
             Log.e("kowsar_LastRepCode",LastRepCode);
             Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
@@ -530,7 +530,7 @@ public class Broker_Replication {
                                 } else {
                                     if (Integer.parseInt(LastRepCode) < 0) {
 
-                                        database.execSQL("Update ReplicationTable Set LastRepLogCode = " + dbh.ReadConfig("MaxRepLogCode") + " Where ServerTable = '" + replicatedetail.getServerTable() + "' ");
+                                        database.execSQL("Update ReplicationTable Set LastRepLogCode = " + broker_dbh.ReadConfig("MaxRepLogCode") + " Where ServerTable = '" + replicatedetail.getServerTable() + "' ");
 
                                         RetrofitReplicateAuto(replevel);
                                     } else {
@@ -674,16 +674,16 @@ public class Broker_Replication {
 
     public void BrokerStack() {
 
-        UserInfo userInfo = dbh.LoadPersonalInfo();
-        dbh.DatabaseCreate();
+        UserInfo userInfo = broker_dbh.LoadPersonalInfo();
+        broker_dbh.DatabaseCreate();
         Call<RetrofitResponse> call1 = broker_apiInterface.BrokerStack( "BrokerStack",userInfo.getBrokerCode());
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    if (!response.body().getText().equals(dbh.ReadConfig("BrokerStack"))) {
-                        dbh.SaveConfig("BrokerStack", response.body().getText());
+                    if (!response.body().getText().equals(broker_dbh.ReadConfig("BrokerStack"))) {
+                        broker_dbh.SaveConfig("BrokerStack", response.body().getText());
                     }
                 }
             }
@@ -706,11 +706,11 @@ public class Broker_Replication {
                     assert response.body() != null;
 
                     if (!response.body().getText().equals("")) {
-                        if (!response.body().getText().equals(dbh.ReadConfig("GroupCodeDefult"))) {
-                            dbh.SaveConfig("GroupCodeDefult", response.body().getText());
+                        if (!response.body().getText().equals(broker_dbh.ReadConfig("GroupCodeDefult"))) {
+                            broker_dbh.SaveConfig("GroupCodeDefult", response.body().getText());
                         }
                     } else {
-                        dbh.SaveConfig("GroupCodeDefult", "0");
+                        broker_dbh.SaveConfig("GroupCodeDefult", "0");
                     }
                 }
             }
@@ -729,8 +729,8 @@ public class Broker_Replication {
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    if (!response.body().getText().equals(dbh.ReadConfig("MenuBroker"))) {
-                        dbh.SaveConfig("MenuBroker", response.body().getText());
+                    if (!response.body().getText().equals(broker_dbh.ReadConfig("MenuBroker"))) {
+                        broker_dbh.SaveConfig("MenuBroker", response.body().getText());
                     }
                 }
             }
@@ -752,7 +752,7 @@ public class Broker_Replication {
                     assert response.body() != null;
                     ArrayList<Column> columns = response.body().getColumns();
                     for (Column column : columns) {
-                        dbh.ReplicateGoodtype(column);
+                        broker_dbh.ReplicateGoodtype(column);
                     }
                     columnReplication(0);
                 }
@@ -780,7 +780,7 @@ callMethod.Log(""+i);
                         ArrayList<Column> columns = response.body().getColumns();
                         int j = 0;
                         for (Column column : columns) {
-                            dbh.ReplicateColumn(column, i);
+                            broker_dbh.ReplicateColumn(column, i);
                             j++;
                         }
                         if (j == columns.size()) {
@@ -811,7 +811,7 @@ callMethod.Log(""+i);
         Log.e("kowsar", "0");
         locations.clear();
 
-        cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + dbh.ReadConfig("LastGpsLocationCode") + " order by GpsLocationCode limit 20", null);
+        cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCode") + " order by GpsLocationCode limit 20", null);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -834,9 +834,9 @@ callMethod.Log(""+i);
                     if (response.isSuccessful()) {
                         assert response.body() != null;
 
-                        dbh.SaveConfig("LastGpsLocationCode", locations.get(locations.size() - 1).getGpsLocationCode());
+                        broker_dbh.SaveConfig("LastGpsLocationCode", locations.get(locations.size() - 1).getGpsLocationCode());
 
-                        cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + dbh.ReadConfig("LastGpsLocationCode"), null);
+                        cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCode"), null);
                         Log.e("kowsar", response.body().toString());
                         if (cursor.getCount() > 1) {
                             cursor.close();

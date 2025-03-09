@@ -24,10 +24,8 @@
                 android:id="@+id/ocr_localfactor_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_weight="1"
-                app:titleTextColor="@color/white"
                 android:background="?attr/colorPrimary"
-                android:layout_gravity="center"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:title="انتخاب فاکتور">
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/ocr_localfactor_a_switch"
@@ -53,12 +51,14 @@
                 android:layout_height="match_parent"
                 android:id="@+id/ocr_localfactor_a_edtsearch"
                 android:hint="جستجو"
-                android:background="@drawable/bg_round_selected"
+                android:background="@drawable/bg_editbox"
                 android:singleLine="true"
                 android:selectAllOnFocus="true"
                 android:autofillHints=""
                 android:inputType="text"
-                android:layout_weight="0.2"/>
+                android:layout_margin="2dp"
+                android:layout_weight="0.2"
+                android:textColor="?attr/colorOnBackground"/>
 
             <TextView
                 android:id="@+id/ocr_localfactor_a_count"
@@ -68,7 +68,7 @@
                 android:textSize="26sp"
                 android:gravity="center"
                 android:text=""
-                android:textColor="@color/grey_1000"
+                android:textColor="?attr/colorOnBackground"
                 />
 
         </LinearLayout>

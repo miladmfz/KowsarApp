@@ -33,21 +33,12 @@ public class Find_Action extends Activity implements DatePickerDialog.OnDateSetL
     public Call<RetrofitResponse> call;
     CallMethod callMethod;
     Find_DBH find_dbh;
-    Intent intent;
     Integer il;
     PersianCalendar persianCalendar;
     String date;
     Dialog dialog, dialogProg;
-    Calendar cldr;
-    TimePickerDialog picker;
-    TextView tv_reservestart;
-    TextView tv_reserveend;
     TextView tv_date;
-    int ehour = 0;
-    int eminutes = 0;
     int printerconter ;
-
-    TextView tv_rep;
 
     public Find_Action(Context mContext) {
         this.mContext = mContext;

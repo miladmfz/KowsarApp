@@ -59,7 +59,7 @@ import retrofit2.Response;
 
 
 public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     private final ImageView img;
     public MaterialCardView rltv;

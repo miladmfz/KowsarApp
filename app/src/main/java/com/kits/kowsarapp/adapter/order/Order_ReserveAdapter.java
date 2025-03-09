@@ -28,17 +28,15 @@ public class Order_ReserveAdapter extends RecyclerView.Adapter<Order_ReserveView
     private final Context mContext;
     CallMethod callMethod;
     ArrayList<Order_BasketInfo> basketInfos;
-    Order_APIInterface apiInterface;
     Intent intent;
-   Order_Action action;
+   Order_Action order_action;
 
 
     public Order_ReserveAdapter(ArrayList<Order_BasketInfo> BasketInfos, Context context) {
         this.mContext = context;
         this.basketInfos = BasketInfos;
         this.callMethod = new CallMethod(mContext);
-        this.action = new Order_Action(mContext);
-        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
+        this.order_action = new Order_Action(mContext);
 
     }
 
@@ -106,7 +104,7 @@ public class Order_ReserveAdapter extends RecyclerView.Adapter<Order_ReserveView
 
             builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
 
-                action.DeleteReserveDialog(basketInfos.get(position));
+                order_action.DeleteReserveDialog(basketInfos.get(position));
 
             });
 
