@@ -93,7 +93,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                Log.e("onFailure", "" + t);
+                callMethod.Log(t.getMessage());
             }
         });
 
@@ -122,7 +122,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
                     }
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        Log.e("", t.getMessage());
+                        callMethod.Log(t.getMessage());
                     }
                 });
 
@@ -149,7 +149,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        Log.e("", t.getMessage());
+                        callMethod.Log(t.getMessage());
                     }
                 });
 

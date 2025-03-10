@@ -212,6 +212,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
         binding.bBydateAFab.setOnClickListener(v -> {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
             dialog.setContentView(R.layout.broker_buymulti_box);
             Button boxbuy = dialog.findViewById(R.id.b_buymulti_btn);
             final EditText amount_mlti = dialog.findViewById(R.id.b_buymulti_amount);

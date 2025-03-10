@@ -1,11 +1,14 @@
 package com.kits.kowsarapp.adapter.order;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
@@ -45,6 +48,7 @@ public class Order_ObjectTypeAdapter extends RecyclerView.Adapter<Order_MizTypeV
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBindViewHolder(@NonNull Order_MizTypeViewHolder holder, int position) {
 
@@ -54,10 +58,37 @@ public class Order_ObjectTypeAdapter extends RecyclerView.Adapter<Order_MizTypeV
         }else {
             holder.tv_name.setText(callMethod.NumberRegion(objectTypes.get(position).getaType()));
         }
+
+
+        TypedValue typedValue = new TypedValue();
+        Context context = holder.itemView.getContext();
+
+
+
+        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSecondary, typedValue, true);
+        int colorOnSecondary = typedValue.data;
+
+        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedValue, true);
+        int colorOnPrimary = typedValue.data;
+
+        if (callMethod.ReadString("ObjectType").equals(objectTypes.get(position).getaType())) {
+            holder.rltv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_primary));
+            holder.tv_name.setTextColor(colorOnPrimary);
+        } else {
+
+            holder.rltv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_secondary));
+            holder.tv_name.setTextColor(colorOnSecondary);
+        }
+
+
+
+
         holder.rltv.setOnClickListener(v -> {
             Order_TableActivity activity = (Order_TableActivity) mContext;
             callMethod.EditString("ObjectType", objectTypes.get(position).getaType());
 
+
+            notifyDataSetChanged();
             activity.State = "0";
             activity.CallSpinner();
         });

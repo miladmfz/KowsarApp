@@ -51,6 +51,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -185,8 +186,9 @@ public class Ocr_CollectFragment extends Fragment {
         dialogProg.findViewById(R.id.ocr_spinner_text).setVisibility(View.GONE);
         CreateView_Control();
     }catch (Exception e){
-        Log.e("kowsar",e.getMessage());
-    }
+            callMethod.Log(e.getMessage());
+
+   }
     }
 
 
@@ -323,10 +325,9 @@ public class Ocr_CollectFragment extends Fragment {
         ll_title.addView(tv_company);
 
         if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-            Log.e("CheckString", "AppOCRFactorExplain Dare");
+            callMethod.Log("CheckString = "+"AppOCRFactorExplain Dare");
         } else {
-            Log.e("CheckString", "AppOCRFactorExplain nadare");
-
+            callMethod.Log("CheckString = "+"AppOCRFactorExplain nadare");
             ll_title.addView(btn_set_stack);
         }
 
@@ -403,7 +404,7 @@ public class Ocr_CollectFragment extends Fragment {
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    Log.e("kowsar_onFailure",t.getMessage()); }
+                            callMethod.Log(t.getMessage()); }
             });
         });
 
@@ -412,6 +413,7 @@ public class Ocr_CollectFragment extends Fragment {
 
             final Dialog dialog = new Dialog(requireActivity());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
             dialog.setContentView(R.layout.ocr_checkamount);
             EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
             MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
@@ -463,7 +465,7 @@ public class Ocr_CollectFragment extends Fragment {
                                         }
                                         @Override
                                         public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                            Log.e("kowsar_onFailure",t.getMessage()); }
+                                                    callMethod.Log(t.getMessage()); }
                                     });
 
 
@@ -472,7 +474,7 @@ public class Ocr_CollectFragment extends Fragment {
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                Log.e("kowsar_onFailure",t.getMessage()); }
+                                        callMethod.Log(t.getMessage()); }
                         });
 
 
@@ -545,7 +547,9 @@ public class Ocr_CollectFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                         dialogProg.dismiss();
-                        Log.e("",t.getMessage()); }
+                        callMethod.Log(t.getMessage());
+
+                    }
                 });
 
 
@@ -1038,8 +1042,7 @@ public class Ocr_CollectFragment extends Fragment {
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                    Log.e("kowsar_onFailure", t.getMessage());
-                                }
+                                    callMethod.Log(t.getMessage());                                }
                             });
 
                             // print.Printing(factor,goods_visible,"0");
@@ -1178,7 +1181,7 @@ public class Ocr_CollectFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                        Log.e("kowsar_onFailure", t.getMessage());
+                        callMethod.Log(t.getMessage());
                     }
                 });
             }

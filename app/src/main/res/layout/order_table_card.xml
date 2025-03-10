@@ -448,10 +448,11 @@
 
         </LinearLayout>
 
-        <androidx.viewpager.widget.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@color/colorPrimary" />
+<!--        <androidx.viewpager.widget.ViewPager-->
+<!--            android:layout_width="300dp"-->
+<!--            android:layout_height="4dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:background="@color/colorPrimary" />-->
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

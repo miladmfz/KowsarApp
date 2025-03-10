@@ -39,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -94,7 +95,6 @@ public class Order_Print {
     }
 
     public void GetHeader_Data(String Filter) {
-        Log.e("test","6");
         Filter_print = Filter;
         dialogProg();
         tv_rep.setText(R.string.textvalue_printing);
@@ -106,7 +106,6 @@ public class Order_Print {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
-                    Log.e("test","0");
                     assert response.body() != null;
                     Factor_header = response.body().getFactors();
                     AppPrinters.clear();
@@ -116,8 +115,9 @@ public class Order_Print {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                Log.e("test","1");
-                GetHeader_Data("");
+                Order_CanPrint_0();
+                callMethod.showToast("بدون پرینتر");
+//GetHeader_Data("");
             }
         });
 
@@ -125,24 +125,35 @@ public class Order_Print {
 
 
     public void GetAppPrinterList() {
-        Log.e("test","2");
         call = apiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    Log.e("test","3");
                     printerconter = 0;
-                    AppPrinters = response.body().getAppPrinters();
-                    GetRow_Data();
-                }
+                    AppPrinters.clear();
+                    for (AppPrinter appPrinter:response.body().getAppPrinters()) {
+                        if (appPrinter.getPrinterActive().equals("1")){
+                            AppPrinters.add(appPrinter);
+                        }
+                    }
+                    if (AppPrinters.size()>0){
+                        GetRow_Data();
+                    }else{
+                        callMethod.showToast("ثبت بدون پرینت");
+                        intent = new Intent(mContext, Order_TableActivity.class);
+                        intent.putExtra("State", "0");
+                        intent.putExtra("EditTable", "0");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        mContext.startActivity(intent);
+                        ((Activity) mContext).finish();
+                    }
+               }
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                Log.e("test","4 eroor");
-                GetAppPrinterList();
 
             }
         });
@@ -150,7 +161,6 @@ public class Order_Print {
 
 
     public void GetRow_Data() {
-        Log.e("test","5");
         if (printerconter < (AppPrinters.size())) {
             call = apiInterface.OrderGetFactorRow(
                     "OrderGetFactorRow",
@@ -159,7 +169,6 @@ public class Order_Print {
                     AppPrinters.get(printerconter).getWhereClause()
             );
 
-            Log.e("test","Filter_print="+Filter_print);
             if (Filter_print.length() > 0) {
                 if (AppPrinters.get(printerconter).getWhereClause().contains(Filter_print)) {
                     call.enqueue(new Callback<RetrofitResponse>() {
@@ -189,7 +198,6 @@ public class Order_Print {
                     GetRow_Data();
                 }
             } else {
-                Log.e("test","7 filter print");
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
@@ -216,39 +224,41 @@ public class Order_Print {
 
 
         } else {
-            Log.e("test","6 not size");
-            call = apiInterface.Order_CanPrint(
-                    "Order_CanPrint",
-                    callMethod.ReadString("AppBasketInfoCode"),
-                    "0"
-            );
-            call.enqueue(new Callback<RetrofitResponse>() {
-                @Override
-                public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        if (response.body().getText().equals("Done")) {
-                            callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
-                            dialogProg.dismiss();
-                            intent = new Intent(mContext, Order_TableActivity.class);
-                            intent.putExtra("State", "0");
-                            intent.putExtra("EditTable", "0");
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            mContext.startActivity(intent);
-                            ((Activity) mContext).finish();
-
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                    GetRow_Data();
-                }
-            });
+            Order_CanPrint_0();
         }
     }
 
+    public void Order_CanPrint_0() {
+        call = apiInterface.Order_CanPrint(
+                "Order_CanPrint",
+                callMethod.ReadString("AppBasketInfoCode"),
+                "0"
+        );
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    if (response.body().getText().equals("Done")) {
+                        callMethod.showToast(mContext.getString(R.string.textvalue_recorded));
+                        dialogProg.dismiss();
+                        intent = new Intent(mContext, Order_TableActivity.class);
+                        intent.putExtra("State", "0");
+                        intent.putExtra("EditTable", "0");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        mContext.startActivity(intent);
+                        ((Activity) mContext).finish();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                GetRow_Data();
+            }
+        });
+    }
 
     @SuppressLint("RtlHardcoded")
     public void printDialogView() {

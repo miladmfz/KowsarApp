@@ -167,13 +167,11 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                 .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                        Log.e("test","Failed");
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        Log.e("test","Ready");
                         imageInfo.SaveLogo(resource);
                         return false;
                     }
@@ -379,7 +377,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                Log.e("kowsar_onFailure",t.getMessage());
+                callMethod.Log(t.getMessage());
             }
         });
 

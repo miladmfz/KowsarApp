@@ -447,8 +447,8 @@ public class Ocr_PaintActivity extends AppCompatActivity {
             photoFile = null;
             try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
-                Log.e("intent_exception", ex.getMessage());
+            } catch (Exception e) {
+                callMethod.Log(e.getMessage());
             }
             if (photoFile != null) {
                 photoURI = FileProvider.getUriForFile(this, "com.kits.ocrkowsar.fileprovider", photoFile);

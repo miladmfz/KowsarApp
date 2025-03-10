@@ -18,6 +18,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_PFOpenActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
@@ -44,7 +45,8 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     private final LinearLayoutCompat mainline;
-    private final ImageView img;
+//    private final ImageView img;
+    private final ShapeableImageView img;
     public MaterialCardView rltv;
     public final Button btnadd;
 

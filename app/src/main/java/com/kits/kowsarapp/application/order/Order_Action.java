@@ -55,6 +55,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -128,6 +129,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         final Dialog dialog_payment = new Dialog(mContext);
 
         dialog_payment.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog_payment.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog_payment.setContentView(R.layout.order_payment_box);
 
         Button btn_payment = dialog_payment.findViewById(R.id.ord_payment_b_btn_final);
@@ -454,6 +456,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     public void LoginSetting() {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.default_loginconfig);
         EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
         MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);
@@ -477,6 +480,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.order_reserve_box);
         LinearLayout ll_reservebox = dialog.findViewById(R.id.order_reserve_box);
         if (callMethod.ReadString("LANG").equals("fa")) {
@@ -565,7 +569,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                        String ehourOfDay = "", eminute, eTime;
+                        String ehourOfDay = "0", eminute, eTime;
                         assert response.body() != null;
                         if (minute + Integer.parseInt(response.body().getText()) > 60) {
                             eminute = String.valueOf(minute + Integer.parseInt(response.body().getText()) - 60);
@@ -718,6 +722,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     public void GoodBoxDialog(Good good, String Flag) {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.order_goodorder_box);
         LinearLayoutCompat ll_orderboxgood = dialog.findViewById(R.id.order_goodorder_box);
         if (callMethod.ReadString("LANG").equals("fa")) {
@@ -1143,6 +1148,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.order_basketinfo_explain);
         Button explain_btn = dialog.findViewById(R.id.ord_basketexplain_b_explain_btn);
         explain_btn.setText(R.string.textvalue_setexplain);
@@ -1290,6 +1296,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.order_basketinfo_explain);
         Button explain_btn = dialog.findViewById(R.id.ord_basketexplain_b_explain_btn);
         explain_btn.setText(R.string.textvalue_setexplain);

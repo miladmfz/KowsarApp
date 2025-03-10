@@ -76,8 +76,6 @@ public class Ocr_StackFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.e("kowsar","7 " );
-
 
         callMethod = new CallMethod(requireActivity());
         ocr_dbh = new Ocr_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));

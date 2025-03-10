@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,7 +89,6 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
         mainline.removeAllViews();
 
         for (Column Column : Columns) {
-            Log.e("kowsar "+Column.getColumnName(),good.getGoodFieldValue(Column.getColumnFieldValue("columnname")));
 
             if (Integer.parseInt(Column.getSortOrder()) > 1) {
                 TextView extra_TextView = new TextView(mContext);
@@ -139,6 +139,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
                 final Dialog dialog = new Dialog(mContext);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
                 dialog.setContentView(R.layout.find_selectedfeild);
 
 
@@ -277,7 +278,8 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 }
                 @Override
                 public void onFailure(Call<RetrofitResponse> call2, Throwable t) {
-                    Log.e("onFailure",""+t.toString());
+                    callMethod.Log(t.getMessage());
+
                 }
             });
         }

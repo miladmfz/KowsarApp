@@ -130,7 +130,6 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
 
                 if (options[item].equals("پرینتر بلوتوثی")) {
 
-//                    Log.e("kowsar","0");
 //                    intent = new Intent(mContext, PrinterActivity.class);
 //                    intent.putExtra("PreFac", preFactor.getPreFactorFieldValue("PreFactorCode"));
 //                    mContext.startActivity(intent);
@@ -138,7 +137,6 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                     callMethod.showToast("دستگاهی پیدا نشد");
 
                 } else if (options[item].equals("پرینتر مجموعه")) {
-                    Log.e("kowsar","1");
 
                     Print print=new Print(mContext,preFactor.getPreFactorFieldValue("PreFactorCode"));
                     print.Start();

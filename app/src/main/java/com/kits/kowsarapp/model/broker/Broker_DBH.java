@@ -82,20 +82,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
     }
 
-    public void CreateActivationDb() {
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS Activation (" +
-                "AppBrokerCustomerCode TEXT," +
-                "ActivationCode TEXT," +
-                "PersianCompanyName TEXT," +
-                "EnglishCompanyName TEXT," +
-                "ServerURL TEXT," +
-                "SQLiteURL TEXT," +
-                "MaxDevice TEXT," +
-                "SecendServerURL TEXT," +
-                "DbName TEXT," +
-                "AppType TEXT)");
-        getWritableDatabase().close();
-    }
+
 
     public void InitialConfigInsert() {
 

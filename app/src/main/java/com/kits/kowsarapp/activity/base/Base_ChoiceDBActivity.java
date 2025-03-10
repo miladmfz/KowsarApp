@@ -126,7 +126,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        Log.e("kowsar",t.getMessage());
+                        callMethod.Log(t.getMessage());
                     }
                 });
             }else{
@@ -151,7 +151,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     public void FirstActivation(Activation activation) {
 
 
-        Log.e("Debug Build.VERSION.SDK_INT =", Build.VERSION.SDK_INT+"");
 
 
         @SuppressLint("HardwareIds") String android_id = BuildConfig.BUILD_TYPE.equals("release") ?
@@ -186,16 +185,16 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("SdkVersion", Build.VERSION.SDK_INT+"", Body_str);
         Body_str =callMethod.CreateJson("DeviceIp", "---- / -----", Body_str);
 
-        Log.e("e=",""+Body_str);
+        callMethod.Log("Body_str = "+Body_str);
+
         Call<RetrofitResponse> call = apiInterface.LogReport(callMethod.RetrofitBody(Body_str));
-        Log.e("ec=",""+call.request().url());
-        Log.e("ec=",""+call.request().body());
+        callMethod.Log(""+call.request().url());
+        callMethod.Log(""+call.request().body());
 
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
-                Log.e("res=",""+response.body().toString());
 
                 if (response.isSuccessful()) {
                     // Handle successful response

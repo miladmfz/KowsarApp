@@ -32,6 +32,7 @@ import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 
 import java.io.File;
+import java.util.Objects;
 
 
 public class Base_AboutUsActivity extends AppCompatActivity {
@@ -65,6 +66,7 @@ public class Base_AboutUsActivity extends AppCompatActivity {
 
                     final Dialog dialog = new Dialog(Base_AboutUsActivity.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
                     dialog.setContentView(R.layout.default_loginconfig);
                     EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
                     MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);

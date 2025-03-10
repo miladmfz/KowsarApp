@@ -27,8 +27,7 @@ public class Broker_BluetoothUtil {
                 }
 
             }
-        } catch (Exception e) {
-            Log.e("Kowsar_bleAdapter ", e.getMessage());
+        } catch (Exception ignored) {
         }
     }
 

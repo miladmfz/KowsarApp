@@ -50,6 +50,7 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
 
         progressDialog = new Dialog(this);
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         progressDialog.setContentView(R.layout.broker_spinner_box);
         TextView repw = progressDialog.findViewById(R.id.b_spinner_text);

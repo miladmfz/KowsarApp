@@ -273,6 +273,11 @@ public class Order_RegistrationActivity extends AppCompatActivity {
         binding.ordRegistrAActivereserv.setChecked(callMethod.ReadBoolan("ReserveActive"));
         binding.ordRegistrACanfreetable.setChecked(callMethod.ReadBoolan("CanFreeTable"));
 
+        binding.ordRegistrAMaxselloff.setText(callMethod.NumberRegion(callMethod.ReadString("MaxSellOff")));
+        binding.ordRegistrABodysize.setText(callMethod.NumberRegion(callMethod.ReadString("BodySize")));
+
+
+
         binding.ordRegistrAPozcode.setText(callMethod.NumberRegion(callMethod.ReadString("PosCode")));
         binding.ordRegistrAPozname.setText(callMethod.NumberRegion(callMethod.ReadString("PosName")));
         binding.ordRegistrAPospayment.setChecked(callMethod.ReadBoolan("PosPayment"));
@@ -387,7 +392,7 @@ public class Order_RegistrationActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                Log.e("kowsar_onFailure",t.getMessage());
+                callMethod.Log(t.getMessage());
             }
         });
 
@@ -460,7 +465,6 @@ public class Order_RegistrationActivity extends AppCompatActivity {
                                     if (response.isSuccessful()) {
                                         assert response.body() != null;
 
-                                        Log.e("kowsar",response.body().getText());
                                         callMethod.EditBoolan("CanFreeTable", !response.body().getText().equals("0"));
                                         binding.ordRegistrACanfreetable.setChecked(callMethod.ReadBoolan("CanFreeTable"));
 
@@ -470,7 +474,6 @@ public class Order_RegistrationActivity extends AppCompatActivity {
                                             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                                                 if (response.isSuccessful()) {
                                                     assert response.body() != null;
-                                                    Log.e("kowsar",response.body().getText());
                                                     callMethod.EditString("MaxSellOff", response.body().getText());
                                                     binding.ordRegistrAMaxselloff.setText(callMethod.ReadString("MaxSellOff"));
                                                     callMethod.showToast(getString(R.string.textvalue_resived));

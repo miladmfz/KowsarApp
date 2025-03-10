@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,15 +41,17 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
     FragmentTransaction fragmentTransaction;
     CallMethod callMethod;
     String Parent_GourpCode;
+    String selectedGroup;
 
     Order_APIInterface order_apiInterface;
     Call<RetrofitResponse> call2;
 
 
-    public Order_GrpAdapter(ArrayList<GoodGroup> GoodGroups, String parentcode, FragmentTransaction fragmentTransaction, Context mContext) {
+    public Order_GrpAdapter(ArrayList<GoodGroup> GoodGroups, String parentcode, String selectedGroup, FragmentTransaction fragmentTransaction, Context mContext) {
         this.GoodGroups = GoodGroups;
         this.mContext = mContext;
         this.Parent_GourpCode = parentcode;
+        this.selectedGroup = selectedGroup;
         this.fragmentTransaction = fragmentTransaction;
         this.callMethod = new CallMethod(mContext);
         this.order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
@@ -81,8 +85,26 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
         }
 
 
+        TypedValue typedValue = new TypedValue();
+        Context context = holder.itemView.getContext();
+
+        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSecondary, typedValue, true);
+        int colorOnSecondary = typedValue.data;
+
+        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedValue, true);
+        int colorOnPrimary = typedValue.data;
+
+        if (selectedGroup.equals(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"))) {
+            holder.rltv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_primary));
+            holder.grpname.setTextColor(colorOnPrimary);
+        } else {
+            holder.rltv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_secondary));
+           holder.grpname.setTextColor(colorOnSecondary);
+        }
+
+
+
         if (!GoodGroups.get(position).getGoodGroupFieldValue("GoodGroupImageName").equals("")) {
-            Log.e("test"+position,"0000");
 
             holder.img.setVisibility(View.VISIBLE);
             Glide.with(holder.img).asBitmap().load(Base64.decode(GoodGroups.get(position).getGoodGroupFieldValue("GoodGroupImageName"), Base64.DEFAULT)).diskCacheStrategy(DiskCacheStrategy.NONE).fitCenter().into(holder.img);
@@ -99,11 +121,11 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
                         assert response.body() != null;
                         if (!response.body().getText().equals("no_photo")) {
-                            Log.e("test"+position,response.body().getText());
                             GoodGroups.get(position).setGoodGroupImageName(response.body().getText());
                             notifyItemChanged(position);
                         }else{
-                            Log.e("test"+position,response.body().getText());
+                            callMethod.Log("test"+position+" = "+response.body().getText());
+
                         }
 
                     }

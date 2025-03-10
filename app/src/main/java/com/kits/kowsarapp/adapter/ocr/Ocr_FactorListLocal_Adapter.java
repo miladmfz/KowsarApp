@@ -41,6 +41,7 @@ import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,6 +70,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
         ocr_dbh = new Ocr_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_signature);
         this.width =metrics;
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
@@ -203,6 +205,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
 
             final Dialog dialog = new Dialog(mContext);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
             dialog.setContentView(R.layout.default_loginconfig);
             EditText ed_password =  dialog.findViewById(R.id.d_loginconfig_ed);
             MaterialButton btn_login =  dialog.findViewById(R.id.d_loginconfig_btn);
@@ -243,7 +246,8 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                Log.e("",t.getMessage()); }
+                                callMethod.Log(t.getMessage());
+                            }
                         });
                     }else {
                         callMethod.showToast("تاییده ارسال شده است");

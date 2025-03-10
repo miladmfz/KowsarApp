@@ -265,7 +265,8 @@ public class Find_DBH extends SQLiteOpenHelper {
             limitcolumn = Integer.parseInt(columnscount) / Integer.parseInt(goodtypecount);
         } catch (Exception e) {
             callMethod.showToast("تنظیم جدول از سمت دیتابیس مشکل دارد");
-            Log.e("kowsar_query", e.getMessage());
+            callMethod.Log(e.getMessage());
+
         }
     }
     @SuppressLint("Range")
@@ -275,8 +276,8 @@ public class Find_DBH extends SQLiteOpenHelper {
         //query = "Select * from BrokerColumn where AppType = " + AppType + " limit " + limitcolumn;
         query = "Select * from BrokerColumn ";
 
+        callMethod.Log("query=" + query);
 
-        Log.e("kowsar_query", query);
         columns = new ArrayList<>();
         cursor = getWritableDatabase().rawQuery(query, null);
         if (cursor != null) {

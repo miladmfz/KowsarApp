@@ -136,7 +136,8 @@ public class Ocr_PackFragment extends Fragment{
 
         CreateView_Pack();
         }catch (Exception e){
-            Log.e("kowsarwwww ",e.getMessage());
+            callMethod.Log(e.getMessage());
+
         }
     }
 
@@ -284,8 +285,7 @@ public class Ocr_PackFragment extends Fragment{
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        Log.e("", t.getMessage());
-                    }
+                        callMethod.Log(t.getMessage());                    }
                 });
 
 
@@ -571,8 +571,7 @@ public class Ocr_PackFragment extends Fragment{
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                        Log.e("123", t.getMessage());
-                    }
+                        callMethod.Log(t.getMessage());                    }
                 });
             }
 

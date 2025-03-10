@@ -110,6 +110,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     public void factor_detail(Factor factor) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_dialog_factordetail);
 
 
@@ -151,7 +152,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         tv_customercode.setText(NumberFunctions.PerisanNumber(factor.getCustomercode()));
         //TODO change Ersal be customer path
         tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getErsall()));
-        Log.e("kowsar",factor.getBrokerName());
+
         if (factor.getBrokerName().length() > 20)
             tv_BrokerName.setText(NumberFunctions.PerisanNumber(factor.getBrokerName().substring(0, 20) + "..."));
         else
@@ -234,6 +235,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     public void Pack_detail(Factor factor) {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         dialog.setContentView(R.layout.ocr_packdetail_box);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 
@@ -508,7 +510,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        Log.e("", t.getMessage());
+                        callMethod.Log(t.getMessage());
                     }
                 });
 
@@ -529,6 +531,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     public void goodamount_detail(String amount,String shortage) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_amount_zoom);
         TextView tv_good_1 = dialog.findViewById(R.id.ocr_amountzoome_tv1);
         TextView tv_good_2 = dialog.findViewById(R.id.ocr_amountzoome_tv2);
@@ -546,6 +549,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_checkamount);
         EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
         MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
@@ -563,6 +567,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_checkamount);
         EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
         MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
@@ -584,6 +589,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     public void good_detail(String GoodCode) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_gooddetail_box);
         ImageView iv_good = dialog.findViewById(R.id.ocr_gooddetail_b_img);
         TextView tv_good_1 = dialog.findViewById(R.id.ocr_gooddetail_b_tv1);
@@ -692,7 +698,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                Log.e("retrofit_fail", t.getMessage());
+                callMethod.Log(t.getMessage());
             }
         });
         byte[] BaseImageByte;
@@ -724,7 +730,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
 
-                Log.e("onFailure", "" + t);
+                callMethod.Log(t.getMessage());
             }
         });
 
@@ -738,6 +744,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_goodscan_box);
         RecyclerView goodscan_recycler = dialog.findViewById(R.id.ocr_goodscan_b_recyclerView);
         Button goodscan_btn = dialog.findViewById(R.id.ocr_goodscan_b_btn);
@@ -832,7 +839,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                             }
                                             @Override
                                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                                Log.e("kowsar_onFailure", t.getMessage());
+                                                callMethod.Log(t.getMessage());
                                             }
                                         });
 
@@ -860,8 +867,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
                                             @Override
                                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                                Log.e("kowsar_onFailure", t.getMessage());
-                                            }
+                                                callMethod.Log(t.getMessage());                                            }
                                         });
 
                                     }
@@ -883,6 +889,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     public void LoginSetting() {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.default_loginconfig);
         EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
         MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);
@@ -1036,7 +1043,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 //
 //            @Override
 //            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
-//                Log.e("test",t.getMessage());
+//        callMethod.Log(t.getMessage());
 //            }
 //        });
 
@@ -1104,6 +1111,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_stacklocation);
 
 

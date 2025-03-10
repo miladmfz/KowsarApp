@@ -105,9 +105,7 @@ public class Base_Action {
             animationView.setAnimation(R.raw.oklottie);
             try {
                 dialog1.show();
-            } catch (Exception e) {
-                Log.e("Lottie", "Error while showing the dialog: " + e.getMessage());
-            }
+            } catch (Exception ignored) {                  }
             animationView.setRepeatCount(0);
 
             animationView.addAnimatorListener(new Animator.AnimatorListener() {
@@ -139,9 +137,6 @@ public class Base_Action {
 
     @SuppressLint("HardwareIds")
     public void app_info() {
-
-        Log.e("Debug Build.VERSION.SDK_INT =", Build.VERSION.SDK_INT+"");
-        Log.e("Debug isVpnConnection =",getIpAddress(true)+" / "+isVpnConnection()+"");
 
 
         @SuppressLint("HardwareIds")
@@ -177,16 +172,12 @@ public class Base_Action {
         Body_str =callMethod.CreateJson("SdkVersion", Build.VERSION.SDK_INT+"", Body_str);
         Body_str =callMethod.CreateJson("DeviceIp", getIpAddress(true)+" / "+isVpnConnection(), Body_str);
 
-        Log.e("e=",""+Body_str);
         Call<RetrofitResponse> call = apiInterface.LogReport(callMethod.RetrofitBody(Body_str));
-        Log.e("ec=",""+call.request().url());
-        Log.e("ec=",""+call.request().body());
 
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
-                Log.e("res=",""+response.body().toString());
 
                 if (response.isSuccessful()) {
                     // Handle successful response

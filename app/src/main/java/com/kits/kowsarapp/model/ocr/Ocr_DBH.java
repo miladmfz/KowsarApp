@@ -103,7 +103,7 @@ public class Ocr_DBH extends SQLiteOpenHelper {
 
         ArrayList<Factor> factors = new ArrayList<Factor>();
 
-        Log.e("",query);
+        callMethod.Log("query = "+ query);
 
         cursor = getWritableDatabase().rawQuery(query, null);
         if (cursor != null) {
@@ -127,7 +127,6 @@ public class Ocr_DBH extends SQLiteOpenHelper {
                 factors.add(factor_detail);
             }
         }
-        Log.e("","8");
 
         assert cursor != null;
         cursor.close();
@@ -141,7 +140,8 @@ public class Ocr_DBH extends SQLiteOpenHelper {
 
 
         cursor = getWritableDatabase().rawQuery(query, null);
-        Log.e("query",query);
+
+        callMethod.Log("query=" + query);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {

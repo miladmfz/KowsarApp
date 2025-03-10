@@ -6,13 +6,14 @@
 
     <style name="RoyalGoldTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">#3B82F6</item> <!-- Lighter Royal Blue -->
-        <item name="colorPrimaryVariant">#2563EB</item> <!-- Slightly deeper Lighter Royal Blue -->
-        <item name="colorSecondary">#FFD700</item> <!-- Brighter Gold -->
-        <item name="colorSecondaryVariant">#EAB308</item> <!-- Slightly deeper Brighter Gold -->
+        <item name="colorPrimaryVariant">#215FE8</item> <!-- Slightly deeper Lighter Royal Blue -->
+        <item name="colorSecondary">#CFAF4B</item> <!-- Richer Gold -->
+        <item name="colorSecondaryVariant">#B8860B</item> <!-- Metallic Gold -->
         <item name="colorOnPrimary">#FFFFFF</item> <!-- White text on Primary -->
         <item name="colorSurface">#F1F5F9</item> <!-- Soft, even lighter background -->
         <item name="colorOnBackground">#111827</item> <!-- Deep gray for contrast instead of pure black -->
         <item name="android:statusBarColor">#2563EB</item> <!-- Brighter Blue for Status Bar -->
+
     </style>
 
 
@@ -20,12 +21,13 @@
     <style name="Theme.Default" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">#3B82F6</item> <!-- Lighter Royal Blue -->
         <item name="colorPrimaryVariant">#215FE8</item> <!-- Slightly deeper Lighter Royal Blue -->
-        <item name="colorSecondary">#FFD700</item> <!-- Brighter Gold -->
-        <item name="colorSecondaryVariant">#DFAA05</item> <!-- Slightly deeper Brighter Gold -->
+        <item name="colorSecondary">#CFAF4B</item> <!-- Richer Gold -->
+        <item name="colorSecondaryVariant">#B8860B</item> <!-- Metallic Gold -->
         <item name="colorOnPrimary">#FFFFFF</item> <!-- White text on Primary -->
         <item name="colorSurface">#F1F5F9</item> <!-- Soft, even lighter background -->
         <item name="colorOnBackground">#111827</item> <!-- Deep gray for contrast instead of pure black -->
         <item name="android:statusBarColor">#2563EB</item> <!-- Brighter Blue for Status Bar -->
+
     </style>
 
     <!--    <style name="Theme.Default" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->

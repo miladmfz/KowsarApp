@@ -153,7 +153,7 @@ public class Order_SearchViewFragment extends Fragment {
                     callMethod.Log(response.body().getGroups().size()+"");
                     assert response.body() != null;
 
-                    Order_GrpAdapter adapter = new Order_GrpAdapter(response.body().getGroups(), Parent_GourpCode, fragmentTransaction, requireActivity());
+                    Order_GrpAdapter adapter = new Order_GrpAdapter(response.body().getGroups(), Parent_GourpCode,good_GourpCode, fragmentTransaction, requireActivity());
                     rc_grp.setLayoutManager(new LinearLayoutManager(requireActivity()));
                     rc_grp.setAdapter(adapter);
                 }

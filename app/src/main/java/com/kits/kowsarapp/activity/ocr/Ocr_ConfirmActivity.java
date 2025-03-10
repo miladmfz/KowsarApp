@@ -321,7 +321,6 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
         tv_lottiestatus.setText("اسکن کنید");
         tv_lottiestatus.setVisibility(View.VISIBLE);
         if (BarcodeScan.length()>0){
-            Log.e("kowsar","0");
 
             progressBar.setVisibility(View.VISIBLE);
             tv_lottiestatus.setText("در حال جستجو");
@@ -440,14 +439,12 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
                                 stackFragment.setOcr_goods(ocr_goods);
                                 stackFragment.setBarcodeScan(BarcodeScan);
                                 stackFragment.callrecycler() ;
-                                Log.e("kowsar", "Fragment already exists, data updated");
                             } else {
                                 // Create a new instance of StackFragment if not already added
                                 stackFragment = new Ocr_StackFragment();
                                 stackFragment.setOcr_goods(ocr_goods);
                                 stackFragment.setBarcodeScan(BarcodeScan);
                                 fragmentTransaction.replace(R.id.ocr_confirm_a_framelayout, stackFragment, "STACK_FRAGMENT");
-                                Log.e("kowsar", "New fragment created and data set");
                             }
 
                             fragmentTransaction.commitAllowingStateLoss();
@@ -455,7 +452,8 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
                             progressBar.setVisibility(View.GONE);
 
                         }catch (Exception e){
-                            Log.e("kowsar","4" +e.getMessage());
+                            callMethod.Log(e.getMessage());
+
                         }
                     } else {
                         tv_lottiestatus.setText("موردی یافت نشد");

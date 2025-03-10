@@ -87,9 +87,28 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
         holder.callimage(goods.get(position));
         holder.rltv.setChecked(goods.get(position).isCheck());
 
+        if (callMethod.ReadBoolan("CanUseInactive")){
+
+            holder.btnadd.setText("افزودن");
+            holder.btnadd.setVisibility(View.VISIBLE);
+
+
+        }else{
+
+            if (goods.get(position).getGoodFieldValue("ActiveStack").equals("1")) {
+                holder.btnadd.setText("افزودن");
+                holder.btnadd.setVisibility(View.VISIBLE);
+
+            }else{
+                holder.btnadd.setText("غیر فعال ");
+                holder.btnadd.setVisibility(View.INVISIBLE);
+
+            }
+        }
+
         holder.rltv.setOnLongClickListener(view ->
         {
-            if (goods.get(position).getGoodFieldValue("ActiveStack").equals("1")) {
+            if (callMethod.ReadBoolan("CanUseInactive")){
                 if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
                     multi_select = true;
                     holder.rltv.setChecked(!holder.rltv.isChecked());
@@ -124,9 +143,47 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                     mContext.startActivity(intent);
 
                 }
-            } else {
-                callMethod.showToast("این کالا غیر فعال می باشد");
+            }else{
+                if (goods.get(position).getGoodFieldValue("ActiveStack").equals("1")) {
+                    if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
+                        multi_select = true;
+                        holder.rltv.setChecked(!holder.rltv.isChecked());
+                        goods.get(position).setCheck(!goods.get(position).isCheck());
+
+                        if (goods.get(position).isCheck()) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                                Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
+                                activity.good_select_function(goods.get(position));
+                            }
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                                Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
+                                activity.good_select_function(goods.get(position));
+                            }
+
+                        } else {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                                Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
+                                activity.good_select_function(goods.get(position));
+                            }
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                                Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
+                                activity.good_select_function(goods.get(position));
+                            }
+
+
+                        }
+                    } else {
+
+                        Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
+                        intent.putExtra("fac", "0");
+                        mContext.startActivity(intent);
+
+                    }
+                } else {
+                    callMethod.showToast("این کالا غیر فعال می باشد");
+                }
             }
+
 
             return true;
         });

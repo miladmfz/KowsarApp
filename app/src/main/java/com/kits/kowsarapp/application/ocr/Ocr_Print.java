@@ -43,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -131,7 +132,6 @@ public class Ocr_Print {
 
                     if (callMethod.ReadString("Category").equals("2")) {
                         for (AppPrinter appPrinter : AppPrinters) {
-                            Log.e("test_name", appPrinter.getPrinterName());
                             if (appPrinter.getWhereClause().equals(callMethod.ReadString("StackCategory"))) {
                                 printerconter++;
                                 targetprinter = appPrinter;
@@ -159,13 +159,12 @@ public class Ocr_Print {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                Log.e("test", "3");
+                callMethod.Log(t.getMessage());
                 dialogProg.dismiss();
                 ((Activity) mContext).finish();
 
             }
         });
-        Log.e("test","4");
     }
 
 
@@ -178,7 +177,7 @@ public class Ocr_Print {
 
 
         dialogprint = new Dialog(mContext);
-        dialogprint.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialogprint.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialogprint.setContentView(R.layout.ocr_print_layout_view);
         main_layout = dialogprint.findViewById(R.id.ocr_print_layout_view_ll);
         main_layout.setGravity(Gravity.CENTER);
@@ -552,7 +551,8 @@ public class Ocr_Print {
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                Log.e("test_Confirm", t.getMessage());
+                callMethod.Log(t.getMessage());
+
                 dialogProg.dismiss();
                 ((Activity) mContext).finish();
             }

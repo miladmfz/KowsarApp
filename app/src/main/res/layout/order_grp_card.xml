@@ -4,16 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="start"
-    android:layout_margin="2dp"
+    android:layout_margin="3dp"
     android:layoutDirection="rtl"
     android:orientation="vertical"
+    android:elevation="12dp"
+    android:clipToOutline="true"
+    android:outlineSpotShadowColor="?attr/colorPrimary"
     >
+
+
+
+
     <androidx.appcompat.widget.LinearLayoutCompat
 
+
         android:id="@+id/ord_grp_c_list"
-        android:background="@drawable/bg_card"
-        android:backgroundTint="?attr/colorSecondary"
-        android:textColor="?attr/colorOnSecondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -33,18 +38,16 @@
             android:id="@+id/ord_grp_c_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="8dp"
             android:gravity="center"
             android:text="@string/grplist_name"
-            android:textSize="16sp"
-            style="@style/Widget.MaterialComponents.Button"
+            android:textSize="18dp"
             android:textColor="?attr/colorOnSecondary"/>
 
         <ImageView
             android:id="@+id/ord_grp_c_imgv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
             android:background="@drawable/ic_arrow_down"
             android:gravity="center"
             android:textColor="?attr/colorOnBackground"

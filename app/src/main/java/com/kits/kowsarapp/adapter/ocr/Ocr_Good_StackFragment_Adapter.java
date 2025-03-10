@@ -75,7 +75,6 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
     public void onBindViewHolder(@NonNull final GoodViewHolder holder, @SuppressLint("RecyclerView") int position)
     {
 
-        Log.e("kowsar","10 start"+ position );
 
 
         holder.goodnameTextView.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getGoodName()));
@@ -132,7 +131,8 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
                                     .fitCenter()
                                     .into(holder.img);
                         }catch (Exception e){
-                            Log.e("kowsar","10 Exception"+ e.getMessage() );
+                            callMethod.Log(e.getMessage());
+
                         }
 
 
@@ -141,7 +141,7 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                    Log.e("kowsar","10 Throwable"+ t.getMessage() );
+                    callMethod.Log(t.getMessage());
 
                 }
             });

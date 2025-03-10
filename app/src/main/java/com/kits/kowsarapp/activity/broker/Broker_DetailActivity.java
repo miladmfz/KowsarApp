@@ -117,7 +117,6 @@ public class Broker_DetailActivity extends AppCompatActivity {
             }
         }
 
-        Log.e("test",gooddetail.getGoodFieldValue("GoodCode"));
         imagelists = broker_dbh.GetksrImageCodes(gooddetail.getGoodFieldValue("GoodCode"));
         SliderView();
 
@@ -127,9 +126,13 @@ public class Broker_DetailActivity extends AppCompatActivity {
             binding.bDetailABtnbuy.setBackgroundTintList(getResources().getColorStateList(R.color.grey_700));
         }
 
+        if (callMethod.ReadBoolan("CanUseInactive")){
+            binding.bDetailABtnbuy.setText("غیر فعال ");
+        }
         binding.bDetailABtnbuy.setOnClickListener(view -> {
-            if (gooddetail.getGoodFieldValue("ActiveStack").equals("1")) {
 
+
+            if (callMethod.ReadBoolan("CanUseInactive")){
                 if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
                     broker_action.buydialog(gooddetail.getGoodFieldValue("GoodCode"), "0");
                 } else {
@@ -138,8 +141,20 @@ public class Broker_DetailActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }else{
-                callMethod.showToast("این کالا غیر فعال می باشد");
+                if (gooddetail.getGoodFieldValue("ActiveStack").equals("1")) {
+
+                    if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
+                        broker_action.buydialog(gooddetail.getGoodFieldValue("GoodCode"), "0");
+                    } else {
+                        intent = new Intent(this, Broker_PFOpenActivity.class);
+                        intent.putExtra("fac", "0");
+                        startActivity(intent);
+                    }
+                }else{
+                    callMethod.showToast("این کالا غیر فعال می باشد");
+                }
             }
+
         });
     }
 

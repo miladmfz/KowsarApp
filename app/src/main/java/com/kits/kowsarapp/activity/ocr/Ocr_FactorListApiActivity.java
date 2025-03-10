@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -119,6 +120,7 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
         dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog1.setContentView(R.layout.ocr_spinner_box);
         TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
@@ -647,7 +649,7 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
                 }else{
                     finish();
                     callMethod.showToast("مشکلی در گروه بندی ارسال");
-                    Log.e("",t.getMessage());
+                    callMethod.Log(t.getMessage());
                 }
 
             }
@@ -802,7 +804,7 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                Log.e("test_+",t.getMessage());
+                callMethod.Log(t.getMessage());
             }
         });
     }

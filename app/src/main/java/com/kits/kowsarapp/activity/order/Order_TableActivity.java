@@ -127,9 +127,13 @@ public class Order_TableActivity extends AppCompatActivity {
 
     public void intent() {
         Bundle data = getIntent().getExtras();
-        assert data != null;
-        State = data.getString("State");
-        EditTable = data.getString("EditTable");
+        if (data != null) {
+            State = data.getString("State", "0");  // مقدار پیش‌فرض "0"
+            EditTable = data.getString("EditTable", "0");  // مقدار پیش‌فرض "0"
+        } else {
+            State = "0";
+            EditTable = "0";
+        }
     }
 
     public void Config() {
@@ -244,11 +248,9 @@ public class Order_TableActivity extends AppCompatActivity {
     public void init() {
 
         Call<RetrofitResponse> call1 = order_apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "RstMiz_MizType");
-        callMethod.Log(call1.request().url().toString());
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                callMethod.Log("size = "+response.body().getObjectTypes().size());
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     objectTypes.clear();

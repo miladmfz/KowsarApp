@@ -267,6 +267,7 @@ public class Find_SearchActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.default_loginconfig);
         EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
         MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);

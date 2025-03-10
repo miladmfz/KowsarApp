@@ -1,6 +1,7 @@
 package com.kits.kowsarapp.application.order;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.activity.order.Order_TableActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.AppPrinter;
 import com.kits.kowsarapp.model.base.Factor;
@@ -37,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -176,7 +179,10 @@ public class Order_PrintChangeTable {
 
                 @Override
                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                    GetHeader_Data("", basketInfo_New);
+                    callMethod.Log(t.getMessage());
+                    callMethod.Log("basketInfo_New");
+                    //GetHeader_Data("");
+                    //GetHeader_Data("", basketInfo_New);
                 }
             });
 
@@ -193,7 +199,19 @@ public class Order_PrintChangeTable {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     printerconter = 0;
-                    AppPrinters = response.body().getAppPrinters();
+                    AppPrinters.clear();
+                    for (AppPrinter appPrinter:response.body().getAppPrinters()) {
+                        if (appPrinter.getPrinterActive().equals("1")){
+                            AppPrinters.add(appPrinter);
+                        }
+                    }
+                    if (AppPrinters.size()>0){
+                        GetRow_Data();
+                    }else{
+                        callMethod.showToast("ثبت بدون پرینت");
+                        dialogProg.dismiss();
+                        DoPrint();
+                    }
                     GetRow_Data();
                 }
             }

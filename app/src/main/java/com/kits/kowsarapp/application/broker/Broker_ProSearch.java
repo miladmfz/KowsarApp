@@ -25,6 +25,7 @@ import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Broker_ProSearch {
 
@@ -63,6 +64,8 @@ public class Broker_ProSearch {
 
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);//title laye nadashte bashim
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+
         dialog.setContentView(R.layout.broker_prosearch_box);
 
         spinner = dialog.findViewById(R.id.b_prosearch_spinner);

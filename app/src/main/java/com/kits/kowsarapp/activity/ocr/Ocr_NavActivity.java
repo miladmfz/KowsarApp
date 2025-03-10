@@ -33,6 +33,8 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
+import java.util.Objects;
+
 
 public class Ocr_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
@@ -67,7 +69,7 @@ public void Config() {
     callMethod = new CallMethod(this);
     ocr_action = new Ocr_Action(this);
     ocr_dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
-    ocr_dbh.DatabaseCreate();
+//    ocr_dbh.DatabaseCreate();
 
     toolbar = findViewById(R.id.ocr_main_a_toolbar);
     setSupportActionBar(toolbar);
@@ -181,6 +183,7 @@ public void Config() {
         btn2.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
             dialog.setContentView(R.layout.ocr_scanner_box);
 
             final EditText tv_scanner = dialog.findViewById(R.id.ocr_scanner_b_tv);

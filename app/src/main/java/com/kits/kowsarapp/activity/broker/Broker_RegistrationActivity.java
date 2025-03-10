@@ -251,7 +251,18 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         binding.bRegisterAKowsarservice.setChecked(callMethod.ReadBoolan("kowsarService"));
         binding.bRegisterAShowdetail.setChecked(callMethod.ReadBoolan("ShowDetail"));
         binding.bRegisterALineview.setChecked(callMethod.ReadBoolan("LineView"));
+        binding.bRegisterACanuseinactive.setChecked(callMethod.ReadBoolan("CanUseInactive"));
 
+
+        binding.bRegisterACanuseinactive.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("CanUseInactive")) {
+                callMethod.EditBoolan("CanUseInactive", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("CanUseInactive", true);
+                callMethod.showToast("بله");
+            }
+        });
 
 
         binding.bRegisterAShowdetail.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -288,8 +299,6 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
                 callMethod.showToast("بله");
             }
         });
-
-
 
 
         binding.bRegisterASelloff.setOnCheckedChangeListener((compoundButton, b) -> {

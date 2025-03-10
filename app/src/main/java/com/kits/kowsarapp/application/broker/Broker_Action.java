@@ -38,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 
 import okhttp3.MediaType;
@@ -86,8 +87,7 @@ public class Broker_Action extends Base_Action {
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Log.e("kowsar - SellPriceType =",good.getGoodFieldValue("SellPriceType"));
-
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         if (callMethod.ReadBoolan("SellPriceTypeDeactive")) {
 
 
@@ -914,13 +914,14 @@ public class Broker_Action extends Base_Action {
 //                cursor = dtb.rawQuery("Select PreFactorCode, PreFactorDate, PreFactorExplain, CustomerRef, BrokerRef, (Select sum(FactorAmount) From PreFactorRow r Where r.PrefactorRef=h.PrefactorCode) As rwCount From PreFactor h Where PreFactorCode = " + factor_code, null);
 //                String pr1 = CursorToJson(cursor);
 //                cursor.close();
-//                Log.e("bklog_reqqqq", pr1);
+ //               callMethod.Log("pr1=" + pr1);
 //                params.put("PFHDQASW", pr1);
 //                cursor = dtb.rawQuery("Select GoodRef, FactorAmount, Price From PreFactorRow Where  GoodRef>0 and  Prefactorref = " + factor_code, null);
 //                String pr2 = CursorToJson(cursor);
 //                cursor.close();
 //
-//                Log.e("bklog_reqqqq", pr2);
+//
+//                  callMethod.Log("pr2=" + pr2);
 //                params.put("PFDTQASW", pr2);
 //                return params;
 //            }
@@ -937,6 +938,7 @@ public class Broker_Action extends Base_Action {
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.broker_pfexplain_card);
         Button pf_detail_btn = dialog.findViewById(R.id.b_pfexplain_c_btn);
         pf_detail_btn.setText("ثبت توضیحات");
@@ -967,6 +969,7 @@ public class Broker_Action extends Base_Action {
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.broker_pfexplain_card);
         Button pf_detail_btn = dialog.findViewById(R.id.b_pfexplain_c_btn);
         final EditText pf_detail_detail = dialog.findViewById(R.id.b_pfexplain_c_detail);
@@ -1017,7 +1020,7 @@ public class Broker_Action extends Base_Action {
 
 
         } catch (JSONException e) {
-            Log.e("CursorToJson", "Error while converting cursor to JSON: " + e.getMessage());
+            callMethod.Log(e.getMessage());
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -1043,7 +1046,7 @@ public class Broker_Action extends Base_Action {
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
-            Log.e("CursorToJson", "Error while converting cursor to JSON: " + e.getMessage());
+            callMethod.Log(e.getMessage());
         } finally {
             if (cursor != null) {
                 cursor.close();

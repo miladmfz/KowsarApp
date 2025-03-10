@@ -68,6 +68,7 @@ public class CallMethod extends Application {
         return shPref.getBoolean("FirstStart", true);
     }
 
+
     public void showToast(String message) {
         if (toast!=null){
             toast.cancel();
@@ -76,7 +77,7 @@ public class CallMethod extends Application {
         toast.show();
     }
     public void Log(String message) {
-        Log.e("KowsarApp",message);
+        Log.e("KowsarApp = ",message);
     }
 
 

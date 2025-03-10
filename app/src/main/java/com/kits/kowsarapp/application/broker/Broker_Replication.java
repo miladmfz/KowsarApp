@@ -162,7 +162,8 @@ public class Broker_Replication {
             LastRepCode = String.valueOf(replicatedetail.getLastRepLogCode());
             UserInfo userInfo = broker_dbh.LoadPersonalInfo();
 
-            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
+//            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
+            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
                     String.valueOf(replicatedetail.getLastRepLogCode()),
                     replicatedetail.getServerTable(),
                     "",
@@ -295,13 +296,12 @@ public class Broker_Replication {
                                                 }
 
                                                 try {
-                                                    Log.e("kowsar_qCol=", repcode + " = " + qCol.toString());
+                                                    callMethod.Log("kowsar_qCol="+repcode + " = " + qCol.toString());
                                                     database.execSQL(qCol.toString());
                                                     LastRepCode = repcode;
                                                 } catch (Exception e) {
-                                                    Log.e("kowsar_qCol=", e.getMessage());
+                                                    callMethod.Log(e.getMessage());
                                                 }
-
 
                                                 d.close();
                                                 break;
@@ -326,8 +326,7 @@ public class Broker_Replication {
                                     database.execSQL("Update ReplicationTable Set LastRepLogCode = " + LastRepCode + " Where ServerTable = '" + replicatedetail.getServerTable() + "' ");
                                     break;
                             }
-                            Log.e("kowsar_1=", RepRowCount+"");
-                            Log.e("kowsar_1=", arrayobject.length()+"");
+
                             if (arrayobject.length() >= RepRowCount) {
                                 RetrofitReplicate(replicatelevel);
                             } else {
@@ -344,8 +343,7 @@ public class Broker_Replication {
                                 }
                             }
                         } catch (Exception ignored) {
-                            Log.e("kowsar_1=", ignored.getMessage());
-                            callMethod.Log("10");
+
                         }
                     }
                 }
@@ -377,7 +375,7 @@ public class Broker_Replication {
 
             String where = replicatedetail.getCondition().replace("BrokerCondition", broker_dbh.ReadConfig("BrokerCode"));
 
-            Log.e("kowsar_LastRepCode",LastRepCode);
+            callMethod.Log("LastRepCode=" + LastRepCode);
             Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
                     LastRepCode,
                     replicatedetail.getServerTable(),
@@ -563,7 +561,7 @@ public class Broker_Replication {
         LastRepCode = cursor.getString(0);
         cursor.close();
 
-        Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
+        Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
                  LastRepCode
                 , RepTable
                 ,""
@@ -611,7 +609,7 @@ public class Broker_Replication {
                                                 qCol = "Delete from KsrImage Where KsrImageCode= " + code;
                                                 try {
                                                     database.execSQL(qCol);
-                                                    Log.e("kowsar_qCol=", qCol);
+                                                    callMethod.Log("qCol=" + qCol);
                                                 } catch (Exception ignored) {
                                                 }
                                                 image_info.DeleteImage(code);
@@ -621,7 +619,7 @@ public class Broker_Replication {
 
                                             try {
                                                 database.execSQL(qCol);
-                                                Log.e("test_qCol=", qCol);
+                                                callMethod.Log("qCol=" + qCol);
                                             } catch (Exception ignored) {
                                             }
                                             d.close();
@@ -636,7 +634,7 @@ public class Broker_Replication {
 
                                             try {
                                                 database.execSQL(qCol);
-                                                Log.e("test_qCol=", qCol);
+                                                callMethod.Log("qCol=" + qCol);
                                             } catch (Exception ignored) {
                                             }
                                             d.close();
@@ -808,7 +806,6 @@ callMethod.Log(""+i);
     @SuppressLint("Range")
     public void SendGpsLocation() {
 
-        Log.e("kowsar", "0");
         locations.clear();
 
         cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCode") + " order by GpsLocationCode limit 20", null);
@@ -824,7 +821,6 @@ callMethod.Log(""+i);
         assert cursor != null;
         String GpsLocationString = CursorToJson(cursor);
         cursor.close();
-        Log.e("kowsar", GpsLocationString);
 
         if (locations.size()>0) {
             Call<RetrofitResponse> call1 = broker_apiInterface.UpdateLocation( "UpdateLocation",GpsLocationString);
@@ -837,7 +833,6 @@ callMethod.Log(""+i);
                         broker_dbh.SaveConfig("LastGpsLocationCode", locations.get(locations.size() - 1).getGpsLocationCode());
 
                         cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCode"), null);
-                        Log.e("kowsar", response.body().toString());
                         if (cursor.getCount() > 1) {
                             cursor.close();
                             SendGpsLocation();
@@ -853,7 +848,7 @@ callMethod.Log(""+i);
                 }
             });
         } else {
-            Log.e("kowsar_Gps", "size = ");
+            callMethod.Log("kowsar_Gps zero size");
         }
     }
 

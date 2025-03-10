@@ -191,8 +191,8 @@ public class Order_SearchActivity extends AppCompatActivity {
                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
-                        textCartItemCount.setText(callMethod.NumberRegion(response.body().getGoods().get(0).getSumFacAmount()));
-                        if (Integer.parseInt(response.body().getGoods().get(0).getSumFacAmount()) > 0) {
+                        textCartItemCount.setText(callMethod.NumberRegion(response.body().getBasketInfos().get(0).getSumFacAmount()));
+                        if (Integer.parseInt(response.body().getBasketInfos().get(0).getSumFacAmount()) > 0) {
                             if (textCartItemCount.getVisibility() != View.VISIBLE) {
                                 textCartItemCount.setVisibility(View.VISIBLE);
                             }

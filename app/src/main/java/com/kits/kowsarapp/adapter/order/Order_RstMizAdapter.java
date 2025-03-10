@@ -540,7 +540,6 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                 builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
 
-                    callMethod.Log(basketInfo.getRstMizName()+"");
 
                     callMethod.EditString("RstMizName", basketInfo.getRstMizName());
                     callMethod.EditString("MizType", basketInfo.getMizType());
@@ -640,7 +639,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                     @Override
                     public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                        Log.e("test", t.getMessage());
+                        callMethod.Log(t.getMessage());
 
                     }
                 });
@@ -1479,7 +1478,6 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 //
 //                    @Override
 //                    public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-//                        Log.e("test", t.getMessage());
 //
 //                    }
 //                });
@@ -1503,7 +1501,8 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
             notificationManager.createNotificationChannel(Channel);
         }
         Intent notificationIntent = new Intent(mContext, Order_TableActivity.class);
-
+        notificationIntent.putExtra("State", "0");
+        notificationIntent.putExtra("EditTable", "0");
         @SuppressLint("UnspecifiedImmutableFlag") PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent,
                 PendingIntent.FLAG_IMMUTABLE);
 

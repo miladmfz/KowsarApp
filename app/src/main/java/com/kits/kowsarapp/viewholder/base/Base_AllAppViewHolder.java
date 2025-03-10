@@ -66,18 +66,26 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
     CallMethod callMethod;
 
     public Call<RetrofitResponse> call;
+    Broker_DBH broker_dbh;
+    Ocr_DBH ocr_dbh;
+    Order_DBH order_dbh;
+    Find_DBH search_dbh;
 
 
     public Base_AllAppViewHolder(View itemView, Context context) {
         super(itemView);
 
         base_dbh = new Base_DBH(context, "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
+        callMethod=new CallMethod(context);
         dialog = new Dialog(context);
         dialog.setContentView(R.layout.broker_spinner_box);
 
         tv_rep = dialog.findViewById(R.id.b_spinner_text);
         tv_step = dialog.findViewById(R.id.b_spinner_step);
         btn_prog = dialog.findViewById(R.id.b_spinner_btn);
+
+
+
 
         tv_persianname = itemView.findViewById(R.id.base_allapp_c_persianname);
         tv_apptype = itemView.findViewById(R.id.base_allapp_c_apptype);
@@ -156,6 +164,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
         btn_login.setOnClickListener(view -> {
 
             if (!new File(activationsss.getDatabaseFilePath()).exists()) {
+
                 DownloadRequest(activationsss,mcontext);
             } else {
                 callMethod.EditString("PersianCompanyNameUse", activationsss.getPersianCompanyName());
@@ -254,45 +263,88 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
 
                     public void onDownloadComplete() {
 
-                        File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
-                        File CompletefILE = new File(activation.getDatabaseFolderPath() + "/KowsarDb.sqlite");
-                        DownloadTemp.renameTo(CompletefILE);
-                        callMethod.EditString("DatabaseName", activation.getDatabaseFilePath());
 
-                        if (activation.getAppType().equals("1")){ // broker
-                            Broker_DBH broker_dbh = new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                            broker_dbh.DatabaseCreate();
-                            broker_dbh.InitialConfigInsert();
-                        }else if (activation.getAppType().equals("2")){ // ocr
-                            Ocr_DBH ocr_dbh = new Ocr_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                            ocr_dbh.DatabaseCreate();
-                        }else if (activation.getAppType().equals("3")){ // order
-                            Order_DBH order_dbh = new Order_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                            order_dbh.DatabaseCreate();
-                        }else if (activation.getAppType().equals("4")){ // search
-                            Find_DBH search_dbh = new Find_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
-                            search_dbh.DatabaseCreate();
+                        File downloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
+                        File completeFile = new File(activation.getDatabaseFolderPath() + "/KowsarDb.sqlite");
+
+// تغییر نام فایل
+                        if (downloadTemp.renameTo(completeFile)) {
+                            callMethod.EditString("DatabaseName", activation.getDatabaseFilePath());
+
+                            broker_dbh = new Broker_DBH(mcontext, callMethod.ReadString("DatabaseName"));
+                            ocr_dbh = new Ocr_DBH(mcontext, callMethod.ReadString("DatabaseName"));
+                            order_dbh = new Order_DBH(mcontext, callMethod.ReadString("DatabaseName"));
+                            search_dbh = new Find_DBH(mcontext, callMethod.ReadString("DatabaseName"));
+
+                            switch (activation.getAppType()) {
+                                case "1":  // broker
+                                    broker_dbh.DatabaseCreate();
+                                    broker_dbh.InitialConfigInsert();
+                                    break;
+                                case "2":  // ocr
+                                    ocr_dbh.DatabaseCreate();
+                                    break;
+                                case "3":  // order
+                                    order_dbh.DatabaseCreate();
+                                    break;
+                                case "4":  // search
+                                    search_dbh.DatabaseCreate();
+                                    break;
+                            }
+
+                            callMethod.EditString("PersianCompanyNameUse", activation.getPersianCompanyName());
+                            callMethod.EditString("EnglishCompanyNameUse", activation.getEnglishCompanyName());
+                            callMethod.EditString("ServerURLUse", activation.getServerURL());
+                            callMethod.EditString("IpConfig", "");
+                            callMethod.EditString("AppType", activation.getAppType());
+                            callMethod.EditString("DbName", activation.getDbName());
+                            callMethod.EditString("ActivationCode", activation.getActivationCode());
+
+                            if (activation.getSecendServerURL() == null || activation.getSecendServerURL().isEmpty()) {
+                                callMethod.EditString("SecendServerURL", activation.getServerURL());
+                            }else{
+                                callMethod.EditString("SecendServerURL", activation.getSecendServerURL());
+                            }
+
+                            Intent intent = new Intent(App.getContext(), Base_SplashActivity.class);
+                            mcontext.startActivity(intent);
+                            ((Activity) mcontext).finish();
+                            dialog.dismiss();
+
+                        } else {
+                            callMethod.Log("Error: Database rename failed!");
                         }
 
 
-                        callMethod.EditString("PersianCompanyNameUse", activation.getPersianCompanyName());
-                        callMethod.EditString("EnglishCompanyNameUse", activation.getEnglishCompanyName());
-                        callMethod.EditString("ServerURLUse", activation.getServerURL());
-                        callMethod.EditString("IpConfig", "");
-                        callMethod.EditString("AppType", activation.getAppType());
-                        callMethod.EditString("DbName", activation.getDbName());
-                        callMethod.EditString("ActivationCode", activation.getActivationCode());
 
-                        if (activation.getSecendServerURL() == null || activation.getSecendServerURL().isEmpty()) {
-                            callMethod.EditString("SecendServerURL", activation.getServerURL());
-                        }else{
-                            callMethod.EditString("SecendServerURL", activation.getSecendServerURL());
-                        }
+//                        File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
+//                        File CompletefILE = new File(activation.getDatabaseFolderPath() + "/KowsarDb.sqlite");
+//                        DownloadTemp.renameTo(CompletefILE);
+//                        callMethod.Log("");
+//                        callMethod.EditString("DatabaseName", activation.getDatabaseFilePath());
+//
+//                        broker_dbh = new Broker_DBH(mcontext, callMethod.ReadString("DatabaseName"));
+//                        ocr_dbh = new Ocr_DBH(mcontext, callMethod.ReadString("DatabaseName"));
+//                        order_dbh = new Order_DBH(mcontext, callMethod.ReadString("DatabaseName"));
+//                        search_dbh = new Find_DBH(mcontext, callMethod.ReadString("DatabaseName"));
+//                        switch (activation.getAppType()) {
+//                            case "1":  // broker
+//                                broker_dbh.DatabaseCreate();
+//                                broker_dbh.InitialConfigInsert();
+//                                break;
+//                            case "2":  // ocr
+//                                ocr_dbh.DatabaseCreate();
+//                                break;
+//                            case "3":  // order
+//                                order_dbh.DatabaseCreate();
+//                                break;
+//                            case "4":  // search
+//                                search_dbh.DatabaseCreate();
+//                                break;
+//                        }
+//
 
-                        Intent intent = new Intent(App.getContext(), Base_SplashActivity.class);
-                        mcontext.startActivity(intent);
-                        ((Activity) mcontext).finish();
-                        dialog.dismiss();
+
                     }
 
 

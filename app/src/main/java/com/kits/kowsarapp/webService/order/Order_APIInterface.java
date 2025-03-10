@@ -164,7 +164,11 @@ public interface Order_APIInterface {
 //    Call<RetrofitResponse> OrderEditInfoExplain(@Body RequestBody requestBody );
 //
 
-
+//    @GET(Order_Url+"OrderGetAppPrinter")
+//    @FormUrlEncoded
+//    Call<RetrofitResponse> OrderGetAppPrinter(
+//            @Query("tag") String tag
+//    );
 
 
 //**********************************************************************************
@@ -173,7 +177,7 @@ public interface Order_APIInterface {
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> OrderGetAppPrinter(
-            @Query("tag") String tag
+            @Field("tag") String tag
     );
 
     @POST("index.php")
