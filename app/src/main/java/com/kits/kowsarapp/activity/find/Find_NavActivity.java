@@ -22,6 +22,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.kits.kowsarapp.BuildConfig;
+import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
@@ -168,8 +169,8 @@ public class Find_NavActivity extends AppCompatActivity implements NavigationVie
         final int id = item.getItemId();
 
         if (id == R.id.aboutus) {
-//            intent = new Intent(this, AboutUsActivity.class);
-//            startActivity(intent);
+            intent = new Intent(this, Base_AboutUsActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_cfg) {
             intent = new Intent(this, Find_ConfigActivity.class);

@@ -172,7 +172,7 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
 
 
         final Dialog dialog = new Dialog(mcontext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);//title laye nadashte bashim
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.broker_imagezoom_card);
         SliderView sliderView = dialog.findViewById(R.id.b_imagezoom_c_view);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
@@ -182,7 +182,7 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
 
         Broker_SliderAdapter adapter = new Broker_SliderAdapter(goods, false, mcontext);
         sliderView.setSliderAdapter(adapter);
-        sliderView.setIndicatorAnimation(IndicatorAnimations.SCALE); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        sliderView.setIndicatorAnimation(IndicatorAnimations.SCALE);
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
         sliderView.setIndicatorSelectedColor(Color.WHITE);

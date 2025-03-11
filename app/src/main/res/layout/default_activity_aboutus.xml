@@ -72,6 +72,25 @@
                 android:textColor="?attr/colorOnBackground"
                 android:layout_marginTop="10dp" />
 
+            <TextView
+                android:id="@+id/tv6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="شماره تماس شرکت : 02191070120"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="?attr/colorOnBackground"
+                android:layout_marginTop="10dp" />
+            <TextView
+                android:id="@+id/tv7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="مدیریت جانبکلو : 09126863070"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnBackground"
+                android:layout_marginTop="10dp" />
+
             <!-- Download Link -->
             <TextView
                 android:id="@+id/tv5"

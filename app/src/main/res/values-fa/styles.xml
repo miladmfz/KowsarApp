@@ -13,6 +13,7 @@
         <item name="colorSurface">#F1F5F9</item> <!-- Soft, even lighter background -->
         <item name="colorOnBackground">#111827</item> <!-- Deep gray for contrast instead of pure black -->
         <item name="android:statusBarColor">#2563EB</item> <!-- Brighter Blue for Status Bar -->
+        <item name="android:fontFamily">@font/shabnamlight</item>
 
     </style>
 
@@ -27,6 +28,7 @@
         <item name="colorSurface">#F1F5F9</item> <!-- Soft, even lighter background -->
         <item name="colorOnBackground">#111827</item> <!-- Deep gray for contrast instead of pure black -->
         <item name="android:statusBarColor">#2563EB</item> <!-- Brighter Blue for Status Bar -->
+        <item name="android:fontFamily">@font/shabnamlight</item>
 
     </style>
 
@@ -50,6 +52,8 @@
         <item name="colorSurface">#E0F2FE</item>
         <item name="colorOnBackground">#000000</item>
         <item name="android:statusBarColor">#172554</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
 
@@ -63,6 +67,8 @@
         <item name="colorSurface">#F0FDFA</item>
         <item name="colorOnBackground">#000000</item>
         <item name="android:statusBarColor">#0F766E</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
 
@@ -75,6 +81,8 @@
         <item name="colorSurface">#FFF7ED</item>
         <item name="colorOnBackground">#000000</item>
         <item name="android:statusBarColor">#C2410C</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
 
@@ -87,6 +95,8 @@
         <item name="colorSurface">#FAF5FF</item>
         <item name="colorOnBackground">#000000</item>
         <item name="android:statusBarColor">#5B21B6</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
 
@@ -100,6 +110,8 @@
         <item name="colorSurface">#1C1C1C</item>
         <item name="colorOnBackground">#FFFFFF</item>
         <item name="android:statusBarColor">#8B6508</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
 
@@ -113,6 +125,8 @@
         <item name="colorSurface">#ECFEFF</item>
         <item name="colorOnBackground">#000000</item>
         <item name="android:statusBarColor">#155E75</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
 
@@ -125,6 +139,8 @@
         <item name="colorSurface">#111827</item>
         <item name="colorOnBackground">#E0E7FF</item>
         <item name="android:statusBarColor">#312E81</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
     <style name="RosewoodEleganceTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -136,6 +152,8 @@
         <item name="colorSurface">#FDF2F8</item>
         <item name="colorOnBackground">#000000</item>
         <item name="android:statusBarColor">#4C0519</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
 
@@ -148,6 +166,8 @@
         <item name="colorSurface">#020617</item>
         <item name="colorOnBackground">#F1F5F9</item>
         <item name="android:statusBarColor">#1E293B</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
     <style name="LemonFreshTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -159,6 +179,8 @@
         <item name="colorSurface">#FEFCE8</item>
         <item name="colorOnBackground">#000000</item>
         <item name="android:statusBarColor">#CA8A04</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
+
     </style>
 
 
@@ -195,6 +217,7 @@
         <item name="colorSurface">#F3E5F5</item>
         <item name="colorOnBackground">#000000</item>
         <item name="android:statusBarColor">#4A148C</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
 
     </style>
 
@@ -211,6 +234,7 @@
 
         <item name="colorSurface">#E8F5E9</item>
         <item name="android:statusBarColor">#004D40</item>
+        <item name="android:fontFamily">@font/shabnamlight</item>
 
     </style>
 

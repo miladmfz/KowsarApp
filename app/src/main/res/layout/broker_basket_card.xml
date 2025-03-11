@@ -15,7 +15,6 @@
         android:background="@drawable/bg_card"
         android:layout_margin="5dp">
 
-
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="0dp"
             android:layout_height="wrap_content"
