@@ -42,7 +42,7 @@
                     android:gravity="center"
                     android:text="@string/tableitem_name"
                     android:layout_margin="3dp"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
+
                     android:textColor="?attr/colorOnBackground" />
 
                 <TextView
@@ -53,7 +53,7 @@
                     android:layout_weight="0.3"
                     android:gravity="center"
                     android:layout_margin="3dp"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
+
                     android:textColor="?attr/colorOnBackground" />
 
 
@@ -75,7 +75,7 @@
                     android:layout_weight="0.8"
                     android:gravity="center"
                     android:layout_margin="3dp"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
+
                     android:textColor="?attr/colorOnBackground" />
 
                 <Button
@@ -113,7 +113,7 @@
                 android:text="@string/tableitem_tableexplain"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:textAppearance="?attr/textAppearanceHeadline6"
+
                 android:textColor="?attr/colorOnBackground" />
             />
 
@@ -126,7 +126,7 @@
                 android:layout_weight="0.3"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textAppearance="?attr/textAppearanceHeadline6"
+
                 android:textColor="?attr/colorOnBackground" />
             />
 
@@ -142,7 +142,7 @@
             android:orientation="horizontal"
             android:paddingTop="5dp"
             android:visibility="visible"
-            android:textAppearance="?attr/textAppearanceHeadline6"
+
             android:textColor="?attr/colorOnBackground"
             >
 
@@ -154,7 +154,7 @@
                 android:text="@string/tableitem_infoexplain"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:textAppearance="?attr/textAppearanceHeadline6"
+
                 android:textColor="?attr/colorOnBackground"/>
 
 
@@ -166,7 +166,7 @@
                 android:layout_weight="0.3"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textAppearance="?attr/textAppearanceHeadline6"
+
                 android:textColor="?attr/colorOnBackground"/>
 
 
@@ -211,7 +211,7 @@
                     android:gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
+
                     android:textColor="?attr/colorOnSecondary"/>
 
 
@@ -292,7 +292,7 @@
                             android:text="@string/tableitem_reserve"
                             android:textStyle="bold"
                             tools:ignore="NestedWeights"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
                         <TextView
@@ -304,7 +304,7 @@
                             android:gravity="center"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -319,7 +319,7 @@
                         android:gravity="center"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceHeadline6"
+
                         android:textColor="?attr/colorOnBackground" />
 
 
@@ -332,7 +332,7 @@
                         android:gravity="center"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textAppearance="?attr/textAppearanceHeadline6"
+
                         android:textColor="?attr/colorOnBackground" />
                 </LinearLayout>
 

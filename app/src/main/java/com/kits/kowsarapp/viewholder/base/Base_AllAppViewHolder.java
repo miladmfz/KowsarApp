@@ -170,6 +170,11 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
                 callMethod.EditString("PersianCompanyNameUse", activationsss.getPersianCompanyName());
                 callMethod.EditString("EnglishCompanyNameUse", activationsss.getEnglishCompanyName());
                 callMethod.EditString("ServerURLUse", activationsss.getServerURL());
+                if (activationsss.getSecendServerURL() == null || activationsss.getSecendServerURL().isEmpty()) {
+                    callMethod.EditString("SecendServerURL", activationsss.getServerURL());
+                }else{
+                    callMethod.EditString("SecendServerURL", activationsss.getSecendServerURL());
+                }
                 callMethod.EditString("DatabaseName", activationsss.getDatabaseFilePath());
                 callMethod.EditString("ActivationCode", activationsss.getActivationCode());
                 callMethod.EditString("AppType", activationsss.getAppType());

@@ -160,9 +160,12 @@
                         android:layout_marginBottom="8dp"
                         app:cornerRadius="12dp"
                         android:textSize="18sp"
-                        android:backgroundTint="@color/green_500"
-                        android:textColor="@color/white"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:background="@drawable/bg_primary"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:layout_margin="5dp"
                         app:icon="@drawable/ic_add_invoice"
+                        app:iconTint="?attr/colorOnPrimary"
                         app:iconGravity="start"
                         app:iconSize="24dp"/>
 
@@ -173,13 +176,22 @@
                         android:layout_height="60dp"
                         android:text="جستجوی کالا"
                         android:layout_marginBottom="8dp"
-                        app:cornerRadius="12dp"
-                        android:textSize="18sp"
-                        android:backgroundTint="@color/blue_500"
-                        android:textColor="@color/white"
+                        app:iconTint="?attr/colorPrimary"
+
+                        app:strokeColor="?attr/colorPrimary"
+                        app:strokeWidth="2dp"
                         app:icon="@drawable/ic_search_product"
+                        app:cornerRadius="12dp"
                         app:iconGravity="start"
-                        app:iconSize="24dp" />
+                        app:iconSize="24dp"
+                        android:layout_margin="3dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="?attr/colorSecondary"
+                        android:textColor="?attr/colorOnSecondary"
+
+                        />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/b_main_a_open_factor"
@@ -187,26 +199,42 @@
                         android:layout_height="60dp"
                         android:text="فاکتورهای باز"
                         android:layout_marginBottom="8dp"
-                        app:cornerRadius="12dp"
-                        android:textSize="18sp"
-                        android:backgroundTint="@color/orange_500"
-                        android:textColor="@color/color_black"
+                        app:strokeColor="?attr/colorPrimary"
+                        app:strokeWidth="2dp"
+                        app:iconTint="?attr/colorPrimary"
+
                         app:icon="@drawable/ic_open_invoices"
+                        app:cornerRadius="12dp"
                         app:iconGravity="start"
-                        app:iconSize="24dp" />
+                        app:iconSize="24dp"
+                        android:layout_margin="3dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="?attr/colorSecondary"
+                        android:textColor="?attr/colorOnSecondary"
+                        />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/b_main_a_all_factor"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:text="همه فاکتورها"
-                        app:cornerRadius="12dp"
-                        android:textSize="18sp"
-                        android:backgroundTint="@color/red_500"
-                        android:textColor="@color/color_black"
+                        app:iconTint="?attr/colorPrimary"
+
+                        app:strokeColor="?attr/colorPrimary"
+                        app:strokeWidth="2dp"
                         app:icon="@drawable/ic_all_invoices"
+                        app:cornerRadius="12dp"
                         app:iconGravity="start"
-                        app:iconSize="24dp" />
+                        app:iconSize="24dp"
+                        android:layout_margin="3dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="?attr/colorSecondary"
+                        android:textColor="?attr/colorOnSecondary"
+                     />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

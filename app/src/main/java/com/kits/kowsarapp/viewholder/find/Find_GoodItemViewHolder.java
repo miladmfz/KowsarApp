@@ -145,20 +145,26 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
                 Button explain_btn = dialog.findViewById(R.id.find_select_c_btn);
                 final TextView goodname_tv = dialog.findViewById(R.id.find_select_c_tv);
-                final EditText selectedfeild_et = dialog.findViewById(R.id.find_select_c_et);
+                final EditText selectedfeild_et1 = dialog.findViewById(R.id.find_select_c_et1);
+                final EditText selectedfeild_et2 = dialog.findViewById(R.id.find_select_c_et2);
+                final EditText selectedfeild_et3 = dialog.findViewById(R.id.find_select_c_et3);
+                final EditText selectedfeild_et4 = dialog.findViewById(R.id.find_select_c_et4);
 
 
                 goodname_tv.setText(good.getGoodFieldValue("GoodName"));
-                selectedfeild_et.setText(good.getGoodFieldValue("SelectedFeild"));
-                selectedfeild_et.selectAll();
+
+                selectedfeild_et1.setText(good.getGoodFieldValue("GoodName"));
+                selectedfeild_et2.setText(good.getGoodFieldValue("MaxSellPrice"));
+                selectedfeild_et3.setText(good.getGoodFieldValue("GoodExplain3"));
+                selectedfeild_et4.setText(good.getGoodFieldValue("SellPrice6"));
 
 
 
                 dialog.show();
-                selectedfeild_et.requestFocus();
-                selectedfeild_et.postDelayed(() -> {
+                selectedfeild_et1.requestFocus();
+                selectedfeild_et1.postDelayed(() -> {
                     InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.showSoftInput(selectedfeild_et, InputMethodManager.SHOW_IMPLICIT);
+                    inputMethodManager.showSoftInput(selectedfeild_et1, InputMethodManager.SHOW_IMPLICIT);
                 }, 500);
 
 
@@ -166,19 +172,38 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
                 explain_btn.setOnClickListener(view -> {
                     find_action.showdialogProg();
-                    String safeInput = selectedfeild_et.getText().toString().replaceAll("[;'\"--#/*]", "");
+                    String GoodName_str = selectedfeild_et1.getText().toString().replaceAll("[;'\"--#/*]", "");
+                    String MaxSellPrice_str = selectedfeild_et2.getText().toString().replaceAll("[;'\"--#/*]", "");
+                    String GoodExplain3_str = selectedfeild_et3.getText().toString().replaceAll("[;'\"--#/*]", "");
+                    String SellPrice6_str = selectedfeild_et4.getText().toString().replaceAll("[;'\"--#/*]", "");
 
 
-                    Call<RetrofitResponse> call2 = find_apiInterface.SetSelectedFeild(
-                            "SetSelectedFeild",
+//
+//                    Call<RetrofitResponse> call2 = find_apiInterface.SetSelectedFeild(
+//                            "SetSelectedFeild",
+//                            good.getGoodFieldValue("GoodCode"),
+//                            NumberFunctions.EnglishNumber(GoodName_str),
+//                            NumberFunctions.EnglishNumber(MaxSellPrice_str),
+//                            NumberFunctions.EnglishNumber(GoodExplain3_str),
+//                            NumberFunctions.EnglishNumber(SellPrice6_str)
+//                    );
+//
+                    Call<RetrofitResponse> call2 = find_apiInterface.SetGoodDetail(
+                            "SetGoodDetail",
                             good.getGoodFieldValue("GoodCode"),
-                            NumberFunctions.EnglishNumber(safeInput)
+                            NumberFunctions.EnglishNumber(GoodName_str),
+                            NumberFunctions.EnglishNumber(MaxSellPrice_str),
+                            NumberFunctions.EnglishNumber(GoodExplain3_str),
+                            NumberFunctions.EnglishNumber(SellPrice6_str)
                     );
 
                     call2.enqueue(new Callback<RetrofitResponse>() {
                         @Override
                         public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                            good.setGoodFieldValue("SelectedFeild",NumberFunctions.EnglishNumber(safeInput));
+                            good.setGoodFieldValue("GoodName",NumberFunctions.EnglishNumber(GoodName_str));
+                            good.setGoodFieldValue("MaxSellPrice",NumberFunctions.EnglishNumber(MaxSellPrice_str));
+                            good.setGoodFieldValue("GoodExplain3",NumberFunctions.EnglishNumber(GoodExplain3_str));
+                            good.setGoodFieldValue("SellPrice6",NumberFunctions.EnglishNumber(SellPrice6_str));
                             if (response.isSuccessful()) {
                                 Find_SearchActivity activity = (Find_SearchActivity) mContext;
                                 activity.refresh();

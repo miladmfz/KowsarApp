@@ -70,6 +70,17 @@ public interface Find_APIInterface {
                                             @Field("SelectedFeild") String SelectedFeild
     );
 
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> SetGoodDetail(@Field("tag") String tag,
+                                         @Field("GoodCode") String GoodCode,
+                                         @Field("GoodName") String GoodName,
+                                         @Field("MaxSellPrice") String MaxSellPrice,
+                                         @Field("GoodExplain3") String GoodExplain3,
+                                         @Field("SellPrice6") String SellPrice6
+    );
+
+
 
 
 }

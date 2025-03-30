@@ -186,9 +186,6 @@ public class Base_SplashActivity extends AppCompatActivity {
         }
 
 
-
-
-
         //region $ BrokerApp
         if (callMethod.ReadBoolan("AutoReplication")) {
             try {

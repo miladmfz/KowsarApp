@@ -37,6 +37,7 @@ import com.kits.kowsarapp.adapter.ocr.Ocr_FactorListApi_Adapter;
 import com.kits.kowsarapp.adapter.ocr.Ocr_StacksAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Factor;
+import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
@@ -326,10 +327,18 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
                 if(response.isSuccessful()) {
                     assert response.body() != null;
-                    for ( Ocr_Good good : response.body().getOcr_Goods()) {
+                    try {
+                        for ( Ocr_Good good : response.body().getOcr_Goods()) {
 
-                        stacks.add(good.getGoodExplain4());
+                            stacks.add(good.getGoodExplain4());
+                        }
+                    }catch (Exception e){
+                        for ( Good good : response.body().getGoods()) {
+
+                            stacks.add(good.getGoodExplain4());
+                        }
                     }
+
 
                     ocr_stacksAdapter=new Ocr_StacksAdapter(Ocr_FactorListApiActivity.this,stacks);
 

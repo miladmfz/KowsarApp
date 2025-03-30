@@ -71,7 +71,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
                             android:text="مبلغ کل"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -82,7 +82,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -101,7 +101,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
                             android:text=" مبلغ دریافتی"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -112,7 +112,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -132,7 +132,6 @@
                             android:gravity="center"
                             android:text=" مبلغ مانده"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -143,7 +142,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -173,7 +172,7 @@
                             android:gravity="center"
                             android:text="@string/buyactivity_rowcount"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -184,7 +183,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -205,7 +204,7 @@
                             android:gravity="center"
                             android:text="@string/buyactivity_totalamount"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -216,7 +215,7 @@
                             android:layout_weight="0.3"
                             android:gravity="center"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
 
@@ -256,7 +255,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
 
-                android:textAppearance="?attr/textAppearanceHeadline6"
+
                 android:textColor="?attr/colorOnBackground"
                 android:paddingBottom="70dp"
 
@@ -289,7 +288,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
 
-                android:textAppearance="?attr/textAppearanceHeadline6"
+
                 android:textColor="?attr/colorOnBackground"
                 />
 
@@ -335,7 +334,7 @@
             android:text="پرداخت"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_weight="1"
             style="@style/Widget.MaterialComponents.Button"
             android:backgroundTint="?attr/colorSecondary"

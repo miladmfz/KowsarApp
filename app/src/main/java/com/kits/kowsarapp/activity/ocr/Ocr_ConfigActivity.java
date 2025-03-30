@@ -151,6 +151,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_sendtimetype = findViewById(R.id.ocr_config_a_sendtimetype);
         sm_printbarcode = findViewById(R.id.ocr_config_a_printbarcode);
         sm_justscanner = findViewById(R.id.ocr_config_a_justscanner);
+        sm_sumamounthint = findViewById(R.id.ocr_config_a_showsumamounthint);
 
 
         ll_spinner_Stack=findViewById(R.id.ocr_config_a_line_stack_spinner);

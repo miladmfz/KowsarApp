@@ -731,7 +731,7 @@
                                     android:layout_margin="3dp"
                                     android:text="Text"
                                     android:textColor="?attr/colorOnBackground"
-                                    android:textAppearance="?attr/textAppearanceHeadline6"
+
                                     android:layout_weight="1"/>
                                 <EditText
                                     android:layout_width="match_parent"

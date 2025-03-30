@@ -98,7 +98,7 @@
                             android:layout_margin="10dp"
                             android:gravity="center"
                             android:text="@string/mainactivity_btn1"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground"/>
 
                     </LinearLayout>
@@ -130,7 +130,7 @@
                             android:layout_margin="10dp"
                             android:gravity="center"
                             android:text="@string/mainactivity_btn2"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground"/>
 
                     </LinearLayout>
@@ -164,7 +164,7 @@
                             android:gravity="center"
                             android:text="@string/mainactivity_btn3"
 
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground"/>
 
                     </LinearLayout>
@@ -197,7 +197,7 @@
                             android:autoSizeTextType="uniform"
 
                             android:text="@string/mainactivity_btn4"
-                            android:textAppearance="?attr/textAppearanceHeadline6"
+
                             android:textColor="?attr/colorOnBackground" />
 
                     </LinearLayout>
