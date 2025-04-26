@@ -1913,7 +1913,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                 "','" + column.getColumnFieldValue("Condition") +
                 "','" + column.getColumnFieldValue("OrderIndex") +
                 "'," + Apptype + "); ";
-        getWritableDatabase().execSQL(query);
+        getWritableDatabase(). execSQL(query);
         getWritableDatabase().close();
     }
 

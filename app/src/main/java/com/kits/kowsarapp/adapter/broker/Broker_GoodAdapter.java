@@ -115,21 +115,21 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                     goods.get(position).setCheck(!goods.get(position).isCheck());
 
                     if (goods.get(position).isCheck()) {
-                        if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                        if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                             Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                             activity.good_select_function(goods.get(position));
                         }
-                        if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                        if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                             Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                             activity.good_select_function(goods.get(position));
                         }
 
                     } else {
-                        if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                        if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                             Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                             activity.good_select_function(goods.get(position));
                         }
-                        if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                        if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                             Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                             activity.good_select_function(goods.get(position));
                         }
@@ -151,21 +151,21 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                         goods.get(position).setCheck(!goods.get(position).isCheck());
 
                         if (goods.get(position).isCheck()) {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                                 Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
 
                         } else {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                                 Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
@@ -193,26 +193,27 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
 
 
             holder.rltv.setOnClickListener(v -> {
+                callMethod.Log("getClass = "+mContext.getClass().getName());
 
                 if (multi_select) {
                     if (goods.get(position).getGoodFieldValue("ActiveStack").equals("1")) {
                         holder.rltv.setChecked(!holder.rltv.isChecked());
                         goods.get(position).setCheck(!goods.get(position).isCheck());
                         if (goods.get(position).isCheck()) {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                                 Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
                         } else {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                                 Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
@@ -235,20 +236,20 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                         holder.rltv.setChecked(!holder.rltv.isChecked());
                         goods.get(position).setCheck(!goods.get(position).isCheck());
                         if (goods.get(position).isCheck()) {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                                 Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
                         } else {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                                 Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
@@ -273,20 +274,20 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                         holder.rltv.setChecked(!holder.rltv.isChecked());
                         goods.get(position).setCheck(!goods.get(position).isCheck());
                         if (goods.get(position).isCheck()) {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                                 Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
                         } else {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_SearchActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                                 Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.Broker_ByDateActivity")) {
+                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
