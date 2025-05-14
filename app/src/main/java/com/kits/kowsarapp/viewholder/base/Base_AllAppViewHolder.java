@@ -5,12 +5,17 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,9 +23,12 @@ import com.downloader.Error;
 import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
+import com.kits.kowsarapp.activity.broker.Broker_ConfigActivity;
+import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Activation;
@@ -36,6 +44,7 @@ import com.kits.kowsarapp.webService.base.Kowsar_APIInterface;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +65,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
     public TextView tv_serverurl;
     public Button btn_login;
     public Button btn_recall;
+    public Button btn_delete;
     Dialog dialog;
     TextView tv_rep;
     TextView tv_step;
@@ -94,6 +104,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
         img = itemView.findViewById(R.id.base_allapp_c_image);
         btn_login = itemView.findViewById(R.id.base_allapp_c_login);
         btn_recall = itemView.findViewById(R.id.base_allapp_c_recall);
+        btn_delete = itemView.findViewById(R.id.base_allapp_c_ِdelet);
 
 
 
@@ -178,6 +189,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
                 callMethod.EditString("DatabaseName", activationsss.getDatabaseFilePath());
                 callMethod.EditString("ActivationCode", activationsss.getActivationCode());
                 callMethod.EditString("AppType", activationsss.getAppType());
+                callMethod.EditString("DbName", activationsss.getDbName());
 
                 Intent intent = new Intent(mcontext, Base_SplashActivity.class);
                 mcontext.startActivity(intent);
@@ -213,15 +225,115 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
             });
         });
 
+
+        btn_delete.setOnClickListener(view -> {
+
+            if (!new File(activationsss.getDatabaseFilePath()).exists()) {
+                base_dbh.DeleteActivation(activationsss);
+                Intent intent = new Intent(mcontext, Base_SplashActivity.class);
+                ((Activity) mcontext).finish();
+                mcontext.startActivity(intent);
+            } else {
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mcontext, R.style.AlertDialogCustom);
+                builder.setTitle(R.string.textvalue_allert);
+                builder.setMessage(" آیا از حذف تمامی اطلاعات"+activationsss.getPersianCompanyName()+" مطمئن هستید؟ ");
+
+                builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
+
+
+
+
+                    final Dialog dialog1 = new Dialog(mcontext);
+                    dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+                    dialog1.setContentView(R.layout.default_loginconfig);
+                    EditText ed_password = dialog1.findViewById(R.id.d_loginconfig_ed);
+                    MaterialButton btn_login = dialog1.findViewById(R.id.d_loginconfig_btn);
+
+
+
+                    ed_password.addTextChangedListener(
+                            new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                }
+
+                                @Override
+                                public void afterTextChanged(final Editable editable) {
+
+                                    if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).length()>5) {
+                                        if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(activationsss.getActivationCode())) {
+
+                                            Deletedb(activationsss,mcontext);
+
+
+                                        } else {
+                                            callMethod.showToast("رمز عبور صیحیح نیست");
+                                        }
+
+                                    }
+                                }
+                            });
+
+                    btn_login.setOnClickListener(v -> {
+
+                        if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(activationsss.getActivationCode())) {
+                            Deletedb(activationsss,mcontext);
+
+                        }else {
+                            callMethod.showToast("رمز عبور صیحیح نیست");
+                        }
+
+
+                    });
+                    dialog1.show();
+
+                });
+
+                builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
+                    // code to handle negative button click
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+
+
+
+    }
+    public void Deletedb(Activation activation,Context mcontext) {
+        base_dbh.DeleteActivation(activation);
+
+        File currentFile = new File(mcontext.getApplicationInfo().dataDir + "/databases/" + activation.getEnglishCompanyName() + "/KowsarDb.sqlite");
+        File newFile = new File(mcontext.getApplicationInfo().dataDir + "/databases/" + activation.getEnglishCompanyName() + "/deleteddb");
+
+        if (rename(currentFile, newFile)) {
+            base_dbh.DeleteActivation(activation);
+            Intent intent = new Intent(mcontext, Base_SplashActivity.class);
+            ((Activity) mcontext).finish();
+            mcontext.startActivity(intent);
+        }
     }
 
+    private boolean rename(File from, File to) {
+        return Objects.requireNonNull(from.getParentFile()).exists() && from.exists() && from.renameTo(to);
+    }
     public void DownloadRequest(Activation activation,Context mcontext) {
 
         btn_prog.setOnClickListener(view -> DownloadRequest(activation,mcontext));
 
 
-        String downloadurl="http://5.160.152.173:60005/api/kits/GetDb?Code="+activation.getActivationCode();
-        //String downloadurl="http://itmali.ir/api/kits/GetDb?Code="+activation.getActivationCode();
+        //String downloadurl="http://5.160.152.173:60005/api/kits/GetDb?Code="+activation.getActivationCode();
+        String downloadurl="http://itmali.ir/webapi/kits/GetDb?Code="+activation.getActivationCode();
 
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)

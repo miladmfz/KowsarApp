@@ -102,7 +102,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                 holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.purple_100));
 
             }
-        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
 
             holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 

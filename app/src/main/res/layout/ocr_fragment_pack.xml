@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     tools:context="fragment.ocr.Ocr_PackFragment">
 
+    <ScrollView
+        android:id="@+id/ocr_pack_scrollView_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ocr_pack_f_layout"
@@ -19,5 +26,6 @@
             android:layout_height="2dp"
             android:background="?attr/colorOnBackground"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
 
 </FrameLayout>

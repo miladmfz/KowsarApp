@@ -34,6 +34,7 @@ import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.model.base.AppPrinter;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.model.ocr.Ocr_SpinnerItem;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
@@ -76,7 +77,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
     EditText ed_titlesize,ed_rowcall,ed_bodysize;
     TextView tv_Deliverer,tv_lastprinter,tv_delay,tv_accesscount,tv_laststack;
 
-    SwitchMaterial sm_showamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext;
+    SwitchMaterial sm_showamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle;
     LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack;
 
     String stackcategory="همه";
@@ -152,6 +153,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_printbarcode = findViewById(R.id.ocr_config_a_printbarcode);
         sm_justscanner = findViewById(R.id.ocr_config_a_justscanner);
         sm_sumamounthint = findViewById(R.id.ocr_config_a_showsumamounthint);
+        sm_listorsingle = findViewById(R.id.ocr_config_a_listorsingle);
 
 
         ll_spinner_Stack=findViewById(R.id.ocr_config_a_line_stack_spinner);
@@ -202,6 +204,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_printbarcode.setChecked(callMethod.ReadBoolan("PrintBarcode"));
         sm_justscanner.setChecked(callMethod.ReadBoolan("JustScanner"));
         sm_sumamounthint.setChecked(callMethod.ReadBoolan("ShowSumAmountHint"));
+        sm_listorsingle.setChecked(callMethod.ReadBoolan("ListOrSingle"));
 
 
         btn_config.setOnClickListener(v -> {
@@ -269,6 +272,16 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             }
         });
 
+        sm_listorsingle.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ListOrSingle")) {
+                callMethod.EditBoolan("ListOrSingle", false);
+                callMethod.showToast("ارسال تکی کالا فعال شد ");
+            } else {
+                callMethod.EditBoolan("ListOrSingle", true);
+                callMethod.showToast("انتخاب لیستی فعال شد");
+            }
+        });
+
 
 
         ArrayAdapter<Ocr_SpinnerItem> spinnerAdapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
@@ -294,14 +307,14 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
 
 //        Call<RetrofitResponse> call =apiInterface.GetStackCategory("GetStackCategory");
-        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
+        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory_new");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 stacks.add("همه");
                 if(response.isSuccessful()) {
                     assert response.body() != null;
-                    for ( Good good : response.body().getGoods()) {
+                    for (Ocr_Good good : response.body().getOcr_Goods()) {
                         stacks.add(good.getGoodExplain4());
                     }
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,

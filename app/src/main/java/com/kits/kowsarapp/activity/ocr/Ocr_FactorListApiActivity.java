@@ -320,7 +320,7 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
     public void init(){
 
-        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
+        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory_new");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -413,7 +413,12 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount-1) {
                             loading = false;
                             PageNo++;
-                            ocr_stacksAdapter.Clear_selectedItems();
+                            try {
+                                ocr_stacksAdapter.Clear_selectedItems();
+
+                            }catch (Exception e){
+                                callMethod.Log(e.getMessage());
+                            }
                             MoreFactor();
                         }
                     }

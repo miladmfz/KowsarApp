@@ -37,12 +37,64 @@
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="8dp"/>
 
+            <!-- Login Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ocr_gooddetail_b_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="تایید کالا"
+                android:layout_margin="3dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textColor="?attr/colorOnPrimary"
+                />
+
+            <!-- Row: شماره قفسه -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ocr_gooddetail_ll_lb6"
+                android:background="@drawable/bg_round"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginBottom="8dp"
+
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/ocr_gooddetail_b_lb6"
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="شماره قفسه"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/ocr_gooddetail_b_tv6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:textSize="20sp"
+                    android:textColor="?attr/colorOnBackground"
+                    android:gravity="center"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
             <!-- Row: شماره قفسه -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="1"
+                android:background="@drawable/bg_round"
+                android:layout_marginBottom="8dp"
+
                 android:paddingBottom="8dp">
 
                 <TextView
@@ -53,13 +105,13 @@
                     android:layout_weight="0.5"
                     android:text="شماره قفسه"
                     android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
 
                 <TextView
                     android:id="@+id/ocr_gooddetail_b_tv5"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:textSize="20sp"

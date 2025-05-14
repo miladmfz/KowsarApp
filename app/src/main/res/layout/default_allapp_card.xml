@@ -166,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="0.5"
-                android:text="ورود"
+                android:text="بارگیری و ورود"
                 android:textColor="@color/white"
                 app:backgroundTint="#4169E1"
                 app:strokeColor="@color/grey_300"
@@ -180,10 +180,23 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="0.5"
-                android:text="دریافت مجدد"
+                android:text="اصلاح تنظیمات"
                 android:layout_marginHorizontal="10dp"
                 android:textColor="@color/white"
                 app:backgroundTint="#B8860B"
+                app:strokeColor="@color/grey_300"
+                app:strokeWidth="1dp" />
+            <Button
+                android:id="@+id/base_allapp_c_ِdelet"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="0.5"
+                android:text="حذف"
+                android:layout_marginHorizontal="10dp"
+                android:textColor="@color/white"
+                app:backgroundTint="#F13131"
                 app:strokeColor="@color/grey_300"
                 app:strokeWidth="1dp" />
 

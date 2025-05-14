@@ -207,6 +207,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
     public void callimage(Good good){
         String imagecode = broker_dbh.GetLastksrImageCode(good.getGoodFieldValue("GoodCode"));
+        callMethod.Log("imagecode = " + imagecode);
 
         if (image_info.Image_exist(imagecode)) {
             String root = Environment.getExternalStorageDirectory().getAbsolutePath();

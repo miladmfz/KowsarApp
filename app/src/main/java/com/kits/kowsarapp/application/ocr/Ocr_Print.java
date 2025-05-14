@@ -635,7 +635,7 @@ public class Ocr_Print {
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
             FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate() +"       "+factorData.getErsall()));
-        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
             FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate() +"       "+factorData.getMandehBedehkar()));
         }else{
             FactorDate.setText(NumberFunctions.PerisanNumber(" تاریخ :   " +factorData.getFactorDate()));

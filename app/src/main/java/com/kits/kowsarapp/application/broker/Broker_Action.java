@@ -26,6 +26,7 @@ import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 
+import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
@@ -59,6 +60,8 @@ public class Broker_Action extends Base_Action {
     Broker_DBH broker_dbh;
     Intent intent;
     Cursor cursor;
+    Cursor cursor2;
+
     Integer il;
     String url;
     Broker_APIInterface broker_apiInterface;
@@ -761,11 +764,11 @@ public class Broker_Action extends Base_Action {
         JsonElement pr1 = broker_cursorToJson_El(cursor);
         cursor.close();
 
-        cursor = dtb.rawQuery("Select GoodRef, FactorAmount, Price From PreFactorRow Where  GoodRef > 0 and  Prefactorref = " + factor_code, null);
-        String pr22 = CursorToJson(cursor);
+        cursor2 = dtb.rawQuery("Select GoodRef, FactorAmount, Price From PreFactorRow Where  GoodRef > 0 and  Prefactorref = " + factor_code, null);
+        String pr22 = CursorToJson(cursor2);
 
-        JsonElement pr2 = broker_cursorToJson_El(cursor);
-        cursor.close();
+        JsonElement pr2 = broker_cursorToJson_El(cursor2);
+        cursor2.close();
 
 
 
@@ -775,69 +778,60 @@ public class Broker_Action extends Base_Action {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonPayload.toString());
 
         //Call<RetrofitResponse> call1 = broker_apiInterface.BrokerOrder(requestBody);
-        Call<RetrofitResponse> call1 = broker_apiInterface.BrokerOrder(
-                "PFQASWED",
+        Call<RetrofitResponse> call1 = broker_apiInterface.BrokerOrderNew(
+                "Broker_InsertFactor",
                 pr11,
                 pr22
         );
+
+//        Call<RetrofitResponse> call1 = broker_apiInterface.BrokerOrder(
+//                "PFQASWED",
+//                pr11,
+//                pr22
+//        );
 
 
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    callMethod.Log(response.body().toString());
 
-                    try {
-                        callMethod.Log("0");
-                        JSONArray object = new JSONArray(response.body().getText());
-                        JSONObject jo = object.getJSONObject(0);
-                        il = object.length();
-                        int code = jo.getInt("GoodCode");
-                        if (code == 0) {
-                            int kowsarcode = jo.getInt("PreFactorCode");
-                            if (kowsarcode > 0) {
-                                String factorDate = jo.getString("PreFactorDate");
-                                broker_dbh.UpdatePreFactor(factor_code, String.valueOf(kowsarcode), factorDate);
-                                callMethod.EditString("PreFactorCode", "0");
-                                lottieok();
-
-
-                            } else {
-                                callMethod.Log("4");
-                                callMethod.showToast("خطا در ارتباط با سرور");
-                            }
-
+                try {
+                    assert response.body() != null;
+                    if (Integer.parseInt(response.body().getFactors().get(0).getGoodCode()) == 0) {
+                        if (Integer.parseInt(response.body().getFactors().get(0).getPreFactorCode()) > 0) {
+                            broker_dbh.UpdatePreFactor(factor_code, response.body().getFactors().get(0).getPreFactorCode(), response.body().getFactors().get(0).getPreFactorDate());
+                            callMethod.EditString("PreFactorCode", "0");
+                            lottieok();
                         } else {
-                            SQLiteDatabase dtb = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
-                            for (int i = 0; i < il; i++) {
-                                jo = object.getJSONObject(i);
-                                code = jo.getInt("GoodCode");
-                                int flag = jo.getInt("Flag");
-                                dtb.execSQL("Update PreFactorRow set Shortage = " + flag + " Where IfNull(PreFactorRef,0)=" + factor_code + " And GoodRef = " + code);
-                                dtb.close();
-                            }
-                            callMethod.showToast("کالاهای مورد نظر کسر موجودی دارند!");
-                            intent = new Intent(mContext, Broker_BasketActivity.class);
-                            intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
-                            ((Activity) mContext).finish();
-                            ((Activity) mContext).overridePendingTransition(0, 0);
-                            mContext.startActivity(intent);
-                            ((Activity) mContext).overridePendingTransition(0, 0);
+                            callMethod.Log("4");
+                            callMethod.showToast("خطا در ارتباط با سرور");
                         }
-                    } catch (JSONException e) {
-                        callMethod.Log("5");
-                        callMethod.Log("error= "+e.getMessage());
-                        callMethod.showToast("بروز خطا در اطلاعات");
+
+                    } else {
+                        SQLiteDatabase dtb = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
+                        for (int i = 0; i < response.body().getFactors().size(); i++) {
+                            dtb.execSQL("Update PreFactorRow set Shortage = " + response.body().getFactors().get(i).getExistFlag() + " Where IfNull(PreFactorRef,0)=" + factor_code + " And GoodRef = " + response.body().getFactors().get(i).getGoodCode());
+                            dtb.close();
+                        }
+                        callMethod.showToast("کالاهای مورد نظر کسر موجودی دارند!");
+                        intent = new Intent(mContext, Broker_BasketActivity.class);
+                        intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
+                        ((Activity) mContext).finish();
+                        ((Activity) mContext).overridePendingTransition(0, 0);
+                        mContext.startActivity(intent);
+                        ((Activity) mContext).overridePendingTransition(0, 0);
                     }
-                } else {
-                    // Handle the error response here
+                }catch (Exception e){
+                    callMethod.Log(e.getMessage());
                 }
+
+
             }
 
             @Override
             public void onFailure(Call<RetrofitResponse> call, Throwable t) {
-                callMethod.Log(t.getMessage());            }
+                callMethod.Log(t.getMessage());
+            }
         });
 
 
@@ -1049,7 +1043,7 @@ public class Broker_Action extends Base_Action {
             callMethod.Log(e.getMessage());
         } finally {
             if (cursor != null) {
-                cursor.close();
+                //cursor.close();
             }
         }
         return resultSet.toString();
@@ -1075,7 +1069,7 @@ public class Broker_Action extends Base_Action {
             jsonArray.put(jsonObject);
             cursor.moveToNext();
         }
-        cursor.close();
+        //cursor.close();
 
         // تبدیل آرایه JSON به رشته JSON
         String jsonString = jsonArray.toString();

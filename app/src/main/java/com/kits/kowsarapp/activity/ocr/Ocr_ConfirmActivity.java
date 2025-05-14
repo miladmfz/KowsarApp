@@ -93,12 +93,20 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
         setContentView(R.layout.ocr_activity_confirm);
 
         Dialog dialog1 = new Dialog(this);
-        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.ocr_spinner_box);
-        TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
-        repw.setText("در حال خواندن اطلاعات");
-        dialog1.show();
+
+        try {
+
+            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+            dialog1.setContentView(R.layout.ocr_spinner_box);
+            TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
+            repw.setText("در حال خواندن اطلاعات");
+            dialog1.show();
+        }catch (Exception e){
+            callMethod.Log(e.getMessage());
+        }
+
+
 
         intent();
         Config();
@@ -205,7 +213,14 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
                                 ocr_goods_scan.clear();
                                 handler.removeCallbacksAndMessages(null);
                                 handler.postDelayed(() -> {
-                                    String barcode = NumberFunctions.EnglishNumber(editable.toString().substring(2, editable.toString().length() - 2).replace("\n", ""));
+                                    String barcode="" ;
+
+                                    try {
+                                        barcode = NumberFunctions.EnglishNumber(editable.toString().substring(2, editable.toString().length() - 2).replace("\n", ""));
+
+                                    }catch (Exception e){
+                                        barcode ="";
+                                    }
 
                                     ed_barcode.selectAll();
 
@@ -237,29 +252,18 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
                     callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
 
                 OrderBy="GoodExplain1";
-
-            } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
-
+            } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
                 OrderBy="FormNo";
-
             }else{
-
                 OrderBy="GoodExplain1";
             }
-
-
         }else{
             if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                     callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
-
                 OrderBy="GoodName";
-
-            } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
-
+            } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
                 OrderBy="FormNo Desc";
-
             }else{
-
                 OrderBy="GoodName";
             }
 
@@ -268,9 +272,9 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
+            call=apiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,OrderBy);
         }else{
-            call=secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
+            call=secendApiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,OrderBy);
         }
 
         call.enqueue(new Callback<RetrofitResponse>() {

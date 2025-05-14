@@ -61,8 +61,57 @@ public class Factor {
     @SerializedName("AppOCRFactorExplain")
     private String AppOCRFactorExplain;
 
+
+    @SerializedName("PreFactorCode")
+    private String PreFactorCode;
+    @SerializedName("PreFactorDate")
+    private String PreFactorDate;
+    @SerializedName("ExistFlag")
+    private String ExistFlag;
+    @SerializedName("GoodCode")
+    private String GoodCode;
+
+
+    public String getPreFactorCode() {
+        return PreFactorCode;
+    }
+
+    public void setPreFactorCode(String preFactorCode) {
+        PreFactorCode = preFactorCode;
+    }
+
+    public String getPreFactorDate() {
+        return PreFactorDate;
+    }
+
+    public void setPreFactorDate(String preFactorDate) {
+        PreFactorDate = preFactorDate;
+    }
+
+    public String getExistFlag() {
+        return ExistFlag;
+    }
+
+    public void setExistFlag(String existFlag) {
+        ExistFlag = existFlag;
+    }
+
+    public String getGoodCode() {
+        return GoodCode;
+    }
+
+    public void setGoodCode(String goodCode) {
+        GoodCode = goodCode;
+    }
+
     public String getAppOCRFactorExplain() {
-        return AppOCRFactorExplain;
+        if (AppOCRFactorExplain != null)
+        {
+            return AppOCRFactorExplain;
+        }else {
+            return "";
+        }
+
     }
 
     public void setAppOCRFactorExplain(String appOCRFactorExplain) {
@@ -697,7 +746,7 @@ public class Factor {
     public String getSumPrice() {
         if (SumPrice != null)
         {
-            return SumPrice;
+            return  SumPrice.substring(0,SumPrice.indexOf("."));
         }else {
             return "";
         }

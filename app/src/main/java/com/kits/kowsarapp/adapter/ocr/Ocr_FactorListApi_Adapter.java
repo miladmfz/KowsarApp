@@ -72,15 +72,13 @@ public class Ocr_FactorListApi_Adapter extends RecyclerView.Adapter<Ocr_FactorLi
 
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
-
             if (factors.get(position).getDbname().equals(callMethod.ReadString("DbName"))){
                 holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-
             }else {
                 holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.purple_100));
-
             }
-        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
 
             holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 

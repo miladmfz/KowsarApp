@@ -36,6 +36,10 @@ public class PreFactor {
     private String LastFactor;
 
 
+    @SerializedName("GoodCode")
+    private String GoodCode;
+    @SerializedName("ExistFlag")
+    private String ExistFlag;
 
 
     //region $ getter setter

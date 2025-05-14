@@ -421,14 +421,14 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                     call3=apiInterface.OcrControlled(
-                            "OcrControlled",
+                            "OcrControlled_new",
                             factor.getAppOCRFactorCode(),
                             "3",
                             callMethod.ReadString("JobPersonRef")
                     );
                 }else{
                     call3=secendApiInterface.OcrControlled(
-                            "OcrControlled",
+                            "OcrControlled_new",
                             factor.getAppOCRFactorCode(),
                             "3",
                             callMethod.ReadString("JobPersonRef")
@@ -468,7 +468,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         Call<RetrofitResponse> call2;
                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                             call2=apiInterface.SetPackDetail(
-                                    "SetPackDetail",
+                                    "SetPackDetail_new",
                                     factor.getAppOCRFactorCode(),
                                     reader_s,
                                     coltrol_s,
@@ -479,7 +479,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                             );
                         }else{
                             call2=secendApiInterface.SetPackDetail(
-                                    "SetPackDetail",
+                                    "SetPackDetail_new",
                                     factor.getAppOCRFactorCode(),
                                     reader_s,
                                     coltrol_s,
@@ -586,7 +586,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     }
 
 
-    public void good_detail(String GoodCode) {
+    public void good_detail(Ocr_Good singleGood,String BarcodeScan) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
@@ -597,6 +597,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         TextView tv_good_3 = dialog.findViewById(R.id.ocr_gooddetail_b_tv3);
         TextView tv_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_tv4);
         TextView tv_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_tv5);
+        TextView tv_good_6 = dialog.findViewById(R.id.ocr_gooddetail_b_tv6);
 
 
         TextView lb_good_1 = dialog.findViewById(R.id.ocr_gooddetail_b_lb1);
@@ -604,10 +605,13 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         TextView lb_good_3 = dialog.findViewById(R.id.ocr_gooddetail_b_lb3);
         TextView lb_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_lb4);
         TextView lb_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_lb5);
+        TextView lb_good_6 = dialog.findViewById(R.id.ocr_gooddetail_b_lb6);
 
-
+        LinearLayoutCompat ll_good_6= dialog.findViewById(R.id.ocr_gooddetail_ll_lb6);
 
         LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.ocr_gooddetail_ll1_tv1);
+
+        MaterialButton btn_confirm = dialog.findViewById(R.id.ocr_gooddetail_b_btn);
 
 
         Call<RetrofitResponse> call;
@@ -617,11 +621,11 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 //            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
 //        }
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
+            call=apiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
         }else{
-            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
+            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
         }
-        callMethod.Log(GoodCode);
+        callMethod.Log(singleGood.getGoodCode());
         call.enqueue(new Callback<RetrofitResponse>() {
 
             @Override
@@ -638,7 +642,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                     if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                             callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
 
-                        if (callMethod.ReadString("sds").equals("PakhshQOQNOOS")){
+                        if (callMethod.ReadString("FactorDbName").equals("PakhshQOQNOOS")){
 
                             lb_good_1.setText("موجودی کل");
                             lb_good_2.setText("قطع");
@@ -647,7 +651,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                             lb_good_5.setText("شماره قفسه");
 
 
-                        }else if (callMethod.ReadString("sds").equals("Afarinegan")){
+                        }else if (callMethod.ReadString("FactorDbName").equals("Afarinegan")){
 
                             lb_good_1.setText("موجودی کل");
                             lb_good_2.setText("قطع");
@@ -665,22 +669,28 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
                         tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getPageNo()));
                         tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodExplain2()));
+                        ll_good_6.setVisibility(View.GONE);
 
 
-
-                    } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+                    } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
                         lb_good_1.setText("موجودی کل");
                         lb_good_2.setText("قطع");
                         lb_good_3.setText("نوع جلد");
                         lb_good_4.setText("پشت جلد");
                         lb_good_5.setText("شماره قفسه");
+                        lb_good_6.setText("نیاز فاکتور");
+
+                        tv_good_6.setText(NumberFunctions.PerisanNumber(singleGood.getFacAmount()));
 
                         tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
                         tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
                         tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
+                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodMaxSellPrice()));
                         tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
 
                     }else{
+                        ll_good_6.setVisibility(View.GONE);
+
                         lb_good_1.setText("موجودی کل");
                         lb_good_2.setText("قطع");
                         lb_good_3.setText("نوع جلد");
@@ -707,9 +717,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         Call<RetrofitResponse> call2;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2=apiInterface.GetImage("getImage", GoodCode, 0, 400);
+            call2=apiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 400);
         }else{
-            call2=secendApiInterface.GetImage("getImage", GoodCode, 0, 400);
+            call2=secendApiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 400);
         }
 
         call2.enqueue(new Callback<RetrofitResponse>() {
@@ -734,8 +744,81 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             }
         });
 
+
+        if (callMethod.ReadBoolan("ListOrSingle") || BarcodeScan.equals("")) {
+
+            btn_confirm.setVisibility(View.GONE);
+        }else{
+            btn_confirm.setVisibility(View.VISIBLE);
+            btn_confirm.setOnClickListener(v -> {
+
+
+                Call<RetrofitResponse> call1;
+                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
+                    call1 = apiInterface.OcrControlled(
+                            "OcrControlled_new",
+                            singleGood.getAppOCRFactorRowCode(),
+                            "0",
+                            callMethod.ReadString("JobPersonRef")
+                    );
+                } else {
+                    call1 = secendApiInterface.OcrControlled(
+                            "OcrControlled_new",
+                            singleGood.getAppOCRFactorRowCode(),
+                            "0",
+                            callMethod.ReadString("JobPersonRef")
+                    );
+                }
+
+
+                callMethod.Log("call=" + call1.request().url());
+                callMethod.Log("call=" + call1.request().toString());
+
+
+                call1.enqueue(new Callback<RetrofitResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                        if (response.isSuccessful()) {
+                            callMethod.Log("step 2");
+
+                            assert response.body() != null;
+                            Intent intent = new Intent(mContext, Ocr_ConfirmActivity.class);
+                            intent.putExtra("ScanResponse", BarcodeScan);
+                            intent.putExtra("State", "0");
+                            intent.putExtra("FactorImage", "");
+                            mContext.startActivity(intent);
+                            ((Activity) mContext).finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
+
+                        callMethod.Log(t.getMessage());
+
+                    }
+                });
+
+
+            });
+        }
+
+
         dialog.show();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void GoodScanDetail(ArrayList<Ocr_Good> goodspass, String state, String barcodescan) {
 
@@ -820,9 +903,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
                                         Call<RetrofitResponse> call;
                                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                            call=apiInterface.CheckState("OcrControlled_new", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
                                         }else{
-                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                            call=secendApiInterface.CheckState("OcrControlled_new", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
                                         }
 
                                         call.enqueue(new Callback<RetrofitResponse>() {
@@ -848,9 +931,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
                                         Call<RetrofitResponse> call;
                                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                            call=apiInterface.CheckState("OcrControlled_new", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
                                         }else{
-                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                            call=secendApiInterface.CheckState("OcrControlled_new", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
                                         }
                                         call.enqueue(new Callback<RetrofitResponse>() {
                                             @Override
@@ -1142,7 +1225,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             dialogProg();
             tv_rep.setText("در حال ارسال اطلاعات");
             Call<RetrofitResponse> call = apiInterface.SetStackLocation(
-                    "SetStackLocation",
+                    "SetStackLocation_new",
                     ocr_good.getGoodCode(),
                     NumberFunctions.EnglishNumber(safeInput)
             );

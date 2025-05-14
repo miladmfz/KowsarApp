@@ -126,6 +126,7 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("AutoSend", true);
             callMethod.EditBoolan("PrintBarcode", true);
             callMethod.EditBoolan("JustScanner", true);
+            callMethod.EditBoolan("ListOrSingle", true);
 
 
             //endregion

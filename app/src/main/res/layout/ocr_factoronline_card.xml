@@ -10,16 +10,22 @@
     android:clickable="true"
     android:focusable="true"
     android:checkable="true"
-    android:layoutDirection="rtl">
 
+    android:layoutDirection="rtl">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@drawable/bg_card"
-        android:id="@+id/ocr_factoronline_c_ll_main"
+        >
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/ocr_factoronline_c_ll_main"
+        android:layout_margin="3dp"
         android:layout_weight="1">
 
 
@@ -326,6 +332,6 @@
             android:background="@color/colorPrimary" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </com.google.android.material.card.MaterialCardView>

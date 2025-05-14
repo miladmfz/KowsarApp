@@ -130,7 +130,14 @@ public class Ocr_Good implements Serializable {
     }
 
     public String getFormNo() {
-        return FormNo;
+        if (FormNo != null)
+        {
+            return  FormNo;
+        }else {
+            return "";
+        }
+
+
     }
 
     public void setFormNo(String formNo) {
@@ -322,7 +329,14 @@ public class Ocr_Good implements Serializable {
     }
 
     public String getGoodMaxSellPrice() {
-        return GoodMaxSellPrice;
+        if (GoodMaxSellPrice != null)
+        {
+            return  GoodMaxSellPrice.substring(0,GoodMaxSellPrice.indexOf("."));
+        }else {
+            return "";
+        }
+
+
     }
 
     public void setGoodMaxSellPrice(String goodMaxSellPrice) {
@@ -354,7 +368,12 @@ public class Ocr_Good implements Serializable {
     }
 
     public String getFacAmount() {
-        return FacAmount;
+        if (FacAmount != null)
+        {
+            return  FacAmount.substring(0,FacAmount.indexOf("."));
+        }else {
+            return "";
+        }
     }
 
     public void setFacAmount(String facAmount) {

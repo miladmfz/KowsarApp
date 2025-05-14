@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -75,6 +77,7 @@ public class Ocr_PackFragment extends Fragment{
     ArrayList<Ocr_Good> ocr_goods= new ArrayList<>();
 
 
+    ScrollView scrollView_main ;
 
     LinearLayoutCompat ll_main;
     LinearLayoutCompat ll_title;
@@ -105,6 +108,7 @@ public class Ocr_PackFragment extends Fragment{
     Integer lastCunter = 0;
     Integer width = 1;
     Integer firsttry = 0;
+    Integer conter_confirm = 0;
 
 
     @Override
@@ -112,6 +116,8 @@ public class Ocr_PackFragment extends Fragment{
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ocr_fragment_pack, container, false);
         ll_main = view.findViewById(R.id.ocr_pack_f_layout);
+        scrollView_main= view.findViewById(R.id.ocr_pack_scrollView_main);
+
         return view;
     }
 
@@ -236,6 +242,58 @@ public class Ocr_PackFragment extends Fragment{
         ll_main.addView(ll_send_confirm);
         ConfirmCount_Pack();
 
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+            for (int i = 0; i < ll_good_body_detail.getChildCount(); i++) {
+                View child = ll_good_body_detail.getChildAt(i);
+
+                if (child instanceof LinearLayoutCompat) {
+                    LinearLayoutCompat ll_row = (LinearLayoutCompat) child;
+
+                    if (ll_row.getChildCount() > 0) {
+                        View firstChild = ll_row.getChildAt(0);
+
+                        if (firstChild instanceof LinearLayoutCompat) {
+                            LinearLayoutCompat ll_details = (LinearLayoutCompat) firstChild;
+
+                            if (ll_details.getChildCount() > 0) {
+                                View secondChild = ll_details.getChildAt(0);
+
+                                if (secondChild instanceof LinearLayoutCompat) {
+                                    LinearLayoutCompat ll_radif_check = (LinearLayoutCompat) secondChild;
+
+                                    for (int j = 0; j < ll_radif_check.getChildCount(); j++) {
+                                        View checkView = ll_radif_check.getChildAt(j);
+
+                                        if (checkView instanceof MaterialCheckBox) {
+                                            MaterialCheckBox cb = (MaterialCheckBox) checkView;
+
+                                            if (!cb.isChecked()) {
+
+                                                cb.requestFocus();
+
+                                                scrollView_main.post(() -> {
+                                                    cb.getParent().requestChildFocus(cb, cb);
+                                                });
+
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            callMethod.Log("No unchecked checkbox found.");
+        }, 1000);
+
+
+
+
+
         btn_shortage.setOnClickListener(v -> CreateView_shortage());
 
         btn_send.setOnClickListener(v -> action.Pack_detail(factor));
@@ -245,21 +303,21 @@ public class Ocr_PackFragment extends Fragment{
         btn_confirm.setOnClickListener(v -> {
 
             int b = Array_GoodCodesCheck.size();
-            final int[] conter = {0};
+            conter_confirm = 0;
 
             for (String goodchecks : Array_GoodCodesCheck) {
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                     call=apiInterface.OcrControlled(
-                            "OcrControlled",
+                            "OcrControlled_new",
                             goodchecks,
                             "2",
                             callMethod.ReadString("JobPersonRef")
                     );
                 }else{
                     call=secendApiInterface.OcrControlled(
-                            "OcrControlled",
+                            "OcrControlled_new",
                             goodchecks,
                             "2",
                             callMethod.ReadString("JobPersonRef")
@@ -270,8 +328,8 @@ public class Ocr_PackFragment extends Fragment{
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
-                            conter[0] = conter[0] + 1;
-                            if (conter[0] == b) {
+                            conter_confirm = conter_confirm + 1;
+                            if (conter_confirm == b) {
                                 intent = new Intent(requireActivity(), Ocr_ConfirmActivity.class);
 
                                 intent.putExtra("ScanResponse", BarcodeScan);
@@ -413,7 +471,7 @@ public class Ocr_PackFragment extends Fragment{
             }
 
 
-        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
 
             callMethod.Log("Gostaresh");
 
@@ -459,7 +517,7 @@ public class Ocr_PackFragment extends Fragment{
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view((ocr_goods.get(correct_row).getGoodCode())));
+        tv_goodname.setOnClickListener(v -> image_zome_view((ocr_goods.get(correct_row))));
 
 
         return ll_factor_row;
@@ -703,7 +761,7 @@ public class Ocr_PackFragment extends Fragment{
 
 
 
-        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("Ocr Gostaresh")){
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
             if (contergood%2==0){
                 ll_details.setBackgroundColor(requireActivity().getColor(R.color.grey_200));
             }
@@ -753,7 +811,7 @@ public class Ocr_PackFragment extends Fragment{
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view((ocr_goods.get(correct_row).getGoodCode())));
+        tv_goodname.setOnClickListener(v -> image_zome_view((ocr_goods.get(correct_row))));
 
         arraygood_shortage.clear();
         et_amountshortage.addTextChangedListener(new TextWatcher() {
@@ -977,9 +1035,9 @@ public class Ocr_PackFragment extends Fragment{
     }
 
 
-    public void image_zome_view(String GoodCode) {
+    public void image_zome_view(Ocr_Good Single_good) {
 
-        action.good_detail(GoodCode);
+        action.good_detail(Single_good,"");
 
     }
 

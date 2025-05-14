@@ -112,6 +112,16 @@ public interface Broker_APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
+    Call<RetrofitResponse> BrokerOrderNew(
+            @Field("tag") String tag
+            , @Field("Factor_Header") String Factor_Header
+            , @Field("Factor_Rows") String Factor_Rows
+
+    );
+
+
+    @POST("index.php")
+    @FormUrlEncoded
     Call<RetrofitResponse> BrokerOrder(
             @Field("tag") String tag
             , @Field("PFHDQASW") String PFHDQASW

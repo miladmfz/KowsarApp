@@ -113,6 +113,12 @@ public class Base_DBH extends SQLiteOpenHelper {
         return activations;
     }
 
+
+    public void DeleteActivation(@NotNull Activation activation) {
+        getWritableDatabase().execSQL("Delete from Activation Where ActivationCode= '" + activation.getActivationCode() + "'");
+
+    }
+
     public void InsertActivation(@NotNull Activation activation) {
 
         query = "select * from Activation Where ActivationCode= '" + activation.getActivationCode() + "'";
