@@ -502,7 +502,7 @@ public class Ocr_CollectFragment extends Fragment {
                                             if(response.isSuccessful()) {
                                                 ocr_action.checkSumAmount(factor);
                                                 if (response.body().getText().equals("HasNotDoubleCheck")){
-                                                    ocr_action.Pack_detail(factor);
+                                                    ocr_action.Pack_detail(factor,"0");
 
                                                 }else if (response.body().getText().equals("HasDoubleCheck")){
                                                     ocr_print.Printing(factor,ocr_goods_visible,"0","0");

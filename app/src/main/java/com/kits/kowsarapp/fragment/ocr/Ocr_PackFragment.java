@@ -296,7 +296,7 @@ public class Ocr_PackFragment extends Fragment{
 
         btn_shortage.setOnClickListener(v -> CreateView_shortage());
 
-        btn_send.setOnClickListener(v -> action.Pack_detail(factor));
+        btn_send.setOnClickListener(v -> action.Pack_detail(factor,"1"));
         btn_print.setOnClickListener(v -> print.Printing(factor,empty_goods_visible,"0","0"));
 
 
