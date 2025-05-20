@@ -316,6 +316,7 @@ public class Ocr_CollectFragment extends Fragment {
 
 
         }
+
         try{
             factor.getAppOCRFactorExplain();
         }catch (Exception e){
@@ -469,6 +470,8 @@ public class Ocr_CollectFragment extends Fragment {
             btncheckamount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    callMethod.Log("factor.getSumAmount() = "+factor.getSumAmount());
+
                     if (NumberFunctions.EnglishNumber(edamount.getText().toString()).equals(factor.getSumAmount())) {
 
 
@@ -738,6 +741,7 @@ public class Ocr_CollectFragment extends Fragment {
         btn_shortage.setBackgroundResource(R.color.orange_500);
         btn_print.setBackgroundResource(R.color.blue_500);
     }
+
     public void setTextColor(){
         tv_company.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_appocrfactorexplain.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
@@ -773,10 +777,6 @@ public class Ocr_CollectFragment extends Fragment {
         btn_shortage.setPadding(0, 0, 30, 20);
         btn_print.setPadding(0, 0, 30, 20);
     }
-
-
-
-
 
 
     @SuppressLint("RtlHardcoded")
@@ -838,6 +838,7 @@ public class Ocr_CollectFragment extends Fragment {
         tv_amount.setGravity(Gravity.CENTER);
         tv_price.setGravity(Gravity.CENTER);
 
+
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))-10);
         tv_goodname.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
         tv_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))+3);
@@ -860,13 +861,9 @@ public class Ocr_CollectFragment extends Fragment {
 
 
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
-
-
             tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getFormNo()));
         }else{
-
             tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
-
         }
 
         tv_gap.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
@@ -888,7 +885,6 @@ public class Ocr_CollectFragment extends Fragment {
             }
 
         }
-
 
         ll_radif_check.addView(tv_gap);
         ll_radif_check.addView(checkBox);
@@ -982,29 +978,8 @@ public class Ocr_CollectFragment extends Fragment {
         });
         
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
-            if (callMethod.ReadBoolan("ListOrSingle")){
-                if(isChecked){
-                    ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
-                    if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
-                        Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
-                    }
-                }else {
-                    ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
-                    Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
-                }
-            }else{
-
-                if (Array_GoodCodesCheck.size()>0){
-                    if(isChecked){
-                        checkBox.setChecked(false);
-                        callMethod.showToast("چند انتخابی غیر فعال است");
-                    }else {
-                        ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
-                        Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
-
-                    }
-                }else{
+            if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
+                if (callMethod.ReadBoolan("ListOrSingle")){  // list true
                     if(isChecked){
                         ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
                         if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
@@ -1013,15 +988,35 @@ public class Ocr_CollectFragment extends Fragment {
                     }else {
                         ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
                         Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                    }
+                }else{
 
+                    if (Array_GoodCodesCheck.size()>0){
+                        if(isChecked){
+                            checkBox.setChecked(false);
+                            callMethod.showToast("چند انتخابی غیر فعال است");
+                        }else {
+                            ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
+                            Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                        }
+                    }else{
+                        if(isChecked){
+
+                            ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
+                            image_zome_view(ocr_goods_visible.get(correct_row));
+                            if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
+                                Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                            }
+                        }else {
+                            ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
+                            Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+
+                        }
                     }
                 }
-
-
-
+            } else {
+                callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
             }
-
-
 
 
         });

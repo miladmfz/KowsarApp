@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.work.Constraints;
@@ -15,6 +16,7 @@ import androidx.work.WorkManager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -29,6 +31,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
+import com.kits.kowsarapp.application.base.LocationService;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
@@ -126,8 +129,17 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     public void GpslocationCall() {
 
         if (callMethod.ReadBoolan("kowsarService")) {
-            AlarmReceiver alarm = new AlarmReceiver();
-            alarm.setAlarm(App.getContext());
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                // Android 8.0 یا بالاتر
+                ContextCompat.startForegroundService(this, new Intent(this, LocationService.class));
+            } else {
+                this.startService(new Intent(this, LocationService.class));
+            }
+
+//
+//            AlarmReceiver alarm = new AlarmReceiver();
+//            alarm.setAlarm(App.getContext());
         }
     }
 

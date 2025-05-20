@@ -663,8 +663,12 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
         MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
 
+        callMethod.Log("factor.getSumAmount()"+ factor.getSumAmount());
+
 
         btncheckamount.setOnClickListener(v -> {
+            callMethod.Log("factor.getSumAmount()"+ factor.getSumAmount());
+
             if (NumberFunctions.EnglishNumber(edamount.getText().toString()).equals(factor.getSumAmount())) {
                 Pack_detail(factor,"1");
             }else {
@@ -776,7 +780,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
                         tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
                         tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
-                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodMaxSellPrice()));
+                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getMaxSellPrice()));
                         tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
 
                     }else{

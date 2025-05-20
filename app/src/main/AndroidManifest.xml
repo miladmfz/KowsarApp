@@ -34,7 +34,6 @@
         tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-
     <application
         android:name=".application.base.App"
         android:icon="@drawable/img_logo_kits_jpg"
@@ -44,11 +43,10 @@
         android:roundIcon="@drawable/img_logo_kits_jpg"
         android:supportsRtl="true"
         android:theme="@style/GrayDefault"
-        tools:ignore="AllowBackup"
-        >
-
-
-
+        tools:ignore="AllowBackup">
+        <activity
+            android:name=".activity.ocr.Ocr_MergingActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.broker.Broker_AllGrpActivity"
             android:configChanges="orientation|screenSize"
@@ -59,7 +57,8 @@
         <activity android:name=".activity.broker.Broker_ConfigActivity" />
         <activity android:name=".activity.broker.Broker_CustomerActivity" />
         <activity android:name=".activity.broker.Broker_DetailActivity" />
-        <activity android:name=".activity.broker.Broker_NavActivity"
+        <activity
+            android:name=".activity.broker.Broker_NavActivity"
             tools:ignore="DuplicateActivity" />
         <activity android:name=".activity.broker.Broker_PFActivity" />
         <activity android:name=".activity.broker.Broker_PFOpenActivity" />
@@ -67,18 +66,11 @@
         <activity android:name=".activity.broker.Broker_RegistrationActivity" />
         <activity android:name=".activity.broker.Broker_ScanCodeActivity" />
         <activity android:name=".activity.broker.Broker_SearchActivity" />
-
-
-
-
         <activity android:name=".activity.order.Order_NavActivity" />
         <activity android:name=".activity.order.Order_BasketActivity" />
         <activity android:name=".activity.order.Order_RegistrationActivity" />
         <activity android:name=".activity.order.Order_TableActivity" />
         <activity android:name=".activity.order.Order_SearchActivity" />
-
-
-
         <activity android:name=".activity.ocr.Ocr_ConfigActivity" />
         <activity android:name=".activity.ocr.Ocr_ConfirmActivity" />
         <activity android:name=".activity.ocr.Ocr_FactorDetailActivity" />
@@ -87,17 +79,11 @@
         <activity android:name=".activity.ocr.Ocr_NavActivity" />
         <activity android:name=".activity.ocr.Ocr_PaintActivity" />
         <activity android:name=".activity.ocr.Ocr_ScanCodeActivity" />
-
-
         <activity android:name=".activity.find.Find_SearchActivity" />
         <activity android:name=".activity.find.Find_RegistrationActivity" />
         <activity android:name=".activity.find.Find_ConfigActivity" />
         <activity android:name=".activity.find.Find_NavActivity" />
         <activity android:name=".activity.find.Find_ScanCodeActivity" />
-
-
-
-
         <activity android:name=".activity.base.Base_AboutUsActivity" />
         <activity android:name=".activity.base.Base_ChoiceDBActivity" />
         <activity
@@ -110,13 +96,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
-
-
-
-
 
         <service
             android:name=".application.base.LocationService"

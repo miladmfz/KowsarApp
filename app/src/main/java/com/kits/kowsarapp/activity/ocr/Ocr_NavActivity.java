@@ -238,7 +238,20 @@ public void Config() {
         btn1.setText("فاکتور های جدید انبار");
         btn2.setText("فاکتور های ارسال نشده");
 
-        btn3.setVisibility(View.GONE);
+        if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
+                callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+            btn3.setText("لیست کسری فاکتور ها");
+
+
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
+            btn3.setText("لیست کسری فاکتور ها");
+
+
+        }else{
+            btn3.setVisibility(View.GONE);
+
+        }
+
 
         btn1.setOnClickListener(view -> {
             intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
@@ -246,8 +259,16 @@ public void Config() {
             startActivity(intent);
 
         });
+
         btn2.setOnClickListener(view -> {
             intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent.putExtra("State", "4");
+            startActivity(intent);
+
+        });
+
+        btn3.setOnClickListener(view -> {
+            intent = new Intent(Ocr_NavActivity.this, Ocr_MergingActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 

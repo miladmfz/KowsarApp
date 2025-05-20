@@ -746,7 +746,11 @@ public class Factor {
     public String getSumPrice() {
         if (SumPrice != null)
         {
-            return  SumPrice.substring(0,SumPrice.indexOf("."));
+            try {
+                return  SumPrice.substring(0,SumPrice.indexOf("."));
+            }catch (Exception e){
+                return  SumPrice;
+            }
         }else {
             return "";
         }
@@ -759,7 +763,12 @@ public class Factor {
     public String getNewSumPrice() {
         if (NewSumPrice != null)
         {
-            return NewSumPrice;
+            try {
+                return  NewSumPrice.substring(0,NewSumPrice.indexOf("."));
+            }catch (Exception e){
+                return  NewSumPrice;
+            }
+
         }else {
             return "";
         }
@@ -770,9 +779,15 @@ public class Factor {
     }
 
     public String getSumAmount() {
+
         if (SumAmount != null)
         {
-            return SumAmount;
+            try {
+                return  SumAmount.substring(0,SumAmount.indexOf("."));
+            }catch (Exception e){
+                return  SumAmount;
+            }
+
         }else {
             return "";
         }

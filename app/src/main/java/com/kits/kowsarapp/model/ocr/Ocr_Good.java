@@ -130,13 +130,18 @@ public class Ocr_Good implements Serializable {
     }
 
     public String getFormNo() {
+
         if (FormNo != null)
         {
-            return  FormNo;
+            try {
+                return  FormNo.substring(0,FormNo.indexOf("."));
+            }catch (Exception e){
+                return  FormNo;
+            }
+
         }else {
             return "";
         }
-
 
     }
 

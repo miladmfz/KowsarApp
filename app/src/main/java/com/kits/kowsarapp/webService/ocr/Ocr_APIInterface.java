@@ -28,6 +28,16 @@ public interface Ocr_APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
+    Call<RetrofitResponse> OcrShortageList(@Field("tag") String tag
+            , @Field("orderby") String orderby
+            , @Field("isGrouped") String isGrouped
+    );
+
+
+
+
+    @POST("index.php")
+    @FormUrlEncoded
     Call<RetrofitResponse> CheckState(@Field("tag") String tag
             , @Field("AppOCRCode") String AppOCRCode
             , @Field("State") String State
