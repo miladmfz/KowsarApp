@@ -849,6 +849,10 @@ public class Ocr_CollectFragment extends Fragment {
 
 
         checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(row_counter)));
+try {
+
+
+
         tv_goodname.setText(NumberFunctions.PerisanNumber(good_detial.getGoodName()));
 
         tv_amount.setText(NumberFunctions.PerisanNumber(good_detial.getFacAmount()));
@@ -886,6 +890,9 @@ public class Ocr_CollectFragment extends Fragment {
 
         }
 
+}catch (Exception e){
+    callMethod.Log("kowsar "+ e.getMessage());
+}
         ll_radif_check.addView(tv_gap);
         ll_radif_check.addView(checkBox);
 
@@ -906,7 +913,7 @@ public class Ocr_CollectFragment extends Fragment {
                 ll_details.setBackgroundColor(requireActivity().getColor(R.color.grey_200));
             }
             try {
-                if (good_detial.getMinAmount().equals("1.000")){
+                if (good_detial.getMinAmount().equals("1")){
                     ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
                 }
             }catch (Exception e){
@@ -1020,8 +1027,25 @@ public class Ocr_CollectFragment extends Fragment {
 
 
         });
-        tv_goodname.setOnClickListener(v -> image_zome_view(ocr_goods_visible.get(correct_row)));
-        tv_amount.setOnClickListener(v -> amount_zome_view(ocr_goods_visible.get(correct_row).getFacAmount(),ocr_goods_visible.get(correct_row).getShortageAmount()+""));
+
+
+
+        tv_goodname.setOnClickListener(v -> {
+            if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
+                image_zome_view(ocr_goods_visible.get(correct_row));
+            } else {
+                callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
+            }
+
+        });
+        tv_amount.setOnClickListener(v -> {
+            if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
+                amount_zome_view(ocr_goods_visible.get(correct_row).getFacAmount(),ocr_goods_visible.get(correct_row).getShortageAmount()+"");
+            } else {
+                callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
+            }
+
+        });
 
 
 

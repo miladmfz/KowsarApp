@@ -128,6 +128,9 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("JustScanner", true);
             callMethod.EditBoolan("ListOrSingle", true);
 
+            callMethod.EditBoolan("ShortageList", false);
+
+
 
             //endregion
 

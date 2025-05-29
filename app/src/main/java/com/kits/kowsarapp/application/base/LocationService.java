@@ -58,14 +58,45 @@ public class LocationService extends Service {
 
                 Location location = locationResult.getLastLocation();
                 if (location != null && !callMethod.ReadString("ServerURLUse").isEmpty()) {
-                    calendar1.setTimeInMillis(location.getTime() + 12600000); // GMT+3:30 adjustment
+                    calendar1.setTimeInMillis((location.getTime() + 12600000)-86400000); // GMT+3:30 adjustment
                     int hour = calendar1.get(Calendar.HOUR_OF_DAY);
+                    Location lastLocation = null;
 
-                    if (hour > 7 && hour < 20) {
-                        String datetime = calendar1.getPersianShortDateTime();
-                        broker_dbh.UpdateLocationService(locationResult, datetime);
-                        callMethod.Log("Location Updated: " + datetime);
+                    if (hour > 7 && hour < 23) {
+                        try {
+                            Location currentLocation = locationResult.getLastLocation();
+
+                            if (lastLocation == null) {
+                                lastLocation = currentLocation; // اولین بار مقداردهی کن
+                            }
+
+//                            if (lastLocation == null) {
+//                                lastLocation = broker_dbh.getLastSavedLocation(); // متدی که آخرین مختصات رو از SQLite می‌خونه
+//                            }
+
+
+                            float distance = lastLocation.distanceTo(currentLocation); // فاصله برحسب متر
+
+                            if (distance > 15) {
+                                String datetime = calendar1.getPersianShortDateTime();
+                                broker_dbh.UpdateLocationService(locationResult, datetime);
+                                broker_dbh.UpdateLocationService_New(locationResult, datetime);
+                                callMethod.Log("Location Updated: " + datetime + " | Distance: " + distance);
+                                lastLocation = currentLocation; // موقعیت جدید رو ذخیره کن
+                            }
+                        } catch (Exception ignored) { }
                     }
+
+
+//
+//                    if (hour > 7 && hour < 23) {
+//                        try {
+//                            String datetime = calendar1.getPersianShortDateTime();
+//                            broker_dbh.UpdateLocationService(locationResult, datetime);
+//                            broker_dbh.UpdateLocationService_New(locationResult, datetime);
+//                            callMethod.Log("Location Updated: " + datetime);
+//                        }catch (Exception ignored){ }
+//                    }
                 }
             }
         };
@@ -76,9 +107,10 @@ public class LocationService extends Service {
 
     private void startLocationUpdates() {
         LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(15000); // 15 seconds
-        locationRequest.setFastestInterval(10000); // 10 seconds
+        locationRequest.setInterval(5000); // 15 seconds
+        locationRequest.setFastestInterval(3000); // 10 seconds
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setSmallestDisplacement(10); // فقط اگر حداقل ۱۰ متر حرکت کرده
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             callMethod.Log("Permission not granted");

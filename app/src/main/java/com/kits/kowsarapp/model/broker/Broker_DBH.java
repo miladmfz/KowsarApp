@@ -1,16 +1,21 @@
 package com.kits.kowsarapp.model.broker;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.LocationResult;
 import com.kits.kowsarapp.BuildConfig;
+import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.base.Column;
@@ -28,6 +33,8 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class Broker_DBH extends SQLiteOpenHelper {
     CallMethod callMethod;
@@ -94,12 +101,15 @@ public class Broker_DBH extends SQLiteOpenHelper {
         getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'KsrImage_LastRepCode', '0' Where Not Exists(Select * From Config Where KeyValue = 'KsrImage_LastRepCode')");
         getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'MaxRepLogCode', '0' Where Not Exists(Select * From Config Where KeyValue = 'MaxRepLogCode')");
         getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'LastGpsLocationCode', '0' Where Not Exists(Select * From Config Where KeyValue = 'LastGpsLocationCode')");
+        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'LastGpsLocationCodeNew', '0' Where Not Exists(Select * From Config Where KeyValue = 'LastGpsLocationCodeNew')");
         getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'VersionInfo', '" + BuildConfig.VERSION_NAME + "' Where Not Exists(Select * From Config Where KeyValue = 'VersionInfo')");
         getWritableDatabase().close();
     }
 
     public void DatabaseCreate() {
         getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS GpsLocation (GpsLocationCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,Longitude TEXT, Latitude TEXT, Speed TEXT, BrokerRef TEXT, GpsDate TEXT)");
+        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS GpsLocationNew (GpsLocationCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,Longitude TEXT, Latitude TEXT, Speed TEXT, Accuracy TEXT,BrokerRef TEXT," +
+                "GpsDate TEXT,NextGpsDate TEXT,DurationInSeconds TEXT,Status TEXT,LocationDescription TEXT)");
         getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PreFactorRow (PreFactorRowCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,PreFactorRef INTEGER, GoodRef INTEGER, FactorAmount INTEGER, Shortage INTEGER, PreFactorDate TEXT,  Price INTEGER)");
         getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS Prefactor ( PreFactorCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, PreFactorDate TEXT," +
                 " PreFactorTime TEXT, PreFactorKowsarCode INTEGER, PreFactorKowsarDate TEXT, PreFactorExplain TEXT, CustomerRef INTEGER, BrokerRef INTEGER)");
@@ -1882,6 +1892,86 @@ public class Broker_DBH extends SQLiteOpenHelper {
         getWritableDatabase().execSQL(query);
         getWritableDatabase().close();
     }
+
+    public void UpdateLocationService_New(LocationResult locationResult, String gpsDate) {
+
+        Location location = locationResult.getLastLocation();
+
+        if (location == null) return;
+
+
+        String longitude = String.valueOf(location.getLongitude());
+        String latitude = String.valueOf(location.getLatitude());
+        String speed = String.valueOf(location.getSpeed());
+        String accuracy = String.valueOf(location.getAccuracy());
+        String brokerRef = ReadConfig("BrokerCode");
+
+        // مقادیر فرضی برای فیلدهای جدید
+        String CorrectgpsDate = gpsDate; // فعلاً خالی
+
+        String lastgpsDate = GetLastLocationTime(); // فعلاً خالی
+        String durationInSeconds = "0"; // اگر تایمر نداری، فعلاً صفر
+        String status = location.getSpeed() < 1 ? "Stopped" : "Moving";
+        String locationDescription = ""; // می‌تونی با reverse geocoding پرش کنی یا خالی بذاری
+
+
+
+
+        try {
+            Geocoder geocoder = new Geocoder(App.getContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                StringBuilder sb = new StringBuilder();
+                if (address.getThoroughfare() != null)
+                    sb.append(address.getThoroughfare()).append(", ");
+                if (address.getSubLocality() != null)
+                    sb.append(address.getSubLocality()).append(", ");
+                if (address.getLocality() != null)
+                    sb.append(address.getLocality()).append(", ");
+                if (address.getCountryName() != null)
+                    sb.append(address.getCountryName());
+                locationDescription = sb.toString();
+            } else {
+                locationDescription = "Unknown Location";
+            }
+        } catch (Exception e) {
+            locationDescription = "Geocoder Error";
+            e.printStackTrace();
+        }
+
+
+
+
+
+        String query = "INSERT INTO GpsLocationNew (Longitude, Latitude, Speed, Accuracy, BrokerRef, GpsDate, NextGpsDate, DurationInSeconds, Status, LocationDescription) " +
+                "VALUES ('" + longitude + "', '" + latitude + "', '" + speed + "', '" + accuracy + "', '" + brokerRef + "', '" + CorrectgpsDate + "', '" + lastgpsDate + "', '" + durationInSeconds + "', '" + status + "', '" + locationDescription + "')";
+
+        callMethod.Log(query);
+
+        getWritableDatabase().execSQL(query);
+        getWritableDatabase().close();
+    }
+
+
+    public Location getLastSavedLocation() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT Latitude, Longitude FROM Gpslocationnew ORDER BY id DESC LIMIT 1", null);
+
+        if (cursor.moveToFirst()) {
+            double lat = cursor.getDouble(0);
+            double lng = cursor.getDouble(1);
+            Location location = new Location("db");
+            location.setLatitude(lat);
+            location.setLongitude(lng);
+            cursor.close();
+            return location;
+        }
+        cursor.close();
+        return null;
+    }
+
+
     public void UpdateLocationService(LocationResult locationResult, String gpsDate) {
 
 
@@ -1940,6 +2030,29 @@ public class Broker_DBH extends SQLiteOpenHelper {
         cursor.close();
         return result;
     }
+
+
+    @SuppressLint("Range")
+    public String GetLastLocationTime() {
+
+        query = " select GpsLocationCode,GpsDate from GpsLocationNew order by 1 desc limit 1 OFFSET 0";
+
+
+        cursor = getWritableDatabase().rawQuery(query, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            result = cursor.getString(cursor.getColumnIndex("GpsDate"));
+
+        }else
+        {
+            result="";
+        }
+        cursor.close();
+        return result;
+    }
+
+
+
 
 
 

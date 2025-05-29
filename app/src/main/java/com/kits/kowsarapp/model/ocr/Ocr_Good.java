@@ -114,7 +114,22 @@ public class Ocr_Good implements Serializable {
     }
 
     public String getMinAmount() {
-        return MinAmount;
+
+
+        if (MinAmount != null)
+        {
+            try{
+                return  MinAmount.substring(0,MinAmount.indexOf("."));
+
+            }
+            catch (Exception e){
+                return  MinAmount;
+            }
+
+        }else {
+            return "";
+        }
+
     }
 
     public void setMinAmount(String minAmount) {
@@ -336,7 +351,14 @@ public class Ocr_Good implements Serializable {
     public String getGoodMaxSellPrice() {
         if (GoodMaxSellPrice != null)
         {
-            return  GoodMaxSellPrice.substring(0,GoodMaxSellPrice.indexOf("."));
+            try{
+                return  GoodMaxSellPrice.substring(0,GoodMaxSellPrice.indexOf("."));
+
+            }
+            catch (Exception e){
+                return  GoodMaxSellPrice;
+            }
+
         }else {
             return "";
         }
@@ -375,7 +397,16 @@ public class Ocr_Good implements Serializable {
     public String getFacAmount() {
         if (FacAmount != null)
         {
-            return  FacAmount.substring(0,FacAmount.indexOf("."));
+
+            try{
+                return  FacAmount.substring(0,FacAmount.indexOf("."));
+
+            }
+            catch (Exception e){
+                return  FacAmount;
+            }
+
+
         }else {
             return "";
         }

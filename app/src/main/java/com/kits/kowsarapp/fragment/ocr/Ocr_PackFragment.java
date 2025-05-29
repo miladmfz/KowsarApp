@@ -168,6 +168,8 @@ public class Ocr_PackFragment extends Fragment{
         ll_shortage_print.setWeightSum(2);
 
 
+        try {
+
 
 
         tv_company.setText(NumberFunctions.PerisanNumber("بخش بسته بندی"));
@@ -189,6 +191,10 @@ public class Ocr_PackFragment extends Fragment{
         btn_shortage.setText("اعلام کسر موجودی");
         btn_print.setText("پرینت فاکتور");
 
+        }catch (Exception e){
+
+            callMethod.Log("kowsar header = "+e.getMessage());
+        }
 
 
 
@@ -430,10 +436,16 @@ public class Ocr_PackFragment extends Fragment{
 
         tv_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
 
-        checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(countergood)));
+        try {
+
+            checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(countergood)));
         tv_goodname.setText(NumberFunctions.PerisanNumber(good.getGoodName()));
         tv_amount.setText(NumberFunctions.PerisanNumber(good.getFacAmount()));
         tv_price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(good.getGoodMaxSellPrice()))));
+    }catch (Exception e){
+
+        callMethod.Log("kowsar row = "+e.getMessage());
+    }
 
 
         tv_gap.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
@@ -462,7 +474,7 @@ public class Ocr_PackFragment extends Fragment{
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
 
             try {
-                if (good.getMinAmount().equals("1.000")){
+                if (good.getMinAmount().equals("1")){
                     ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
                 }
             }catch (Exception e){

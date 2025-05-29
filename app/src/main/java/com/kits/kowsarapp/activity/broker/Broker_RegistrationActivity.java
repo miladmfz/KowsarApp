@@ -85,6 +85,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
         Call<RetrofitResponse> call1 = broker_apiInterface.GetSellBroker("GetSellBroker");
+        callMethod.Log("kowsarapp ="+call1.request().toString());
 
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -109,7 +110,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
                 SellBrokers.clear();
 
-                callMethod.Log(""+t.getMessage());
+                callMethod.Log("kowsarapp ="+t.getMessage());
                 SellBroker sellBroker= new SellBroker();
                 sellBroker.setBrokerCode("0");
                 sellBroker.setBrokerNameWithoutType("بازاریاب تعریف نشده");

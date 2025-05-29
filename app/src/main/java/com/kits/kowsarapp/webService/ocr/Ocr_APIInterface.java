@@ -87,6 +87,8 @@ public interface Ocr_APIInterface {
             , @Field("Packer") String Packer
             , @Field("PackDeliverDate") String PackDeliverDate
             , @Field("PackCount") String PackCount
+            , @Field("AppOCRFactorExplain") String AppOCRFactorExplain
+
     );
 
 

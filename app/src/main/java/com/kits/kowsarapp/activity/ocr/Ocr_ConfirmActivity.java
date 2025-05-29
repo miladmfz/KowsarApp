@@ -413,7 +413,7 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
         searchtarget = searchtarget.replaceAll(" ", "%");
 
 
-        call=apiInterface.GetOcrGoodList("GetOcrGoodList",searchtarget);
+        call=apiInterface.GetOcrGoodList("GetOcrGoodList_new",searchtarget);
         action.dialogProg();
 
 
@@ -469,6 +469,7 @@ public class Ocr_ConfirmActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                action.dialogProg_dismiss();
                 callMethod.showToast("Connection fail ...!!!");
                 tv_lottiestatus.setText("موردی یافت نشد");
                 img_lottiestatus.setVisibility(View.VISIBLE);

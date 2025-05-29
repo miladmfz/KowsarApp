@@ -80,7 +80,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     Dialog dialog, dialogProg;
     TextView tv_rep;
     Ocr_Print print;
-    Handler handler;
+    Handler handler = new Handler();
     ArrayList<Ocr_Good> Empty_goods = new ArrayList<>();
 
     public Ocr_Action(Context mcontxt) {
@@ -271,7 +271,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                 callMethod.ReadString("Deliverer"),
                                 "",
                                 "",
-                                "0"
+                                "0",
+                                factor.getAppOCRFactorExplain()
+
 
                         );
                     }else{
@@ -282,7 +284,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                 callMethod.ReadString("Deliverer"),
                                 "",
                                 "",
-                                "0"
+                                "0",
+                                factor.getAppOCRFactorExplain()
 
                         );
                     }
@@ -328,6 +331,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             MaterialButton btn_pack_h_send = dialog.findViewById(R.id.ocr_packdetail_b_send);
             MaterialButton btn_pack_h_5 = dialog.findViewById(R.id.ocr_packdetail_b_btn5);
             EditText ed_pack_h_amount = dialog.findViewById(R.id.ocr_packdetail_b_packamount);
+            EditText ed_pack_h_ocrexplain = dialog.findViewById(R.id.ocr_packdetail_b_ocrexplain);
 
             ed_pack_h_date = dialog.findViewById(R.id.ocr_packdetail_b_senddate);
 
@@ -340,6 +344,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                     + tdayOfMonth.substring(tdayOfMonth.length() - 2);
 
             ed_pack_h_date.setText(NumberFunctions.PerisanNumber(date));
+            ed_pack_h_ocrexplain.setText(factor.getAppOCRFactorExplain());
 
             LinearLayoutCompat ll_pack_h_main = dialog.findViewById(R.id.ocr_packdetail_b_linejob);
             sendtime=NumberFunctions.PerisanNumber(date);
@@ -498,6 +503,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         break;
                     }
                 }
+                //
 
 
                 if (!falt) {
@@ -551,6 +557,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 //                            );
 //
 //                        }
+
                             Call<RetrofitResponse> call2;
                             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                                 call2=apiInterface.SetPackDetail(
@@ -560,8 +567,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                         coltrol_s,
                                         pack_s,
                                         NumberFunctions.EnglishNumber(date),
-                                        packCount
-
+                                        packCount,
+                                        NumberFunctions.EnglishNumber(ed_pack_h_ocrexplain.getText().toString())
                                 );
                             }else{
                                 call2=secendApiInterface.SetPackDetail(
@@ -571,8 +578,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                         coltrol_s,
                                         pack_s,
                                         NumberFunctions.EnglishNumber(date),
-                                        packCount
-
+                                        packCount,
+                                        NumberFunctions.EnglishNumber(ed_pack_h_ocrexplain.getText().toString())
                                 );
                             }
 

@@ -286,6 +286,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
                         if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(activationsss.getActivationCode())) {
                             Deletedb(activationsss,mcontext);
 
+
                         }else {
                             callMethod.showToast("رمز عبور صیحیح نیست");
                         }
@@ -310,18 +311,31 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
 
 
     }
+
+    void deleteRecursive(File fileOrDirectory) {
+
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+        fileOrDirectory.delete();
+
+
+    }
+
+
+
+
     public void Deletedb(Activation activation,Context mcontext) {
         base_dbh.DeleteActivation(activation);
 
         File currentFile = new File(mcontext.getApplicationInfo().dataDir + "/databases/" + activation.getEnglishCompanyName() + "/KowsarDb.sqlite");
         File newFile = new File(mcontext.getApplicationInfo().dataDir + "/databases/" + activation.getEnglishCompanyName() + "/deleteddb");
-
-        if (rename(currentFile, newFile)) {
-            base_dbh.DeleteActivation(activation);
-            Intent intent = new Intent(mcontext, Base_SplashActivity.class);
-            ((Activity) mcontext).finish();
-            mcontext.startActivity(intent);
-        }
+        File databasedir = new File(mcontext.getApplicationInfo().dataDir + "/databases/" + activation.getEnglishCompanyName());
+        deleteRecursive(databasedir);
+        base_dbh.DeleteActivation(activation);
+        Intent intent = new Intent(mcontext, Base_SplashActivity.class);
+        ((Activity) mcontext).finish();
+        mcontext.startActivity(intent);
     }
 
     private boolean rename(File from, File to) {

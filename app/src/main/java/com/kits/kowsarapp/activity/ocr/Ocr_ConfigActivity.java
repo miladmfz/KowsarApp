@@ -77,7 +77,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
     EditText ed_titlesize,ed_rowcall,ed_bodysize;
     TextView tv_Deliverer,tv_lastprinter,tv_delay,tv_accesscount,tv_laststack;
 
-    SwitchMaterial sm_showamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle;
+    SwitchMaterial sm_showamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle,sm_shortagelist;
     LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack;
 
     String stackcategory="همه";
@@ -154,6 +154,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_justscanner = findViewById(R.id.ocr_config_a_justscanner);
         sm_sumamounthint = findViewById(R.id.ocr_config_a_showsumamounthint);
         sm_listorsingle = findViewById(R.id.ocr_config_a_listorsingle);
+        sm_shortagelist = findViewById(R.id.ocr_config_a_shortagelist);
 
 
         ll_spinner_Stack=findViewById(R.id.ocr_config_a_line_stack_spinner);
@@ -205,6 +206,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_justscanner.setChecked(callMethod.ReadBoolan("JustScanner"));
         sm_sumamounthint.setChecked(callMethod.ReadBoolan("ShowSumAmountHint"));
         sm_listorsingle.setChecked(callMethod.ReadBoolan("ListOrSingle"));
+        sm_shortagelist.setChecked(callMethod.ReadBoolan("ShortageList"));
 
 
         btn_config.setOnClickListener(v -> {
@@ -279,6 +281,16 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             } else {
                 callMethod.EditBoolan("ListOrSingle", true);
                 callMethod.showToast("انتخاب لیستی فعال شد");
+            }
+        });
+
+        sm_shortagelist.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShortageList")) {
+                callMethod.EditBoolan("ShortageList", false);
+                callMethod.showToast("عدم نمایش لیست کسری");
+            } else {
+                callMethod.EditBoolan("ShortageList", true);
+                callMethod.showToast(" نمایش لیست کسری");
             }
         });
 

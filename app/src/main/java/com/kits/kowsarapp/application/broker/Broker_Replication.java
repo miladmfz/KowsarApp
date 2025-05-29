@@ -20,6 +20,7 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.KowsarLocation;
+import com.kits.kowsarapp.model.base.KowsarLocationNew;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -48,7 +49,10 @@ public class Broker_Replication {
     private final Integer RepRowCount = 100;
     private final Broker_DBH broker_dbh;
     ArrayList<KowsarLocation> locations = new ArrayList<>();
+    ArrayList<KowsarLocationNew> locationsNew = new ArrayList<>();
+
     KowsarLocation location;
+    KowsarLocationNew locationnew;
 
     CallMethod callMethod;
     Broker_APIInterface broker_apiInterface;
@@ -87,6 +91,7 @@ public class Broker_Replication {
         dialog = new Dialog(mContext);
         dialog();
         SendGpsLocation();
+        SendGpsLocationnew();
 
 
         if (broker_dbh.GetColumnscount().equals("0")) {
@@ -551,8 +556,8 @@ public class Broker_Replication {
 
 
     }
-
     public void replicateGoodImageChange() {
+
         tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی عکس"));
         FinalStep = 0;
         String RepTable = "KsrImage";
@@ -800,6 +805,56 @@ callMethod.Log(""+i);
     }
 
 
+    @SuppressLint("Range")
+    public void SendGpsLocationnew() {
+
+        locationsNew.clear();
+
+        cursor = sqLiteDatabase.rawQuery("select * from GpsLocationNew where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCodeNew") + " order by GpsLocationCode limit 20", null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                locationnew = new KowsarLocationNew();
+                locationnew.setGpsLocationCode(String.valueOf(cursor.getInt(cursor.getColumnIndex("GpsLocationCode"))));
+                locationsNew.add(locationnew);
+            }
+        }
+
+        assert cursor != null;
+        String GpsLocationString = CursorToJson(cursor);
+        cursor.close();
+
+        callMethod.Log(GpsLocationString);
+
+        if (locationsNew.size()>0) {
+            Call<RetrofitResponse> call1 = broker_apiInterface.UpdateLocation( "UpdateLocationNew",GpsLocationString);
+            call1.enqueue(new Callback<RetrofitResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+
+                        broker_dbh.SaveConfig("LastGpsLocationCodeNew", locationsNew.get(locationsNew.size() - 1).getGpsLocationCode());
+
+                        cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCodeNew"), null);
+                        if (cursor.getCount() > 1) {
+                            cursor.close();
+                            SendGpsLocationnew();
+                        } else {
+                            cursor.close();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                }
+            });
+        } else {
+            callMethod.Log("kowsar_Gps zero size");
+        }
+    }
 
 
 

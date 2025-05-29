@@ -244,7 +244,7 @@ public void Config() {
 
 
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
-            btn3.setText("لیست کسری فاکتور ها");
+
 
 
         }else{
@@ -267,12 +267,18 @@ public void Config() {
 
         });
 
-        btn3.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_MergingActivity.class);
-            intent.putExtra("State", "4");
-            startActivity(intent);
+        if (callMethod.ReadBoolan("ShortageList")){
+            btn3.setText("لیست کسری فاکتور ها");
+            btn3.setOnClickListener(view -> {
+                intent = new Intent(Ocr_NavActivity.this, Ocr_MergingActivity.class);
+                intent.putExtra("State", "4");
+                startActivity(intent);
 
-        });
+            });
+        }else{
+            btn3.setVisibility(View.GONE);
+        }
+
 
 
 
