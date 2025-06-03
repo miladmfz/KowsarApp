@@ -168,6 +168,8 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
 
 
     public void Actionbtn(final Activation activations,Context mcontext, CallMethod callMethod) {
+
+
         Kowsar_APIInterface apiInterface = APIClient_kowsar.getCleint_log().create(Kowsar_APIInterface.class);
 
         Activation activationsss=activations;

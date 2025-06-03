@@ -1893,7 +1893,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
         getWritableDatabase().close();
     }
 
-    public void UpdateLocationService_New(LocationResult locationResult, String gpsDate) {
+    public void UpdateLocationService_New(LocationResult locationResult, String gpsDate, String distance) {
 
         Location location = locationResult.getLastLocation();
 
@@ -1936,7 +1936,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                 locationDescription = "Unknown Location";
             }
         } catch (Exception e) {
-            locationDescription = "Geocoder Error";
+            locationDescription = distance;
             e.printStackTrace();
         }
 
@@ -1945,7 +1945,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
 
         String query = "INSERT INTO GpsLocationNew (Longitude, Latitude, Speed, Accuracy, BrokerRef, GpsDate, NextGpsDate, DurationInSeconds, Status, LocationDescription) " +
-                "VALUES ('" + longitude + "', '" + latitude + "', '" + speed + "', '" + accuracy + "', '" + brokerRef + "', '" + CorrectgpsDate + "', '" + lastgpsDate + "', '" + durationInSeconds + "', '" + status + "', '" + locationDescription + "')";
+                "VALUES ('" + longitude + "', '" + latitude + "', '" + speed + "', '" + accuracy + "', '" + brokerRef + "', '" + CorrectgpsDate + "', '" + lastgpsDate + "', '" + durationInSeconds + "', '" + status + "', '" + distance + "')";
 
         callMethod.Log(query);
 

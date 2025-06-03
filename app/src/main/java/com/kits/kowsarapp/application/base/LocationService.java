@@ -73,16 +73,19 @@ public class LocationService extends Service {
 //                            if (lastLocation == null) {
 //                                lastLocation = broker_dbh.getLastSavedLocation(); // متدی که آخرین مختصات رو از SQLite می‌خونه
 //                            }
-
-
                             float distance = lastLocation.distanceTo(currentLocation); // فاصله برحسب متر
+                            String datetime = calendar1.getPersianShortDateTime();
+                            broker_dbh.UpdateLocationService(locationResult, datetime);
+                            broker_dbh.UpdateLocationService_New(locationResult, datetime,String.valueOf(distance));
+                            callMethod.Log("Location Updated: " + datetime + " | Distance: " + distance);
+                            lastLocation = currentLocation; // موقعیت جدید رو ذخیره کن
 
-                            if (distance > 15) {
-                                String datetime = calendar1.getPersianShortDateTime();
-                                broker_dbh.UpdateLocationService(locationResult, datetime);
-                                broker_dbh.UpdateLocationService_New(locationResult, datetime);
-                                callMethod.Log("Location Updated: " + datetime + " | Distance: " + distance);
-                                lastLocation = currentLocation; // موقعیت جدید رو ذخیره کن
+
+
+                            if (distance > 5) {
+
+                            }else{
+                                callMethod.Log("  Distance: " + distance);
                             }
                         } catch (Exception ignored) { }
                     }
@@ -110,7 +113,7 @@ public class LocationService extends Service {
         locationRequest.setInterval(5000); // 15 seconds
         locationRequest.setFastestInterval(3000); // 10 seconds
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setSmallestDisplacement(10); // فقط اگر حداقل ۱۰ متر حرکت کرده
+        locationRequest.setSmallestDisplacement(5); // فقط اگر حداقل ۱۰ متر حرکت کرده
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             callMethod.Log("Permission not granted");
