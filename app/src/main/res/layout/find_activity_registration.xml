@@ -46,9 +46,9 @@
 
                 <Button
                     android:id="@+id/find_register_a_btn"
-                    android:layout_width="match_parent"
                     android:text="@string/reg_save"
-
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     app:backgroundTint="@color/green_600"
                     app:strokeColor="?attr/colorOnBackground"

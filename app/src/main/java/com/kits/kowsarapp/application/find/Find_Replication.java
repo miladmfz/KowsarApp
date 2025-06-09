@@ -55,6 +55,8 @@ public class Find_Replication {
             dialog();
             tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی تنظیم جدول"));
             Call<RetrofitResponse> call1 = find_apiInterface.GetGoodType("GetGoodType");
+            callMethod.Log("kowsar = "+call1.request() );
+            callMethod.Log("kowsar = "+call1.request().toString() );
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

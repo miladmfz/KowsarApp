@@ -106,14 +106,20 @@ public class Ocr_FactorListApi_Adapter extends RecyclerView.Adapter<Ocr_FactorLi
 
 
 
-        if (factors.get(position).getAppOCRFactorExplain() != null&&factors.get(position).getAppOCRFactorExplain().length()>0){
-            holder.fac_factor_ocrexplain_ll.setVisibility(View.VISIBLE);
-            holder.fac_ocrexplain.setText(NumberFunctions.PerisanNumber(factors.get(position).getAppOCRFactorExplain()));
-            holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.red_50));
 
-        }else {
-            holder.fac_factor_ocrexplain_ll.setVisibility(View.GONE);
+        if(callMethod.ReadString("Category").equals("2")){
+            if (factors.get(position).getAppOCRFactorExplain() != null&&factors.get(position).getAppOCRFactorExplain().length()>0){
+                holder.fac_factor_ocrexplain_ll.setVisibility(View.VISIBLE);
+                holder.fac_ocrexplain.setText(NumberFunctions.PerisanNumber(factors.get(position).getAppOCRFactorExplain()));
+                holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.red_50));
+
+            }else {
+                holder.fac_factor_ocrexplain_ll.setVisibility(View.GONE);
+            }
+
         }
+
+
 
 
 
@@ -203,6 +209,13 @@ public class Ocr_FactorListApi_Adapter extends RecyclerView.Adapter<Ocr_FactorLi
             if (factors.get(position).getDbname().equals(callMethod.ReadString("DbName"))){
                 if(factors.get(position).getStackClass().length()>1){
                     if(callMethod.ReadString("Category").equals("5")) {
+
+
+
+
+
+
+
                         ocr_action.GetOcrFactorDetail(factors.get(position));
                     }else {
                         if (position < Integer.parseInt(callMethod.ReadString("AccessCount"))) {

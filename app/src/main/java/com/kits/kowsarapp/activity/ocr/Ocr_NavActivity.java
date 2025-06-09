@@ -26,6 +26,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
@@ -406,6 +407,10 @@ public void Config() {
             }
 
 
+
+        }else if (id == R.id.ocr_aboutus) {
+            intent = new Intent(this, Base_AboutUsActivity.class);
+            startActivity(intent);
 
         }
         DrawerLayout drawer = findViewById(R.id.ocr_nav_drawer_layout);

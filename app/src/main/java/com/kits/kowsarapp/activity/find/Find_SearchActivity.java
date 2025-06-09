@@ -163,6 +163,7 @@ public class Find_SearchActivity extends AppCompatActivity {
                         handler.postDelayed(() -> {
 
                             AutoSearch = NumberFunctions.EnglishNumber(editable.toString());
+                            AutoSearch.replace(" ","%");
                             allgood();
 
                             if(callMethod.ReadBoolan("SelectAllAfterSearch")){

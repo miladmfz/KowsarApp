@@ -127,6 +127,7 @@ public class Ocr_Print {
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
+
                     printerconter = 0;
                     AppPrinters = response.body().getAppPrinters();
 
@@ -162,7 +163,7 @@ public class Ocr_Print {
                 callMethod.Log(t.getMessage());
                 dialogProg.dismiss();
                 ((Activity) mContext).finish();
-
+                dialogProg();
             }
         });
     }

@@ -241,6 +241,13 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
 
     public void callimage(Find_Good good){
+        Glide.with(img)
+                .asBitmap()
+                .load(R.drawable.img_base_no_photo)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .fitCenter()
+                .into(img);
+        /*
         if (!good.getGoodImageName().equals("")) {
             Glide.with(img)
                     .asBitmap()
@@ -308,7 +315,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
-
+*/
 
 
     }

@@ -108,6 +108,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         dialogProg.dismiss();
     }
     public void factor_detail(Factor factor) {
+
+
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
@@ -135,6 +137,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         TextView tv_Ersall = dialog.findViewById(R.id.ocr_factordialog_d_ersall);
         TextView tv_BrokerName = dialog.findViewById(R.id.ocr_factordialog_d_brokername);
         TextView tv_AppFactorState = dialog.findViewById(R.id.ocr_factordialog_d_appfactorstate);
+        TextView tv_appfactorexplain = dialog.findViewById(R.id.ocr_factordialog_d_appfactorexplain);
         Button btn_1 = dialog.findViewById(R.id.ocr_factordialog_d_btn1);
         Button btn_2 = dialog.findViewById(R.id.ocr_factordialog_d_btn2);
 
@@ -159,6 +162,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             tv_BrokerName.setText(NumberFunctions.PerisanNumber(factor.getBrokerName()));
 
         tv_AppFactorState.setText(NumberFunctions.PerisanNumber(factor.getAppFactorState()));
+
+        tv_appfactorexplain.setText(NumberFunctions.PerisanNumber(factor.getAppOCRFactorExplain()));
 
 
         tv_AppPackDate.setText(NumberFunctions.PerisanNumber(factor.getAppPackDate()));
@@ -221,7 +226,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         });
 
         btn_2.setOnClickListener(v -> {
-            Pack_detail(factor,"0");
+            Pack_detail(factor,"1");
             dialog.dismiss();
         });
 
@@ -469,6 +474,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
             callMethod.Log(sendtime);
             btn_pack_h_send.setOnClickListener(v -> {
+
                 coltrol_s = "";
                 reader_s = "";
                 pack_s = "";
@@ -506,20 +512,77 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                 //
 
 
+
+
+
+
+                if(callMethod.ReadString("Category").equals("5")) {
+
+
+
+                    Call<RetrofitResponse> call2;
+                    if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
+                        call2 = apiInterface.SetPackDetail(
+                                "SetPackDetail_new",
+                                factor.getAppOCRFactorCode(),
+                                reader_s,
+                                coltrol_s,
+                                pack_s,
+                                NumberFunctions.EnglishNumber(date),
+                                packCount,
+                                NumberFunctions.EnglishNumber(ed_pack_h_ocrexplain.getText().toString())
+                        );
+                    } else {
+                        call2 = secendApiInterface.SetPackDetail(
+                                "SetPackDetail_new",
+                                factor.getAppOCRFactorCode(),
+                                reader_s,
+                                coltrol_s,
+                                pack_s,
+                                NumberFunctions.EnglishNumber(date),
+                                packCount,
+                                NumberFunctions.EnglishNumber(ed_pack_h_ocrexplain.getText().toString())
+                        );
+                    }
+                    call2.enqueue(new Callback<RetrofitResponse>() {
+                        @Override
+                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                            dialog.dismiss();
+                            callMethod.Log("جزئیات فاکتور ثبت گردید");
+                            if (!callMethod.ReadString("Category").equals("5")) {
+                                print.Printing(factor, Empty_goods, packCount, "0");
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                            callMethod.Log("جزئیات فاکتور ثبت نگردید");
+
+                        }
+                    });
+
+
+
+
+                }else{
+
+
+
                 if (!falt) {
-                    dialogProg();
+                    //dialogProg();
 
                     Call<RetrofitResponse> call3;
 
-                    if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                        call3=apiInterface.OcrControlled(
+                    if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
+                        call3 = apiInterface.OcrControlled(
                                 "OcrControlled_new",
                                 factor.getAppOCRFactorCode(),
                                 "3",
                                 callMethod.ReadString("JobPersonRef")
                         );
-                    }else{
-                        call3=secendApiInterface.OcrControlled(
+                    } else {
+                        call3 = secendApiInterface.OcrControlled(
                                 "OcrControlled_new",
                                 factor.getAppOCRFactorCode(),
                                 "3",
@@ -559,8 +622,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 //                        }
 
                             Call<RetrofitResponse> call2;
-                            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                call2=apiInterface.SetPackDetail(
+                            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
+                                call2 = apiInterface.SetPackDetail(
                                         "SetPackDetail_new",
                                         factor.getAppOCRFactorCode(),
                                         reader_s,
@@ -570,8 +633,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                         packCount,
                                         NumberFunctions.EnglishNumber(ed_pack_h_ocrexplain.getText().toString())
                                 );
-                            }else{
-                                call2=secendApiInterface.SetPackDetail(
+                            } else {
+                                call2 = secendApiInterface.SetPackDetail(
                                         "SetPackDetail_new",
                                         factor.getAppOCRFactorCode(),
                                         reader_s,
@@ -582,7 +645,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                         NumberFunctions.EnglishNumber(ed_pack_h_ocrexplain.getText().toString())
                                 );
                             }
-
+                            dialogProg();
                             call2.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -591,27 +654,35 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 //                                    OcrPrintPacker(factor);
 //                                }
                                     if (!callMethod.ReadString("Category").equals("5")) {
-                                        print.Printing(factor,Empty_goods,packCount,"0");
+                                        print.Printing(factor, Empty_goods, packCount, "0");
+                                        callMethod.Log("جزئیات فاکتور ثبت گردید");
+                                        dialogProg_dismiss();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                    dialogProg_dismiss();
+
                                 }
                             });
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                            dialogProg_dismiss();
+
                             callMethod.Log(t.getMessage());
                         }
                     });
 
 
                 } else {
+                    dialogProg_dismiss();
+
                     callMethod.showToast(falt_message + " را تکمیل کنید");
                 }
-
+            }
 
             });
 
@@ -1339,18 +1410,23 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                     if (response.isSuccessful()) {
 
                         assert response.body() != null;
-                        dialog.dismiss();
-                        dialogProg.dismiss();
-                        callMethod.showToast("ثبت گردید");
+                        if (response.body().getText().equals("Done")){
+                            dialog.dismiss();
+                            dialogProg.dismiss();
+                            callMethod.showToast("ثبت گردید");
+                        }
+
+
                     }
                 }
 
                 @Override
                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                    callMethod.Log("kowsar"+ t.getMessage());
 
                     dialog.dismiss();
                     dialogProg.dismiss();
-                    callMethod.showToast("ثبت نگردید");
+                    callMethod.showToast("اطلاعات ثبت نگردید");
 
                 }
             });

@@ -63,6 +63,8 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
     ProgressBar prog;
     GridLayoutManager gridLayoutManager;
     Dialog dialog1;
+    Call<RetrofitResponse> Requset_List_call;
+    Call<RetrofitResponse> Requset_ListCount_call;
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
@@ -670,7 +672,15 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
         });
     }
 
+
+
+
     public void RetrofitRequset_List() {
+
+        if (Requset_List_call != null && !Requset_List_call.isExecuted() && !Requset_List_call.isCanceled()) {
+            Requset_List_call.cancel();
+        }
+
 /*
         PageNo=0;
         RetrofitRequset_ListCount();
@@ -697,9 +707,8 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
         textView_status.setVisibility(View.GONE);
         RetrofitRequset_ListCount();
         pastVisiblesItems=0;
-        Call<RetrofitResponse> call;
 
-        call=apiInterface.GetOcrFactorList(
+        Requset_List_call=apiInterface.GetOcrFactorList(
                 "GetFactorList",
                 state,
                 srch,
@@ -711,9 +720,9 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
                 "0",
                 callMethod.ReadString("ActiveDatabase")
         );
-        callMethod.Log(call.request().url()+"");
-        callMethod.Log(""+call.request().body());
-        call.enqueue(new Callback<RetrofitResponse>() {
+        callMethod.Log(Requset_List_call.request().url()+"");
+        callMethod.Log(""+Requset_List_call.request().body());
+        Requset_List_call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
@@ -777,6 +786,11 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 
     public void RetrofitRequset_ListCount() {
 
+        if (Requset_ListCount_call != null && !Requset_ListCount_call.isExecuted() && !Requset_ListCount_call.isCanceled()) {
+            Requset_ListCount_call.cancel();
+        }
+
+
 //        String Body_str  = "";
 //
 //        Body_str =callMethod.CreateJson("State", state, Body_str);
@@ -793,10 +807,9 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
 //        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
 
-        Call<RetrofitResponse> call;
 
 
-        call=apiInterface.GetOcrFactorList(
+        Requset_ListCount_call=apiInterface.GetOcrFactorList(
                 "GetFactorListCount",
                 state,
                 srch,
@@ -808,7 +821,7 @@ public class Ocr_FactorListApiActivity extends AppCompatActivity {
                 "0",
                 callMethod.ReadString("ActiveDatabase")
         );
-        call.enqueue(new Callback<RetrofitResponse>() {
+        Requset_ListCount_call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {

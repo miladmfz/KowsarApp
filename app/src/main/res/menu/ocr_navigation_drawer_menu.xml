@@ -31,10 +31,12 @@
                 android:id="@+id/ocr_nav_cfg"
                 android:icon="@drawable/ic_setting"
                 android:title="تنظیمات" />
+
             <item
                 android:id="@+id/ocr_aboutus"
-                android:title="b"
-                android:visible="false"/>
+                android:icon="@drawable/img_base_about_us"
+
+                android:title="@string/aboutus" />
 
 
         </menu>

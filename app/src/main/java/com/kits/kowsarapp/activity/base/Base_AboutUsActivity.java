@@ -71,31 +71,6 @@ public class Base_AboutUsActivity extends AppCompatActivity {
                     EditText ed_password = dialog.findViewById(R.id.d_loginconfig_ed);
                     MaterialButton btn_login = dialog.findViewById(R.id.d_loginconfig_btn);
 
-                    ed_password.addTextChangedListener(
-                            new TextWatcher() {
-                                @Override
-                                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                                }
-
-                                @Override
-                                public void afterTextChanged(final Editable editable) {
-
-                                    if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).length()>5) {
-                                        if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
-
-                                            Intent intent = new Intent(Base_AboutUsActivity.this, Broker_RegistrationActivity.class);
-                                            startActivity(intent);
-                                        } else {
-                                            callMethod.showToast("رمز عبور صیحیح نیست");
-                                        }
-
-                                    }
-                                }
-                            });
 
                     btn_login.setOnClickListener(vs -> {
                         if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
@@ -132,11 +107,11 @@ public class Base_AboutUsActivity extends AppCompatActivity {
 
     private void DownloadFun() {
 
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse("http://192.168.1.20:60005/api/kits/KowsarApp"));
-        request.setTitle("BrokerKowsar");
-        request.setDescription("Downloading New Version");
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse("http://itmali.ir/app/KowsarApp.apk"));
+        request.setTitle("کوثر سامانه");
+        request.setDescription("در حال بارگیری آخرین نسخه نرم افزار");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "BrokerKowsar.apk");
+        request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "KowsarApp.apk");
 
         DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         long downloadID = downloadManager.enqueue(request);
@@ -159,7 +134,7 @@ public class Base_AboutUsActivity extends AppCompatActivity {
                             Uri apkUri = FileProvider.getUriForFile(
                                     Base_AboutUsActivity.this,
                                     BuildConfig.APPLICATION_ID + ".provider",
-                                    new File(Environment.getExternalStorageDirectory() + "/Android/data/com.kits.brokerkowsar/files/Download/BrokerKowsar.apk")
+                                    new File(Environment.getExternalStorageDirectory() + "/Android/data/com.kits.kowsarapp/files/Download/KowsarApp.apk")
                             );
 
                             Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
