@@ -73,6 +73,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         binding = BrokerActivityBydateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

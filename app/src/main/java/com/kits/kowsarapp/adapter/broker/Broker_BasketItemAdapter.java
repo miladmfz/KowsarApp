@@ -2,7 +2,6 @@ package com.kits.kowsarapp.adapter.broker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import com.kits.kowsarapp.viewholder.broker.Broker_BasketItemViewHolder;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -31,14 +29,12 @@ import retrofit2.Callback;
 
 
 public class Broker_BasketItemAdapter extends RecyclerView.Adapter<Broker_BasketItemViewHolder> {
-    DecimalFormat decimalFormat = new DecimalFormat("0,000");
     private final Broker_APIInterface broker_apiInterface;
     private final ImageInfo image_info;
     private final Context mContext;
     CallMethod callMethod;
     private final ArrayList<Good> goods;
     private final Broker_DBH broker_dbh;
-    Intent intent;
     Broker_Action broker_action;
 
     public Broker_BasketItemAdapter(ArrayList<Good> goods, Context mContext) {

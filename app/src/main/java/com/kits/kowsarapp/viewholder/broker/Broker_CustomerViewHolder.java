@@ -23,7 +23,7 @@ import com.kits.kowsarapp.model.base.NumberFunctions;
 
 import java.text.DecimalFormat;
 
-;
+
 
 public class Broker_CustomerViewHolder extends RecyclerView.ViewHolder {
 

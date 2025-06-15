@@ -1,22 +1,16 @@
 package com.kits.kowsarapp.application.find;
 
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.kits.kowsarapp.activity.find.Find_NavActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
-import com.kits.kowsarapp.model.base.UserInfo;
 import com.kits.kowsarapp.model.find.Find_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.find.Find_APIInterface;

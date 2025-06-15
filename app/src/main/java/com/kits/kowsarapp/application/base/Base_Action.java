@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -15,7 +14,8 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
+
+import androidx.annotation.NonNull;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.BuildConfig;
@@ -32,7 +32,6 @@ import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
@@ -177,7 +176,7 @@ public class Base_Action {
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull  Response<RetrofitResponse> response) {
 
                 if (response.isSuccessful()) {
                     // Handle successful response
@@ -188,7 +187,7 @@ public class Base_Action {
 
 
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 // Handle failure
             }
         });

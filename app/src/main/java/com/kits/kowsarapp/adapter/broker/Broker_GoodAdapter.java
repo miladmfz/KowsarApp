@@ -18,7 +18,6 @@ import com.kits.kowsarapp.activity.broker.Broker_PFOpenActivity;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
-import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
@@ -123,7 +122,6 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                             Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                             activity.good_select_function(goods.get(position));
                         }
-
                     } else {
                         if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
                             Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
@@ -133,15 +131,11 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                             Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                             activity.good_select_function(goods.get(position));
                         }
-
-
                     }
                 } else {
-
                     Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                     intent.putExtra("fac", "0");
                     mContext.startActivity(intent);
-
                 }
             }else{
                 if (goods.get(position).getGoodFieldValue("ActiveStack").equals("1")) {
@@ -169,11 +163,8 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                                 Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
                                 activity.good_select_function(goods.get(position));
                             }
-
-
                         }
                     } else {
-
                         Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                         intent.putExtra("fac", "0");
                         mContext.startActivity(intent);
@@ -190,8 +181,6 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
 
         if (callMethod.ReadBoolan("ShowDetail")) {
             holder.btnadd.setVisibility(View.VISIBLE);
-
-
             holder.rltv.setOnClickListener(v -> {
                 callMethod.Log("getClass = "+mContext.getClass().getName());
 
@@ -229,7 +218,6 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                 }
 
             });
-
             holder.btnadd.setOnClickListener(v -> {
                 if (multi_select) {
                     if (goods.get(position).getGoodFieldValue("ActiveStack").equals("1")) {

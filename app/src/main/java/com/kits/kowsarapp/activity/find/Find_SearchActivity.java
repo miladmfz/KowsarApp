@@ -8,14 +8,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -211,7 +210,7 @@ public class Find_SearchActivity extends AppCompatActivity {
         Call<RetrofitResponse> call = find_apiInterface.GetGoodList ("GetFindGoodList", AutoSearch);
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
 
                     assert response.body() != null;
@@ -224,7 +223,7 @@ public class Find_SearchActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
                 find_goods.clear();
                 find_goodAdapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);

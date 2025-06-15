@@ -28,7 +28,6 @@ import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
-import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
@@ -134,9 +133,9 @@ public void Config() {
             Pack();
         }else if(state_category==4){ //state 2
             Delivery();
-        }else if(state_category==5){ //state 2
+        }else if(state_category==5){ //state 4
             Manage();
-        }else if(state_category==6){ //state 2
+        }else if(state_category==6){ //state 6
             StackLocation();
         }
 
@@ -151,7 +150,7 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_ConfirmActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_SelectionActivity.class);
             intent.putExtra("ScanResponse", "");
             intent.putExtra("State", "6");
             intent.putExtra("FactorImage", "");
@@ -223,7 +222,7 @@ public void Config() {
 
         });
         btn3.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Manage_List_Api_Activity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -255,14 +254,14 @@ public void Config() {
 
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Collect_List_Api_Activity.class);
             intent.putExtra("State", "0");
             startActivity(intent);
 
         });
 
         btn2.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Manage_List_Api_Activity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -294,13 +293,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Check_List_Api_Activity.class);
             intent.putExtra("State", "1");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Manage_List_Api_Activity.class);
             intent.putExtra("State", "4");
 
             startActivity(intent);
@@ -308,7 +307,7 @@ public void Config() {
         });
         btn3.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Delivery_List_Api_Activity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
 
@@ -327,7 +326,7 @@ public void Config() {
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Delivery_List_Api_Activity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
         });
@@ -363,7 +362,7 @@ public void Config() {
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
-            intent = new Intent(Ocr_NavActivity.this, Ocr_FactorListApiActivity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Manage_List_Api_Activity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
         });

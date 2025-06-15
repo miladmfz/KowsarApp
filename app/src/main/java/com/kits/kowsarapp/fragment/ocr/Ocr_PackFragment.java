@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,7 +29,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
@@ -44,7 +43,6 @@ import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -336,7 +334,7 @@ public class Ocr_PackFragment extends Fragment{
                         if (response.isSuccessful()) {
                             conter_confirm = conter_confirm + 1;
                             if (conter_confirm == b) {
-                                intent = new Intent(requireActivity(), Ocr_ConfirmActivity.class);
+                                intent = new Intent(requireActivity(), Ocr_Check_Confirm_Activity.class);
 
                                 intent.putExtra("ScanResponse", BarcodeScan);
                                 intent.putExtra("State", "1");

@@ -3,8 +3,6 @@ package com.kits.kowsarapp.activity.ocr;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
@@ -17,18 +15,11 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
-import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
-import com.kits.kowsarapp.fragment.ocr.Ocr_PackFragment;
-import com.kits.kowsarapp.fragment.ocr.Ocr_StackFragment;
-import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
@@ -63,12 +54,6 @@ public class Ocr_MergingActivity extends AppCompatActivity {
     Integer state_category;
     public String searchtarget = "";
 
-
-
-    LottieAnimationView progressBar;
-    LottieAnimationView img_lottiestatus;
-    Call<RetrofitResponse> call;
-    TextView tv_lottiestatus;
 
 
 

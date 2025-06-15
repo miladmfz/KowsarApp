@@ -20,7 +20,6 @@ import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
-import java.text.DecimalFormat;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,7 +27,6 @@ import retrofit2.Response;
 
 
 public class Order_GoodItemViewHolder extends RecyclerView.ViewHolder {
-    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     public ImageView img;
     public MaterialCardView rltv;

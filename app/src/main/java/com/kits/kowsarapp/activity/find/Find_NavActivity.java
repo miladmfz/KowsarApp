@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -24,13 +23,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
-import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.find.Find_Replication;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.find.Find_DBH;
-import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.find.Find_APIInterface;
 import com.kits.kowsarapp.R;
 
 import java.util.Locale;

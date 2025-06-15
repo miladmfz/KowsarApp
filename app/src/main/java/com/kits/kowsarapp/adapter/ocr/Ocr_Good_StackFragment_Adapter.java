@@ -4,7 +4,6 @@ package com.kits.kowsarapp.adapter.ocr;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Base64;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +24,11 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
-import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,7 +38,6 @@ import retrofit2.Response;
 
 public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Good_StackFragment_Adapter.GoodViewHolder>{
 
-    private final Context mContext;
     private List<Ocr_Good> ocr_goods;
     Call<RetrofitResponse> call2;
     Ocr_APIInterface apiInterface;
@@ -54,7 +50,6 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
 
     public Ocr_Good_StackFragment_Adapter(List<Ocr_Good> ocr_goods, Context context)
     {
-        this.mContext = context;
         this.ocr_goods = ocr_goods;
         this.ocr_action = new Ocr_Action(context);
         this.callMethod = new CallMethod(context);

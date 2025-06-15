@@ -28,7 +28,7 @@ import com.kits.kowsarapp.model.base.NumberFunctions;
 import java.io.File;
 import java.text.DecimalFormat;
 
-;
+
 
 public class Broker_BasketItemViewHolder extends RecyclerView.ViewHolder {
 

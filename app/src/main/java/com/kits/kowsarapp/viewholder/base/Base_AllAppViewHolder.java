@@ -27,8 +27,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
-import com.kits.kowsarapp.activity.broker.Broker_ConfigActivity;
-import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Activation;
@@ -43,7 +41,6 @@ import com.kits.kowsarapp.webService.base.APIClient_kowsar;
 import com.kits.kowsarapp.webService.base.Kowsar_APIInterface;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -52,7 +49,6 @@ import retrofit2.Response;
 
 
 public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
-    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     private final ImageView img;
     public MaterialCardView rltv;

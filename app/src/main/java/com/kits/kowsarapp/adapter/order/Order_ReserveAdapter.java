@@ -18,9 +18,6 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.viewholder.order.Order_ReserveViewHolder;
-import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.order.Order_APIInterface;
-
 import java.util.ArrayList;
 
 

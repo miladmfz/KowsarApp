@@ -31,15 +31,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfigActivity;
-import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.adapter.ocr.Ocr_GoodScan_Adapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.base.Factor;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.Job;
 import com.kits.kowsarapp.model.base.JobPerson;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -955,7 +955,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                             callMethod.Log("step 2");
 
                             assert response.body() != null;
-                            Intent intent = new Intent(mContext, Ocr_ConfirmActivity.class);
+                            Intent intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
+
                             intent.putExtra("ScanResponse", BarcodeScan);
                             intent.putExtra("State", "0");
                             intent.putExtra("FactorImage", "");
@@ -1086,7 +1087,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                                 if (response.isSuccessful()) {
 
-                                                    Intent intent = new Intent(mContext, Ocr_ConfirmActivity.class);
+                                                    Intent intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
                                                     intent.putExtra("ScanResponse", barcodescan);
                                                     intent.putExtra("State", "0");
                                                     ((Activity) mContext).finish();
@@ -1113,7 +1114,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                                 if (response.isSuccessful()) {
 
-                                                    Intent intent = new Intent(mContext, Ocr_ConfirmActivity.class);
+                                                    Intent intent = new Intent(mContext, Ocr_Check_Confirm_Activity.class);
                                                     intent.putExtra("ScanResponse", barcodescan);
                                                     intent.putExtra("State", "1");
                                                     ((Activity) mContext).finish();
@@ -1282,7 +1283,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
 //        call2.enqueue(new Callback<RetrofitResponse>() {
 //            @Override
-//            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+//            public void onResponse(@NonNull Call<RetrofitResponse> call,@NonNull  Response<RetrofitResponse> response) {
 //                callMethod.showToast("فاکتور ارسال گردید");
 //
 //                dbh.Insert_IsSent(factor_code);
@@ -1298,7 +1299,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 //            }
 //
 //            @Override
-//            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+//            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 //        callMethod.Log(t.getMessage());
 //            }
 //        });

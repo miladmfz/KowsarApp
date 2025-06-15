@@ -11,11 +11,7 @@ import retrofit2.http.Query;
 
 public interface Kowsar_APIInterface {
 
-
-
     String Kits_Url="kits/";
-
-
 
     @GET(Kits_Url+"Activation")
     Call<RetrofitResponse> Activation(

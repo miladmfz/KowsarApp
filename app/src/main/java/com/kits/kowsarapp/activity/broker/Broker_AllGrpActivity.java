@@ -1,6 +1,5 @@
 package com.kits.kowsarapp.activity.broker;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -17,8 +16,6 @@ import com.kits.kowsarapp.model.base.Category;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.GoodGroup;
 import com.kits.kowsarapp.model.base.Product;
-import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.util.ArrayList;
 import java.util.List;

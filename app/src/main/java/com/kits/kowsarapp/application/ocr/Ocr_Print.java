@@ -29,7 +29,6 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.model.base.AppPrinter;
 import com.kits.kowsarapp.model.base.Factor;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;

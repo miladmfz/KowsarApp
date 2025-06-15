@@ -15,7 +15,7 @@ import com.kits.kowsarapp.model.base.PreFactor;
 
 import java.text.DecimalFormat;
 
-;
+
 
 public class Broker_PFOpenViewHolder extends RecyclerView.ViewHolder {
     DecimalFormat decimalFormat = new DecimalFormat("0,000");

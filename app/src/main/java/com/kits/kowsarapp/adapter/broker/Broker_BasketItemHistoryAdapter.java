@@ -12,7 +12,6 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.application.broker.Broker_Action;
-import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.viewholder.broker.Broker_BasketItemHistoryViewHolder;
 import com.kits.kowsarapp.webService.base.APIClient;
@@ -28,7 +27,6 @@ public class Broker_BasketItemHistoryAdapter extends RecyclerView.Adapter<Broker
     Broker_APIInterface apiInterface;
     ImageInfo image_info;
     Broker_Action action;
-    private String itemPosition;
 
     public Broker_BasketItemHistoryAdapter(ArrayList<Good> goods, String Itemposition, Context mContext) {
         this.mContext = mContext;
@@ -69,7 +67,6 @@ public class Broker_BasketItemHistoryAdapter extends RecyclerView.Adapter<Broker
 
     public void updateList(ArrayList<Good> newGoods, String newItemPosition) {
         this.goods = newGoods;
-        this.itemPosition = newItemPosition;
         notifyDataSetChanged();
     }
 

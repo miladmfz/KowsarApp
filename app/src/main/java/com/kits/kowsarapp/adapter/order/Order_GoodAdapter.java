@@ -15,10 +15,7 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
-import com.kits.kowsarapp.model.order.Order_DBH;
 import com.kits.kowsarapp.viewholder.order.Order_GoodItemViewHolder;
-import com.kits.kowsarapp.webService.base.APIClient;
-import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.gson.JsonObject;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
@@ -38,13 +37,10 @@ import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +61,6 @@ public class Order_TableActivity extends AppCompatActivity {
 
     public String State = "0";
     public String EditTable = "0";
-    public String mizType = "";
 
     LinearLayout init_ll;
     LottieAnimationView progressBar;

@@ -109,12 +109,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
         binding.bBasketATotalRowBuy.setText(NumberFunctions.PerisanNumber(String.valueOf(goods.size())));
 
 
-        binding.bBasketATotalDelete.setOnClickListener(view ->
-
-
-                {
-
-
+        binding.bBasketATotalDelete.setOnClickListener(view -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
                     builder.setTitle(R.string.textvalue_allert);
                     builder.setMessage("آیا مایل به خالی کردن سبد خرید می باشید؟");
@@ -123,7 +118,6 @@ public class Broker_BasketActivity extends AppCompatActivity {
                         broker_dbh.DeletePreFactorRow(PreFac, "0");
                         finish();
                         callMethod.showToast("سبد خرید با موفقیت حذف گردید!");
-
                     });
 
                     builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
@@ -133,17 +127,9 @@ public class Broker_BasketActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
-
-
         );
 
-
-        binding.bBasketATest.setOnClickListener(view ->
-
-
-                {
-
-
+        binding.bBasketATest.setOnClickListener(view -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
                     builder.setTitle(R.string.textvalue_allert);
                     builder.setMessage("آیا فاکتور ارسال گردد؟");
@@ -159,13 +145,8 @@ public class Broker_BasketActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }
-
         );
-
-
     }
-
-
     public void intent() {
         Bundle data = getIntent().getExtras();
         assert data != null;

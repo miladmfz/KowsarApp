@@ -1,6 +1,5 @@
 package com.kits.kowsarapp.activity.find;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 
 import com.kits.kowsarapp.adapter.base.Base_ThemeSpinnerAdapter;
 import com.kits.kowsarapp.application.base.App;
@@ -33,9 +31,7 @@ import com.kits.kowsarapp.webService.find.Find_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -26,7 +26,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.Factor;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;

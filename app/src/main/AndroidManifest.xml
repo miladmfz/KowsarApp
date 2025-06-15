@@ -45,6 +45,27 @@
         android:theme="@style/GrayDefault"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".activity.ocr.Ocr_Delivery_List_Api_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ocr.Ocr_Manage_List_Api_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ocr.Ocr_Check_Confirm_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ocr.Ocr_Check_List_Api_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ocr.Ocr_Collect_Confirm_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ocr.Ocr_Collect_List_Api_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ocr.Ocr_SelectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ocr.Ocr_MergingActivity"
             android:exported="false" />
         <activity
@@ -72,10 +93,8 @@
         <activity android:name=".activity.order.Order_TableActivity" />
         <activity android:name=".activity.order.Order_SearchActivity" />
         <activity android:name=".activity.ocr.Ocr_ConfigActivity" />
-        <activity android:name=".activity.ocr.Ocr_ConfirmActivity" />
         <activity android:name=".activity.ocr.Ocr_FactorDetailActivity" />
         <activity android:name=".activity.ocr.Ocr_FactorListLocalActivity" />
-        <activity android:name=".activity.ocr.Ocr_FactorListApiActivity" />
         <activity android:name=".activity.ocr.Ocr_NavActivity" />
         <activity android:name=".activity.ocr.Ocr_PaintActivity" />
         <activity android:name=".activity.ocr.Ocr_ScanCodeActivity" />

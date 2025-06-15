@@ -9,13 +9,11 @@ import android.view.Window;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_BasketItemHistoryAdapter;
-import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.BrokerActivityBaskethistoryBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;

@@ -33,9 +33,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
-import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
-import com.kits.kowsarapp.activity.order.Order_BasketActivity;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Print;
@@ -48,8 +48,6 @@ import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.base.NumberFunctions;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -439,7 +437,7 @@ public class Ocr_CollectFragment extends Fragment {
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
                         dialogProg.dismiss();
-                        intent = new Intent(requireActivity(), Ocr_ConfirmActivity.class);
+                        intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
                         intent.putExtra("ScanResponse", BarcodeScan);
                         intent.putExtra("State", "0");
                         intent.putExtra("FactorImage", "");
@@ -577,7 +575,7 @@ public class Ocr_CollectFragment extends Fragment {
                                 conter_confirm = conter_confirm +1;
                                 if(conter_confirm==Array_GoodCodesCheck_count){
                                     assert response.body() != null;
-                                    intent = new Intent(requireActivity(), Ocr_ConfirmActivity.class);
+                                    intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
                                     intent.putExtra("ScanResponse", BarcodeScan);
                                     intent.putExtra("State", "0");
                                     intent.putExtra("FactorImage", "");
@@ -1264,7 +1262,14 @@ try {
 
                             if (lastCunter == arraygood_shortage.size()) {
 
-                                intent = new Intent( requireActivity(), Ocr_ConfirmActivity.class);
+                                if (state.equals("0")){
+                                    intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
+
+                                }else if (state.equals("1")){
+                                    intent = new Intent(requireActivity(), Ocr_Check_Confirm_Activity.class);
+
+                                }
+
                                 intent.putExtra("ScanResponse", TcPrintRef );
                                 intent.putExtra("State", state);
                                 requireActivity().finish();

@@ -8,11 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
 
-import java.text.DecimalFormat;
 
 
 public class Order_GoodBoxItemViewHolder extends RecyclerView.ViewHolder {
-    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
 
     public TextView tv_name;

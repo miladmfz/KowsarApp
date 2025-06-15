@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kits.kowsarapp.activity.ocr.Ocr_ConfirmActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
@@ -113,7 +112,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
 
-                            intent = new Intent(mContext, Ocr_ConfirmActivity.class);
+                            intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
                             intent.putExtra("ScanResponse", barcodescan);
                             intent.putExtra("State", "0");
                             ((Activity) mContext).finish();
@@ -139,7 +138,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
 
-                            intent = new Intent(mContext, Ocr_ConfirmActivity.class);
+                            intent = new Intent(mContext, Ocr_Check_Confirm_Activity.class);
                             intent.putExtra("ScanResponse", barcodescan);
                             intent.putExtra("State", "1");
                             ((Activity) mContext).finish();

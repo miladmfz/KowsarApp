@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.ocr.Ocr_FactorListApiActivity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Collect_List_Api_Activity;
 
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class Ocr_StacksAdapter extends RecyclerView.Adapter<Ocr_StacksAdapter.Vi
                 selectedItems.remove(item);
             }
 
-            Ocr_FactorListApiActivity activity = (Ocr_FactorListApiActivity) mContext;
+            Ocr_Collect_List_Api_Activity activity = (Ocr_Collect_List_Api_Activity) mContext;
             activity.CheckStackList();
 
         });

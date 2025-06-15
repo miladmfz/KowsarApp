@@ -2,11 +2,10 @@ package com.kits.kowsarapp.activity.base;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
+
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.kits.kowsarapp.BuildConfig;
@@ -101,7 +99,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         binding.baseAppRegistercode.setOnClickListener(v -> {
             int exist=0;
             for (Activation singleactive : activations) {
-                if (binding.baseAppTvGetcode.getText().toString().equals(singleactive.getActivationCode())){
+                if (Objects.requireNonNull(binding.baseAppTvGetcode.getText()).toString().equals(singleactive.getActivationCode())){
                     exist=exist+1;
                 }
             }
@@ -194,18 +192,14 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call,@NonNull  Response<RetrofitResponse> response) {
 
-                if (response.isSuccessful()) {
-                    // Handle successful response
-                } else {
-                    // Handle unsuccessful response
-                }
+
             }
 
 
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 // Handle failure
             }
         });

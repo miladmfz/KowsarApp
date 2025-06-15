@@ -1,6 +1,5 @@
 package com.kits.kowsarapp.activity.broker;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +16,7 @@ import androidx.work.WorkManager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 
-import android.location.Location;
-import android.os.Build;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -28,39 +26,30 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
+
 import com.google.android.material.navigation.NavigationView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.LocationService;
-import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 
 import com.kits.kowsarapp.BuildConfig;
-import com.kits.kowsarapp.application.base.AlarmReceiver;
-import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.WManager;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.GoodGroup;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.webService.base.APIClient;
-
-
-
-
 
 public class Broker_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

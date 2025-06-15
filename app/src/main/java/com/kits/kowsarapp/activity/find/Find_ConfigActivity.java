@@ -17,8 +17,6 @@ import com.kits.kowsarapp.databinding.FindActivityConfigBinding;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.find.Find_DBH;
 
-
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 

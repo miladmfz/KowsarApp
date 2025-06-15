@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
-import com.kits.kowsarapp.application.base.CallMethod;
 
 import java.io.File;
 import java.io.FileOutputStream;

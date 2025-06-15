@@ -2,8 +2,6 @@ package com.kits.kowsarapp.viewholder.find;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;

@@ -18,7 +18,7 @@ import com.kits.kowsarapp.model.base.NumberFunctions;
 import java.io.File;
 import java.text.DecimalFormat;
 
-;
+
 
 public class Broker_BasketItemHistoryViewHolder extends RecyclerView.ViewHolder {
     DecimalFormat decimalFormat = new DecimalFormat("0,000");

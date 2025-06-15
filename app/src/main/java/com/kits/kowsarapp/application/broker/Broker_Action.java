@@ -9,12 +9,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
@@ -26,7 +28,6 @@ import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 
-import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
@@ -44,7 +45,6 @@ import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -793,7 +793,7 @@ public class Broker_Action extends Base_Action {
 
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call,@NonNull  Response<RetrofitResponse> response) {
 
                 try {
                     assert response.body() != null;
@@ -829,7 +829,7 @@ public class Broker_Action extends Base_Action {
             }
 
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 callMethod.Log(t.getMessage());
             }
         });

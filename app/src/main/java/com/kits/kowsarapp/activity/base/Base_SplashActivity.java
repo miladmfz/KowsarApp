@@ -31,7 +31,6 @@ import com.kits.kowsarapp.activity.find.Find_NavActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Base_DBH;
-import com.kits.kowsarapp.model.broker.Broker_DBH;
 
 import java.io.File;
 import java.util.Locale;
@@ -298,9 +297,7 @@ public class Base_SplashActivity extends AppCompatActivity {
 
 
     private void requestPermission() {
-        callMethod.Log("1");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            callMethod.Log("2");
             if (!Environment.isExternalStorageManager()) {
                 try {
                     intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);

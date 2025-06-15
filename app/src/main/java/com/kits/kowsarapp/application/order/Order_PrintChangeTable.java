@@ -1,10 +1,8 @@
 package com.kits.kowsarapp.application.order;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
@@ -23,7 +21,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.order.Order_TableActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.AppPrinter;
 import com.kits.kowsarapp.model.base.Factor;
@@ -39,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

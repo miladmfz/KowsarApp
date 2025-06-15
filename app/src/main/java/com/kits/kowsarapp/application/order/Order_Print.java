@@ -10,7 +10,6 @@ import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;

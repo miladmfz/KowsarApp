@@ -9,11 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 
-import java.text.DecimalFormat;
 
 
 public class Order_ReserveViewHolder extends RecyclerView.ViewHolder {
-    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     public MaterialCardView rltv;
     public TextView tv_reservestart;

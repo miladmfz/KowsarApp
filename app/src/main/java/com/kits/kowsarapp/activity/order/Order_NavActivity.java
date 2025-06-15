@@ -4,7 +4,6 @@ package com.kits.kowsarapp.activity.order;
 import static com.kits.kowsarapp.R.string.textvalue_exitmessage;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -32,26 +31,19 @@ import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
-import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.find.Find_Replication;
 import com.kits.kowsarapp.application.order.Order_Action;
 import com.kits.kowsarapp.model.base.AppPrinter;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
-import com.kits.kowsarapp.model.find.Find_DBH;
 import com.kits.kowsarapp.model.order.Order_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 
 public class Order_NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

@@ -4,7 +4,6 @@ package com.kits.kowsarapp.application.find;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.TextView;
 
 import com.kits.kowsarapp.application.base.CallMethod;
@@ -20,9 +19,7 @@ import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.time.RadialPickerLayout;
 import com.mohamadamin.persianmaterialdatetimepicker.time.TimePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
-
-import java.util.ArrayList;
-import java.util.Calendar;
+;
 
 import retrofit2.Call;
 

@@ -1,28 +1,20 @@
 package com.kits.kowsarapp.application.base;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.base.AppPrinter;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
-import com.kits.kowsarapp.model.broker.Broker_DBH;
-
 import com.kits.kowsarapp.webService.base.APIClient;
 
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import retrofit2.Call;
