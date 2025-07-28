@@ -972,6 +972,8 @@ try {
                     ocr_goods_scan.add(good_detial);
 
                     if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
+                        checkBox.setChecked(false);
+
                         ocr_action.GoodScanDetail(ocr_goods_scan, state, getBarcodeScan());
                     } else {
                         callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");

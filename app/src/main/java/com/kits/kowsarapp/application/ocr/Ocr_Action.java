@@ -36,6 +36,7 @@ import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_ConfigActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.adapter.ocr.Ocr_GoodScan_Adapter;
+import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 
 import com.kits.kowsarapp.R;
@@ -92,7 +93,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
 
-        dialog = new Dialog(mcontxt);
+        dialog = new Dialog(mContext);
         dialogProg = new Dialog(mContext);
         print = new Ocr_Print(mContext);
 
@@ -110,10 +111,16 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     public void factor_detail(Factor factor) {
 
 
+callMethod.Log("=="+factor.getFactorPrivateCode());
+
         final Dialog dialog = new Dialog(mContext);
+
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_dialog_factordetail);
+
+
 
 
         TextView tv_AppOCRFactorCode = dialog.findViewById(R.id.ocr_factordialog_d_appocrfactorcode);
@@ -153,8 +160,17 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         tv_FactorDate.setText(NumberFunctions.PerisanNumber(factor.getFactorDate()));
         tv_CustName.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
         tv_customercode.setText(NumberFunctions.PerisanNumber(factor.getCustomercode()));
-        //TODO change Ersal be customer path
-        tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getErsall()));
+
+
+        if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
+                callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+            tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getErsall()));
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
+            tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getMandehBedehkar()));
+        }else{
+            tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getErsall()));
+        }
+
 
         if (factor.getBrokerName().length() > 20)
             tv_BrokerName.setText(NumberFunctions.PerisanNumber(factor.getBrokerName().substring(0, 20) + "..."));
@@ -229,7 +245,6 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             Pack_detail(factor,"1");
             dialog.dismiss();
         });
-
 
         dialog.show();
 
@@ -771,6 +786,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         TextView tv_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_tv4);
         TextView tv_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_tv5);
         TextView tv_good_6 = dialog.findViewById(R.id.ocr_gooddetail_b_tv6);
+        TextView tv_good_7 = dialog.findViewById(R.id.ocr_gooddetail_b_tv7);
 
 
         TextView lb_good_1 = dialog.findViewById(R.id.ocr_gooddetail_b_lb1);
@@ -779,6 +795,10 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         TextView lb_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_lb4);
         TextView lb_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_lb5);
         TextView lb_good_6 = dialog.findViewById(R.id.ocr_gooddetail_b_lb6);
+        TextView lb_good_7 = dialog.findViewById(R.id.ocr_gooddetail_b_lb7);
+
+        LinearLayoutCompat ll_good_7= dialog.findViewById(R.id.ocr_gooddetail_ll_lb7);
+
 
         LinearLayoutCompat ll_good_6= dialog.findViewById(R.id.ocr_gooddetail_ll_lb6);
 
@@ -824,6 +844,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                             lb_good_5.setText("شماره قفسه");
 
 
+
+
                         }else if (callMethod.ReadString("FactorDbName").equals("Afarinegan")){
 
                             lb_good_1.setText("موجودی کل");
@@ -843,6 +865,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getPageNo()));
                         tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodExplain2()));
                         ll_good_6.setVisibility(View.GONE);
+                        ll_good_7.setVisibility(View.GONE);
 
 
                     } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
@@ -852,6 +875,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         lb_good_4.setText("پشت جلد");
                         lb_good_5.setText("شماره قفسه");
                         lb_good_6.setText("نیاز فاکتور");
+                        lb_good_7.setText("کد کالا ");
 
                         tv_good_6.setText(NumberFunctions.PerisanNumber(singleGood.getFacAmount()));
 
@@ -860,6 +884,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
                         tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
                         tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getMaxSellPrice()));
                         tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
+                        tv_good_7.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodCode()));
 
                     }else{
                         ll_good_6.setVisibility(View.GONE);
@@ -1035,7 +1060,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             }
 
         } else {
-            goodscan_tvstatus.setText("در این فکتور وجود ندارد");
+            goodscan_tvstatus.setText("در این فاکتور وجود ندارد");
         }
 
         goodscan_btn.setOnClickListener(view -> dialog.dismiss());
@@ -1189,6 +1214,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
 
     public void GetOcrFactorDetail(Factor factor) {
 
+
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
             call=apiInterface.GetOcrFactorDetail(
@@ -1207,8 +1233,10 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
-                    Factor Factor=response.body().getFactors().get(0);
-                    factor_detail(Factor);
+
+                    Factor Factor_detail=response.body().getFactors().get(0);
+
+                    factor_detail(Factor_detail);
                 }
             }
             @Override

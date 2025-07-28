@@ -394,7 +394,7 @@ public class Ocr_Manage_List_Api_Activity extends AppCompatActivity {
 
     public void CallRecycle() {
 
-        ocr_manage_listApi_adapter = new Ocr_Manage_ListApi_Adapter(visible_factors,state, App.getContext());
+        ocr_manage_listApi_adapter = new Ocr_Manage_ListApi_Adapter(visible_factors,state, this);
         if (ocr_manage_listApi_adapter.getItemCount()==0){
             prog.setVisibility(View.GONE);
 

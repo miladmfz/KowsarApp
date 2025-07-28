@@ -154,6 +154,7 @@ public class Ocr_Collect_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Collec
 
                         intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                         intent.putExtra("State", state);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         mContext.startActivity(intent);
                     } else {
                         Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();

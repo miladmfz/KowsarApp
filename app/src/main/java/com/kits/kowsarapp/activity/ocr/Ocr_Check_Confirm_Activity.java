@@ -21,6 +21,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
+import com.kits.kowsarapp.fragment.ocr.Ocr_PackFragment;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -52,7 +53,8 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
     CallMethod callMethod;
     FragmentManager fragmentManager ;
     FragmentTransaction fragmentTransaction;
-    Ocr_CollectFragment collectFragment;
+    //Ocr_CollectFragment collectFragment;
+    Ocr_PackFragment packFragment;
 
 
     EditText ed_barcode;
@@ -147,10 +149,12 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        collectFragment = new Ocr_CollectFragment();
+        //collectFragment = new Ocr_CollectFragment();
+        packFragment = new Ocr_PackFragment();
 
 
-        collectFragment.setBarcodeScan(BarcodeScan);
+        //collectFragment.setBarcodeScan(BarcodeScan);
+        packFragment.setBarcodeScan(BarcodeScan);
 
         ocr_goods_scan.clear();
     }
@@ -217,8 +221,6 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
         );
 
 
-
-
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
 
@@ -228,8 +230,6 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
         }else{
             OrderBy="GoodExplain1";
         }
-
-
 
 
         Call<RetrofitResponse> call;
@@ -251,13 +251,21 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
                         finish();
                     } else {
                         ocr_goods = response.body().getOcr_Goods();
-                        if (factor.getAppIsControled().equals("0")) {
-                            collectFragment.setFactor(factor);
-                            collectFragment.setocr_Goods(ocr_goods);
-                            collectFragment.setState(State);
-                            collectFragment.setTcPrintRef(BarcodeScan);
-                            fragmentTransaction.replace(R.id.ocr_check_confirm_a_framelayout, collectFragment);
+                        if (factor.getAppIsPacked().equals("0")) {
+//                            collectFragment.setFactor(factor);
+//                            collectFragment.setocr_Goods(ocr_goods);
+//                            collectFragment.setState(State);
+//                            collectFragment.setTcPrintRef(BarcodeScan);
+//                            fragmentTransaction.replace(R.id.ocr_check_confirm_a_framelayout, collectFragment);
+//                            fragmentTransaction.commit();
+
+
+                            packFragment.setFactor(factor);
+                            packFragment.setocr_Goods(ocr_goods);
+                            fragmentTransaction.replace(R.id.ocr_check_confirm_a_framelayout, packFragment);
                             fragmentTransaction.commit();
+
+
                         } else{
                             finish();
                         }
@@ -274,6 +282,8 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
 
         ed_barcode.setFocusable(true);
         ed_barcode.requestFocus();
+
+
     }
 
 

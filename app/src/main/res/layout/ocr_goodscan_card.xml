@@ -104,6 +104,29 @@
                         android:textSize="16sp"
                         android:textColor="?attr/colorOnBackground"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:text="کد کالا:"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnBackground"/>
+                    <TextView
+                        android:id="@+id/ocr_goodscan_c_goodcode"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:textSize="16sp"
+                        android:textColor="?attr/colorOnBackground"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                 <Button
                     android:id="@+id/ocr_goodscan_c_btn"
@@ -124,7 +147,7 @@
             <ImageView
                 android:id="@+id/ocr_goodscan_c_image"
                 android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_height="250dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="0.4"
                 android:background="@drawable/img_base_no_photo"

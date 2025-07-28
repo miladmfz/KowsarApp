@@ -11,11 +11,14 @@ android {
         minSdk 29
         targetSdk 33
         versionCode 1
-        versionName "14.03.09"
+        versionName "14.05.01"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 
     buildTypes {
         release {

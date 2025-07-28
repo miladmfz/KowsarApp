@@ -30,6 +30,7 @@ public class Ocr_Good implements Serializable {
 
     @SerializedName("FormNo")
     private String FormNo;
+
     @SerializedName("TotalAvailable")
     private String TotalAvailable;
 
@@ -41,7 +42,6 @@ public class Ocr_Good implements Serializable {
 
     @SerializedName("PageNo")
     private String PageNo;
-
 
 
     @SerializedName("SumPrice")

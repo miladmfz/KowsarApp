@@ -72,12 +72,13 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
         holder.goodscan_goodname.setText(ocr_goods.get(position).getGoodName());
         holder.goodscan_factoramount.setText(ocr_goods.get(position).getFacAmount());
         holder.goodscan_goodsellprice.setText(ocr_goods.get(position).getGoodMaxSellPrice());
+        holder.goodscan_goodcode.setText(ocr_goods.get(position).getGoodCode());
 
         Call<RetrofitResponse> call2;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2=apiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode()+"",0,400);
+            call2=apiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode()+"",0,250);
         }else{
-            call2=secendApiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode()+"",0,400);
+            call2=secendApiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode()+"",0,250);
         }
 
         call2.enqueue(new Callback<RetrofitResponse>() {
@@ -102,9 +103,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("Deliverer"));
+                    call=apiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("JobPersonRef"));
                 }else{
-                    call=secendApiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("Deliverer"));
+                    call=secendApiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("JobPersonRef"));
                 }
 
                 call.enqueue(new Callback<RetrofitResponse>() {
@@ -129,9 +130,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("Deliverer"));
+                    call=apiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("JobPersonRef"));
                 }else{
-                    call=secendApiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("Deliverer"));
+                    call=secendApiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("JobPersonRef"));
                 }
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
@@ -172,6 +173,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
         private final TextView goodscan_goodname;
         private final TextView goodscan_factoramount;
         private final TextView goodscan_goodsellprice;
+        private final TextView goodscan_goodcode;
         private final ImageView goodscan_image;
         private final Button goodscan_btn;
 
@@ -181,6 +183,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
             goodscan_goodname = itemView.findViewById(R.id.ocr_goodscan_c_goodname);
             goodscan_factoramount = itemView.findViewById(R.id.ocr_goodscan_c_factoramount);
             goodscan_goodsellprice = itemView.findViewById(R.id.ocr_goodscan_c_goodsellprice);
+            goodscan_goodcode = itemView.findViewById(R.id.ocr_goodscan_c_goodcode);
             goodscan_image = itemView.findViewById(R.id.ocr_goodscan_c_image);
             goodscan_btn = itemView.findViewById(R.id.ocr_goodscan_c_btn);
 

@@ -279,7 +279,30 @@ public class Ocr_Print {
         FactorDate.setPadding(0, 0, 0, 15);
 
         TextView FactorDate1 = new TextView(mContext);
-        FactorDate1.setText(NumberFunctions.PerisanNumber(" کد مسیر :   "+factorData.getErsall()));
+
+
+
+
+
+
+        if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
+                callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+            FactorDate1.setText(NumberFunctions.PerisanNumber(" کد مسیر :   "+factorData.getErsall()));
+
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
+
+            FactorDate1.setText(NumberFunctions.PerisanNumber(" کد مسیر :   "+factorData.getMandehBedehkar()));
+
+        }else{
+            FactorDate1.setText(NumberFunctions.PerisanNumber(" کد مسیر :   "+factorData.getErsall()));
+
+        }
+
+
+
+
+
+
         FactorDate1.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         FactorDate1.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")) );
         FactorDate1.setTextColor(mContext.getColor(R.color.colorPrimaryDark));

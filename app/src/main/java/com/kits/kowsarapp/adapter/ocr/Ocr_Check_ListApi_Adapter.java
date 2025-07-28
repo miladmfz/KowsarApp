@@ -118,6 +118,7 @@ public class Ocr_Check_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Check_Li
 
                     intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                     intent.putExtra("State", state);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();

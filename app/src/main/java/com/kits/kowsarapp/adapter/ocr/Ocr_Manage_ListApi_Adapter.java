@@ -1,10 +1,14 @@
 package com.kits.kowsarapp.adapter.ocr;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,7 +28,7 @@ import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
 import java.util.ArrayList;
-
+import java.util.Objects;
 
 
 public class Ocr_Manage_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Manage_ListApi_Adapter.facViewHolder> {
@@ -39,8 +43,8 @@ public class Ocr_Manage_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Manage_
 
     public Ocr_Manage_ListApi_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
         this.mContext = context;
-        this.callMethod = new CallMethod(context);
-        this.ocr_action =new Ocr_Action(context);
+        this.callMethod = new CallMethod(mContext);
+        this.ocr_action =new Ocr_Action(mContext);
         this.state = State;
         this.factors = retrofitFactors;
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
@@ -77,11 +81,10 @@ public class Ocr_Manage_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Manage_
             holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         }
 
-
         Factor factor =factors.get(position);
 
-        holder.fac_customer.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
-        holder.fac_code.setText(NumberFunctions.PerisanNumber(factor.getFactorPrivateCode()));
+        holder.fac_customer.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustName()));
+        holder.fac_code.setText(NumberFunctions.PerisanNumber(factors.get(position).getFactorPrivateCode()));
         holder.fac_customercode.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustomerCode()));
 
 
@@ -97,7 +100,7 @@ public class Ocr_Manage_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Manage_
 
         holder.fac_factor_state_ll.setVisibility(View.GONE);
 
-        holder.fac_kowsardate.setText(NumberFunctions.PerisanNumber(factor.getFactorDate()));
+        holder.fac_kowsardate.setText(NumberFunctions.PerisanNumber(factors.get(position).getFactorDate()));
 
 
 

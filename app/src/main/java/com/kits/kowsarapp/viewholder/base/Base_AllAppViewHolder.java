@@ -117,7 +117,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
                 img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.img_broker_logo));
                 break;
             case "2":  // ocr
-                tv_apptype.setText("جمع آوری و توضیع");
+                tv_apptype.setText("پردازش و توزیع");
                 img.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.img_logo_ocr));
 
                 break;

@@ -161,7 +161,71 @@ public class Broker_Replication {
         replicationModels = broker_dbh.GetReplicationTable();
         if (replicatelevel < replicationModels.size()) {
             ReplicationModel replicatedetail = replicationModels.get(replicatelevel);
-            tv_rep.setText(NumberFunctions.PerisanNumber(replicationModels.size() + "/" + replicatedetail.getReplicationCode() + "در حال بروز رسانی"));
+
+
+
+            String tableName;
+            int currentStep = replicatedetail.getReplicationCode();
+            int totalSteps = 15;
+
+
+            switch (currentStep) {
+                case 1:
+                    tableName = "کالا";
+                    break;
+                case 2:
+                    tableName = "موجودی انبار";
+                    break;
+                case 3:
+                    tableName = "سرگروه";
+                    break;
+                case 4:
+                    tableName = "گروه کالا";
+                    break;
+                case 5:
+                    tableName = "اجزای پایه";
+                    break;
+                case 6:
+                    tableName = "شهر";
+                    break;
+                case 7:
+                    tableName = "ادرس";
+                    break;
+                case 8:
+                    tableName = "مشتری";
+                    break;
+                case 9:
+                    tableName = "خصوصیات اضافه";
+                    break;
+                case 10:
+                    tableName = "گروهیندی ها";
+                    break;
+                case 11:
+                    tableName = "سمت";
+                    break;
+                case 12:
+                    tableName = "سمت شخص";
+                    break;
+                case 13:
+                    tableName = "سمت شخص کالا";
+                    break;
+                case 14:
+                    tableName = "مشتریان بازاریاب";
+                    break;
+                case 15:
+                    tableName = "واحد سنجش";
+                    break;
+                default:
+                    tableName = "نامشخص";
+                    break;
+            }
+
+            String message = "مرحله " + currentStep + " از " + totalSteps + " در حال بروز رسانی " + tableName;
+            tv_rep.setText(NumberFunctions.PerisanNumber(message));
+
+
+
+
             tableDetails = broker_dbh.GetTableDetail(replicatedetail.getClientTable());
             FinalStep = 0;
             LastRepCode = String.valueOf(replicatedetail.getLastRepLogCode());

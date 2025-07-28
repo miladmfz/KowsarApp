@@ -99,7 +99,7 @@
                         android:text="بایگانی: "
                         android:textColor="?attr/colorOnBackground"
                         android:textSize="20sp" />
-                    
+
                     <TextView
                         android:id="@+id/ocr_factordialog_d_appocrfactorcode"
                         android:layout_width="match_parent"

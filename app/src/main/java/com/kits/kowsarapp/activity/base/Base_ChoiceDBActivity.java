@@ -4,13 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -53,6 +57,7 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     TextView tv_step;
     Button btn_prog;
 
+    boolean doubleBackToExitPressedOnce = false;
 
     DefaultActivityDbBinding binding;
 
@@ -210,5 +215,27 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
 
     }
+
+
+    // TODO onBackPressed
+
+
+//
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = findViewById(R.id.b_nav_a_drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else if (doubleBackToExitPressedOnce) {
+//            super.onBackPressed();
+//            return;
+//        }
+//        this.doubleBackToExitPressedOnce = true;
+//        Toast.makeText(this, "برای خروج مجددا کلیک کنید", Toast.LENGTH_SHORT).show();
+//
+//        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+//    }
+
+
 
 }

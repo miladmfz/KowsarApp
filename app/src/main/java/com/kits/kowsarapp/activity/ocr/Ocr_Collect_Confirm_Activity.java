@@ -22,6 +22,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
+import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
 import com.kits.kowsarapp.fragment.ocr.Ocr_PackFragment;
 import com.kits.kowsarapp.fragment.ocr.Ocr_StackFragment;
 import com.kits.kowsarapp.model.base.Factor;
@@ -54,7 +55,8 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
     CallMethod callMethod;
     FragmentManager fragmentManager ;
     FragmentTransaction fragmentTransaction;
-    Ocr_PackFragment packFragment;
+    //Ocr_PackFragment packFragment;
+    Ocr_CollectFragment collectFragment;
 
     EditText ed_barcode;
 
@@ -148,9 +150,11 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        packFragment = new Ocr_PackFragment();
+        //packFragment = new Ocr_PackFragment();
+        collectFragment = new Ocr_CollectFragment();
 
-        packFragment.setBarcodeScan(BarcodeScan);
+        //packFragment.setBarcodeScan(BarcodeScan);
+        collectFragment.setBarcodeScan(BarcodeScan);
 
         ocr_goods_scan.clear();
     }
@@ -227,7 +231,7 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
             OrderBy="GoodName";
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
-            OrderBy="FormNo Desc";
+            OrderBy="FormNo";
         }else{
             OrderBy="GoodName";
         }
@@ -253,11 +257,23 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                     } else {
                         ocr_goods = response.body().getOcr_Goods();
 
-                        if (factor.getAppIsPacked().equals("0")) {
-                            packFragment.setFactor(factor);
-                            packFragment.setocr_Goods(ocr_goods);
-                            fragmentTransaction.replace(R.id.ocr_collect_confirm_a_framelayout, packFragment);
+                        if (factor.getAppIsControled().equals("0")) {
+//                            packFragment.setFactor(factor);
+//                            packFragment.setocr_Goods(ocr_goods);
+//                            fragmentTransaction.replace(R.id.ocr_collect_confirm_a_framelayout, packFragment);
+//                            fragmentTransaction.commit();
+
+
+                            collectFragment.setFactor(factor);
+                            collectFragment.setocr_Goods(ocr_goods);
+                            collectFragment.setState(State);
+                            collectFragment.setTcPrintRef(BarcodeScan);
+                            fragmentTransaction.replace(R.id.ocr_collect_confirm_a_framelayout, collectFragment);
                             fragmentTransaction.commit();
+
+
+
+
                         } else {
                             finish();
                         }
