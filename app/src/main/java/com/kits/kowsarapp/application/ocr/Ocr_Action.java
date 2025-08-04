@@ -258,79 +258,46 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
             dialogProg();
 
-            Call<RetrofitResponse> call3;
-
+            Call<RetrofitResponse> call2;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call3=apiInterface.OcrControlled(
-                        "OcrControlled_new",
+                call2=apiInterface.SetPackDetail(
+                        "SetPackDetail_new",
                         factor.getAppOCRFactorCode(),
-                        "3",
-                        callMethod.ReadString("JobPersonRef")
+                        "",
+                        callMethod.ReadString("Deliverer"),
+                        "",
+                        "",
+                        "0",
+                        factor.getAppOCRFactorExplain()
+
+
                 );
             }else{
-                call3=secendApiInterface.OcrControlled(
-                        "OcrControlled_new",
+                call2=secendApiInterface.SetPackDetail(
+                        "SetPackDetail_new",
                         factor.getAppOCRFactorCode(),
-                        "3",
-                        callMethod.ReadString("JobPersonRef")
+                        "",
+                        callMethod.ReadString("Deliverer"),
+                        "",
+                        "",
+                        "0",
+                        factor.getAppOCRFactorExplain()
+
                 );
             }
 
-
-            call3.enqueue(new Callback<RetrofitResponse>() {
+            call2.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    dialogProg.dismiss();
 
-
-                    Call<RetrofitResponse> call2;
-                    if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                        call2=apiInterface.SetPackDetail(
-                                "SetPackDetail_new",
-                                factor.getAppOCRFactorCode(),
-                                "",
-                                callMethod.ReadString("Deliverer"),
-                                "",
-                                "",
-                                "0",
-                                factor.getAppOCRFactorExplain()
-
-
-                        );
-                    }else{
-                        call2=secendApiInterface.SetPackDetail(
-                                "SetPackDetail_new",
-                                factor.getAppOCRFactorCode(),
-                                "",
-                                callMethod.ReadString("Deliverer"),
-                                "",
-                                "",
-                                "0",
-                                factor.getAppOCRFactorExplain()
-
-                        );
+                    if (!callMethod.ReadString("Category").equals("5")) {
+                        print.Printing(factor,Empty_goods,"1","0");
                     }
-
-                    call2.enqueue(new Callback<RetrofitResponse>() {
-                        @Override
-                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                            dialog.dismiss();
-//                                if (!callMethod.ReadString("Category").equals("5")) {
-//                                    OcrPrintPacker(factor);
-//                                }
-                            if (!callMethod.ReadString("Category").equals("5")) {
-                                print.Printing(factor,Empty_goods,packCount,"0");
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        }
-                    });
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    callMethod.Log(t.getMessage());
                 }
             });
 
@@ -828,7 +795,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     ArrayList<Ocr_Good> ocr_goods = response.body().getOcr_Goods();
 
 
-                    if (!callMethod.ReadBoolan("ShowAmount")){
+                    if (!callMethod.ReadBoolan("ShowDetailAmount")){
                         ll_amonut.setVisibility(View.GONE);
                     }
 
@@ -884,7 +851,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
                         tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getMaxSellPrice()));
                         tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
-                        tv_good_7.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodCode()));
+                        tv_good_7.setText(NumberFunctions.PerisanNumber(singleGood.getGoodCode()));
 
                     }else{
                         ll_good_6.setVisibility(View.GONE);

@@ -111,6 +111,8 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditString("StackCategory", "همه");
             callMethod.EditString("FactorDbName", "");
 
+            callMethod.EditString("BarcodeDelay", "500");
+
             callMethod.EditString("Category", "0");
             callMethod.EditString("ConditionPosition", "0");
             callMethod.EditString("LastTcPrint", "0");
@@ -120,8 +122,9 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditString("AccessCount", "5");
 
             callMethod.EditBoolan("ShowSumAmountHint", true);
+            callMethod.EditBoolan("ShowTotalAmount", true);
             callMethod.EditBoolan("ArabicText", true);
-            callMethod.EditBoolan("ShowAmount", true);
+            callMethod.EditBoolan("ShowDetailAmount", true);
             callMethod.EditBoolan("AutoSend", true);
             callMethod.EditBoolan("PrintBarcode", true);
             callMethod.EditBoolan("JustScanner", true);

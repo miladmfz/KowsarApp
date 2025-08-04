@@ -185,6 +185,9 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
                     @Override
                     public void afterTextChanged( Editable editable) {
                         //String barcode1 = editable.toString().substring(2).replace("\n", "");
+                        handler.removeCallbacksAndMessages(null);
+                        handler.postDelayed(() -> {
+
                         if (ocr_goods.size() > 0) {
 
                             if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
@@ -215,6 +218,8 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
                         }else{
                             callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
                         }
+                        }, Integer.parseInt(callMethod.ReadString("BarcodeDelay")));
+
                     }
 
                 }

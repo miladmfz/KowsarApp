@@ -399,6 +399,10 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
             good_amount_tv.setGravity(Gravity.CENTER);
 
             TextView good_totalprice_tv = new TextView(getApplicationContext());
+            callMethod.Log("g.getSumPrice() = "+g.getPrice());
+            callMethod.Log("g.getSumPrice() = "+g.getFacAmount());
+
+            callMethod.Log("g.getSumPrice() = "+g.getSumPrice());
             good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getSumPrice()))));
             good_totalprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
             good_totalprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));

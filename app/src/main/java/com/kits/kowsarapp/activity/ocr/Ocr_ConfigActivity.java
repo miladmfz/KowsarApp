@@ -70,9 +70,9 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
     Button btn_config;
     EditText ed_titlesize,ed_rowcall,ed_bodysize;
-    TextView tv_Deliverer,tv_lastprinter,tv_delay,tv_accesscount,tv_laststack;
+    TextView tv_Deliverer,tv_lastprinter,tv_barcodedelay,tv_delay,tv_accesscount,tv_laststack;
 
-    SwitchMaterial sm_showamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle,sm_shortagelist;
+    SwitchMaterial sm_showdetailamount,sm_showtotalamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle,sm_shortagelist;
     LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack;
 
     String stackcategory="همه";
@@ -134,6 +134,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         tv_Deliverer =findViewById(R.id.ocr_config_a_deliverer);
         tv_lastprinter =findViewById(R.id.ocr_config_a_lastprinter);
         tv_delay =findViewById(R.id.ocr_config_a_delay);
+        tv_barcodedelay =findViewById(R.id.ocr_config_a_barcodedelay);
         tv_accesscount =findViewById(R.id.ocr_config_a_accesscount);
         tv_laststack =findViewById(R.id.ocr_config_a_laststack);
 
@@ -142,7 +143,8 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
 
         sm_arabictext = findViewById(R.id.ocr_config_a_arabictext);
-        sm_showamount = findViewById(R.id.ocr_config_a_showamount);
+        sm_showdetailamount = findViewById(R.id.ocr_config_a_showamount);
+        sm_showtotalamount = findViewById(R.id.ocr_config_a_showtotalamount);
         sm_autosend = findViewById(R.id.ocr_config_a_autosend);
         sm_sendtimetype = findViewById(R.id.ocr_config_a_sendtimetype);
         sm_printbarcode = findViewById(R.id.ocr_config_a_printbarcode);
@@ -191,11 +193,13 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
         ed_rowcall.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("RowCall")));
         tv_delay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
+        tv_barcodedelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BarcodeDelay")));
         tv_accesscount.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("AccessCount")));
 
         sm_arabictext.setChecked(callMethod.ReadBoolan("ArabicText"));
 
-        sm_showamount.setChecked(callMethod.ReadBoolan("ShowAmount"));
+        sm_showdetailamount.setChecked(callMethod.ReadBoolan("ShowDetailAmount"));
+        sm_showtotalamount.setChecked(callMethod.ReadBoolan("ShowTotalAmount"));
         sm_autosend.setChecked(callMethod.ReadBoolan("AutoSend"));
         sm_printbarcode.setChecked(callMethod.ReadBoolan("PrintBarcode"));
         sm_justscanner.setChecked(callMethod.ReadBoolan("JustScanner"));
@@ -207,6 +211,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         btn_config.setOnClickListener(v -> {
             callMethod.EditString("Deliverer",tv_Deliverer.getText().toString());
             callMethod.EditString("Delay",tv_delay.getText().toString());
+            callMethod.EditString("BarcodeDelay",tv_barcodedelay.getText().toString());
             callMethod.EditString("AccessCount",tv_accesscount.getText().toString());
 
             callMethod.EditString("Category",workcategory);
@@ -221,12 +226,21 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         });
 
 
-        sm_showamount.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (callMethod.ReadBoolan("ShowAmount")) {
-                callMethod.EditBoolan("ShowAmount", false);
+        sm_showdetailamount.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShowDetailAmount")) {
+                callMethod.EditBoolan("ShowDetailAmount", false);
                 callMethod.showToast("خیر");
             } else {
-                callMethod.EditBoolan("ShowAmount", true);
+                callMethod.EditBoolan("ShowDetailAmount", true);
+                callMethod.showToast("بله");
+            }
+        });
+        sm_showtotalamount.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShowTotalAmount")) {
+                callMethod.EditBoolan("ShowTotalAmount", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("ShowTotalAmount", true);
                 callMethod.showToast("بله");
             }
         });
@@ -235,7 +249,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                 callMethod.EditBoolan("PrintBarcode", false);
                 callMethod.showToast("خیر");
             } else {
-                callMethod.EditBoolan("ShowAmount", true);
+                callMethod.EditBoolan("PrintBarcode", true);
                 callMethod.showToast("بله");
             }
         });

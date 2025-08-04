@@ -350,7 +350,7 @@ public class Ocr_CollectFragment extends Fragment {
 
         ll_good_body.addView(ll_good_body_detail);
 
-        if (callMethod.ReadBoolan("JustScanner")){
+        if (callMethod.ReadBoolan("ShowTotalAmount")){
             ll_factor_summary.addView(tv_total_amount);
         }
         ll_factor_summary.addView(tv_total_price);
@@ -366,7 +366,14 @@ public class Ocr_CollectFragment extends Fragment {
             ll_main.addView(ll_factor_summary);
             ll_main.addView(ll_send_confirm);
         }
+//        EditText edBarcode = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
 
+
+//        scrollView_main.setOnTouchListener((v, event) -> {
+//            edBarcode.requestFocus();
+//            edBarcode.selectAll();
+//            return false; // یعنی اجازه بده اسکرول ادامه پیدا کنه
+//        });
 
         ConfirmCount_Control();
 
@@ -401,10 +408,18 @@ public class Ocr_CollectFragment extends Fragment {
 
                                             if (!cb.isChecked()) {
 
+
                                                 cb.requestFocus();
 
                                                 scrollView_main.post(() -> {
                                                     cb.getParent().requestChildFocus(cb, cb);
+
+                                                    // برگردوندن فوکوس به EditText بعد از اسکرول
+                                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                                        EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
+                                                        edBarcode1.requestFocus();
+                                                        edBarcode1.selectAll();
+                                                    }, 300);  // یه تاخیر کوتاه برای برگشت فوکوس
                                                 });
 
                                                 return;
@@ -857,8 +872,6 @@ try {
 
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
-
-
             tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
 
 

@@ -132,7 +132,7 @@ public class Ocr_Print {
 
                     if (callMethod.ReadString("Category").equals("2")) {
                         for (AppPrinter appPrinter : AppPrinters) {
-                            if (appPrinter.getWhereClause().equals(callMethod.ReadString("StackCategory"))) {
+                            if (appPrinter.getPrinterExplain().equals(callMethod.ReadString("PrinterName"))) {
                                 printerconter++;
                                 targetprinter = appPrinter;
                                 printDialogView();
@@ -298,11 +298,6 @@ public class Ocr_Print {
 
         }
 
-
-
-
-
-
         FactorDate1.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         FactorDate1.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")) );
         FactorDate1.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
@@ -332,6 +327,14 @@ public class Ocr_Print {
         Stack.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         Stack.setPadding(0, 0, 0, 30);
 
+        TextView Explain = new TextView(mContext);
+        Explain.setText(NumberFunctions.PerisanNumber("توضیحات : " +factorData.getExplain()));
+        Explain.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+        Explain.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+        Explain.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
+        Explain.setGravity(Gravity.RIGHT);
+        Explain.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        Explain.setPadding(0, 0, 0, 30);
 
 
         LinearLayoutCompat Header_GoodList = new LinearLayoutCompat(App.getContext());
@@ -362,12 +365,6 @@ public class Ocr_Print {
         Header_ShortageAmount.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
         Header_ShortageAmount.setPadding(0, 0, 0, 10);
         Header_ShortageAmount.setGravity(Gravity.CENTER);
-
-
-
-
-
-
 
 
         int GoodList_Counter = 0;
@@ -504,8 +501,8 @@ public class Ocr_Print {
 
         main_layout.addView(img_explain);
 
-
-        //        if (callMethod.ReadBoolan("PrintBarcode")){
+//
+//                if (callMethod.ReadBoolan("PrintBarcode")){
 //            // Barcode view ro tolid mikonim
 //            ImageView barcodeImageView = new ImageView(App.getContext());
 //            barcodeImageView.setLayoutParams(new LinearLayoutCompat.LayoutParams(
@@ -568,7 +565,7 @@ public class Ocr_Print {
 
                 if (response.body().getText().equals("Done")) {
                     dialogProg.dismiss();
-                    //((Activity) mContext).finish();
+                    ((Activity) mContext).finish();
                 }
             }
 

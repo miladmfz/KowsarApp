@@ -7,14 +7,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -77,22 +80,22 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
     Call<RetrofitResponse> call;
     TextView tv_lottiestatus;
 
-
+    Dialog dialog1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_collect_confirm);
 
-        Dialog dialog1 = new Dialog(this);
-
+         dialog1 = new Dialog(this);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+        dialog1.setContentView(R.layout.ocr_spinner_box);
+        TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
+        repw.setText("در حال خواندن اطلاعات");
         try {
 
-            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-            dialog1.setContentView(R.layout.ocr_spinner_box);
-            TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
-            repw.setText("در حال خواندن اطلاعات");
+
             dialog1.show();
         }catch (Exception e){
             callMethod.Log(e.getMessage());
@@ -142,6 +145,7 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
         progressBar = findViewById(R.id.ocr_collect_confirm_a_good_prog);
         img_lottiestatus = findViewById(R.id.ocr_collect_confirm_a_good_lottie);
         tv_lottiestatus = findViewById(R.id.ocr_collect_confirm_a_good_tvstatus);
+        ed_barcode.setFocusable(true);
 
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -173,8 +177,9 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
 
     }
 
-    public void Collect(){
+    public void Searchbox(){
 
+        ed_barcode.requestFocus();
 
         ed_barcode.addTextChangedListener(
                 new TextWatcher() {
@@ -191,40 +196,56 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                     @Override
                     public void afterTextChanged( Editable editable) {
                         //String barcode1 = editable.toString().substring(2).replace("\n", "");
-                        if (ocr_goods.size() > 0) {
 
-                            if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-                                ocr_goods_scan.clear();
-                                handler.removeCallbacksAndMessages(null);
-                                handler.postDelayed(() -> {
-                                    String barcode="" ;
+                        handler.removeCallbacksAndMessages(null);
+                        handler.postDelayed(() -> {
+                            dialog1.show();
 
-                                    try {
-                                        barcode = NumberFunctions.EnglishNumber(editable.toString().substring(2, editable.toString().length() - 2).replace("\n", ""));
+                            if (ocr_goods.size() > 0) {
 
-                                    }catch (Exception e){
-                                        barcode ="";
-                                    }
+                                if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
 
-                                    ed_barcode.selectAll();
 
-                                    for (Ocr_Good singlegood : ocr_goods) {
-                                        if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
-                                            ocr_goods_scan.add(singlegood);
+
+                                    ocr_goods_scan.clear();
+                                    handler.removeCallbacksAndMessages(null);
+                                    handler.postDelayed(() -> {
+                                        String barcode="" ;
+
+                                        try {
+                                            barcode = NumberFunctions.EnglishNumber(editable.toString().substring(2, editable.toString().length() - 2).replace("\n", ""));
+
+                                        }catch (Exception e){
+                                            barcode ="";
                                         }
 
-                                    }
+                                        ed_barcode.selectAll();
 
-                                    action.GoodScanDetail(ocr_goods_scan, State, BarcodeScan);
-                                }, Integer.parseInt(callMethod.ReadString("Delay")));
+                                        for (Ocr_Good singlegood : ocr_goods) {
+                                            if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
+                                                ocr_goods_scan.add(singlegood);
+                                            }
+
+                                        }
+                                        dialog1.dismiss();
+                                        action.GoodScanDetail(ocr_goods_scan, State, BarcodeScan);
+                                    }, Integer.parseInt(callMethod.ReadString("Delay")));
+                                }
+                            }else{
+                                callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
                             }
-                        }else{
-                            callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
-                        }
+
+                        }, Integer.parseInt(callMethod.ReadString("BarcodeDelay")));
+
                     }
 
                 }
         );
+
+
+    }
+    public void Collect(){
+
 
 
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
@@ -258,11 +279,6 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                         ocr_goods = response.body().getOcr_Goods();
 
                         if (factor.getAppIsControled().equals("0")) {
-//                            packFragment.setFactor(factor);
-//                            packFragment.setocr_Goods(ocr_goods);
-//                            fragmentTransaction.replace(R.id.ocr_collect_confirm_a_framelayout, packFragment);
-//                            fragmentTransaction.commit();
-
 
                             collectFragment.setFactor(factor);
                             collectFragment.setocr_Goods(ocr_goods);
@@ -270,10 +286,7 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                             collectFragment.setTcPrintRef(BarcodeScan);
                             fragmentTransaction.replace(R.id.ocr_collect_confirm_a_framelayout, collectFragment);
                             fragmentTransaction.commit();
-
-
-
-
+                            Searchbox();
                         } else {
                             finish();
                         }
@@ -288,176 +301,15 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
             }
         });
 
-        ed_barcode.setFocusable(true);
-        ed_barcode.requestFocus();
     }
 
 
-    public void StackLocation(){
 
-        tv_lottiestatus.setText("اسکن کنید");
-        tv_lottiestatus.setVisibility(View.VISIBLE);
-        if (BarcodeScan.length()>0){
-
-            progressBar.setVisibility(View.VISIBLE);
-            tv_lottiestatus.setText("در حال جستجو");
-            tv_lottiestatus.setVisibility(View.VISIBLE);
-            ed_barcode.setText(BarcodeScan);
-            ed_barcode.selectAll();
-            Search_call();
-        }
-        ed_barcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 100));
-        ed_barcode.setPadding(5, 5, 5, 5);
-
-
-
-        img_lottiestatus.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
-        ed_barcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ed_barcode.setFocusable(true);
-                ed_barcode.requestFocus();
-                ed_barcode.selectAll();
-            }
-        });
-
-
-        tv_lottiestatus.setOnClickListener(view -> {
-            Intent intent = new Intent(this, Ocr_ScanCodeActivity.class);
-            startActivity(intent);
-            finish();
-        });
-        ed_barcode.addTextChangedListener(
-                new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-
-
-                    @Override
-                    public void afterTextChanged( Editable editable) {
-
-
-                        handler.removeCallbacksAndMessages(null);
-                        handler.postDelayed(() -> {
-
-
-                            if (ed_barcode.getText().toString().length()>0){
-
-                                Search_call();
-
-                            }else {
-                                if (!ocr_goods.isEmpty()) {
-                                    ocr_goods.clear();
-                                }
-
-                                img_lottiestatus.setVisibility(View.GONE);
-                                progressBar.setVisibility(View.GONE);
-                                tv_lottiestatus.setText("اسکن کنید");
-                                tv_lottiestatus.setVisibility(View.VISIBLE);
-                            }
-
-
-
-                        },  Integer.parseInt(callMethod.ReadString("Delay")));
-
-
-
-
-                    }
-                }
-        );
-
-
-
-        ed_barcode.setFocusable(true);
-        ed_barcode.requestFocus();
-    }
-
-
-    public void Search_call(){
-        searchtarget = NumberFunctions.EnglishNumber(ed_barcode.getText().toString());
-        searchtarget = searchtarget.replaceAll(" ", "%");
-
-
-        call=apiInterface.GetOcrGoodList("GetOcrGoodList_new",searchtarget);
-        action.dialogProg();
-
-
-        call.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    action.dialogProg_dismiss();
-
-                    ocr_goods.clear();
-                    ocr_goods = response.body().getOcr_Goods();
-
-                    if (ocr_goods.size()> 0) {
-                        try {
-                            img_lottiestatus.setVisibility(View.GONE);
-                            tv_lottiestatus.setText("اسکن کنید");
-                            tv_lottiestatus.setVisibility(View.VISIBLE);
-
-
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            Ocr_StackFragment stackFragment = (Ocr_StackFragment) fragmentManager.findFragmentByTag("STACK_FRAGMENT");
-
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                            if (stackFragment != null) {
-                                // Update the existing fragment's data
-                                stackFragment.setOcr_goods(ocr_goods);
-                                stackFragment.setBarcodeScan(BarcodeScan);
-                                stackFragment.callrecycler() ;
-                            } else {
-                                // Create a new instance of StackFragment if not already added
-                                stackFragment = new Ocr_StackFragment();
-                                stackFragment.setOcr_goods(ocr_goods);
-                                stackFragment.setBarcodeScan(BarcodeScan);
-                                fragmentTransaction.replace(R.id.ocr_collect_confirm_a_framelayout, stackFragment, "STACK_FRAGMENT");
-                            }
-
-                            fragmentTransaction.commitAllowingStateLoss();
-
-                            progressBar.setVisibility(View.GONE);
-
-                        }catch (Exception e){
-                            callMethod.Log(e.getMessage());
-
-                        }
-                    } else {
-                        tv_lottiestatus.setText("موردی یافت نشد");
-                        img_lottiestatus.setVisibility(View.VISIBLE);
-                        tv_lottiestatus.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                action.dialogProg_dismiss();
-                callMethod.showToast("Connection fail ...!!!");
-                tv_lottiestatus.setText("موردی یافت نشد");
-                img_lottiestatus.setVisibility(View.VISIBLE);
-                tv_lottiestatus.setVisibility(View.VISIBLE);
-            }
-        });
-    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        ed_barcode.setFocusable(true);
         ed_barcode.requestFocus();
         ed_barcode.selectAll();
-
-
         super.onWindowFocusChanged(hasFocus);
     }
 

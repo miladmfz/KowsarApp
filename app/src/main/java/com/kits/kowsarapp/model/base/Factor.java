@@ -119,7 +119,20 @@ public class Factor {
     }
 
     public String getMandehBedehkar() {
-        return MandehBedehkar;
+
+        if (MandehBedehkar != null)
+        {
+            try {
+                return  MandehBedehkar.substring(0,MandehBedehkar.indexOf("."));
+            }catch (Exception e){
+                return  MandehBedehkar;
+            }
+
+        }else {
+            return "";
+        }
+
+
     }
 
     public void setMandehBedehkar(String mandehBedehkar) {

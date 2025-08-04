@@ -49,6 +49,7 @@ public class Ocr_DBH extends SQLiteOpenHelper {
 
 
     public void DatabaseCreate() {
+        callMethod.Log("Ocr DatabaseCreate");
         getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS FactorScan (RowCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE " +
                 ", AppOCRFactorCode TEXT" +
                 ", FactorBarcode TEXT" +

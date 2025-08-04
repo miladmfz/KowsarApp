@@ -141,6 +141,8 @@ public class Ocr_Delivery_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Deliv
                                 intent = new Intent(mContext, Ocr_FactorDetailActivity.class);
                                 intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                                 intent.putExtra("FactorImage", "");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                                 mContext.startActivity(intent);
                            }
                         }

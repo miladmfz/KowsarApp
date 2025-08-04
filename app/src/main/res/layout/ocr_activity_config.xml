@@ -454,7 +454,7 @@
 
                 <TextView
 
-                    android:text="نمایش موجودی :"
+                    android:text="نمایش موجودی کالا :"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -465,6 +465,35 @@
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/ocr_config_a_showamount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:layout_gravity="center"
+                    />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp">
+
+                <TextView
+
+                    android:text="نمایش تعداداقلام فاکتور :"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/ocr_config_a_showtotalamount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
@@ -854,6 +883,36 @@
 
                     <EditText
                         android:id="@+id/ocr_config_a_delay"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_editbox"
+                        android:padding="8dp"
+                        android:inputType="numberDecimal"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="16sp"
+                        android:layout_weight="2"
+                        android:gravity="center" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+
+                        android:text="وقفه جستجو بارکدخوان :"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|start"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:paddingStart="8dp"/>
+
+                    <EditText
+                        android:id="@+id/ocr_config_a_barcodedelay"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_editbox"
