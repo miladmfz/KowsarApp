@@ -87,31 +87,34 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
         setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_collect_confirm);
 
-         dialog1 = new Dialog(this);
-        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog1.setContentView(R.layout.ocr_spinner_box);
-        TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
-        repw.setText("در حال خواندن اطلاعات");
-        try {
 
-
-            dialog1.show();
-        }catch (Exception e){
-            callMethod.Log(e.getMessage());
-        }
 
 
 
         intent();
         Config();
         try {
+            dialog1 = new Dialog(this);
+            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+            dialog1.setContentView(R.layout.ocr_spinner_box);
+            TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
+            repw.setText("در حال خواندن اطلاعات");
+            dialog1.show();
+
             Handler handler = new Handler();
             handler.postDelayed(this::init, 100);
-            handler.postDelayed(dialog1::dismiss, 1000);
-        }catch (Exception e){
+
+            handler.postDelayed(() -> {
+                if (!isFinishing() && dialog1 != null && dialog1.isShowing()) {
+                    dialog1.dismiss();
+                }
+            }, 1000);
+
+        } catch (Exception e) {
             callMethod.Log(e.getMessage());
         }
+
 
 
     }
@@ -249,10 +252,12 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
 
 
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
-                callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+             callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
             OrderBy="GoodName";
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
             OrderBy="FormNo";
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
+            OrderBy="GoodExplain3";
         }else{
             OrderBy="GoodName";
         }
@@ -286,7 +291,9 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                             collectFragment.setTcPrintRef(BarcodeScan);
                             fragmentTransaction.replace(R.id.ocr_collect_confirm_a_framelayout, collectFragment);
                             fragmentTransaction.commit();
+
                             Searchbox();
+
                         } else {
                             finish();
                         }

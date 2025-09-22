@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ocr.Ocr_CollectFragment">
 
+
     <ScrollView
         android:id="@+id/ocr_collect_scrollView_main"
         android:layout_width="match_parent"

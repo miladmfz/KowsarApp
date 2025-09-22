@@ -53,7 +53,6 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
     CallMethod callMethod;
     FragmentManager fragmentManager ;
     FragmentTransaction fragmentTransaction;
-    //Ocr_CollectFragment collectFragment;
     Ocr_PackFragment packFragment;
 
 
@@ -67,15 +66,15 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
     Ocr_Action action;
     Handler handler;
 
-    Integer state_category;
     public String searchtarget = "";
 
 
     LottieAnimationView progressBar;
     LottieAnimationView img_lottiestatus;
-    Call<RetrofitResponse> call;
+
     TextView tv_lottiestatus;
 
+    Dialog dialog1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,31 +82,31 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
         setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_check_confirm);
 
-        Dialog dialog1 = new Dialog(this);
+        intent();
+       Config();
 
         try {
-
+            dialog1 = new Dialog(this);
             dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
             Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
             dialog1.setContentView(R.layout.ocr_spinner_box);
             TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
             repw.setText("در حال خواندن اطلاعات");
             dialog1.show();
-        }catch (Exception e){
-            callMethod.Log(e.getMessage());
-        }
 
-
-
-        intent();
-        Config();
-        try {
             Handler handler = new Handler();
             handler.postDelayed(this::init, 100);
-            handler.postDelayed(dialog1::dismiss, 1000);
-        }catch (Exception e){
+
+            handler.postDelayed(() -> {
+                if (!isFinishing() && dialog1 != null && dialog1.isShowing()) {
+                    dialog1.dismiss();
+                }
+            }, 1000);
+
+        } catch (Exception e) {
             callMethod.Log(e.getMessage());
         }
+
 
 
     }
@@ -232,6 +231,8 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
             OrderBy="GoodExplain1";
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
             OrderBy="FormNo";
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
+            OrderBy="GoodName";
         }else{
             OrderBy="GoodExplain1";
         }
@@ -257,13 +258,6 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
                     } else {
                         ocr_goods = response.body().getOcr_Goods();
                         if (factor.getAppIsPacked().equals("0")) {
-//                            collectFragment.setFactor(factor);
-//                            collectFragment.setocr_Goods(ocr_goods);
-//                            collectFragment.setState(State);
-//                            collectFragment.setTcPrintRef(BarcodeScan);
-//                            fragmentTransaction.replace(R.id.ocr_check_confirm_a_framelayout, collectFragment);
-//                            fragmentTransaction.commit();
-
 
                             packFragment.setFactor(factor);
                             packFragment.setocr_Goods(ocr_goods);
@@ -294,12 +288,20 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
+
         ed_barcode.setFocusable(true);
         ed_barcode.requestFocus();
         ed_barcode.selectAll();
 
-
         super.onWindowFocusChanged(hasFocus);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (dialog1 != null && dialog1.isShowing()) {
+            dialog1.dismiss();
+        }
+        super.onDestroy();
     }
 
 

@@ -29,10 +29,9 @@
                         android:layout_height="150dp"
                         android:layout_gravity="center"
                         android:scaleType="centerInside"
-                        android:layout_margin="2dp"
+                        android:layout_margin="5dp"
                         android:background="@drawable/bg_round"
 
-                        android:visibility="gone"
                         tools:ignore="ContentDescription" />
                 </FrameLayout>
                 <androidx.appcompat.widget.LinearLayoutCompat

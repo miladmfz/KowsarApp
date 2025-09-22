@@ -1,12 +1,14 @@
 package com.kits.kowsarapp.application.ocr;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +43,7 @@ import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 
 import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.application.base.ZoomHelper;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.Job;
 import com.kits.kowsarapp.model.base.JobPerson;
@@ -55,6 +59,7 @@ import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -64,6 +69,7 @@ import retrofit2.Response;
 
 
 public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetListener {
+    DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
@@ -741,7 +747,8 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
     }
 
 
-    public void good_detail(Ocr_Good singleGood,String BarcodeScan) {
+    @SuppressLint("ClickableViewAccessibility")
+    public void good_detail(Ocr_Good singleGood, String BarcodeScan) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
@@ -769,7 +776,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
         LinearLayoutCompat ll_good_6= dialog.findViewById(R.id.ocr_gooddetail_ll_lb6);
 
-        LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.ocr_gooddetail_ll1_tv1);
+        LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.ocr_gooddetail_ll_lb1);
 
         MaterialButton btn_confirm = dialog.findViewById(R.id.ocr_gooddetail_b_btn);
 
@@ -836,6 +843,30 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
                     } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
+
+                        lb_good_1.setText("نام");
+                        lb_good_2.setText("شماره قفسه");
+                        lb_good_3.setText("تعداد فاکتور");
+                        lb_good_4.setText("قیمت");
+                        lb_good_5.setText("موجودی کل");
+                        lb_good_6.setText("قطع-جلد");
+                        lb_good_7.setText("کد کالا سیستم");
+
+
+                        lb_good_1.setVisibility(View.GONE);
+
+                        tv_good_1.setText(NumberFunctions.PerisanNumber(singleGood.getGoodName()));
+                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
+                        tv_good_3.setText(NumberFunctions.PerisanNumber(singleGood.getFacAmount()));
+                        tv_good_4.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(singleGood.getGoodMaxSellPrice()))));
+
+                        tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
+                        tv_good_6.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType() +" - "+ocr_goods.get(0).getSize()));
+                        tv_good_7.setText(NumberFunctions.PerisanNumber(singleGood.getGoodCode()));
+                        tv_good_3.setTextColor(ContextCompat.getColor(mContext, R.color.red_800));
+
+
+                    }else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
                         lb_good_1.setText("موجودی کل");
                         lb_good_2.setText("قطع");
                         lb_good_3.setText("نوع جلد");
@@ -844,13 +875,14 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         lb_good_6.setText("نیاز فاکتور");
                         lb_good_7.setText("کد کالا ");
 
-                        tv_good_6.setText(NumberFunctions.PerisanNumber(singleGood.getFacAmount()));
 
                         tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
                         tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
                         tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
-                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getMaxSellPrice()));
-                        tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
+                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodMaxSellPrice()));
+                        tv_good_5.setText(NumberFunctions.PerisanNumber(singleGood.getGoodExplain3()));
+                        tv_good_6.setText(NumberFunctions.PerisanNumber(singleGood.getFacAmount()));
+
                         tv_good_7.setText(NumberFunctions.PerisanNumber(singleGood.getGoodCode()));
 
                     }else{
@@ -879,6 +911,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         byte[] BaseImageByte;
         BaseImageByte = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
         iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
+        //iv_good.setOnTouchListener(new ZoomHelper());
 
         Call<RetrofitResponse> call2;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){

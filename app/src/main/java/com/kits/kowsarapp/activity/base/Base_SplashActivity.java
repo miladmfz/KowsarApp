@@ -68,6 +68,7 @@ public class Base_SplashActivity extends AppCompatActivity {
 
 
     public void Config() {
+
 //        LinearLayoutCompat ll_activity = findViewById(R.id.splashactivity);
 //
 //        if (callMethod.ReadString("LANG").equals("fa")) {
@@ -132,12 +133,11 @@ public class Base_SplashActivity extends AppCompatActivity {
 
             callMethod.EditBoolan("ShortageList", false);
 
-
-
             //endregion
 
-            //region $ order
 
+
+            //region $ order
 
             callMethod.EditString("ObjectType", "");
             callMethod.EditString("PosName", "");
@@ -171,8 +171,6 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("GoodAmount", false);
 
             callMethod.EditBoolan("keyboardRunnable", false);
-
-
 
             callMethod.EditBoolan("FirstStart", false);
             callMethod.EditString("ServerURLUse", "");

@@ -80,7 +80,7 @@ public class Base_DBH extends SQLiteOpenHelper {
 
     @SuppressLint("Range")
     public ArrayList<Activation> getActivation() {
-        query = "Select * From Activation";
+        query = "Select * From Activation ORDER BY 1 DESC";
         cursor = getWritableDatabase().rawQuery(query, null);
         ArrayList<Activation> activations = new ArrayList<>();
 

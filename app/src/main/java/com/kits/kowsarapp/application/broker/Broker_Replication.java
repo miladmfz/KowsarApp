@@ -165,6 +165,8 @@ public class Broker_Replication {
 
 
             String tableName;
+            String RowExec;
+
             int currentStep = replicatedetail.getReplicationCode();
             int totalSteps = 15;
 
@@ -172,51 +174,67 @@ public class Broker_Replication {
             switch (currentStep) {
                 case 1:
                     tableName = "کالا";
+                    RowExec = "100";
                     break;
                 case 2:
                     tableName = "موجودی انبار";
+                    RowExec = "400";
                     break;
                 case 3:
                     tableName = "سرگروه";
+                    RowExec = "400";
                     break;
                 case 4:
                     tableName = "گروه کالا";
+                    RowExec = "600";
                     break;
                 case 5:
                     tableName = "اجزای پایه";
+                    RowExec = "300";
                     break;
                 case 6:
                     tableName = "شهر";
+                    RowExec = "400";
                     break;
                 case 7:
                     tableName = "ادرس";
+                    RowExec = "300";
                     break;
                 case 8:
                     tableName = "مشتری";
+                    RowExec = "300";
                     break;
                 case 9:
                     tableName = "خصوصیات اضافه";
+                    RowExec = "200";
                     break;
                 case 10:
                     tableName = "گروهیندی ها";
+                    RowExec = "600";
                     break;
                 case 11:
                     tableName = "سمت";
+                    RowExec = "600";
                     break;
                 case 12:
                     tableName = "سمت شخص";
+                    RowExec = "600";
                     break;
                 case 13:
                     tableName = "سمت شخص کالا";
+                    RowExec = "300";
                     break;
                 case 14:
                     tableName = "مشتریان بازاریاب";
+                    RowExec = "500";
                     break;
                 case 15:
                     tableName = "واحد سنجش";
+                    RowExec = "200";
                     break;
                 default:
                     tableName = "نامشخص";
+                    RowExec = "100";
                     break;
             }
 
@@ -237,7 +255,7 @@ public class Broker_Replication {
                     replicatedetail.getServerTable(),
                     "",
                     "1",
-                    String.valueOf(RepRowCount)
+                    RowExec
             );
             callMethod.Log(call1.request().toString());
 

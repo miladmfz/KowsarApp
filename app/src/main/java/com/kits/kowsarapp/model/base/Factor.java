@@ -66,8 +66,8 @@ public class Factor {
     private String PreFactorCode;
     @SerializedName("PreFactorDate")
     private String PreFactorDate;
-    @SerializedName("ExistFlag")
-    private String ExistFlag;
+    @SerializedName("Flag")
+    private String Flag;
     @SerializedName("GoodCode")
     private String GoodCode;
 
@@ -88,12 +88,12 @@ public class Factor {
         PreFactorDate = preFactorDate;
     }
 
-    public String getExistFlag() {
-        return ExistFlag;
+    public String getFlag() {
+        return Flag;
     }
 
-    public void setExistFlag(String existFlag) {
-        ExistFlag = existFlag;
+    public void setFlag(String flag) {
+        Flag = flag;
     }
 
     public String getGoodCode() {

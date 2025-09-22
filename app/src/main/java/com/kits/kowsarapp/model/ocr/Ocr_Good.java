@@ -17,7 +17,6 @@ public class Ocr_Good implements Serializable {
     @SerializedName("GoodName")private String GoodName;
     @SerializedName("Price")private String Price;
     @SerializedName("FacAmount")private String FacAmount;
-    @SerializedName("GoodExplain4")private String GoodExplain4;
     @SerializedName("AppRowIsControled")private String AppRowIsControled;
     @SerializedName("AppRowIsPacked")private String AppRowIsPacked;
     @SerializedName("AppOCRFactorRowCode")private String AppOCRFactorRowCode;
@@ -100,10 +99,48 @@ public class Ocr_Good implements Serializable {
 
     @SerializedName("MaxSellPrice")
     private String MaxSellPrice;
-    @SerializedName("GoodExplain2")
-    private String GoodExplain2;
+
+    @SerializedName("GoodExplain1")private String GoodExplain1;
+    @SerializedName("GoodExplain2")private String GoodExplain2;
+    @SerializedName("GoodExplain3")private String GoodExplain3;
+    @SerializedName("GoodExplain4")private String GoodExplain4;
+    @SerializedName("GoodExplain5")private String GoodExplain5;
+    @SerializedName("GoodExplain6")private String GoodExplain6;
+
     @SerializedName("MinAmount")
     private String MinAmount;
+
+    public String getGoodExplain1() {
+        return GoodExplain1;
+    }
+
+    public void setGoodExplain1(String goodExplain1) {
+        GoodExplain1 = goodExplain1;
+    }
+
+    public String getGoodExplain3() {
+        return GoodExplain3;
+    }
+
+    public void setGoodExplain3(String goodExplain3) {
+        GoodExplain3 = goodExplain3;
+    }
+
+    public String getGoodExplain5() {
+        return GoodExplain5;
+    }
+
+    public void setGoodExplain5(String goodExplain5) {
+        GoodExplain5 = goodExplain5;
+    }
+
+    public String getGoodExplain6() {
+        return GoodExplain6;
+    }
+
+    public void setGoodExplain6(String goodExplain6) {
+        GoodExplain6 = goodExplain6;
+    }
 
     public String getBarCodePrintState() {
         return BarCodePrintState;

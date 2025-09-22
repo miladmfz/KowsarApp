@@ -61,6 +61,7 @@ public class Broker_BasketItemViewHolder extends RecyclerView.ViewHolder {
 
 
         rltv = itemView.findViewById(R.id.broker_basket_card);
+
     }
 
 

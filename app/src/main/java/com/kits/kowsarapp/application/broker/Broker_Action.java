@@ -810,7 +810,7 @@ public class Broker_Action extends Base_Action {
                     } else {
                         SQLiteDatabase dtb = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
                         for (int i = 0; i < response.body().getFactors().size(); i++) {
-                            dtb.execSQL("Update PreFactorRow set Shortage = " + response.body().getFactors().get(i).getExistFlag() + " Where IfNull(PreFactorRef,0)=" + factor_code + " And GoodRef = " + response.body().getFactors().get(i).getGoodCode());
+                            dtb.execSQL("Update PreFactorRow set Shortage = " + response.body().getFactors().get(i).getFlag() + " Where IfNull(PreFactorRef,0)=" + factor_code + " And GoodRef = " + response.body().getFactors().get(i).getGoodCode());
                             dtb.close();
                         }
                         callMethod.showToast("کالاهای مورد نظر کسر موجودی دارند!");

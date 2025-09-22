@@ -2,6 +2,7 @@ package com.kits.kowsarapp.viewholder.find;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -245,7 +246,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .fitCenter()
                 .into(img);
-        /*
+
         if (!good.getGoodImageName().equals("")) {
             Glide.with(img)
                     .asBitmap()
@@ -313,7 +314,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
-*/
+
 
 
     }

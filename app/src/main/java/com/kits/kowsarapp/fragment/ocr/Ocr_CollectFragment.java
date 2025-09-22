@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -414,12 +415,29 @@ public class Ocr_CollectFragment extends Fragment {
                                                 scrollView_main.post(() -> {
                                                     cb.getParent().requestChildFocus(cb, cb);
 
-                                                    // برگردوندن فوکوس به EditText بعد از اسکرول
+//                                                    // برگردوندن فوکوس به EditText بعد از اسکرول
+//                                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+//                                                        EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
+//                                                        //edBarcode1.requestFocus();
+//                                                        edBarcode1.selectAll();
+//                                                    }, 300);  // یه تاخیر کوتاه برای برگشت فوکوس
                                                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                                         EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
-                                                        edBarcode1.requestFocus();
+
+
+
+                                                        // برگردوندن فوکوس و انتخاب همه متن
+                                                        //edBarcode1.requestFocus();
                                                         edBarcode1.selectAll();
-                                                    }, 300);  // یه تاخیر کوتاه برای برگشت فوکوس
+                                                        // بستن کیبورد اگر باز باشه
+                                                        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(requireActivity().INPUT_METHOD_SERVICE);
+                                                        if (imm != null) {
+                                                            imm.hideSoftInputFromWindow(edBarcode1.getWindowToken(), 0);
+                                                        }
+
+
+                                                    }, 300);
+
                                                 });
 
                                                 return;
@@ -877,6 +895,8 @@ try {
 
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
             tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getFormNo()));
+        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
+            tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodExplain3()));
         }else{
             tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
         }
