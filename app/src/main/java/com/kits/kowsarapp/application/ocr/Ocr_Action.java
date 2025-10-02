@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -771,10 +772,15 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         TextView lb_good_6 = dialog.findViewById(R.id.ocr_gooddetail_b_lb6);
         TextView lb_good_7 = dialog.findViewById(R.id.ocr_gooddetail_b_lb7);
 
+        LinearLayoutCompat ll_good_1= dialog.findViewById(R.id.ocr_gooddetail_ll_lb1);
+        LinearLayoutCompat ll_good_2= dialog.findViewById(R.id.ocr_gooddetail_ll_lb2);
+        LinearLayoutCompat ll_good_3= dialog.findViewById(R.id.ocr_gooddetail_ll_lb3);
+        LinearLayoutCompat ll_good_4= dialog.findViewById(R.id.ocr_gooddetail_ll_lb4);
+        LinearLayoutCompat ll_good_5= dialog.findViewById(R.id.ocr_gooddetail_ll_lb5);
+        LinearLayoutCompat ll_good_6= dialog.findViewById(R.id.ocr_gooddetail_ll_lb6);
         LinearLayoutCompat ll_good_7= dialog.findViewById(R.id.ocr_gooddetail_ll_lb7);
 
 
-        LinearLayoutCompat ll_good_6= dialog.findViewById(R.id.ocr_gooddetail_ll_lb6);
 
         LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.ocr_gooddetail_ll_lb1);
 
@@ -863,7 +869,17 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
                         tv_good_6.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType() +" - "+ocr_goods.get(0).getSize()));
                         tv_good_7.setText(NumberFunctions.PerisanNumber(singleGood.getGoodCode()));
-                        tv_good_3.setTextColor(ContextCompat.getColor(mContext, R.color.red_800));
+
+
+                        tv_good_3.setTextColor(ContextCompat.getColor(mContext, R.color.red_900));
+                        float currentSize = tv_good_3.getTextSize() / mContext.getResources().getDisplayMetrics().scaledDensity;
+
+                        tv_good_3.setTextSize(currentSize + 5);
+
+                        tv_good_3.setTypeface(tv_good_3.getTypeface(), Typeface.BOLD);
+
+                        ll_good_3.setBackgroundResource(R.drawable.bg_round_green);
+
 
 
                     }else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){

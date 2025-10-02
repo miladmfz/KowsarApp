@@ -140,7 +140,7 @@
                     android:layout_weight="0.3"
                     android:text="نوع جلد"
                     android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:gravity="center"/>
 
@@ -151,7 +151,8 @@
                     android:layout_weight="0.7"
                     android:textSize="22sp"
                     android:textColor="?attr/colorOnBackground"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <!-- Row: پشت جلد -->
