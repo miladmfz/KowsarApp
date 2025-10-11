@@ -86,14 +86,16 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!-- تصویر کالا -->
-        <ImageView
+
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/b_good_c_img"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
             android:layout_marginStart="8dp"
+            android:scaleType="centerCrop"
             android:background="@drawable/bg_round"
-            android:scaleType="centerCrop" />
+            />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </com.google.android.material.card.MaterialCardView>

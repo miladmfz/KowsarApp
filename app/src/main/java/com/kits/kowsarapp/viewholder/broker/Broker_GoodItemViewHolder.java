@@ -55,7 +55,6 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
     public TextView tv_line_maxsellprice;
     public TextView tv_line_amount;
 
-
     private final Context mContext;
     CallMethod callMethod;
 
@@ -85,8 +84,6 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
         btnadd = itemView.findViewById(R.id.b_good_c_btn);
 
         if (callMethod.ReadBoolan("LineView")) {
-
-
             tv_line_name = itemView.findViewById(R.id.b_good_c_name);
             tv_line_maxsellprice = itemView.findViewById(R.id.b_good_c_maxsellprice);
             tv_line_amount = itemView.findViewById(R.id.b_good_c_amount);
@@ -154,8 +151,6 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
     public void Actionbtn(Good good, boolean multi_select) {
 
         this.multi_select1 = multi_select;
-
-
 
 
         if (good.getGoodFieldValue("ActiveStack").equals("1")){

@@ -334,11 +334,12 @@
             android:text="پرداخت"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_weight="1"
             style="@style/Widget.MaterialComponents.Button"
             android:backgroundTint="?attr/colorSecondary"
             android:textColor="?attr/colorOnSecondary"
+
             />
 
 

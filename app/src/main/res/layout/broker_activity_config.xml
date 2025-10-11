@@ -300,7 +300,8 @@
                 android:layout_margin="8dp"
                 android:padding="8dp"
                 android:background="@drawable/bg_card"
-                android:elevation="4dp">
+                android:elevation="4dp"
+                android:visibility="gone">
 
                 <!-- Label Text -->
                 <TextView

@@ -55,10 +55,15 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
 
 
         View view;
+        callMethod.Log("callMethod.ReadBoolan(LineView) =" + callMethod.ReadBoolan("LineView"));
+
 
         if (callMethod.ReadBoolan("LineView")) {
+            callMethod.Log(" broker_good_line_card   ");
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_good_line_card, parent, false);
         } else {
+            callMethod.Log("  broker_good_grid_card ");
+
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.broker_good_grid_card, parent, false);
 
         }
