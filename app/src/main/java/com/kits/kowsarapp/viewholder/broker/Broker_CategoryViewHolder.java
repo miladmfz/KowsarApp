@@ -57,7 +57,7 @@ public class Broker_CategoryViewHolder extends GroupViewHolder {
             intent.putExtra("scan", "");
             intent.putExtra("id", String.valueOf(company.id));
             intent.putExtra("title", company.name);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
             mContext.startActivity(intent);
 
         });

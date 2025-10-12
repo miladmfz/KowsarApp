@@ -144,6 +144,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
             intent = new Intent(mContext, Ocr_FactorDetailActivity.class);
             intent.putExtra("ScanResponse", factors.get(position).getFactorBarcode());
             intent.putExtra("FactorImage", "hasimage");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
             mContext.startActivity(intent);
             ((Activity) mContext).finish();
 
@@ -239,6 +240,7 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                                     intent = new Intent(mContext, Ocr_FactorListLocalActivity.class);
                                     intent.putExtra("IsSent", "0");
                                     intent.putExtra("signature", "0");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                     ((Activity) mContext).finish();
                                     mContext.startActivity(intent);
                                 }

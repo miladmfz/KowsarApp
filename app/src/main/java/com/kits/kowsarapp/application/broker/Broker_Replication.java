@@ -739,6 +739,7 @@ public class Broker_Replication {
                             tv_step.setVisibility(View.GONE);
                             dialog.dismiss();
                             intent = new Intent(mContext, Broker_NavActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                             mContext.startActivity(intent);
                             ((Activity) mContext).finish();
                             callMethod.showToast("بروز رسانی انجام شد");

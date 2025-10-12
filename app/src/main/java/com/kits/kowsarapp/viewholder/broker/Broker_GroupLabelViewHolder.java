@@ -46,6 +46,8 @@ public class Broker_GroupLabelViewHolder extends RecyclerView.ViewHolder {
             intent.putExtra("scan", "");
             intent.putExtra("id", goodGroup.getGoodGroupFieldValue("GroupCode"));
             intent.putExtra("title", goodGroup.getGoodGroupFieldValue("Name"));
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
             mContext.startActivity(intent);
         });
     }

@@ -197,9 +197,12 @@ public class Order_PrintChangeTable {
                     printerconter = 0;
                     AppPrinters.clear();
                     for (AppPrinter appPrinter:response.body().getAppPrinters()) {
-                        if (appPrinter.getPrinterActive().equals("1")){
-                            AppPrinters.add(appPrinter);
+                        if (appPrinter.getChangePrint().equals("1")){
+                            if (appPrinter.getPrinterActive().equals("1")){
+                                AppPrinters.add(appPrinter);
+                            }
                         }
+
                     }
                     if (AppPrinters.size()>0){
                         GetRow_Data();

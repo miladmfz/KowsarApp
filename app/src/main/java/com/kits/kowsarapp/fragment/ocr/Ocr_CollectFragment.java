@@ -1307,6 +1307,7 @@ try {
 
                                 intent.putExtra("ScanResponse", TcPrintRef );
                                 intent.putExtra("State", state);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                 requireActivity().finish();
 
                                 requireActivity().startActivity(intent);

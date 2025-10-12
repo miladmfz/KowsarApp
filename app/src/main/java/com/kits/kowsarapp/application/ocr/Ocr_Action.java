@@ -1001,6 +1001,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                             intent.putExtra("ScanResponse", BarcodeScan);
                             intent.putExtra("State", "0");
                             intent.putExtra("FactorImage", "");
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                             mContext.startActivity(intent);
                             ((Activity) mContext).finish();
                         }
@@ -1131,6 +1132,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                                     Intent intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
                                                     intent.putExtra("ScanResponse", barcodescan);
                                                     intent.putExtra("State", "0");
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                                     ((Activity) mContext).finish();
                                                     mContext.startActivity(intent);
                                                 }
@@ -1158,6 +1160,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                                     Intent intent = new Intent(mContext, Ocr_Check_Confirm_Activity.class);
                                                     intent.putExtra("ScanResponse", barcodescan);
                                                     intent.putExtra("State", "1");
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                                     ((Activity) mContext).finish();
                                                     mContext.startActivity(intent);
                                                 }
@@ -1208,6 +1211,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
 
                                 Intent intent = new Intent(mContext, Ocr_ConfigActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                 mContext.startActivity(intent);
                             } else {
                                 callMethod.showToast("رمز عبور صیحیح نیست");
@@ -1220,6 +1224,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         btn_login.setOnClickListener(v -> {
             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
                 Intent intent = new Intent(mContext, Ocr_ConfigActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                 mContext.startActivity(intent);
             }else {
                 callMethod.showToast("رمز عبور صیحیح نیست");

@@ -144,7 +144,7 @@ public class Order_Print {
                         intent = new Intent(mContext, Order_TableActivity.class);
                         intent.putExtra("State", "0");
                         intent.putExtra("EditTable", "0");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                         mContext.startActivity(intent);
                         ((Activity) mContext).finish();
                     }

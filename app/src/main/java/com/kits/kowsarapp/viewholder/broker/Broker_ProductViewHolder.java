@@ -43,7 +43,7 @@ public class Broker_ProductViewHolder extends ChildViewHolder {
             intent.putExtra("scan", "");
             intent.putExtra("id", String.valueOf(product.id));
             intent.putExtra("title", product.name);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
             App.getContext().startActivity(intent);
 
         });

@@ -118,6 +118,7 @@ public class Base_Action {
                     intent = new Intent(mContext, Broker_NavActivity.class);
                     ((Activity) mContext).finish();
                     ((Activity) mContext).overridePendingTransition(0, 0);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                     ((Activity) mContext).overridePendingTransition(0, 0);
                 }

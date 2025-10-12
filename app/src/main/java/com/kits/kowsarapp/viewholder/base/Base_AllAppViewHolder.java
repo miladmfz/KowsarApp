@@ -190,6 +190,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
                 callMethod.EditString("DbName", activationsss.getDbName());
 
                 Intent intent = new Intent(mcontext, Base_SplashActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                 mcontext.startActivity(intent);
                 ((Activity) mcontext).finish();
 
@@ -229,6 +230,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
             if (!new File(activationsss.getDatabaseFilePath()).exists()) {
                 base_dbh.DeleteActivation(activationsss);
                 Intent intent = new Intent(mcontext, Base_SplashActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                 ((Activity) mcontext).finish();
                 mcontext.startActivity(intent);
             } else {
@@ -332,6 +334,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
         deleteRecursive(databasedir);
         base_dbh.DeleteActivation(activation);
         Intent intent = new Intent(mcontext, Base_SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
         ((Activity) mcontext).finish();
         mcontext.startActivity(intent);
     }
@@ -436,6 +439,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
                             }
 
                             Intent intent = new Intent(App.getContext(), Base_SplashActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                             mcontext.startActivity(intent);
                             ((Activity) mcontext).finish();
                             dialog.dismiss();

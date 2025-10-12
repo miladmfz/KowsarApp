@@ -140,6 +140,7 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                 } else {
                     Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                     intent.putExtra("fac", "0");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                 }
             }else{
@@ -172,6 +173,7 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                     } else {
                         Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                         intent.putExtra("fac", "0");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                         mContext.startActivity(intent);
 
                     }
@@ -219,6 +221,7 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
                     Intent intent = new Intent(mContext, Broker_DetailActivity.class);
                     intent.putExtra("id", goods.get(position).getGoodFieldValue("GoodCode"));
                     intent.putExtra("ws", goods.get(position).getGoodFieldValue("Shortage"));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                 }
 

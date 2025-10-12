@@ -77,6 +77,7 @@ public class Order_ReserveAdapter extends RecyclerView.Adapter<Order_ReserveView
                 callMethod.EditString("RstMizName", basketInfos.get(position).getRstMizName() + R.string.textvalue_tagreserve);
                 callMethod.EditString("AppBasketInfoCode", basketInfos.get(position).getAppBasketInfoCode());
                 intent = new Intent(mContext, Order_SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                 mContext.startActivity(intent);
 
             });

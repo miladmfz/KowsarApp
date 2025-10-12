@@ -440,6 +440,8 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                 intent = new Intent(mContext, Order_TableActivity.class);
                 intent.putExtra("State", "0");
                 intent.putExtra("EditTable", "0");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
                 mContext.startActivity(intent);
                 ((Activity) mContext).finish();
 
@@ -464,10 +466,12 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
         btn_login.setOnClickListener(v -> {
             if (callMethod.ReadString("ActivationCode").equals("444444")){
                 Intent intent = new Intent(mContext, Order_RegistrationActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                 mContext.startActivity(intent);
             }else{
                 if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
                     Intent intent = new Intent(mContext, Order_RegistrationActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                 }else {
                     callMethod.showToast("رمز عبور صیحیح نیست");
@@ -917,8 +921,11 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                                     activity.RefreshState();
                                 } else {
                                     intent = new Intent(mContext, Order_BasketActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
                                     ((Activity) mContext).finish();
                                     ((Activity) mContext).overridePendingTransition(0, 0);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                     mContext.startActivity(intent);
                                 }
                             }
@@ -934,8 +941,11 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                                 activity.RefreshState();
                             } else {
                                 intent = new Intent(mContext, Order_BasketActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
                                 ((Activity) mContext).finish();
                                 ((Activity) mContext).overridePendingTransition(0, 0);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                 mContext.startActivity(intent);
                             }
                         }
@@ -979,8 +989,11 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
                 intent = new Intent(mContext, Order_BasketActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
                 ((Activity) mContext).finish();
                 ((Activity) mContext).overridePendingTransition(0, 0);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                 mContext.startActivity(intent);
             }
         });

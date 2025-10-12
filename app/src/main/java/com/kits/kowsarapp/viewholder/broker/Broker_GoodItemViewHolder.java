@@ -168,6 +168,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 } else {
                     Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                     intent.putExtra("fac", "0");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                 }
             }else{
@@ -189,6 +190,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 } else {
                     Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                     intent.putExtra("fac", "0");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                 }
             }else{

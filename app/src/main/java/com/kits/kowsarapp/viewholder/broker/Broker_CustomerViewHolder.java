@@ -99,7 +99,7 @@ public class Broker_CustomerViewHolder extends RecyclerView.ViewHolder {
                 } else {
                     Intent intent = new Intent(mContext, Broker_ConfigActivity.class);
                     callMethod.showToast("کد بازاریاب را وارد کنید");
-
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                 }
 
@@ -108,6 +108,7 @@ public class Broker_CustomerViewHolder extends RecyclerView.ViewHolder {
                 Intent intent = new Intent(mContext, Broker_PFActivity.class);
                 ((Activity) mContext).finish();
                 ((Activity) mContext).overridePendingTransition(0, 0);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                 mContext.startActivity(intent);
                 ((Activity) mContext).overridePendingTransition(0, 0);
             }

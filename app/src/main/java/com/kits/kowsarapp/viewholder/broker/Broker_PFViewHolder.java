@@ -114,6 +114,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
         fac_history_good.setOnClickListener(view -> {
             callMethod.EditString("PreFactorGood", preFactor.getPreFactorFieldValue("PreFactorCode"));
             intent = new Intent(mContext, Broker_BasketHistoryActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
             mContext.startActivity(intent);
         });
 
@@ -172,6 +173,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                         builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
                             intent = new Intent(mContext, Broker_BasketActivity.class);
                             intent.putExtra("PreFac", preFactor.getPreFactorFieldValue("PreFactorCode"));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                             mContext.startActivity(intent);
                         });
 
@@ -193,6 +195,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                     intent = new Intent(mContext, Broker_PFActivity.class);
                     ((Activity) mContext).finish();
                     ((Activity) mContext).overridePendingTransition(0, 0);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                     ((Activity) mContext).overridePendingTransition(0, 0);
 
@@ -209,6 +212,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
             callMethod.EditString("PreFactorCode", preFactor.getPreFactorFieldValue("PreFactorCode"));
             intent = new Intent(mContext, Broker_BasketActivity.class);
             intent.putExtra("PreFac", preFactor.getPreFactorFieldValue("PreFactorCode"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
             mContext.startActivity(intent);
 
         });
@@ -261,7 +265,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                         intent.putExtra("edit", "1");
                         intent.putExtra("factor_code", preFactor.getPreFactorFieldValue("PreFactorCode"));
                         intent.putExtra("id", "0");
-
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                         ((Activity) mContext).finish();
                         mContext.startActivity(intent);
 
@@ -318,7 +322,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
                 intent.putExtra("scan", "");
                 intent.putExtra("id", "0");
                 intent.putExtra("title", "جستجوی کالا");
-
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                 ((Activity) mContext).overridePendingTransition(0, 0);
                 mContext.startActivity(intent);
                 ((Activity) mContext).overridePendingTransition(0, 0);

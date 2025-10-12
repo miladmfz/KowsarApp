@@ -23,10 +23,22 @@ public class AppPrinter {
     private String FilePath;
     @SerializedName("AppType")
     private String AppType;
+    @SerializedName("ChangePrint")
+    private String ChangePrint;
+
 
 
 
     //region $ getter setter
+
+    public String getChangePrint() {
+        return ChangePrint;
+    }
+
+    public void setChangePrint(String changePrint) {
+        ChangePrint = changePrint;
+    }
+
     public String getFilePath() {
         return FilePath;
     }

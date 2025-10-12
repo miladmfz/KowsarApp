@@ -182,6 +182,8 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             intent = new Intent(Order_NavActivity.this, Order_TableActivity.class);
             intent.putExtra("State", "0");
             intent.putExtra("EditTable", "0");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
             startActivity(intent);
         });
 
@@ -191,6 +193,8 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             intent = new Intent(Order_NavActivity.this, Order_TableActivity.class);
             intent.putExtra("State", "1");
             intent.putExtra("EditTable", "0");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
             startActivity(intent);
         });
 
@@ -200,6 +204,8 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             intent = new Intent(Order_NavActivity.this, Order_TableActivity.class);
             intent.putExtra("State", "2");
             intent.putExtra("EditTable", "0");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
             startActivity(intent);
         });
 
@@ -209,6 +215,8 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             intent = new Intent(Order_NavActivity.this, Order_TableActivity.class);
             intent.putExtra("State", "3");
             intent.putExtra("EditTable", "0");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
             startActivity(intent);
         });
 
@@ -218,6 +226,8 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             intent = new Intent(Order_NavActivity.this, Order_TableActivity.class);
             intent.putExtra("State", "4");
             intent.putExtra("EditTable", "0");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
             startActivity(intent);
         });
 

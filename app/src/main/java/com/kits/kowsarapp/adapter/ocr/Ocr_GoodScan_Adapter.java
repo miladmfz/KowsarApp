@@ -116,6 +116,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
                             intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
                             intent.putExtra("ScanResponse", barcodescan);
                             intent.putExtra("State", "0");
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                             ((Activity) mContext).finish();
                             mContext.startActivity(intent);
                         }
@@ -142,6 +143,7 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
                             intent = new Intent(mContext, Ocr_Check_Confirm_Activity.class);
                             intent.putExtra("ScanResponse", barcodescan);
                             intent.putExtra("State", "1");
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                             ((Activity) mContext).finish();
                             mContext.startActivity(intent);
                         }

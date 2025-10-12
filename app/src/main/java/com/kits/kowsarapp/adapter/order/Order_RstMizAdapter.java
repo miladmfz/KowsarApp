@@ -2,6 +2,7 @@ package com.kits.kowsarapp.adapter.order;
 
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -258,26 +260,19 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                                     callMethod.EditString("AppBasketInfoCode", response.body().getBasketInfos().get(0).getAppBasketInfoCode());
                                     intent = new Intent(mContext, Order_SearchActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                     mContext.startActivity(intent);
                                 }
-
-
                             }
-
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                             }
                         });
                     }
-
-
                 } else {
-
                     if (Integer.parseInt(basketInfos.get(position).getTime().substring(0, 2)) < 2) {
-
-
-
                         intent = new Intent(mContext, Order_SearchActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                         mContext.startActivity(intent);
                     } else {
 
@@ -288,6 +283,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                         builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
 
                             intent = new Intent(mContext, Order_SearchActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                             mContext.startActivity(intent);
                         });
 
@@ -297,12 +293,8 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                         AlertDialog dialog = builder.create();
                         dialog.show();
-
-
                     }
                 }
-
-
             });
 
             holder.btn_cleartable.setOnClickListener(v -> {
@@ -446,6 +438,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                                             callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                                         } else {
                                             Order_TableActivity activity = (Order_TableActivity) mContext;
+
                                             activity.CallSpinner();
                                             callMethod.showToast(activity.getString(R.string.textvalue_recorded));
                                         }
@@ -525,6 +518,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                 } else {
                     intent = new Intent(mContext, Order_BasketActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                     mContext.startActivity(intent);
                 }
             });
@@ -557,6 +551,8 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     intent = new Intent(mContext, Order_TableActivity.class);
                     intent.putExtra("State", "3");
                     intent.putExtra("EditTable", "1");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+
                     mContext.startActivity(intent);
                 });
 
@@ -578,6 +574,11 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
             holder.btn_select.setOnClickListener(v -> {
 
+                Dialog dialogProg = new Dialog(mContext);
+                dialogProg.setContentView(R.layout.order_spinner_box);
+                TextView tv_rep = dialogProg.findViewById(R.id.ord_spinner_text);
+                tv_rep.setText(R.string.textvalue_receiveinformation);
+                dialogProg.show();
 
                 String explainvalue="";
 

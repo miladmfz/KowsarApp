@@ -192,6 +192,7 @@ public class Broker_Action extends Base_Action {
                                         intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                                         ((Activity) mContext).finish();
                                         ((Activity) mContext).overridePendingTransition(0, 0);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                         mContext.startActivity(intent);
                                         ((Activity) mContext).overridePendingTransition(0, 0);
 
@@ -204,6 +205,7 @@ public class Broker_Action extends Base_Action {
                                     intent.putExtra("edit", "0");
                                     intent.putExtra("factor_code", "0");
                                     intent.putExtra("id", "0");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                     mContext.startActivity(intent);
                                 }
                                 dialog.dismiss();
@@ -384,6 +386,7 @@ public class Broker_Action extends Base_Action {
                                     intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                                     ((Activity) mContext).finish();
                                     ((Activity) mContext).overridePendingTransition(0, 0);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                     mContext.startActivity(intent);
                                     ((Activity) mContext).overridePendingTransition(0, 0);
 
@@ -396,6 +399,7 @@ public class Broker_Action extends Base_Action {
                                 intent.putExtra("edit", "0");
                                 intent.putExtra("factor_code", "0");
                                 intent.putExtra("id", "0");
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                 mContext.startActivity(intent);
                             }
                             dialog.dismiss();
@@ -518,6 +522,7 @@ public class Broker_Action extends Base_Action {
                                             intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                                             ((Activity) mContext).finish();
                                             ((Activity) mContext).overridePendingTransition(0, 0);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                             mContext.startActivity(intent);
                                             ((Activity) mContext).overridePendingTransition(0, 0);
 
@@ -530,6 +535,7 @@ public class Broker_Action extends Base_Action {
                                     intent.putExtra("edit", "0");
                                     intent.putExtra("factor_code", "0");
                                     intent.putExtra("id", "0");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                     mContext.startActivity(intent);
                                 }
                                 dialog.dismiss();
@@ -710,6 +716,7 @@ public class Broker_Action extends Base_Action {
                                         intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                                         ((Activity) mContext).finish();
                                         ((Activity) mContext).overridePendingTransition(0, 0);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                         mContext.startActivity(intent);
                                         ((Activity) mContext).overridePendingTransition(0, 0);
 
@@ -722,6 +729,7 @@ public class Broker_Action extends Base_Action {
                                 intent.putExtra("edit", "0");
                                 intent.putExtra("factor_code", "0");
                                 intent.putExtra("id", "0");
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                 mContext.startActivity(intent);
                             }
                             dialog.dismiss();
@@ -818,6 +826,7 @@ public class Broker_Action extends Base_Action {
                         intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                         ((Activity) mContext).finish();
                         ((Activity) mContext).overridePendingTransition(0, 0);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                         mContext.startActivity(intent);
                         ((Activity) mContext).overridePendingTransition(0, 0);
                     }
@@ -951,6 +960,7 @@ public class Broker_Action extends Base_Action {
             intent = new Intent(mContext, Broker_PFActivity.class);
             ((Activity) mContext).finish();
             ((Activity) mContext).overridePendingTransition(0, 0);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
             mContext.startActivity(intent);
             ((Activity) mContext).overridePendingTransition(0, 0);
 
@@ -989,6 +999,7 @@ public class Broker_Action extends Base_Action {
             intent.putExtra("title", "جستجوی کالا");
             ((Activity) mContext).finish();
             ((Activity) mContext).overridePendingTransition(0, 0);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
             mContext.startActivity(intent);
             ((Activity) mContext).overridePendingTransition(0, 0);
 
