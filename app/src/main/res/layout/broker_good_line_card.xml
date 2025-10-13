@@ -5,7 +5,7 @@
     android:id="@+id/broker_good_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="2dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="6dp"
     app:strokeWidth="1dp"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="8dp">
+        >
 
         <!-- دکمه خرید -->
         <com.google.android.material.button.MaterialButton
@@ -27,10 +27,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="3dp"
             android:text="خرید"
             android:layout_margin="3dp"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             style="@style/Widget.MaterialComponents.Button"
             android:backgroundTint="?attr/colorPrimary"
@@ -49,12 +49,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:gravity="start"
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layoutDirection="rtl"
                 tools:text="نام کالا" />
-
+            <TextView
+                android:id="@+id/b_good_c_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layoutDirection="rtl"
+                android:text="مقدار"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/b_good_c_maxsellprice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layoutDirection="rtl"
+                android:text="قیمت"
+                android:textColor="@color/red_700"
+                android:textSize="14sp" />
             <!-- قیمت و مقدار -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -62,25 +83,9 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-                <TextView
-                    android:id="@+id/b_good_c_amount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="start"
-                    android:text="مقدار"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/b_good_c_maxsellprice"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="start"
-                    android:text="قیمت"
-                    android:textColor="@color/red_700"
-                    android:textSize="14sp" />
+
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -92,9 +97,9 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginStart="8dp"
             android:scaleType="centerCrop"
             android:background="@drawable/bg_round"
+            android:layout_margin="5dp"
             />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

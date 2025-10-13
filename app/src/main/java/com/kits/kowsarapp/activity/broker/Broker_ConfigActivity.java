@@ -60,6 +60,7 @@ public class Broker_ConfigActivity extends AppCompatActivity {
         binding.bConfigADetailshow.setChecked(callMethod.ReadBoolan("ShowDetail"));
         binding.bConfigALineview.setChecked(callMethod.ReadBoolan("LineView"));
         binding.bConfigACanuseinactive.setChecked(callMethod.ReadBoolan("CanUseInactive"));
+        binding.bConfigAShowsearchbandactive.setChecked(callMethod.ReadBoolan("ShowSearchBand"));
     }
 
      void setButtonListeners() {

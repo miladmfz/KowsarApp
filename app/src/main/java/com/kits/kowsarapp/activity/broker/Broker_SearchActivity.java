@@ -128,6 +128,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
         broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
         handler = new Handler();
         grid = Integer.parseInt(callMethod.ReadString("Grid"));
+
     }
 
     public void intent() {
@@ -164,6 +165,15 @@ public class Broker_SearchActivity extends AppCompatActivity {
             binding.bSearchAEdtsearch.selectAll();
             return false;
         });
+
+        if(callMethod.ReadBoolan("ShowSearchBand")){
+            binding.bSearchALlCustomer.setVisibility(View.VISIBLE);
+            binding.bSearchALlBtngrp.setVisibility(View.VISIBLE);
+        }else{
+            binding.bSearchALlCustomer.setVisibility(View.GONE);
+            binding.bSearchALlBtngrp.setVisibility(View.GONE);
+        }
+
 
 
         binding.bSearchAEdtsearch.setFocusable(true);

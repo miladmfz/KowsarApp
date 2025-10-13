@@ -45,7 +45,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
     private final LinearLayoutCompat mainline;
 //    private final ImageView img;
-    private final ShapeableImageView img;
+    public final ShapeableImageView img;
     public MaterialCardView rltv;
     public final Button btnadd;
 

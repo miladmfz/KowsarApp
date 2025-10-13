@@ -253,6 +253,41 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         binding.bRegisterALineview.setChecked(callMethod.ReadBoolan("LineView"));
         binding.bRegisterACanuseinactive.setChecked(callMethod.ReadBoolan("CanUseInactive"));
 
+        binding.bRegisterAShowsearchbandactive.setChecked(callMethod.ReadBoolan("ShowSearchBand"));
+        binding.bRegisterAShowgoodimage.setChecked(callMethod.ReadBoolan("ShowGoodImage"));
+        binding.bRegisterAShowgoodbuybtn.setChecked(callMethod.ReadBoolan("ShowGoodBuyBtn"));
+
+
+        binding.bRegisterAShowgoodimage.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShowGoodImage")) {
+                callMethod.EditBoolan("ShowGoodImage", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("ShowGoodImage", true);
+                callMethod.showToast("بله");
+            }
+        });
+
+        binding.bRegisterAShowgoodbuybtn.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShowGoodBuyBtn")) {
+                callMethod.EditBoolan("ShowGoodBuyBtn", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("ShowGoodBuyBtn", true);
+                callMethod.showToast("بله");
+            }
+        });
+
+        binding.bRegisterAShowsearchbandactive.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShowSearchBand")) {
+                callMethod.EditBoolan("ShowSearchBand", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("ShowSearchBand", true);
+                callMethod.showToast("بله");
+            }
+        });
+
 
         binding.bRegisterACanuseinactive.setOnCheckedChangeListener((compoundButton, b) -> {
             if (callMethod.ReadBoolan("CanUseInactive")) {

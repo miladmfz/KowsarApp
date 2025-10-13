@@ -102,7 +102,11 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("LineView", false);
             callMethod.EditBoolan("kowsarService", false);
             callMethod.EditBoolan("ShowCustomerCredit", true);
-            callMethod.EditBoolan("CanUseInactive ", true);
+            callMethod.EditBoolan("CanUseInactive", true);
+            callMethod.EditBoolan("ShowSearchBand", true);
+            callMethod.EditBoolan("ShowGoodImage", true);
+            callMethod.EditBoolan("ShowGoodBuyBtn", true);
+
             //endregion
 
 

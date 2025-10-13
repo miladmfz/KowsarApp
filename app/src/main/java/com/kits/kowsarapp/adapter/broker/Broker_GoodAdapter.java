@@ -91,6 +91,26 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
         holder.callimage(goods.get(position));
         holder.rltv.setChecked(goods.get(position).isCheck());
 
+
+
+
+
+        if (callMethod.ReadBoolan("ShowGoodImage")) {
+            holder.img.setVisibility(View.VISIBLE);
+        }else{
+            holder.img.setVisibility(View.GONE);
+        }
+
+
+        if (callMethod.ReadBoolan("ShowGoodBuyBtn")) {
+            holder.btnadd.setVisibility(View.VISIBLE);
+        }else{
+            holder.btnadd.setVisibility(View.GONE);
+        }
+
+
+
+
         if (callMethod.ReadBoolan("CanUseInactive")){
 
             holder.btnadd.setText("افزودن");
@@ -187,6 +207,10 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
         });
 
         if (callMethod.ReadBoolan("ShowDetail")) {
+
+
+
+
             holder.btnadd.setVisibility(View.VISIBLE);
             holder.rltv.setOnClickListener(v -> {
                 callMethod.Log("getClass = "+mContext.getClass().getName());
@@ -264,39 +288,40 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
             holder.btnadd.setVisibility(View.GONE);
 
 
-            holder.rltv.setOnClickListener(v -> {
-                if (multi_select) {
-                    if (goods.get(position).getGoodFieldValue("ActiveStack").equals("1")) {
-                        holder.rltv.setChecked(!holder.rltv.isChecked());
-                        goods.get(position).setCheck(!goods.get(position).isCheck());
-                        if (goods.get(position).isCheck()) {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
-                                Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
-                                activity.good_select_function(goods.get(position));
-                            }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
-                                Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
-                                activity.good_select_function(goods.get(position));
+            if (callMethod.ReadBoolan("ShowGoodBuyBtn")) {
+                holder.rltv.setOnClickListener(v -> {
+                    if (multi_select) {
+                        if (goods.get(position).getGoodFieldValue("ActiveStack").equals("1")) {
+                            holder.rltv.setChecked(!holder.rltv.isChecked());
+                            goods.get(position).setCheck(!goods.get(position).isCheck());
+                            if (goods.get(position).isCheck()) {
+                                if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
+                                    Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
+                                    activity.good_select_function(goods.get(position));
+                                }
+                                if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
+                                    Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
+                                    activity.good_select_function(goods.get(position));
+                                }
+                            } else {
+                                if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
+                                    Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
+                                    activity.good_select_function(goods.get(position));
+                                }
+                                if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
+                                    Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
+                                    activity.good_select_function(goods.get(position));
+                                }
                             }
                         } else {
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_SearchActivity")) {
-                                Broker_SearchActivity activity = (Broker_SearchActivity) mContext;
-                                activity.good_select_function(goods.get(position));
-                            }
-                            if (mContext.getClass().getName().equals("com.kits.kowsarapp.activity.broker.Broker_ByDateActivity")) {
-                                Broker_ByDateActivity activity = (Broker_ByDateActivity) mContext;
-                                activity.good_select_function(goods.get(position));
-                            }
+                            callMethod.showToast("این کالا غیر فعال می باشد");
                         }
                     } else {
-                        callMethod.showToast("این کالا غیر فعال می باشد");
+                        holder.Actionrltv(goods.get(position), multi_select);
                     }
-                } else {
-                    holder.Actionrltv(goods.get(position), multi_select);
-                }
 
-            });
-
+                });
+            }
 
         }
 

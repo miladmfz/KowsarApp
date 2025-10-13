@@ -433,6 +433,37 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp">
+
+                <!-- Label Text -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:text="نمایش نوار مشتری و گروه و جستجوی پیشرفته"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
+
+                <!-- Switch -->
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/b_config_a_showsearchbandactive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 
             <androidx.appcompat.widget.LinearLayoutCompat

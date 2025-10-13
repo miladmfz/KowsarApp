@@ -125,9 +125,21 @@ public class Broker_DetailActivity extends AppCompatActivity {
             binding.bDetailABtnbuy.setBackgroundTintList(getResources().getColorStateList(R.color.grey_700));
         }
 
-        if (callMethod.ReadBoolan("CanUseInactive")){
-            binding.bDetailABtnbuy.setText("غیر فعال ");
+
+        if (callMethod.ReadBoolan("ShowGoodBuyBtn")) {
+            binding.bDetailABtnbuy.setVisibility(View.VISIBLE);
+            if (callMethod.ReadBoolan("CanUseInactive")){
+                binding.bDetailABtnbuy.setText("غیر فعال ");
+            }
+        }else{
+            binding.bDetailABtnbuy.setVisibility(View.GONE);
+
         }
+
+
+
+
+
         binding.bDetailABtnbuy.setOnClickListener(view -> {
 
 
