@@ -315,8 +315,9 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
             total_amount_tv.setPadding(0, 20, 0, 10);
 
 
+
             TextView total_price_tv = new TextView(getApplicationContext());
-            total_price_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.valueOf(factor.getSumPrice())) + " ریال"));
+            total_price_tv.setText(NumberFunctions.PerisanNumber(" قیمت  : " + decimalFormat.format(Integer.valueOf(factor.getSumPrice())) + " ریال"));
             total_price_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
             total_price_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
             total_price_tv.setTextColor(getColor(R.color.colorPrimaryDark));
@@ -326,17 +327,42 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
             total_layout.addView(total_amount_tv);
             total_layout.addView(total_price_tv);
 
-        if(!factor.getNewSumPrice().equals(factor.getSumPrice())){
-            TextView total_newprice_tv = new TextView(getApplicationContext());
-            total_newprice_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل(جدید) : " + decimalFormat.format(Integer.valueOf(factor.getNewSumPrice())) + " ریال"));
-            total_newprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            total_newprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-            total_newprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            total_newprice_tv.setGravity(Gravity.RIGHT);
+        if (Integer.parseInt(factor.getSumTax())>0){
+            TextView total_tax_tv = new TextView(getApplicationContext());
+            total_tax_tv.setText(NumberFunctions.PerisanNumber(" مالیات  : " + decimalFormat.format(Integer.valueOf(factor.getSumTax())) + " ریال"));
+            total_tax_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+            total_tax_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            total_tax_tv.setTextColor(getColor(R.color.colorPrimaryDark));
+            total_tax_tv.setGravity(Gravity.RIGHT);
 
-            total_layout.addView(total_newprice_tv);
+            TextView total_total_taxprice_tv = new TextView(getApplicationContext());
+            total_total_taxprice_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.parseInt(factor.getSumPrice())+Integer.parseInt(factor.getSumTax())) + " ریال"));
+            total_total_taxprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+            total_total_taxprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            total_total_taxprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));
+            total_total_taxprice_tv.setGravity(Gravity.RIGHT);
+
+            total_layout.addView(total_tax_tv);
+            total_layout.addView(total_total_taxprice_tv);
+
 
         }
+
+
+        // TODO after update 24.8.0
+
+
+//        if(!factor.getNewSumPrice().equals(factor.getSumPrice())){
+//            TextView total_newprice_tv = new TextView(getApplicationContext());
+//            total_newprice_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل(جدید) : " + decimalFormat.format(Integer.valueOf(factor.getNewSumPrice())) + " ریال"));
+//            total_newprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+//            total_newprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+//            total_newprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));
+//            total_newprice_tv.setGravity(Gravity.RIGHT);
+//
+//            total_layout.addView(total_newprice_tv);
+//
+//        }
 
 
 

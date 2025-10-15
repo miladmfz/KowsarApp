@@ -288,13 +288,22 @@ public class Ocr_CollectFragment extends Fragment {
 
                     int FormNo = Integer.parseInt(g.getFormNo());  // Ensure this value is of type double
 
-                    if (callMethod.ReadString("StackCategory").equals("انبار1") && FormNo >= 100000 && FormNo <= 199999) {
+                    if (callMethod.ReadString("StackCategory").equals("انبار1-1") && FormNo >= 106000 && FormNo <= 114999) {
                         ocr_goods_visible.add(g);
                         goodshow(g);
-                    } else if (callMethod.ReadString("StackCategory").equals("انبار2") && FormNo > 200000 && FormNo <= 299999) {
+                    }else if (callMethod.ReadString("StackCategory").equals("انبار1-2") && FormNo >= 115000 && FormNo <= 126999) {
                         ocr_goods_visible.add(g);
                         goodshow(g);
-                    } else if (callMethod.ReadString("StackCategory").equals("انبار3") && FormNo > 300000 && FormNo <= 399999) {
+                    } else if (callMethod.ReadString("StackCategory").equals("انبار2-1") && FormNo > 205000 && FormNo <= 214999) {
+                        ocr_goods_visible.add(g);
+                        goodshow(g);
+                    } else if (callMethod.ReadString("StackCategory").equals("انبار2-2") && FormNo > 215000 && FormNo <= 226999) {
+                        ocr_goods_visible.add(g);
+                        goodshow(g);
+                    } else if (callMethod.ReadString("StackCategory").equals("انبار3-1") && FormNo > 301000 && FormNo <= 317999) {
+                        ocr_goods_visible.add(g);
+                        goodshow(g);
+                    } else if (callMethod.ReadString("StackCategory").equals("انبار3-2") && FormNo > 318000 && FormNo <= 399999) {
                         ocr_goods_visible.add(g);
                         goodshow(g);
                     }
@@ -311,8 +320,6 @@ public class Ocr_CollectFragment extends Fragment {
                 }
 
             }
-
-
 
         }
 

@@ -259,11 +259,40 @@ public class Factor {
     @SerializedName("InfoExplain")
     private String InfoExplain;
 
+    @SerializedName("SumTax")
+    private String SumTax;
+
+    @SerializedName("Moghayerat")
+    private String Moghayerat;
+
 
 
     @SerializedName("Check")
     private boolean Check;
 
+
+    public String getSumTax() {
+
+        if (SumTax != null)
+        {
+            return SumTax;
+        }else {
+            return "0";
+        }
+
+    }
+
+    public void setSumTax(String sumTax) {
+        SumTax = sumTax;
+    }
+
+    public String getMoghayerat() {
+        return Moghayerat;
+    }
+
+    public void setMoghayerat(String moghayerat) {
+        Moghayerat = moghayerat;
+    }
 
     public String getDailyCode() {
         return DailyCode;

@@ -228,7 +228,7 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
 
-            OrderBy="GoodExplain1";
+            OrderBy="GoodName";
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
             OrderBy="FormNo";
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
