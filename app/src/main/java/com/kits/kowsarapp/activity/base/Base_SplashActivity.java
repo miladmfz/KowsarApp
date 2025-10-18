@@ -123,7 +123,7 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditString("LastTcPrint", "0");
             callMethod.EditString("JobPersonRef", "0");
             callMethod.EditString("ActiveDatabase","0");
-            callMethod.EditString("RowCall", "200");
+            callMethod.EditString("RowCall", "20");
             callMethod.EditString("AccessCount", "5");
 
             callMethod.EditBoolan("ShowSumAmountHint", true);

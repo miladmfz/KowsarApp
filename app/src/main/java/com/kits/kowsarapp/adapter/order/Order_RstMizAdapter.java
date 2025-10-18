@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,6 +63,13 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
     String channel_id = "Kowsarmobile";
     String channel_name = "home";
     String changeTable;
+
+    public void updateData(List<Order_BasketInfo> newList, String changeFlag) {
+        this.basketInfos.clear();
+        this.basketInfos.addAll(newList);
+        this.changeTable = changeFlag;
+        notifyDataSetChanged();
+    }
 
     public Order_RstMizAdapter(ArrayList<Order_BasketInfo> BasketInfos, String changeflag, Context context) {
         this.mContext = context;
@@ -619,10 +627,13 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                                     public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                                         if (response.isSuccessful()) {
                                             assert response.body() != null;
+
                                             if (response.body().getText().equals("Done")) {
                                                 order_printChangeTable.GetHeader_Data("MizType", basketInfos.get(position));
 
                                             }
+
+
 
                                         }
                                     }

@@ -278,9 +278,20 @@ public class Order_TableActivity extends AppCompatActivity {
 
     private void callrecycler() {
         progressBar.setVisibility(View.GONE);
-        order_rstMizAdapter = new Order_RstMizAdapter(basketInfos, EditTable, Order_TableActivity.this);
 
-        if (order_rstMizAdapter.getItemCount() == 0) {
+        if (order_rstMizAdapter == null) {
+            // فقط بار اول: آداپتر بساز
+            order_rstMizAdapter = new Order_RstMizAdapter(basketInfos, EditTable, Order_TableActivity.this);
+            recyclerView_Table.setLayoutManager(new GridLayoutManager(this, 1));
+            recyclerView_Table.setItemAnimator(new DefaultItemAnimator());
+            recyclerView_Table.setAdapter(order_rstMizAdapter);
+        } else {
+            // دفعات بعد: فقط داده‌ها رو به‌روزرسانی کن
+            order_rstMizAdapter.updateData(basketInfos, EditTable);
+        }
+
+        // وضعیت خالی یا پر بودن لیست
+        if (basketInfos == null || basketInfos.isEmpty()) {
             tv_lottiestatus.setText(R.string.textvalue_notfound);
             img_lottiestatus.setVisibility(View.VISIBLE);
             tv_lottiestatus.setVisibility(View.VISIBLE);
@@ -288,11 +299,8 @@ public class Order_TableActivity extends AppCompatActivity {
             img_lottiestatus.setVisibility(View.GONE);
             tv_lottiestatus.setVisibility(View.GONE);
         }
-        recyclerView_Table.setLayoutManager(new GridLayoutManager(this, 1));
-        recyclerView_Table.setAdapter(order_rstMizAdapter);
-        recyclerView_Table.setItemAnimator(new DefaultItemAnimator());
-
     }
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
