@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kits.kowsarapp.adapter.ocr.Ocr_Collect_ListApi_Adapter;
 
+import android.content.Context;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -344,7 +345,8 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                         }
 
 
-                        ocr_stacksAdapter=new Ocr_StacksAdapter(App.getContext(),stacks);
+                        ocr_stacksAdapter=new Ocr_StacksAdapter(Ocr_Collect_List_Api_Activity.this,stacks);
+
 
                         stacks_list_recycler.setLayoutManager(new GridLayoutManager(App.getContext(), 1, GridLayoutManager.HORIZONTAL, false
                         ));

@@ -20,16 +20,24 @@ import java.util.List;
 
 public class Ocr_StacksAdapter extends RecyclerView.Adapter<Ocr_StacksAdapter.ViewHolder> {
 
-    private final Context mContext;
+      Context mContext;
 
-    private List<String> items;
-    private List<String> selectedItems = new ArrayList<>(); // List baraye zakhire item haye entekhab shode
+     List<String> items;
+     List<String> selectedItems = new ArrayList<>(); // List baraye zakhire item haye entekhab shode
 
     public Ocr_StacksAdapter(Context context, List<String> items) {
 
         this.items = items;
         this.mContext = context;
     }
+
+
+    private OnStackSelectionChanged listener;
+
+    public interface OnStackSelectionChanged {
+        void onStackSelectionChanged();
+    }
+
 
     @NonNull
     @Override
@@ -42,7 +50,26 @@ public class Ocr_StacksAdapter extends RecyclerView.Adapter<Ocr_StacksAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String item = items.get(position);
         holder.textView.setText(item);
-        holder.checkBox.setOnCheckedChangeListener(null); // Prevent re-binding issues
+//        holder.checkBox.setOnCheckedChangeListener(null); // Prevent re-binding issues
+
+
+//
+//        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isChecked) {
+//                selectedItems.add(item);
+//            } else {
+//                selectedItems.remove(item);
+//            }
+//
+//            if (listener != null) {
+//                listener.onStackSelectionChanged();
+//            }
+//        });
+//
+
+
+
+
 
         // Mo'jodi az peida kardan state check baraye har item
         holder.checkBox.setChecked(selectedItems.contains(item));
