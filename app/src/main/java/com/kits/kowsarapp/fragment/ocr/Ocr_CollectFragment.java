@@ -59,7 +59,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Ocr_CollectFragment extends Fragment {
+public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListener {
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     CallMethod callMethod;
@@ -122,6 +122,8 @@ public class Ocr_CollectFragment extends Fragment {
     Integer row_counter;
     Integer conter_confirm = 0;
 
+    Integer Sum_Confirm_Amount=0;
+
     public String getState() {
         return state;
     }
@@ -169,27 +171,27 @@ public class Ocr_CollectFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         try {
-        callMethod = new CallMethod(requireActivity());
-        ocr_dbh = new Ocr_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
-        ocr_action = new Ocr_Action(requireActivity());
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
-        secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
-        handler=new Handler();
-        ocr_print = new Ocr_Print(requireActivity());
-        for (final String[] ignored : arraygood_shortage) {
-            arraygood_shortage.add(new String[]{"goodcode", "amount "});
-        }
-        DisplayMetrics metrics = new DisplayMetrics();
-        view.getDisplay().getMetrics(metrics);
-        width =metrics.widthPixels;
-        dialogProg = new Dialog(requireActivity());
-        dialogProg.setContentView(R.layout.ocr_spinner_box);
-        dialogProg.findViewById(R.id.ocr_spinner_text).setVisibility(View.GONE);
-        CreateView_Control();
-    }catch (Exception e){
+            callMethod = new CallMethod(requireActivity());
+            ocr_dbh = new Ocr_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
+            ocr_action = new Ocr_Action(requireActivity());
+            apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
+            secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
+            handler=new Handler();
+            ocr_print = new Ocr_Print(requireActivity());
+            for (final String[] ignored : arraygood_shortage) {
+                arraygood_shortage.add(new String[]{"goodcode", "amount "});
+            }
+            DisplayMetrics metrics = new DisplayMetrics();
+            view.getDisplay().getMetrics(metrics);
+            width =metrics.widthPixels;
+            dialogProg = new Dialog(requireActivity());
+            dialogProg.setContentView(R.layout.ocr_spinner_box);
+            dialogProg.findViewById(R.id.ocr_spinner_text).setVisibility(View.GONE);
+            CreateView_Control();
+        }catch (Exception e){
             callMethod.Log(e.getMessage());
 
-   }
+        }
     }
 
 
@@ -263,64 +265,70 @@ public class Ocr_CollectFragment extends Fragment {
         }
 
         row_counter= 0;
-        for (Ocr_Good g : ocr_goods) {
+        Sum_Confirm_Amount=0;
+        for (Ocr_Good ocr_good_single : ocr_goods) {
 
 
             if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                     callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
 
                 if(callMethod.ReadString("StackCategory").equals("همه")) {
-                    ocr_goods_visible.add(g);
-                    goodshow(g);
-                }else if(g.getGoodExplain4().equals(callMethod.ReadString("StackCategory"))){
-                    ocr_goods_visible.add(g);
-                    goodshow(g);
+                    ocr_goods_visible.add(ocr_good_single);
+                    goodshow(ocr_good_single);
+                }else if(ocr_good_single.getGoodExplain4().equals(callMethod.ReadString("StackCategory"))){
+                    ocr_goods_visible.add(ocr_good_single);
+                    goodshow(ocr_good_single);
                 }
 
 
             } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
                 if(callMethod.ReadString("StackCategory").equals("همه")) {
 
-                    ocr_goods_visible.add(g);
-                    goodshow(g);
+                    ocr_goods_visible.add(ocr_good_single);
+                    goodshow(ocr_good_single);
 
-                } else if (g.getFormNo() != null) {
+                } else if (ocr_good_single.getFormNo() != null) {
 
-                    int FormNo = Integer.parseInt(g.getFormNo());  // Ensure this value is of type double
+                    int FormNo = Integer.parseInt(ocr_good_single.getFormNo());  // Ensure this value is of type double
 
-                          if (callMethod.ReadString("StackCategory").equals("انبار1ب1") && FormNo >= 106000 && FormNo <= 114999) {
-                        ocr_goods_visible.add(g);
-                        goodshow(g);
+                    if (callMethod.ReadString("StackCategory").equals("انبار1ب1") && FormNo >= 106000 && FormNo <= 114999) {
+                        ocr_goods_visible.add(ocr_good_single);
+                        goodshow(ocr_good_single);
                     }else if (callMethod.ReadString("StackCategory").equals("انبار1ب2") && FormNo >= 115000 && FormNo <= 126999) {
-                        ocr_goods_visible.add(g);
-                        goodshow(g);
+                        ocr_goods_visible.add(ocr_good_single);
+                        goodshow(ocr_good_single);
                     } else if (callMethod.ReadString("StackCategory").equals("انبار2ب1") && FormNo > 205000 && FormNo <= 214999) {
-                        ocr_goods_visible.add(g);
-                        goodshow(g);
+                        ocr_goods_visible.add(ocr_good_single);
+                        goodshow(ocr_good_single);
                     } else if (callMethod.ReadString("StackCategory").equals("انبار2ب2") && FormNo > 215000 && FormNo <= 226999) {
-                        ocr_goods_visible.add(g);
-                        goodshow(g);
+                        ocr_goods_visible.add(ocr_good_single);
+                        goodshow(ocr_good_single);
                     } else if (callMethod.ReadString("StackCategory").equals("انبار3ب1") && FormNo > 301000 && FormNo <= 317999) {
-                        ocr_goods_visible.add(g);
-                        goodshow(g);
+                        ocr_goods_visible.add(ocr_good_single);
+                        goodshow(ocr_good_single);
                     } else if (callMethod.ReadString("StackCategory").equals("انبار3ب2") && FormNo > 318000 && FormNo <= 399999) {
-                        ocr_goods_visible.add(g);
-                        goodshow(g);
+                        ocr_goods_visible.add(ocr_good_single);
+                        goodshow(ocr_good_single);
                     }
                 }
 
 
             }else{
                 if(callMethod.ReadString("StackCategory").equals("همه")) {
-                    ocr_goods_visible.add(g);
-                    goodshow(g);
-                }else if(g.getGoodExplain4().equals(callMethod.ReadString("StackCategory"))){
-                    ocr_goods_visible.add(g);
-                    goodshow(g);
+                    ocr_goods_visible.add(ocr_good_single);
+                    goodshow(ocr_good_single);
+                }else if(ocr_good_single.getGoodExplain4().equals(callMethod.ReadString("StackCategory"))){
+                    ocr_goods_visible.add(ocr_good_single);
+                    goodshow(ocr_good_single);
                 }
 
             }
 
+        }
+
+        for (Ocr_Good ocr_good_single : ocr_goods_visible) {
+
+            Sum_Confirm_Amount=Sum_Confirm_Amount+Integer.parseInt(ocr_good_single.getFacAmount());
         }
 
         try{
@@ -374,19 +382,11 @@ public class Ocr_CollectFragment extends Fragment {
             ll_main.addView(ll_factor_summary);
             ll_main.addView(ll_send_confirm);
         }
-//        EditText edBarcode = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
 
-
-//        scrollView_main.setOnTouchListener((v, event) -> {
-//            edBarcode.requestFocus();
-//            edBarcode.selectAll();
-//            return false; // یعنی اجازه بده اسکرول ادامه پیدا کنه
-//        });
 
         ConfirmCount_Control();
 
 
-        //// vase scroll kardan be avvalin tik nakhorde
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
 
@@ -490,24 +490,26 @@ public class Ocr_CollectFragment extends Fragment {
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                            callMethod.Log(t.getMessage()); }
+                    callMethod.Log(t.getMessage()); }
             });
         });
 
 
         btn_send.setOnClickListener(v -> {
 
-            final Dialog dialog = new Dialog(requireActivity());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-            dialog.setContentView(R.layout.ocr_checkamount);
-            EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
-            MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
 
 
-            btncheckamount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (callMethod.ReadBoolan("SendCheckAmount")){
+
+                final Dialog dialog = new Dialog(requireActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+                dialog.setContentView(R.layout.ocr_checkamount);
+                EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
+                MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
+
+
+                btncheckamount.setOnClickListener(v12 -> {
                     callMethod.Log("factor.getSumAmount() = "+factor.getSumAmount());
 
                     if (NumberFunctions.EnglishNumber(edamount.getText().toString()).equals(factor.getSumAmount())) {
@@ -553,7 +555,7 @@ public class Ocr_CollectFragment extends Fragment {
                                         }
                                         @Override
                                         public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                                    callMethod.Log(t.getMessage()); }
+                                            callMethod.Log(t.getMessage()); }
                                     });
 
 
@@ -562,18 +564,73 @@ public class Ocr_CollectFragment extends Fragment {
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                        callMethod.Log(t.getMessage()); }
+                                callMethod.Log(t.getMessage()); }
                         });
 
 
                     }else {
                         callMethod.showToast("تعداد وارد شده صحیح نیست");
                     }
+                });
+
+
+                dialog.show();
+
+            }else{
+                dialogProg.show();
+
+                Call<RetrofitResponse> call;
+                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                    call=apiInterface.CheckState("OcrControlled_new",factor.getAppOCRFactorCode(),"1","");
+
+                }else{
+                    call=secendApiInterface.CheckState("OcrControlled_new",factor.getAppOCRFactorCode(),"1","");
                 }
-            });
+                call.enqueue(new Callback<RetrofitResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                        if(response.isSuccessful()) {
+                            dialogProg.dismiss();
 
 
-            dialog.show();
+                            Call<RetrofitResponse> call1;
+                            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                call1=apiInterface.OcrDoubleCheck("OcrDoubleCheck",factor.getAppOCRFactorCode());
+
+                            }else{
+                                call1=secendApiInterface.OcrDoubleCheck("OcrDoubleCheck",factor.getAppOCRFactorCode());
+                            }
+
+                            call1.enqueue(new Callback<RetrofitResponse>() {
+                                @Override
+                                public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                                    if(response.isSuccessful()) {
+                                        ocr_action.checkSumAmount(factor);
+                                        if (response.body().getText().equals("HasNotDoubleCheck")){
+                                            ocr_action.Pack_detail(factor,"0");
+
+                                        }else if (response.body().getText().equals("HasDoubleCheck")){
+                                            ocr_print.Printing(factor,ocr_goods_visible,"0","0");
+                                        }
+
+                                    }
+                                }
+                                @Override
+                                public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
+                                    callMethod.Log(t.getMessage()); }
+                            });
+
+
+
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                        callMethod.Log(t.getMessage()); }
+                });
+            }
+
+
 
 
 
@@ -581,66 +638,152 @@ public class Ocr_CollectFragment extends Fragment {
 
         btn_confirm.setOnClickListener(v -> {
 
+            if (callMethod.ReadBoolan("ConfirmCheckAmount")){
 
-            int Array_GoodCodesCheck_count=Array_GoodCodesCheck.size();
-            conter_confirm = 0;
-            dialogProg.show();
-            try {
+                final Dialog dialog = new Dialog(requireActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+                dialog.setContentView(R.layout.ocr_checkamount);
+                EditText edamount = dialog.findViewById(R.id.ocr_checkamount_c_edamount);
+                MaterialButton btncheckamount = dialog.findViewById(R.id.ocr_checkamount_c_btncheckamount);
 
-                for (String single_GoodCode_check : Array_GoodCodesCheck) {
+
+                btncheckamount.setOnClickListener(v1 -> {
 
 
-                    Call<RetrofitResponse> call;
-                    if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                        call=apiInterface.OcrControlled(
-                                "OcrControlled_new",
-                                single_GoodCode_check,
-                                "0",
-                                callMethod.ReadString("JobPersonRef")
-                        );
-                    }else{
-                        call=secendApiInterface.OcrControlled(
-                                "OcrControlled_new",
-                                single_GoodCode_check,
-                                "0",
-                                callMethod.ReadString("JobPersonRef")
-                        );
+                    callMethod.Log("Sum_Confirm_Amount() = "+Sum_Confirm_Amount);
+
+                    if (NumberFunctions.EnglishNumber(edamount.getText().toString()).equals(Sum_Confirm_Amount.toString())) {
+
+                        int Array_GoodCodesCheck_count=Array_GoodCodesCheck.size();
+                        conter_confirm = 0;
+                        dialogProg.show();
+                        try {
+
+                            for (String single_GoodCode_check : Array_GoodCodesCheck) {
+
+
+                                Call<RetrofitResponse> call;
+                                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                    call=apiInterface.OcrControlled(
+                                            "OcrControlled_new",
+                                            single_GoodCode_check,
+                                            "0",
+                                            callMethod.ReadString("JobPersonRef")
+                                    );
+                                }else{
+                                    call=secendApiInterface.OcrControlled(
+                                            "OcrControlled_new",
+                                            single_GoodCode_check,
+                                            "0",
+                                            callMethod.ReadString("JobPersonRef")
+                                    );
+                                }
+
+
+                                call.enqueue(new Callback<RetrofitResponse>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                        if(response.isSuccessful()) {
+                                            conter_confirm = conter_confirm +1;
+                                            if(conter_confirm==Array_GoodCodesCheck_count){
+                                                assert response.body() != null;
+                                                intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
+                                                intent.putExtra("ScanResponse", BarcodeScan);
+                                                intent.putExtra("State", "0");
+                                                intent.putExtra("FactorImage", "");
+                                                dialogProg.dismiss();
+                                                startActivity(intent);
+                                                requireActivity().finish();
+
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                        dialogProg.dismiss();
+                                        callMethod.Log(t.getMessage());
+
+                                    }
+                                });
+
+
+                            }
+
+                        }catch (Exception e){
+                            callMethod.Log(e.getMessage());
+                        }
+                    }else {
+                        callMethod.showToast("تعداد وارد شده صحیح نیست");
                     }
+                });
 
 
-                    call.enqueue(new Callback<RetrofitResponse>() {
-                        @Override
-                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                            if(response.isSuccessful()) {
-                                conter_confirm = conter_confirm +1;
-                                if(conter_confirm==Array_GoodCodesCheck_count){
-                                    assert response.body() != null;
-                                    intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
-                                    intent.putExtra("ScanResponse", BarcodeScan);
-                                    intent.putExtra("State", "0");
-                                    intent.putExtra("FactorImage", "");
-                                    dialogProg.dismiss();
-                                    startActivity(intent);
-                                    requireActivity().finish();
+                dialog.show();
 
+
+            }else{
+
+                int Array_GoodCodesCheck_count=Array_GoodCodesCheck.size();
+                conter_confirm = 0;
+                dialogProg.show();
+                try {
+
+                    for (String single_GoodCode_check : Array_GoodCodesCheck) {
+
+
+                        Call<RetrofitResponse> call;
+                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                            call=apiInterface.OcrControlled(
+                                    "OcrControlled_new",
+                                    single_GoodCode_check,
+                                    "0",
+                                    callMethod.ReadString("JobPersonRef")
+                            );
+                        }else{
+                            call=secendApiInterface.OcrControlled(
+                                    "OcrControlled_new",
+                                    single_GoodCode_check,
+                                    "0",
+                                    callMethod.ReadString("JobPersonRef")
+                            );
+                        }
+
+
+                        call.enqueue(new Callback<RetrofitResponse>() {
+                            @Override
+                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                if(response.isSuccessful()) {
+                                    conter_confirm = conter_confirm +1;
+                                    if(conter_confirm==Array_GoodCodesCheck_count){
+                                        assert response.body() != null;
+                                        intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
+                                        intent.putExtra("ScanResponse", BarcodeScan);
+                                        intent.putExtra("State", "0");
+                                        intent.putExtra("FactorImage", "");
+                                        dialogProg.dismiss();
+                                        startActivity(intent);
+                                        requireActivity().finish();
+
+                                    }
                                 }
                             }
-                        }
-                        @Override
-                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                            dialogProg.dismiss();
-                            callMethod.Log(t.getMessage());
+                            @Override
+                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                dialogProg.dismiss();
+                                callMethod.Log(t.getMessage());
 
-                        }
-                    });
+                            }
+                        });
 
 
+                    }
+
+                }catch (Exception e){
+                    callMethod.Log(e.getMessage());
                 }
 
-            }catch (Exception e){
-                 callMethod.Log(e.getMessage());
             }
-
 
         });
 
@@ -830,9 +973,9 @@ public class Ocr_CollectFragment extends Fragment {
         ViewPager vp_name_amount = new ViewPager(requireActivity().getApplicationContext());
         ViewPager vp_amount_price = new ViewPager(requireActivity().getApplicationContext());
         TextView tv_gap = new TextView(requireActivity().getApplicationContext());
-        TextView tv_goodname = new TextView(requireActivity().getApplicationContext());
-        TextView tv_amount = new TextView(requireActivity().getApplicationContext());
-        TextView tv_price = new TextView(requireActivity().getApplicationContext());
+        TextView tv_good_part1 = new TextView(requireActivity().getApplicationContext());
+        TextView tv_good_part2 = new TextView(requireActivity().getApplicationContext());
+        TextView tv_good_part3 = new TextView(requireActivity().getApplicationContext());
 
         MaterialCheckBox checkBox = new MaterialCheckBox(requireActivity());
 
@@ -845,9 +988,9 @@ public class Ocr_CollectFragment extends Fragment {
         vp_name_amount.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
         vp_amount_price.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
         tv_gap.setLayoutParams(new LinearLayoutCompat.LayoutParams(20, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        tv_goodname.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float)1.5));
-        tv_amount.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float)4));
-        tv_price.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float)3.5));
+        tv_good_part1.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float)1.5));
+        tv_good_part2.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float)4));
+        tv_good_part3.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float)3.5));
 
         checkBox.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 4));
 
@@ -872,73 +1015,79 @@ public class Ocr_CollectFragment extends Fragment {
         ll_radif_check.setGravity(Gravity.CENTER);
         checkBox.setGravity(Gravity.CENTER_VERTICAL);
         tv_gap.setGravity(Gravity.CENTER);
-        tv_goodname.setGravity(Gravity.RIGHT);
-        tv_amount.setGravity(Gravity.CENTER);
-        tv_price.setGravity(Gravity.CENTER);
+        tv_good_part1.setGravity(Gravity.RIGHT);
+        tv_good_part2.setGravity(Gravity.CENTER);
+        tv_good_part3.setGravity(Gravity.CENTER);
 
 
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))-10);
-        tv_goodname.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        tv_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))+3);
-        tv_amount.setTypeface(null, Typeface.BOLD);
+        tv_good_part1.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        tv_good_part2.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))+3);
+        tv_good_part2.setTypeface(null, Typeface.BOLD);
 
-        tv_price.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        tv_good_part3.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
 
 
+        int checkBoxId = View.generateViewId();
 
         checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(row_counter)));
-try {
+        checkBox.setId(checkBoxId);
+        ocr_goods_visible.get(row_counter - 1).setCheckBoxId(checkBoxId);
+
+        try {
 
 
 
-        tv_goodname.setText(NumberFunctions.PerisanNumber(good_detial.getGoodName()));
+            tv_good_part1.setText(NumberFunctions.PerisanNumber(good_detial.getGoodName()));
 
-        tv_amount.setText(NumberFunctions.PerisanNumber(good_detial.getFacAmount()));
+            tv_good_part2.setText(NumberFunctions.PerisanNumber(good_detial.getFacAmount()));
 
-        if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
-                callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
-            tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
-
-
-        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
-            tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getFormNo()));
-        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
-            tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodExplain3()));
-        }else{
-            tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
-        }
-
-        tv_gap.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        checkBox.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_goodname.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_amount.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_price.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-
-        tv_price.setPadding(0, 10, 0, 10);
-        tv_goodname.setPadding(0, 10, 5, 10);
+            if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
+                    callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+                tv_good_part3.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
 
 
-        if(good_detial.getShortageAmount()==null){
-            callMethod.Log("ShortageAmount is null");
-        }else {
-            if(Integer.parseInt(good_detial.getShortageAmount())>0) {
-                tv_amount.setText(NumberFunctions.PerisanNumber(good_detial.getShortageAmount() + ""));
-                tv_amount.setTextColor(requireActivity().getColor(R.color.red_800));
+            } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
+                tv_good_part3.setText(NumberFunctions.PerisanNumber(good_detial.getFormNo()));
+            } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
+                tv_good_part3.setText(NumberFunctions.PerisanNumber(good_detial.getGoodExplain3()));
+            }else{
+                tv_good_part3.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
             }
 
-        }
+            tv_gap.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
+            checkBox.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
+            tv_good_part1.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
+            tv_good_part2.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
+            tv_good_part3.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
 
-}catch (Exception e){
-    callMethod.Log("kowsar "+ e.getMessage());
-}
+            tv_good_part3.setPadding(0, 10, 0, 10);
+            tv_good_part1.setPadding(0, 10, 5, 10);
+
+
+            if(good_detial.getShortageAmount()==null){
+                callMethod.Log("ShortageAmount is null");
+            }else {
+                if(Integer.parseInt(good_detial.getShortageAmount())>0) {
+                    tv_good_part2.setText(NumberFunctions.PerisanNumber(good_detial.getShortageAmount() + ""));
+                    tv_good_part2.setTextColor(requireActivity().getColor(R.color.red_800));
+                }
+
+            }
+
+        }catch (Exception e){
+            callMethod.Log("kowsar "+ e.getMessage());
+        }
         ll_radif_check.addView(tv_gap);
+
+
         ll_radif_check.addView(checkBox);
 
-        ll_name_price.addView(tv_goodname);
+        ll_name_price.addView(tv_good_part1);
         ll_name_price.addView(vp_name_amount);
-        ll_name_price.addView(tv_amount);
+        ll_name_price.addView(tv_good_part2);
         ll_name_price.addView(vp_amount_price);
-        ll_name_price.addView(tv_price);
+        ll_name_price.addView(tv_good_part3);
 
         ll_details.addView(ll_radif_check);
         ll_details.addView(vp_radif_name);
@@ -997,11 +1146,12 @@ try {
             }else{
                 checkBox.setEnabled(true);
             }
-            
+
         }
         if(callMethod.ReadString("Category").equals("1")) {
             checkBox.setVisibility(View.GONE);
         }
+
         checkBox.setOnClickListener(v -> {
 
             if (callMethod.ReadBoolan("JustScanner")){
@@ -1023,64 +1173,29 @@ try {
                 }
             }
         });
-        
+
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-                if (callMethod.ReadBoolan("ListOrSingle")){  // list true
-                    if(isChecked){
-                        ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
-                        if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
-                            Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
-                        }
-                    }else {
-                        ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
-                        Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
-                    }
-                }else{
-
-                    if (Array_GoodCodesCheck.size()>0){
-                        if(isChecked){
-                            checkBox.setChecked(false);
-                            callMethod.showToast("چند انتخابی غیر فعال است");
-                        }else {
-                            ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
-                            Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
-                        }
-                    }else{
-                        if(isChecked){
-
-                            ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
-                            image_zome_view(ocr_goods_visible.get(correct_row));
-                            if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
-                                Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
-                            }
-                        }else {
-                            ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
-                            Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
-
-                        }
-                    }
-                }
-            } else {
-                callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
-            }
-
+            handleGoodCheck(checkBox, isChecked, correct_row);
 
         });
 
 
 
-        tv_goodname.setOnClickListener(v -> {
+        tv_good_part1.setOnClickListener(v -> {
             if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-                image_zome_view(ocr_goods_visible.get(correct_row));
+                good_detail_view(ocr_goods_visible.get(correct_row));
             } else {
                 callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
             }
 
         });
-        tv_amount.setOnClickListener(v -> {
+
+
+
+
+        tv_good_part2.setOnClickListener(v -> {
             if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-                amount_zome_view(ocr_goods_visible.get(correct_row).getFacAmount(),ocr_goods_visible.get(correct_row).getShortageAmount()+"");
+                good_amount_view(ocr_goods_visible.get(correct_row).getFacAmount(),ocr_goods_visible.get(correct_row).getShortageAmount()+"");
             } else {
                 callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
             }
@@ -1090,6 +1205,47 @@ try {
 
 
     }
+
+    private void handleGoodCheck(MaterialCheckBox checkBox, boolean isChecked, int correct_row) {
+        if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
+            if (callMethod.ReadBoolan("ListOrSingle")) { // حالت لیستی
+                if (isChecked) {
+                    ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
+                    if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
+                        Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                    }
+                } else {
+                    ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
+                    Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                }
+            } else { // حالت تکی
+                if (Array_GoodCodesCheck.size() > 0) {
+                    if (isChecked) {
+                        checkBox.setChecked(false);
+                        callMethod.showToast("چند انتخابی غیر فعال است");
+                    } else {
+                        ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
+                        Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                    }
+                } else {
+                    if (isChecked) {
+                        ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
+                        good_detail_view(ocr_goods_visible.get(correct_row));
+                        if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
+                            Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                        }
+                    } else {
+                        ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
+                        Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                    }
+                }
+            }
+        } else {
+            callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
+        }
+    }
+
+
 
     public void Newview() {
         ll_title = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -1427,6 +1583,8 @@ try {
         tv_goodname.setPadding(0, 10, 5, 10);
 
         ll_radif_check.addView(tv_gap);
+
+
         ll_radif_check.addView(checkBox);
 
         ll_name_price.addView(tv_goodname);
@@ -1485,7 +1643,7 @@ try {
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view(ocr_goods_visible.get(correct_row)));
+        tv_goodname.setOnClickListener(v -> good_detail_view(ocr_goods_visible.get(correct_row)));
 
 
         et_amountshortage.addTextChangedListener(new TextWatcher() {
@@ -1540,14 +1698,52 @@ try {
 
 
 
+    @Override
+    public void onGoodConfirmed(Ocr_Good singleGood) {
+        try {
+            // پیدا کردن اندیس کالای تأییدشده
+            int correct_row = -1;
+            for (int i = 0; i < ocr_goods_visible.size(); i++) {
+                if (ocr_goods_visible.get(i).getGoodCode().equals(singleGood.getGoodCode())) {
+                    correct_row = i;
+                    break;
+                }
+            }
+
+            if (correct_row != -1) {
+                // مستقیماً چک‌باکس همان ردیف را با استفاده از ID اختصاصی آن پیدا می‌کنیم
+                MaterialCheckBox checkBox = requireView().findViewById(singleGood.getCheckBoxId());
+
+                if (checkBox != null && !checkBox.isChecked()) {
+                    // تیک زدن چک‌باکس و اجرای منطق اصلی کنترل
+                    checkBox.setChecked(true);
+                    handleGoodCheck(checkBox, true, correct_row);
 
 
-    public void image_zome_view(Ocr_Good singleGood) {
-        ocr_action.good_detail(singleGood,BarcodeScan);
+                    callMethod.Log("onGoodConfirmed → Checked good: " + singleGood.getGoodCode());
+                } else if (checkBox == null) {
+                    callMethod.Log("onGoodConfirmed → Checkbox not found for ID: " + singleGood.getCheckBoxId());
+                }
+            } else {
+                callMethod.Log("onGoodConfirmed → Good not found in list: " + singleGood.getGoodCode());
+            }
+
+        } catch (Exception e) {
+            callMethod.Log("onGoodConfirmed Error → " + e.getMessage());
+        }
     }
-    public void amount_zome_view(String Facamount,String shortage) {
+
+
+
+    public void good_detail_view(Ocr_Good singleGood) {
+//        ocr_action.good_detail(singleGood,BarcodeScan);
+        ocr_action.good_detail(singleGood, "", this);
+
+    }
+    public void good_amount_view(String Facamount,String shortage) {
         ocr_action.goodamount_detail(Facamount,shortage);
     }
+
     public String getBarcodeScan() {
         return BarcodeScan;
     }

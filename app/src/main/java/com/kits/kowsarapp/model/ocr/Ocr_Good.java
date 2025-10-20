@@ -110,6 +110,16 @@ public class Ocr_Good implements Serializable {
     @SerializedName("MinAmount")
     private String MinAmount;
 
+    private int checkBoxId;
+
+    public int getCheckBoxId() {
+        return checkBoxId;
+    }
+
+    public void setCheckBoxId(int checkBoxId) {
+        this.checkBoxId = checkBoxId;
+    }
+
     public String getGoodExplain1() {
         return GoodExplain1;
     }

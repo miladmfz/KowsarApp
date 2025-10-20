@@ -51,7 +51,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_PackFragment extends Fragment{
+public class Ocr_PackFragment extends Fragment implements OnGoodConfirmListener{
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     CallMethod callMethod;
@@ -1047,8 +1047,7 @@ public class Ocr_PackFragment extends Fragment{
 
     public void image_zome_view(Ocr_Good Single_good) {
 
-        action.good_detail(Single_good,"");
-
+        action.good_detail(Single_good, "", this);
     }
 
     public Factor getFactor() {
@@ -1073,5 +1072,10 @@ public class Ocr_PackFragment extends Fragment{
 
     public void setBarcodeScan(String barcodeScan) {
         BarcodeScan = barcodeScan;
+    }
+
+    @Override
+    public void onGoodConfirmed(Ocr_Good good) {
+
     }
 }

@@ -45,6 +45,7 @@ import com.kits.kowsarapp.application.base.CallMethod;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.ZoomHelper;
+import com.kits.kowsarapp.fragment.ocr.OnGoodConfirmListener;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.Job;
 import com.kits.kowsarapp.model.base.JobPerson;
@@ -749,8 +750,10 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
     @SuppressLint("ClickableViewAccessibility")
-    public void good_detail(Ocr_Good singleGood, String BarcodeScan) {
-        final Dialog dialog = new Dialog(mContext);
+    //public void good_detail(Ocr_Good singleGood, String BarcodeScan) {
+        public void good_detail(Ocr_Good singleGood, String BarcodeScan, OnGoodConfirmListener listener) {
+
+            final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog.setContentView(R.layout.ocr_gooddetail_box);
@@ -798,6 +801,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         }else{
             call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
         }
+
         callMethod.Log(singleGood.getGoodCode());
         call.enqueue(new Callback<RetrofitResponse>() {
 
@@ -959,13 +963,36 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         });
 
 
-        if (callMethod.ReadBoolan("ListOrSingle") || BarcodeScan.equals("")) {
 
-            btn_confirm.setVisibility(View.GONE);
+
+        if (callMethod.ReadBoolan("ListOrSingle") || BarcodeScan.equals("")) {
+            if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
+                btn_confirm.setVisibility(View.VISIBLE);
+            }else{
+                btn_confirm.setVisibility(View.GONE);
+            }
         }else{
             btn_confirm.setVisibility(View.VISIBLE);
-            btn_confirm.setOnClickListener(v -> {
 
+        }
+
+        btn_confirm.setOnClickListener(v -> {
+
+            if (callMethod.ReadBoolan("ListOrSingle") ) {
+                if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
+
+                    btn_confirm.setVisibility(View.VISIBLE);
+                    callMethod.Log("Item selected locally: " + singleGood.getGoodCode() + " - " + singleGood.getGoodName()+" - " + singleGood.getCheckBoxId());
+
+                    // اگر لازم داری در فرگمنت ثبت بشه:
+                    if (listener != null) {
+                        listener.onGoodConfirmed(singleGood);
+                    }
+
+                    dialog.dismiss(); // بستن پنجره
+                }
+            }else{
+                callMethod.Log("ListOrSingle: " + callMethod.ReadBoolan("CheckListFromGoodDialog") );
 
                 Call<RetrofitResponse> call1;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
@@ -1014,22 +1041,13 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                     }
                 });
+            }
 
-
-            });
-        }
+        });
 
 
         dialog.show();
     }
-
-
-
-
-
-
-
-
 
 
 

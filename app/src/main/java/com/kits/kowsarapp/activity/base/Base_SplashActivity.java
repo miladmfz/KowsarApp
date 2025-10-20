@@ -137,6 +137,11 @@ public class Base_SplashActivity extends AppCompatActivity {
 
             callMethod.EditBoolan("ShortageList", false);
 
+            callMethod.EditBoolan("CheckListFromGoodDialog", false);
+            callMethod.EditBoolan("ConfirmCheckAmount", false);
+            callMethod.EditBoolan("SendCheckAmount", false);
+
+
             //endregion
 
 

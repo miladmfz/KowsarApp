@@ -317,7 +317,7 @@ public class Ocr_MergingActivity extends AppCompatActivity {
     }
 
     public void image_zome_view(Ocr_Good singleGood) {
-        ocr_action.good_detail(singleGood,"");
+//        ocr_action.good_detail(singleGood,"");
     }
 
 }

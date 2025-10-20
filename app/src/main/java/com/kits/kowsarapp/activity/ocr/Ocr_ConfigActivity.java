@@ -73,6 +73,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
     TextView tv_Deliverer,tv_lastprinter,tv_barcodedelay,tv_delay,tv_accesscount,tv_laststack;
 
     SwitchMaterial sm_showdetailamount,sm_showtotalamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle,sm_shortagelist;
+    SwitchMaterial sm_checklistfromgooddetail,        sm_confirmcheckamount,    sm_sendcheckamount;
     LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack;
 
     String stackcategory="همه";
@@ -153,6 +154,10 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_listorsingle = findViewById(R.id.ocr_config_a_listorsingle);
         sm_shortagelist = findViewById(R.id.ocr_config_a_shortagelist);
 
+        sm_checklistfromgooddetail = findViewById(R.id.ocr_config_a_checklistfromgooddetail);
+        sm_confirmcheckamount = findViewById(R.id.ocr_config_a_confirmcheckamount);
+        sm_sendcheckamount = findViewById(R.id.ocr_config_a_sendcheckamount);
+
 
         ll_spinner_Stack=findViewById(R.id.ocr_config_a_line_stack_spinner);
         ll_tv_Stack=findViewById(R.id.ocr_config_a_line_stack_tv);
@@ -208,6 +213,11 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_shortagelist.setChecked(callMethod.ReadBoolan("ShortageList"));
 
 
+        sm_checklistfromgooddetail.setChecked(callMethod.ReadBoolan("CheckListFromGoodDialog"));
+        sm_confirmcheckamount.setChecked(callMethod.ReadBoolan("ConfirmCheckAmount"));
+        sm_sendcheckamount.setChecked(callMethod.ReadBoolan("SendCheckAmount"));
+
+
         btn_config.setOnClickListener(v -> {
             callMethod.EditString("Deliverer",tv_Deliverer.getText().toString());
             callMethod.EditString("Delay",tv_delay.getText().toString());
@@ -223,6 +233,43 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             callMethod.EditString("RowCall",NumberFunctions.EnglishNumber(ed_rowcall.getText().toString()));
 
             finish();
+        });
+
+        sm_checklistfromgooddetail.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("CheckListFromGoodDialog")) {
+                callMethod.EditBoolan("CheckListFromGoodDialog", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("CheckListFromGoodDialog", true);
+                callMethod.showToast("بله");
+
+                callMethod.EditBoolan("ListOrSingle", true);
+                callMethod.showToast("انتخاب لیستی فعال شد");
+                sm_listorsingle.setChecked(callMethod.ReadBoolan("ListOrSingle"));
+
+            }
+        });
+
+
+        sm_confirmcheckamount.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ConfirmCheckAmount")) {
+                callMethod.EditBoolan("ConfirmCheckAmount", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("ConfirmCheckAmount", true);
+                callMethod.showToast("بله");
+            }
+        });
+
+
+        sm_sendcheckamount.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("SendCheckAmount")) {
+                callMethod.EditBoolan("SendCheckAmount", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("SendCheckAmount", true);
+                callMethod.showToast("بله");
+            }
         });
 
 
