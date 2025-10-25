@@ -29,6 +29,7 @@ import com.kits.kowsarapp.model.base.TableDetail;
 import com.kits.kowsarapp.model.base.UserInfo;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
+import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -36,7 +37,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -743,6 +746,13 @@ public class Broker_Replication {
                             mContext.startActivity(intent);
                             ((Activity) mContext).finish();
                             callMethod.showToast("بروز رسانی انجام شد");
+
+                            PersianCalendar calendar1 = new PersianCalendar();
+                            calendar1.setTimeZone(TimeZone.getTimeZone("Asia/Tehran"));
+                            calendar1.add(Calendar.DAY_OF_MONTH, -1);
+                            database.execSQL("INSERT INTO config(keyvalue, datavalue) Select 'LastUpdate', '0' Where Not Exists(Select * From Config Where KeyValue = 'LastUpdate')");
+                            database.execSQL("Update Config Set DataValue = '" + calendar1.getPersianShortDateTime() + "' Where KeyValue = 'LastUpdate'");
+
                         }
                     } catch (JSONException ignored) {
 

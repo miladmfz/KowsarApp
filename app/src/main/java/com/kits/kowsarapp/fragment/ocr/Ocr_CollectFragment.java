@@ -265,7 +265,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         }
 
         row_counter= 0;
-        Sum_Confirm_Amount=0;
         for (Ocr_Good ocr_good_single : ocr_goods) {
 
 
@@ -326,10 +325,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
         }
 
-        for (Ocr_Good ocr_good_single : ocr_goods_visible) {
 
-            Sum_Confirm_Amount=Sum_Confirm_Amount+Integer.parseInt(ocr_good_single.getFacAmount());
-        }
 
         try{
             factor.getAppOCRFactorExplain();
@@ -651,7 +647,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                 btncheckamount.setOnClickListener(v1 -> {
 
 
-                    callMethod.Log("Sum_Confirm_Amount() = "+Sum_Confirm_Amount);
 
                     if (NumberFunctions.EnglishNumber(edamount.getText().toString()).equals(Sum_Confirm_Amount.toString())) {
 
@@ -1153,26 +1148,33 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         }
 
         checkBox.setOnClickListener(v -> {
+            if (callMethod.ReadBoolan("CheckListFromGoodDialog")){
+                good_detail_view(ocr_goods_visible.get(correct_row));
 
-            if (callMethod.ReadBoolan("JustScanner")){
+            }else{
+                if (callMethod.ReadBoolan("JustScanner")){
 
-                if (good_detial.getBarCodePrintState().equals("ندارد")) {
-                    callMethod.Log("BarCodePrint = "+good_detial.getBarCodePrintState());
-                    ocr_goods_scan.clear();
-                    ocr_goods_scan.add(good_detial);
+                    if (good_detial.getBarCodePrintState().equals("ندارد")) {
+                        callMethod.Log("BarCodePrint = "+good_detial.getBarCodePrintState());
+                        ocr_goods_scan.clear();
+                        ocr_goods_scan.add(good_detial);
 
-                    if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-                        checkBox.setChecked(false);
+                        if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
+                            checkBox.setChecked(false);
 
-                        ocr_action.GoodScanDetail(ocr_goods_scan, state, getBarcodeScan());
-                    } else {
-                        callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
+                            ocr_action.GoodScanDetail(ocr_goods_scan, state, getBarcodeScan());
+                        } else {
+                            callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
+                        }
+                    }else{
+                        callMethod.Log("BarCodePrint = "+good_detial.getBarCodePrintState());
                     }
-                }else{
-                    callMethod.Log("BarCodePrint = "+good_detial.getBarCodePrintState());
                 }
             }
+
+
         });
+
 
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             handleGoodCheck(checkBox, isChecked, correct_row);
@@ -1206,18 +1208,31 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
     }
 
+
     private void handleGoodCheck(MaterialCheckBox checkBox, boolean isChecked, int correct_row) {
         if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
+            int amount = 0;
+            try {
+                amount = Integer.parseInt(ocr_goods_visible.get(correct_row).getFacAmount());
+            } catch (Exception e) {
+                amount = 0;
+            }
+
             if (callMethod.ReadBoolan("ListOrSingle")) { // حالت لیستی
                 if (isChecked) {
                     ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
                     if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
                         Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
                     }
+                    // ✅ اضافه کردن به جمع
+                    Sum_Confirm_Amount += amount;
                 } else {
                     ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
                     Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                    // ✅ کم کردن از جمع
+                    Sum_Confirm_Amount -= amount;
                 }
+
             } else { // حالت تکی
                 if (Array_GoodCodesCheck.size() > 0) {
                     if (isChecked) {
@@ -1226,6 +1241,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                     } else {
                         ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
                         Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                        Sum_Confirm_Amount -= amount; // در حالت تکی هم کم شود اگر تیک برداشته شد
                     }
                 } else {
                     if (isChecked) {
@@ -1234,12 +1250,20 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                         if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
                             Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
                         }
+                        Sum_Confirm_Amount += amount;
                     } else {
                         ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
                         Array_GoodCodesCheck.remove(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
+                        Sum_Confirm_Amount -= amount;
                     }
                 }
             }
+
+            // ✅ نمایش جمع جدید (در TextView یا Log)
+            Log.e("SUM_DEBUG", "Sum_Confirm_Amount: " + Sum_Confirm_Amount);
+            // یا اگر TextView داری:
+            // txtSumConfirmAmount.setText(String.valueOf(Sum_Confirm_Amount));
+
         } else {
             callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
         }
@@ -1701,7 +1725,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     @Override
     public void onGoodConfirmed(Ocr_Good singleGood) {
         try {
-            // پیدا کردن اندیس کالای تأییدشده
+            // پیدا کردن ردیف
             int correct_row = -1;
             for (int i = 0; i < ocr_goods_visible.size(); i++) {
                 if (ocr_goods_visible.get(i).getGoodCode().equals(singleGood.getGoodCode())) {
@@ -1710,28 +1734,45 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                 }
             }
 
-            if (correct_row != -1) {
-                // مستقیماً چک‌باکس همان ردیف را با استفاده از ID اختصاصی آن پیدا می‌کنیم
-                MaterialCheckBox checkBox = requireView().findViewById(singleGood.getCheckBoxId());
+            if (correct_row == -1) {
+                callMethod.Log("onGoodConfirmed → Good not found: " + singleGood.getGoodCode());
+                return;
+            }
 
-                if (checkBox != null && !checkBox.isChecked()) {
-                    // تیک زدن چک‌باکس و اجرای منطق اصلی کنترل
-                    checkBox.setChecked(true);
-                    handleGoodCheck(checkBox, true, correct_row);
+            // پیدا کردن چک‌باکس
+            MaterialCheckBox checkBox = requireView().findViewById(singleGood.getCheckBoxId());
+            if (checkBox == null) {
+                callMethod.Log("onGoodConfirmed → Checkbox not found for ID: " + singleGood.getCheckBoxId());
+                return;
+            }
 
+            // فقط اگر هنوز تیک نخورده
+            if (!checkBox.isChecked()) {
 
-                    callMethod.Log("onGoodConfirmed → Checked good: " + singleGood.getGoodCode());
-                } else if (checkBox == null) {
-                    callMethod.Log("onGoodConfirmed → Checkbox not found for ID: " + singleGood.getCheckBoxId());
-                }
-            } else {
-                callMethod.Log("onGoodConfirmed → Good not found in list: " + singleGood.getGoodCode());
+                // 🔹 حذف موقت listener
+                checkBox.setOnCheckedChangeListener(null);
+
+                // 🔹 تیک زدن
+                checkBox.setChecked(true);
+
+                // 🔹 اجرای منطق اصلی فقط یک بار
+                handleGoodCheck(checkBox, true, correct_row);
+
+                // 🔹 دوباره listener اصلی رو ست کن
+                int finalCorrect_row = correct_row;
+                checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    handleGoodCheck(checkBox, isChecked, finalCorrect_row);
+                });
+
+                callMethod.Log("onGoodConfirmed → Checked good: " + singleGood.getGoodCode());
             }
 
         } catch (Exception e) {
             callMethod.Log("onGoodConfirmed Error → " + e.getMessage());
         }
     }
+
+
 
 
 

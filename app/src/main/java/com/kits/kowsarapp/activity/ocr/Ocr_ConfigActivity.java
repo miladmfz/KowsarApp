@@ -243,9 +243,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                 callMethod.EditBoolan("CheckListFromGoodDialog", true);
                 callMethod.showToast("بله");
 
-                callMethod.EditBoolan("ListOrSingle", true);
-                callMethod.showToast("انتخاب لیستی فعال شد");
-                sm_listorsingle.setChecked(callMethod.ReadBoolan("ListOrSingle"));
+
 
             }
         });

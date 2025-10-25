@@ -966,6 +966,8 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
         if (callMethod.ReadBoolan("ListOrSingle") || BarcodeScan.equals("")) {
+            btn_confirm.setVisibility(View.GONE);
+
             if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
                 btn_confirm.setVisibility(View.VISIBLE);
             }else{
@@ -976,12 +978,12 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
         }
 
+
         btn_confirm.setOnClickListener(v -> {
 
             if (callMethod.ReadBoolan("ListOrSingle") ) {
                 if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
 
-                    btn_confirm.setVisibility(View.VISIBLE);
                     callMethod.Log("Item selected locally: " + singleGood.getGoodCode() + " - " + singleGood.getGoodName()+" - " + singleGood.getCheckBoxId());
 
                     // اگر لازم داری در فرگمنت ثبت بشه:
@@ -992,55 +994,71 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     dialog.dismiss(); // بستن پنجره
                 }
             }else{
-                callMethod.Log("ListOrSingle: " + callMethod.ReadBoolan("CheckListFromGoodDialog") );
 
-                Call<RetrofitResponse> call1;
-                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
-                    call1 = apiInterface.OcrControlled(
-                            "OcrControlled_new",
-                            singleGood.getAppOCRFactorRowCode(),
-                            "0",
-                            callMethod.ReadString("JobPersonRef")
-                    );
-                } else {
-                    call1 = secendApiInterface.OcrControlled(
-                            "OcrControlled_new",
-                            singleGood.getAppOCRFactorRowCode(),
-                            "0",
-                            callMethod.ReadString("JobPersonRef")
-                    );
+
+                if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
+
+                    callMethod.Log("Item selected locally: " + singleGood.getGoodCode() + " - " + singleGood.getGoodName()+" - " + singleGood.getCheckBoxId());
+
+                    // اگر لازم داری در فرگمنت ثبت بشه:
+                    if (listener != null) {
+                        listener.onGoodConfirmed(singleGood);
+                    }
+
+                    dialog.dismiss(); // بستن پنجره
+                }else{
+
+                    callMethod.Log("ListOrSingle: " + callMethod.ReadBoolan("CheckListFromGoodDialog") );
+
+                    Call<RetrofitResponse> call1;
+                    if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
+                        call1 = apiInterface.OcrControlled(
+                                "OcrControlled_new",
+                                singleGood.getAppOCRFactorRowCode(),
+                                "0",
+                                callMethod.ReadString("JobPersonRef")
+                        );
+                    } else {
+                        call1 = secendApiInterface.OcrControlled(
+                                "OcrControlled_new",
+                                singleGood.getAppOCRFactorRowCode(),
+                                "0",
+                                callMethod.ReadString("JobPersonRef")
+                        );
+                    }
+
+
+                    callMethod.Log("call=" + call1.request().url());
+                    callMethod.Log("call=" + call1.request().toString());
+
+
+                    call1.enqueue(new Callback<RetrofitResponse>() {
+                        @Override
+                        public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                            if (response.isSuccessful()) {
+                                callMethod.Log("step 2");
+
+                                assert response.body() != null;
+                                Intent intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
+
+                                intent.putExtra("ScanResponse", BarcodeScan);
+                                intent.putExtra("State", "0");
+                                intent.putExtra("FactorImage", "");
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+                                mContext.startActivity(intent);
+                                ((Activity) mContext).finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
+
+                            callMethod.Log(t.getMessage());
+
+                        }
+                    });
                 }
 
-
-                callMethod.Log("call=" + call1.request().url());
-                callMethod.Log("call=" + call1.request().toString());
-
-
-                call1.enqueue(new Callback<RetrofitResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
-                        if (response.isSuccessful()) {
-                            callMethod.Log("step 2");
-
-                            assert response.body() != null;
-                            Intent intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
-
-                            intent.putExtra("ScanResponse", BarcodeScan);
-                            intent.putExtra("State", "0");
-                            intent.putExtra("FactorImage", "");
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
-                            mContext.startActivity(intent);
-                            ((Activity) mContext).finish();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-
-                        callMethod.Log(t.getMessage());
-
-                    }
-                });
             }
 
         });

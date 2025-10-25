@@ -82,6 +82,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
     TextView tv_versionname;
     TextView tv_dbname;
+    TextView tv_lastupdate;
     TextView tv_brokercode;
     TextView tv_customer;
     TextView tv_sumfac;
@@ -113,8 +114,6 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     private PersianCalendar calendar1 = new PersianCalendar();
 
     public void test_fun(View v) {
-
-
 
 
     }
@@ -167,6 +166,8 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         tv_dbname = hView.findViewById(R.id.header_dbname);
         tv_brokercode = hView.findViewById(R.id.header_brokercode);
         btn_changedb = hView.findViewById(R.id.header_changedb);
+        tv_lastupdate = hView.findViewById(R.id.header_lastupdate);
+
 
         tv_customer = findViewById(R.id.b_main_a_customer);
         tv_sumfac = findViewById(R.id.b_main_a_sum_factor);
@@ -249,6 +250,10 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         tv_versionname.setText(NumberFunctions.PerisanNumber(BuildConfig.VERSION_NAME));
         tv_dbname.setText(callMethod.ReadString("PersianCompanyNameUse"));
         toolbar.setTitle(callMethod.ReadString("PersianCompanyNameUse"));
+        tv_lastupdate.setText(NumberFunctions.PerisanNumber(broker_dbh.ReadConfig("LastUpdate")));
+
+
+
         menugrp = broker_dbh.getmenuGroups();
 
 
