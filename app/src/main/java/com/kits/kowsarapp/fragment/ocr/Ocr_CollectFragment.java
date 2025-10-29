@@ -1,7 +1,6 @@
 package com.kits.kowsarapp.fragment.ocr;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -37,6 +36,7 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Print;
@@ -486,7 +486,25 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    callMethod.Log(t.getMessage()); }
+                    try {
+                        // 🟢 بررسی وضعیت اتصال
+                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                            callMethod.showToast("اتصال اینترنت قطع است!");
+                        } else if (NetworkUtils.isVPNActive()) {
+                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                        } else {
+                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                            } else {
+                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                            }
+                        }
+                    } catch (Exception e) {
+                        callMethod.Log("Network check error: " + e.getMessage());
+                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    }
+                }
             });
         });
 
@@ -551,7 +569,24 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                         }
                                         @Override
                                         public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                            callMethod.Log(t.getMessage()); }
+                                            try {
+                                                // 🟢 بررسی وضعیت اتصال
+                                                if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                                                    callMethod.showToast("اتصال اینترنت قطع است!");
+                                                } else if (NetworkUtils.isVPNActive()) {
+                                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                                } else {
+                                                    String serverUrl = callMethod.ReadString("ServerURLUse");
+                                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                                    } else {
+                                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                                    }
+                                                }
+                                            } catch (Exception e) {
+                                                callMethod.Log("Network check error: " + e.getMessage());
+                                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                            }                                        }
                                     });
 
 
@@ -560,7 +595,25 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                callMethod.Log(t.getMessage()); }
+                                try {
+                                    // 🟢 بررسی وضعیت اتصال
+                                    if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                                        callMethod.showToast("اتصال اینترنت قطع است!");
+                                    } else if (NetworkUtils.isVPNActive()) {
+                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                    } else {
+                                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                        } else {
+                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    callMethod.Log("Network check error: " + e.getMessage());
+                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                }
+                            }
                         });
 
 
@@ -613,7 +666,25 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                 }
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                    callMethod.Log(t.getMessage()); }
+                                    try {
+                                        // 🟢 بررسی وضعیت اتصال
+                                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                                            callMethod.showToast("اتصال اینترنت قطع است!");
+                                        } else if (NetworkUtils.isVPNActive()) {
+                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                        } else {
+                                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                            } else {
+                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        callMethod.Log("Network check error: " + e.getMessage());
+                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                    }
+                                }
                             });
 
 
@@ -622,7 +693,25 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                     }
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        callMethod.Log(t.getMessage()); }
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }
+                    }
                 });
             }
 
@@ -696,6 +785,24 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                     }
                                     @Override
                                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                        try {
+                                            // 🟢 بررسی وضعیت اتصال
+                                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                                                callMethod.showToast("اتصال اینترنت قطع است!");
+                                            } else if (NetworkUtils.isVPNActive()) {
+                                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                            } else {
+                                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                                } else {
+                                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            callMethod.Log("Network check error: " + e.getMessage());
+                                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                        }
                                         dialogProg.dismiss();
                                         callMethod.Log(t.getMessage());
 
@@ -765,6 +872,24 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                try {
+                                    // 🟢 بررسی وضعیت اتصال
+                                    if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                                        callMethod.showToast("اتصال اینترنت قطع است!");
+                                    } else if (NetworkUtils.isVPNActive()) {
+                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                    } else {
+                                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                        } else {
+                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    callMethod.Log("Network check error: " + e.getMessage());
+                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                }
                                 dialogProg.dismiss();
                                 callMethod.Log(t.getMessage());
 
@@ -1148,9 +1273,10 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         }
 
         checkBox.setOnClickListener(v -> {
+
             if (callMethod.ReadBoolan("CheckListFromGoodDialog")){
                 good_detail_view(ocr_goods_visible.get(correct_row));
-
+                checkBox.toggle();
             }else{
                 if (callMethod.ReadBoolan("JustScanner")){
 
@@ -1358,7 +1484,25 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                    callMethod.Log(t.getMessage());                                }
+                                    try {
+                                        // 🟢 بررسی وضعیت اتصال
+                                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                                            callMethod.showToast("اتصال اینترنت قطع است!");
+                                        } else if (NetworkUtils.isVPNActive()) {
+                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                        } else {
+                                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                            } else {
+                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        callMethod.Log("Network check error: " + e.getMessage());
+                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                    }
+                                }
                             });
 
                             // print.Printing(factor,goods_visible,"0");
@@ -1368,6 +1512,24 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }
                         dialogProg.dismiss();
                         callMethod.Log(t.getMessage());
                     }
@@ -1769,6 +1931,57 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
         } catch (Exception e) {
             callMethod.Log("onGoodConfirmed Error → " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public void onGoodCanceled(Ocr_Good singleGood) {
+        try {
+            // پیدا کردن ردیف
+            int correct_row = -1;
+            for (int i = 0; i < ocr_goods_visible.size(); i++) {
+                if (ocr_goods_visible.get(i).getGoodCode().equals(singleGood.getGoodCode())) {
+                    correct_row = i;
+                    break;
+                }
+            }
+
+            if (correct_row == -1) {
+                callMethod.Log("onGoodCanceled → Good not found: " + singleGood.getGoodCode());
+                return;
+            }
+
+            // پیدا کردن چک‌باکس
+            MaterialCheckBox checkBox = requireView().findViewById(singleGood.getCheckBoxId());
+            if (checkBox == null) {
+                callMethod.Log("onGoodCanceled → Checkbox not found for ID: " + singleGood.getCheckBoxId());
+                return;
+            }
+
+            // ✅ فقط اگر تیک خورده بود
+            if (checkBox.isChecked()) {
+
+                // 🔹 حذف موقت listener تا حلقه ایجاد نشه
+                checkBox.setOnCheckedChangeListener(null);
+
+                // 🔹 برداشتن تیک
+                checkBox.setChecked(false);
+
+                // 🔹 اجرای منطق لغو
+                handleGoodCheck(checkBox, false, correct_row);
+
+                // 🔹 دوباره listener اصلی رو برگردون
+                int finalCorrect_row = correct_row;
+                checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    handleGoodCheck(checkBox, isChecked, finalCorrect_row);
+                });
+
+                callMethod.Log("onGoodCanceled → Unchecked good: " + singleGood.getGoodCode());
+            }
+
+        } catch (Exception e) {
+            callMethod.Log("onGoodCanceled Error → " + e.getMessage());
         }
     }
 

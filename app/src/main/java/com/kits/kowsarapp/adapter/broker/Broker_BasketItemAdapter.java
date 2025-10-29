@@ -12,8 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.activity.order.Order_RegistrationActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
@@ -88,8 +90,24 @@ callMethod.Log(goods.get(position).getGoodFieldValue("Shortage"));
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                    callMethod.Log(t.getMessage());
-
+                    try {
+                        // 🟢 بررسی وضعیت اتصال
+                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                            callMethod.showToast("اتصال اینترنت قطع است!");
+                        } else if (NetworkUtils.isVPNActive()) {
+                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                        } else {
+                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                            } else {
+                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                            }
+                        }
+                    } catch (Exception e) {
+                        callMethod.Log("Network check error: " + e.getMessage());
+                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    }
                 }
             });
 

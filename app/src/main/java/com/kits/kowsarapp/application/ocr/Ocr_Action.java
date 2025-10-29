@@ -44,6 +44,7 @@ import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 
 import com.kits.kowsarapp.R;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.base.ZoomHelper;
 import com.kits.kowsarapp.fragment.ocr.OnGoodConfirmListener;
 import com.kits.kowsarapp.model.base.Factor;
@@ -242,6 +243,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    try {
+                        // 🟢 بررسی وضعیت اتصال
+                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                            callMethod.showToast("اتصال اینترنت قطع است!");
+                        } else if (NetworkUtils.isVPNActive()) {
+                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                        } else {
+                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                            } else {
+                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                            }
+                        }
+                    } catch (Exception e) {
+                        callMethod.Log("Network check error: " + e.getMessage());
+                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    }
 
                 }
             });
@@ -306,6 +325,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    try {
+                        // 🟢 بررسی وضعیت اتصال
+                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                            callMethod.showToast("اتصال اینترنت قطع است!");
+                        } else if (NetworkUtils.isVPNActive()) {
+                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                        } else {
+                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                            } else {
+                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                            }
+                        }
+                    } catch (Exception e) {
+                        callMethod.Log("Network check error: " + e.getMessage());
+                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    }
                 }
             });
 
@@ -433,6 +470,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                    try {
+                                        // 🟢 بررسی وضعیت اتصال
+                                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                            callMethod.showToast("اتصال اینترنت قطع است!");
+                                        } else if (NetworkUtils.isVPNActive()) {
+                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                        } else {
+                                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                            } else {
+                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        callMethod.Log("Network check error: " + e.getMessage());
+                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                    }
                                 }
                             });
                             ll_pack_h_main.addView(ll_new);
@@ -444,6 +499,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    try {
+                        // 🟢 بررسی وضعیت اتصال
+                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                            callMethod.showToast("اتصال اینترنت قطع است!");
+                        } else if (NetworkUtils.isVPNActive()) {
+                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                        } else {
+                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                            } else {
+                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                            }
+                        }
+                    } catch (Exception e) {
+                        callMethod.Log("Network check error: " + e.getMessage());
+                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    }
 
                 }
             });
@@ -547,6 +620,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                         @Override
                         public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                            try {
+                                // 🟢 بررسی وضعیت اتصال
+                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                    callMethod.showToast("اتصال اینترنت قطع است!");
+                                } else if (NetworkUtils.isVPNActive()) {
+                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                } else {
+                                    String serverUrl = callMethod.ReadString("ServerURLUse");
+                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                    } else {
+                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                callMethod.Log("Network check error: " + e.getMessage());
+                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                            }
                             callMethod.Log("جزئیات فاکتور ثبت نگردید");
 
                         }
@@ -652,6 +743,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                    try {
+                                        // 🟢 بررسی وضعیت اتصال
+                                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                            callMethod.showToast("اتصال اینترنت قطع است!");
+                                        } else if (NetworkUtils.isVPNActive()) {
+                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                        } else {
+                                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                            } else {
+                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        callMethod.Log("Network check error: " + e.getMessage());
+                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                    }
                                     dialogProg_dismiss();
 
                                 }
@@ -660,9 +769,25 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                         @Override
                         public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                            try {
+                                // 🟢 بررسی وضعیت اتصال
+                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                    callMethod.showToast("اتصال اینترنت قطع است!");
+                                } else if (NetworkUtils.isVPNActive()) {
+                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                } else {
+                                    String serverUrl = callMethod.ReadString("ServerURLUse");
+                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                    } else {
+                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                callMethod.Log("Network check error: " + e.getMessage());
+                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                            }
                             dialogProg_dismiss();
-
-                            callMethod.Log(t.getMessage());
                         }
                     });
 
@@ -787,7 +912,9 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
         LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.ocr_gooddetail_ll_lb1);
 
-        MaterialButton btn_confirm = dialog.findViewById(R.id.ocr_gooddetail_b_btn);
+        MaterialButton btn_confirm = dialog.findViewById(R.id.ocr_gooddetail_b_btn_confirm);
+        MaterialButton btn_cansel = dialog.findViewById(R.id.ocr_gooddetail_b_btn_cancel);
+
 
 
         Call<RetrofitResponse> call;
@@ -924,8 +1051,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-                callMethod.Log(t.getMessage());
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
             }
         });
         byte[] BaseImageByte;
@@ -958,8 +1101,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
 
-                callMethod.Log(t.getMessage());
-            }
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }            }
         });
 
 
@@ -967,14 +1126,18 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
         if (callMethod.ReadBoolan("ListOrSingle") || BarcodeScan.equals("")) {
             btn_confirm.setVisibility(View.GONE);
+            btn_cansel.setVisibility(View.GONE);
 
             if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
                 btn_confirm.setVisibility(View.VISIBLE);
+                btn_cansel.setVisibility(View.VISIBLE);
             }else{
                 btn_confirm.setVisibility(View.GONE);
+                btn_cansel.setVisibility(View.GONE);
             }
         }else{
             btn_confirm.setVisibility(View.VISIBLE);
+
 
         }
 
@@ -1053,13 +1216,47 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         @Override
                         public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
 
-                            callMethod.Log(t.getMessage());
-
+                            try {
+                                // 🟢 بررسی وضعیت اتصال
+                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                    callMethod.showToast("اتصال اینترنت قطع است!");
+                                } else if (NetworkUtils.isVPNActive()) {
+                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                } else {
+                                    String serverUrl = callMethod.ReadString("ServerURLUse");
+                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                    } else {
+                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                callMethod.Log("Network check error: " + e.getMessage());
+                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                            }
                         }
                     });
                 }
 
             }
+
+        });
+
+
+        btn_cansel.setOnClickListener(v -> {
+
+            if (callMethod.ReadBoolan("ListOrSingle") ) {
+                if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
+
+
+                    if (listener != null) {
+                        listener.onGoodCanceled(singleGood);
+                    }
+
+                    dialog.dismiss(); // بستن پنجره
+                }
+            }
+
 
         });
 
@@ -1175,8 +1372,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                             }
                                             @Override
                                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                                callMethod.Log(t.getMessage());
-                                            }
+                                                try {
+                                                    // 🟢 بررسی وضعیت اتصال
+                                                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                                        callMethod.showToast("اتصال اینترنت قطع است!");
+                                                    } else if (NetworkUtils.isVPNActive()) {
+                                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                                    } else {
+                                                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                                        } else {
+                                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                                        }
+                                                    }
+                                                } catch (Exception e) {
+                                                    callMethod.Log("Network check error: " + e.getMessage());
+                                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                                }                                            }
                                         });
 
                                     }else if (state.equals("1"))
@@ -1204,7 +1417,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                                             @Override
                                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                                callMethod.Log(t.getMessage());                                            }
+                                                try {
+                                                    // 🟢 بررسی وضعیت اتصال
+                                                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                                        callMethod.showToast("اتصال اینترنت قطع است!");
+                                                    } else if (NetworkUtils.isVPNActive()) {
+                                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                                    } else {
+                                                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                                        } else {
+                                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                                        }
+                                                    }
+                                                } catch (Exception e) {
+                                                    callMethod.Log("Network check error: " + e.getMessage());
+                                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                                }                                            }
                                         });
 
                                     }
@@ -1297,7 +1527,26 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                 }
             }
             @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
+            }
         });
 
 
@@ -1337,7 +1586,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
             @Override
             public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
             }
         });
 
@@ -1508,8 +1774,24 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                 @Override
                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                    callMethod.Log("kowsar"+ t.getMessage());
-
+                    try {
+                        // 🟢 بررسی وضعیت اتصال
+                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                            callMethod.showToast("اتصال اینترنت قطع است!");
+                        } else if (NetworkUtils.isVPNActive()) {
+                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                        } else {
+                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                            } else {
+                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                            }
+                        }
+                    } catch (Exception e) {
+                        callMethod.Log("Network check error: " + e.getMessage());
+                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    }
                     dialog.dismiss();
                     dialogProg.dismiss();
                     callMethod.showToast("اطلاعات ثبت نگردید");

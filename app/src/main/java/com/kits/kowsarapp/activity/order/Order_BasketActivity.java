@@ -28,6 +28,7 @@ import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.order.Order_GoodBasketAdapter;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.order.Order_Action;
 import com.kits.kowsarapp.application.order.Order_Print;
 import com.kits.kowsarapp.model.base.Good;
@@ -225,6 +226,24 @@ public class Order_BasketActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(Order_BasketActivity.this)) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }
                     }
                 });
             });
@@ -255,6 +274,24 @@ public class Order_BasketActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(Order_BasketActivity.this)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
                 prog.setVisibility(View.GONE);
                 goods.clear();
                 callrecycler();
@@ -332,6 +369,24 @@ public class Order_BasketActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(Order_BasketActivity.this)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
                 goods.clear();
                 callrecycler();
             }

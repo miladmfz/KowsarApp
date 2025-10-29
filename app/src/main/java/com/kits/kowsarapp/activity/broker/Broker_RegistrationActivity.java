@@ -17,6 +17,7 @@ import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.base.Base_ThemeSpinnerAdapter;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
 import com.kits.kowsarapp.databinding.BrokerActivityRegistrBinding;
@@ -108,6 +109,24 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
                 SellBrokers.clear();
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(Broker_RegistrationActivity.this)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
 
                 callMethod.Log("kowsarapp ="+t.getMessage());
                 SellBroker sellBroker= new SellBroker();

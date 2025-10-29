@@ -55,6 +55,12 @@
                     android:background="@drawable/bg_round"
                     />
 
+                <ProgressBar
+                    android:id="@+id/b_good_c_progress"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
 
 
 

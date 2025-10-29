@@ -29,6 +29,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorDetailActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -247,8 +248,24 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                callMethod.Log(t.getMessage());
-                            }
+                                try {
+                                    // 🟢 بررسی وضعیت اتصال
+                                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                        callMethod.showToast("اتصال اینترنت قطع است!");
+                                    } else if (NetworkUtils.isVPNActive()) {
+                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                    } else {
+                                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                        } else {
+                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    callMethod.Log("Network check error: " + e.getMessage());
+                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                }                            }
                         });
                     }else {
                         callMethod.showToast("تاییده ارسال شده است");

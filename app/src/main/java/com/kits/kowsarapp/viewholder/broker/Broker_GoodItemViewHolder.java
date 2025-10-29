@@ -10,6 +10,8 @@ import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_PFOpenActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -54,6 +57,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
     public TextView tv_line_name;
     public TextView tv_line_maxsellprice;
     public TextView tv_line_amount;
+    public ProgressBar progressBar;
 
     private final Context mContext;
     CallMethod callMethod;
@@ -80,6 +84,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
         mainline = itemView.findViewById(R.id.b_good_c_mainline);
         img = itemView.findViewById(R.id.b_good_c_img);
+        progressBar = itemView.findViewById(R.id.b_good_c_progress);
         rltv = itemView.findViewById(R.id.broker_good_card);
         btnadd = itemView.findViewById(R.id.b_good_c_btn);
 
@@ -146,7 +151,6 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-
     @SuppressLint({"ResourceAsColor", "UseCompatLoadingForColorStateLists"})
     public void Actionbtn(Good good, boolean multi_select) {
 
@@ -158,8 +162,6 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
         }else{
             btnadd.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.grey_700));
         }
-
-
 
         btnadd.setOnClickListener(view -> {
             if (good.getGoodFieldValue("ActiveStack").equals("1")) {
@@ -190,7 +192,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 } else {
                     Intent intent = new Intent(mContext, Broker_PFOpenActivity.class);
                     intent.putExtra("fac", "0");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mContext.startActivity(intent);
                 }
             }else{
@@ -201,7 +203,85 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void callimage(Good good){
+    public void callimage(Good good) {
+        String imagecode = broker_dbh.GetLastksrImageCode(good.getGoodFieldValue("GoodCode"));
+        callMethod.Log("imagecode = " + imagecode);
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (image_info.Image_exist(imagecode)) {
+            String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+            File imagefile = new File(root + "/Kowsar/" +
+                    callMethod.ReadString("EnglishCompanyNameUse") + "/" +
+                    imagecode + ".jpg"
+            );
+            Bitmap myBitmap = BitmapFactory.decodeFile(imagefile.getAbsolutePath());
+            img.setImageBitmap(myBitmap);
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        //  نمایش عکس پیش‌فرض
+        byte[] imageByteArray1 = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
+        Bitmap defaultBitmap = BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length);
+        img.setImageBitmap(defaultBitmap);
+
+        // 🔹 فراخوانی API برای گرفتن تصویر
+        call = broker_apiInterface.GetImageFromKsr("GetImageFromKsr", good.getGoodFieldValue("KsrImageCode"));
+        callMethod.Log(call.request().toString());
+
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
+                progressBar.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    String imgText = response.body().getText();
+                    if (!"no_photo".equals(imgText)) {
+                        try {
+                            byte[] decodedBytes = Base64.decode(imgText, Base64.DEFAULT);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                            image_info.SaveImage(bitmap, imagecode);
+                            img.setImageBitmap(bitmap);
+                        } catch (Exception e) {
+                            callMethod.Log("Decode Error: " + e.getMessage());
+                            showErrorState(img);
+                        }
+                    } else {
+                        showErrorState(img);
+                    }
+                } else {
+                    showErrorState(img);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                callMethod.Log("Request Failed: " + t.getMessage());
+
+                if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                    callMethod.showToast("اتصال اینترنت قطع است!");
+                } else if (NetworkUtils.isVPNActive()) {
+                    callMethod.showToast("VPN فعال است، ممکن است اتصال با سرور مختل شود!");
+                } else if (!NetworkUtils.canReachServer(callMethod.ReadString("ServerURLUse"))) {
+                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                } else {
+                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                }
+
+                showErrorState(img);
+            }
+
+        });
+    }
+
+
+    private void showErrorState(ImageView img) {
+        img.setImageResource(R.drawable.error_img);
+    }
+
+    public void callimage1(Good good){
         String imagecode = broker_dbh.GetLastksrImageCode(good.getGoodFieldValue("GoodCode"));
         callMethod.Log("imagecode = " + imagecode);
 

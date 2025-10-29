@@ -102,11 +102,6 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
         }
 
 
-        if (callMethod.ReadBoolan("ShowGoodBuyBtn")) {
-            holder.btnadd.setVisibility(View.VISIBLE);
-        }else{
-            holder.btnadd.setVisibility(View.GONE);
-        }
 
 
 
@@ -129,6 +124,7 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
 
             }
         }
+
 
         holder.rltv.setOnLongClickListener(view ->
         {
@@ -325,6 +321,11 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
 
         }
 
+        if (callMethod.ReadBoolan("ShowGoodBuyBtn")) {
+            holder.btnadd.setVisibility(View.VISIBLE);
+        }else{
+            holder.btnadd.setVisibility(View.GONE);
+        }
 
     }
 
@@ -337,9 +338,8 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
     @Override
     public void onViewDetachedFromWindow(@NonNull Broker_GoodItemViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        if (holder.call.isExecuted()) {
+        if (holder.call != null && holder.call.isExecuted()) {
             holder.call.cancel();
-
         }
     }
 }

@@ -36,6 +36,7 @@ import com.kits.kowsarapp.activity.order.Order_TableActivity;
 import com.kits.kowsarapp.adapter.order.Order_GoodBoxItemAdapter;
 import com.kits.kowsarapp.adapter.order.Order_ReserveAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.model.base.DistinctValue;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -333,8 +334,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                     }
                     @Override
                     public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
-                        callMethod.Log("kowsar_______"+t.getMessage());
-                    }
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }                    }
                 });
             }else{ // Received == 0
 
@@ -393,8 +410,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                         }
                         @Override
                         public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
-                            callMethod.Log("kowsar_______"+t.getMessage());
-                        }
+                            try {
+                                // 🟢 بررسی وضعیت اتصال
+                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                    callMethod.showToast("اتصال اینترنت قطع است!");
+                                } else if (NetworkUtils.isVPNActive()) {
+                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                } else {
+                                    String serverUrl = callMethod.ReadString("ServerURLUse");
+                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                    } else {
+                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                callMethod.Log("Network check error: " + e.getMessage());
+                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                            }                        }
                     });
 
                 }else{
@@ -410,8 +443,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                         }
                         @Override
                         public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
-                            callMethod.Log("kowsar_______"+t.getMessage());
-                        }
+                            try {
+                                // 🟢 بررسی وضعیت اتصال
+                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                    callMethod.showToast("اتصال اینترنت قطع است!");
+                                } else if (NetworkUtils.isVPNActive()) {
+                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                } else {
+                                    String serverUrl = callMethod.ReadString("ServerURLUse");
+                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                    } else {
+                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                callMethod.Log("Network check error: " + e.getMessage());
+                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                            }                        }
                     });
                 }
             }
@@ -450,6 +499,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
             }
         });
 
@@ -528,6 +595,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
 
             }
         });
@@ -545,6 +630,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
             }
         });
 
@@ -602,6 +705,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }
 
                     }
                 });
@@ -713,6 +834,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    try {
+                        // 🟢 بررسی وضعیت اتصال
+                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                            callMethod.showToast("اتصال اینترنت قطع است!");
+                        } else if (NetworkUtils.isVPNActive()) {
+                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                        } else {
+                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                            } else {
+                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                            }
+                        }
+                    } catch (Exception e) {
+                        callMethod.Log("Network check error: " + e.getMessage());
+                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    }
                 }
             });
 
@@ -804,6 +943,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
             }
         });
 
@@ -832,6 +989,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
             }
         });
 
@@ -933,6 +1108,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                         @Override
                         public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                            try {
+                                // 🟢 بررسی وضعیت اتصال
+                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                    callMethod.showToast("اتصال اینترنت قطع است!");
+                                } else if (NetworkUtils.isVPNActive()) {
+                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                } else {
+                                    String serverUrl = callMethod.ReadString("ServerURLUse");
+                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                    } else {
+                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                callMethod.Log("Network check error: " + e.getMessage());
+                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                            }
                             if (Flag.equals("0")) {
                                 callMethod.showToast(getString(R.string.textvalue_notrecorded));
                                 dialog.dismiss();
@@ -988,6 +1181,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
                 intent = new Intent(mContext, Order_BasketActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
 
@@ -1229,6 +1440,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
 
             }
         });
@@ -1292,6 +1521,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                     @Override
                     public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }
                         dialog.dismiss();
                         dialogProg.dismiss();
                     }
@@ -1367,7 +1614,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                        } else {
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                        }
+                    }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
             }
         });
 
@@ -1416,6 +1680,24 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
                     @Override
                     public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }
                         dialog.dismiss();
                         dialogProg.dismiss();
                     }

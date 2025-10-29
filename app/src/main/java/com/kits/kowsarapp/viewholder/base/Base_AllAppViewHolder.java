@@ -29,6 +29,7 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.base.Base_DBH;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -218,8 +219,6 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-//                    callMethod.ErrorLog(t.getMessage());
                 }
             });
         });

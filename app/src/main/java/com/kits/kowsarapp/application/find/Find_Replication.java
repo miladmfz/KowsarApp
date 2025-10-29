@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -75,6 +76,24 @@ public class Find_Replication {
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                try {
+                                    // 🟢 بررسی وضعیت اتصال
+                                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                        callMethod.showToast("اتصال اینترنت قطع است!");
+                                    } else if (NetworkUtils.isVPNActive()) {
+                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                    } else {
+                                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                        } else {
+                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    callMethod.Log("Network check error: " + e.getMessage());
+                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                }
                             }
                         });
                     }

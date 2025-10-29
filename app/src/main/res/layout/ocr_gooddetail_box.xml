@@ -36,23 +36,44 @@
                 android:layout_marginTop="8dp"/>
 
 
-
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/ocr_gooddetail_b_btn"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="تایید کالا"
-                android:layout_margin="3dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                style="@style/Widget.MaterialComponents.Button"
-                android:backgroundTint="?attr/colorPrimary"
-                android:textColor="?attr/colorOnPrimary"
-                />
+                android:weightSum="1"
+                android:orientation="horizontal"
+
+                >
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ocr_gooddetail_b_btn_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="تایید کالا"
+                    android:layout_margin="3dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:layout_weight="0.3"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ocr_gooddetail_b_btn_cancel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="لغو کالا"
+                    android:layout_margin="3dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:backgroundTint="@color/red_300"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:layout_weight="0.7"
+                    />
 
 
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/ocr_gooddetail_ll_lb1"
@@ -85,7 +106,6 @@
                     android:textColor="?attr/colorOnBackground"
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
-
             <!-- Row: قطع -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/ocr_gooddetail_ll_lb2"
