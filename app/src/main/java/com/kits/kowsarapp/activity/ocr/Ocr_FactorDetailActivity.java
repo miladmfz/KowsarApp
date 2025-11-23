@@ -430,8 +430,8 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
             TextView good_price_tv = new TextView(getApplicationContext());
 
-
-            good_price_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format( Float.parseFloat(g.getPrice()))));
+            String g_getPrice = g.getPrice().replace(",", ".");
+            good_price_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format( Float.parseFloat(g_getPrice))));
 
             //good_price_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getPrice()))));
             good_price_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
@@ -449,7 +449,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
             TextView good_totalprice_tv = new TextView(getApplicationContext());
 
 
-            good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format( Float.parseFloat(g.getPrice())*Float.parseFloat(g.getFacAmount()))));
+            good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format( Float.parseFloat(g_getPrice)*Float.parseFloat(g.getFacAmount()))));
 
             good_totalprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
             good_totalprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));

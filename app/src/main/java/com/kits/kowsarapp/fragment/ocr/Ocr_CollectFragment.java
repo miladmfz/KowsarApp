@@ -290,25 +290,43 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                     int FormNo = Integer.parseInt(ocr_good_single.getFormNo());  // Ensure this value is of type double
 
-                    if (callMethod.ReadString("StackCategory").equals("انبار1ب1") && FormNo >= 106000 && FormNo <= 114999) {
+//                    if (callMethod.ReadString("StackCategory").equals("انبار1ب1") && FormNo >= 106000 && FormNo <= 114999) {
+//                        ocr_goods_visible.add(ocr_good_single);
+//                        goodshow(ocr_good_single);
+//                    }else if (callMethod.ReadString("StackCategory").equals("انبار1ب2") && FormNo >= 115000 && FormNo <= 126999) {
+//                        ocr_goods_visible.add(ocr_good_single);
+//                        goodshow(ocr_good_single);
+//                    } else if (callMethod.ReadString("StackCategory").equals("انبار2ب1") && FormNo > 205000 && FormNo <= 214999) {
+//                        ocr_goods_visible.add(ocr_good_single);
+//                        goodshow(ocr_good_single);
+//                    } else if (callMethod.ReadString("StackCategory").equals("انبار2ب2") && FormNo > 215000 && FormNo <= 226999) {
+//                        ocr_goods_visible.add(ocr_good_single);
+//                        goodshow(ocr_good_single);
+//                    } else if (callMethod.ReadString("StackCategory").equals("انبار3ب1") && FormNo > 301000 && FormNo <= 317999) {
+//                        ocr_goods_visible.add(ocr_good_single);
+//                        goodshow(ocr_good_single);
+//                    } else if (callMethod.ReadString("StackCategory").equals("انبار3ب2") && FormNo > 318000 && FormNo <= 399999) {
+//                        ocr_goods_visible.add(ocr_good_single);
+//                        goodshow(ocr_good_single);
+//                    }
+
+
+                    if (callMethod.ReadString("StackCategory").equals("انبار1") && FormNo >= 101000 && FormNo <= 126999) {
                         ocr_goods_visible.add(ocr_good_single);
                         goodshow(ocr_good_single);
-                    }else if (callMethod.ReadString("StackCategory").equals("انبار1ب2") && FormNo >= 115000 && FormNo <= 126999) {
+                    } else if (callMethod.ReadString("StackCategory").equals("انبار2") && FormNo > 201000 && FormNo <= 226999) {
                         ocr_goods_visible.add(ocr_good_single);
                         goodshow(ocr_good_single);
-                    } else if (callMethod.ReadString("StackCategory").equals("انبار2ب1") && FormNo > 205000 && FormNo <= 214999) {
-                        ocr_goods_visible.add(ocr_good_single);
-                        goodshow(ocr_good_single);
-                    } else if (callMethod.ReadString("StackCategory").equals("انبار2ب2") && FormNo > 215000 && FormNo <= 226999) {
-                        ocr_goods_visible.add(ocr_good_single);
-                        goodshow(ocr_good_single);
+
                     } else if (callMethod.ReadString("StackCategory").equals("انبار3ب1") && FormNo > 301000 && FormNo <= 317999) {
                         ocr_goods_visible.add(ocr_good_single);
                         goodshow(ocr_good_single);
-                    } else if (callMethod.ReadString("StackCategory").equals("انبار3ب2") && FormNo > 318000 && FormNo <= 399999) {
+                    } else if (callMethod.ReadString("StackCategory").equals("انبار3ب2") && FormNo > 318000 && FormNo <= 322999) {
                         ocr_goods_visible.add(ocr_good_single);
                         goodshow(ocr_good_single);
                     }
+
+
                 }
 
 
