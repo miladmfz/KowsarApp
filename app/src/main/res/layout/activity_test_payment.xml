@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/edtAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="مبلغ (ریال)"
+        android:inputType="number"
+        android:text="10000" />
+
+    <Button
+        android:id="@+id/btnPayTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="تست پرداخت با پوز"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/txtResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Result..."
+        android:layout_marginTop="24dp" />
+
+</LinearLayout>

@@ -343,7 +343,13 @@ public class Factor {
     }
 
     public String getRowExplain() {
-        return RowExplain;
+
+        if (RowExplain != null)
+        {
+            return RowExplain;
+        }else {
+            return "0";
+        }
     }
 
     public void setRowExplain(String rowExplain) {

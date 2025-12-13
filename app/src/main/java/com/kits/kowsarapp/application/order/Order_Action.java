@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.order.Order_BasketActivity;
 import com.kits.kowsarapp.activity.order.Order_RegistrationActivity;
@@ -37,6 +39,8 @@ import com.kits.kowsarapp.adapter.order.Order_GoodBoxItemAdapter;
 import com.kits.kowsarapp.adapter.order.Order_ReserveAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.ThirdPartyRequest;
+import com.kits.kowsarapp.application.base.ThirdPartyResult;
 import com.kits.kowsarapp.model.base.DistinctValue;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -53,6 +57,7 @@ import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,7 +70,9 @@ import retrofit2.Response;
 
 public class Order_Action extends Activity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
-
+    ThirdPartyRequest BehPardakht_pos_request = new ThirdPartyRequest();
+    ThirdPartyResult BehPardakht_pos_result = new ThirdPartyResult();
+    Order_BasketInfo BehPardakht_basketInfo=new Order_BasketInfo();
     private final Context mContext;
     CallMethod callMethod;
     Intent intent;
@@ -73,6 +80,11 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     PersianCalendar persianCalendar;
     Calendar cldr;
     TimePickerDialog picker;
+
+
+    private static final int REQUEST_POS = 9001;
+    private final Gson gson = new Gson();
+
 
     Order_Print order_print;
     Order_DBH order_dbh;
@@ -121,6 +133,7 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
     }
     public void BasketInfopayment(Order_BasketInfo basketInfo) {
 
+        BehPardakht_basketInfo=basketInfo;
         payment_type="cash";
         payment_mablagh_tosend="0";
         payment_mablagh_incrise="0";
@@ -313,47 +326,49 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                             ,"0"
                             ,DecrementValue_str
                     );
+                    dialogProg();
+                    call_payment.enqueue(new Callback<RetrofitResponse>() {
+                        @Override
+                        public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                            if (response.isSuccessful()) {
+                                assert response.body() != null;
+                                dialog_payment.dismiss();
+                                dialogProg.dismiss();
+                            }
+                        }
+                        @Override
+                        public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                            try {
+                                // 🟢 بررسی وضعیت اتصال
+                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                    callMethod.showToast("اتصال اینترنت قطع است!");
+                                } else if (NetworkUtils.isVPNActive()) {
+                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                } else {
+                                    String serverUrl = callMethod.ReadString("ServerURLUse");
+                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                    } else {
+                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                callMethod.Log("Network check error: " + e.getMessage());
+                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                            }                    }
+                    });
+
                 }else{
-                    call_payment = order_apiInterface.Factor_Payment_Pos(
-                            "Factor_Payment_Pos"
-                            ,basketInfo.getFactorCode()
-                            ,callMethod.ReadString("PosCode")
-                            ,basketInfo.getNotReceived()
-                    );
+
+                    startPosPayment(basketInfo.getNotReceived());
+
+
+
                 }
 
-                dialogProg();
-                call_payment.enqueue(new Callback<RetrofitResponse>() {
-                    @Override
-                    public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
-                        if (response.isSuccessful()) {
-                            assert response.body() != null;
-                            dialog_payment.dismiss();
-                            dialogProg.dismiss();
-                        }
-                    }
-                    @Override
-                    public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }                    }
-                });
-            }else{ // Received == 0
+            }
+            else
+            { // Received == 0
 
 
                 int mablagh = (Integer.parseInt(totalprice) - ((Integer.parseInt(totalprice) * (Integer.parseInt(NumberFunctions.EnglishNumber(ed_payment_selloff.getText().toString()))) / 100)));
@@ -385,90 +400,222 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
                                 ,"0"
                                 ,"0"
                         );
+                        if ((!payment_mablagh_incrise.equals("0"))||(!payment_mablagh_decrise.equals("0"))){
+                            dialogProg();
+                            Call<RetrofitResponse> finalCall_payment = call_payment;
+                            call_payment_inc_dec.enqueue(new Callback<RetrofitResponse>() {
+                                @Override
+                                public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                                    if (response.isSuccessful()) {
+                                        dialog_payment.dismiss();
+                                        dialogProg.dismiss();
+                                    }
+                                }
+                                @Override
+                                public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                                    try {
+                                        // 🟢 بررسی وضعیت اتصال
+                                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                            callMethod.showToast("اتصال اینترنت قطع است!");
+                                        } else if (NetworkUtils.isVPNActive()) {
+                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                        } else {
+                                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                            } else {
+                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        callMethod.Log("Network check error: " + e.getMessage());
+                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                    }                        }
+                            });
+
+                        }
+                        else{
+                            dialogProg();
+                            call_payment.enqueue(new Callback<RetrofitResponse>() {
+                                @Override
+                                public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                                    if (response.isSuccessful()) {
+                                        assert response.body() != null;
+                                        dialog_payment.dismiss();
+                                        dialogProg.dismiss();
+                                    }
+                                }
+                                @Override
+                                public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                                    try {
+                                        // 🟢 بررسی وضعیت اتصال
+                                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                            callMethod.showToast("اتصال اینترنت قطع است!");
+                                        } else if (NetworkUtils.isVPNActive()) {
+                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                                        } else {
+                                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                            } else {
+                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        callMethod.Log("Network check error: " + e.getMessage());
+                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                                    }                        }
+                            });
+                        }
                     }else{
-                        call_payment = order_apiInterface.Factor_Payment_Pos(
-                                "Factor_Payment_Pos"
-                                ,basketInfo.getFactorCode()
-                                ,callMethod.ReadString("PosCode")
-                                ,basketInfo.getNotReceived()
-                        );
+
+                        startPosPayment(basketInfo.getNotReceived());
                     }
 
                 }
 
 
-                if ((!payment_mablagh_incrise.equals("0"))||(!payment_mablagh_decrise.equals("0"))){
-                    dialogProg();
-                    Call<RetrofitResponse> finalCall_payment = call_payment;
-                    call_payment_inc_dec.enqueue(new Callback<RetrofitResponse>() {
-                        @Override
-                        public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
-                            if (response.isSuccessful()) {
-                                dialog_payment.dismiss();
-                                dialogProg.dismiss();
-                            }
-                        }
-                        @Override
-                        public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
-                            try {
-                                // 🟢 بررسی وضعیت اتصال
-                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                    callMethod.showToast("اتصال اینترنت قطع است!");
-                                } else if (NetworkUtils.isVPNActive()) {
-                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                } else {
-                                    String serverUrl = callMethod.ReadString("ServerURLUse");
-                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                    } else {
-                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                    }
-                                }
-                            } catch (Exception e) {
-                                callMethod.Log("Network check error: " + e.getMessage());
-                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                            }                        }
-                    });
 
-                }else{
-                    dialogProg();
-                    call_payment.enqueue(new Callback<RetrofitResponse>() {
-                        @Override
-                        public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
-                            if (response.isSuccessful()) {
-                                assert response.body() != null;
-                                dialog_payment.dismiss();
-                                dialogProg.dismiss();
-                            }
-                        }
-                        @Override
-                        public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
-                            try {
-                                // 🟢 بررسی وضعیت اتصال
-                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                    callMethod.showToast("اتصال اینترنت قطع است!");
-                                } else if (NetworkUtils.isVPNActive()) {
-                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                } else {
-                                    String serverUrl = callMethod.ReadString("ServerURLUse");
-                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                    } else {
-                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                    }
-                                }
-                            } catch (Exception e) {
-                                callMethod.Log("Network check error: " + e.getMessage());
-                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                            }                        }
-                    });
-                }
             }
 
         });
 
     }
 
+
+    public void  BasketInfopayment_request (Order_BasketInfo basketInfo, ThirdPartyResult res,String resultJson){
+
+        Call<RetrofitResponse> call_payment = null;
+        Call<RetrofitResponse> call_payment_inc_dec= null;
+
+
+                            call_payment = order_apiInterface.Factor_Payment_Pos_new(
+                            "Factor_Payment_Pos"
+                            ,basketInfo.getFactorCode()
+                            ,callMethod.ReadString("PosCode")
+                            ,basketInfo.getNotReceived()
+                            ,res.sessionId
+                            ,res.resultCode
+                            ,res.resultDescription
+                            ,res.transactionAmount
+                            ,res.referenceID
+                            ,res.retrievalReferencedNumber
+                            ,res.maskedCardNumber
+                            ,res.terminalID
+                            ,res.dateOfTransaction
+                            ,res.timeOfTransaction
+                            ,res.echoData
+                            ,resultJson
+                            ,""
+                            ,basketInfo.getAppBasketInfoCode()
+                    );
+
+
+        dialogProg();
+        if (Integer.parseInt(basketInfo.getReceived())>0) { // Received >0
+
+            call_payment.enqueue(new Callback<RetrofitResponse>() {
+                @Override
+                public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        dialogProg.dismiss();
+                    }
+                }
+                @Override
+                public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                    try {
+                        // 🟢 بررسی وضعیت اتصال
+                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                            callMethod.showToast("اتصال اینترنت قطع است!");
+                        } else if (NetworkUtils.isVPNActive()) {
+                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                        } else {
+                            String serverUrl = callMethod.ReadString("ServerURLUse");
+                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                            } else {
+                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                            }
+                        }
+                    } catch (Exception e) {
+                        callMethod.Log("Network check error: " + e.getMessage());
+                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    }                    }
+            });
+        }else{
+
+
+
+            if ((!payment_mablagh_incrise.equals("0"))||(!payment_mablagh_decrise.equals("0"))){
+                dialogProg();
+                Call<RetrofitResponse> finalCall_payment = call_payment;
+                call_payment_inc_dec.enqueue(new Callback<RetrofitResponse>() {
+                    @Override
+                    public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                        if (response.isSuccessful()) {
+                            dialogProg.dismiss();
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }                        }
+                });
+
+            }
+            else{
+                dialogProg();
+                call_payment.enqueue(new Callback<RetrofitResponse>() {
+                    @Override
+                    public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            dialogProg.dismiss();
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
+                        try {
+                            // 🟢 بررسی وضعیت اتصال
+                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                                callMethod.showToast("اتصال اینترنت قطع است!");
+                            } else if (NetworkUtils.isVPNActive()) {
+                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                            } else {
+                                String serverUrl = callMethod.ReadString("ServerURLUse");
+                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                                } else {
+                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                                }
+                            }
+                        } catch (Exception e) {
+                            callMethod.Log("Network check error: " + e.getMessage());
+                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                        }                        }
+                });
+            }
+        }
+
+
+    }
     public void dialogProg() {
         dialogProg.setContentView(R.layout.order_spinner_box);
         tv_rep = dialogProg.findViewById(R.id.ord_spinner_text);
@@ -1741,6 +1888,84 @@ public class Order_Action extends Activity implements DatePickerDialog.OnDateSet
 
 
     }
+
+    private void startPosPayment(String Amount) {
+
+        // ساخت درخواست طبق مستند به‌پرداخت (روش بدون کتابخانه) :contentReference[oaicite:0]{index=0}
+
+        BehPardakht_pos_request.versionName = "2.0.0";
+        BehPardakht_pos_request.sessionId = "Kits_" + System.currentTimeMillis();
+        BehPardakht_pos_request.applicationId = 10135;             // 👈 این رو با applicationId واقعی خودت عوض کن
+        BehPardakht_pos_request.totalAmount = Amount;
+        BehPardakht_pos_request.transactionType = "PURCHASE";     // نوع تراکنش: خرید
+        BehPardakht_pos_request.echoData = "TestEcho";
+
+        String json = gson.toJson(BehPardakht_pos_request);
+
+        Intent posIntent = new Intent("com.behpardakht.thirdparty.payment");
+
+        posIntent.setPackage("com.behpardakht.app");
+
+        posIntent.putExtra("paymentData", json);
+
+        // کلید طبق مستند: paymentData :contentReference[oaicite:1]{index=1}
+
+        try {
+            startActivityForResult(posIntent, REQUEST_POS);
+            callMethod.showToast("در حال ارسال درخواست به پوز...");
+        } catch (Exception e) {
+            callMethod.showToast("خطا در اجرای اپ پرداخت: " + e.getMessage());
+        }
+    }
+
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode != REQUEST_POS) return;
+
+        // یک لاگ خام که همیشه ذخیره می‌کنیم (حتی اگر JSON نیاد)
+        StringBuilder rawLog = new StringBuilder();
+        rawLog.append("activityResultCode=").append(resultCode).append("\n");
+
+        if (data != null && data.getExtras() != null) {
+            rawLog.append("---- extras ----\n");
+            for (String key : data.getExtras().keySet()) {
+                Object v = data.getExtras().get(key);
+                rawLog.append(key).append("=").append(String.valueOf(v)).append("\n");
+            }
+        } else {
+            rawLog.append("extras=null\n");
+        }
+
+        // JSON نتیجه
+        String resultJson = (data == null) ? null : data.getStringExtra("paymentResult");
+        if (resultJson == null || resultJson.trim().isEmpty()) {
+            rawLog.append("paymentResult=NULL_OR_EMPTY\n");
+        } else {
+            rawLog.append("---- paymentResult ----\n");
+            rawLog.append(resultJson);
+        }
+
+        // تلاش برای parse (اگر شد)
+        BehPardakht_pos_result = null;
+        try {
+            if (resultJson != null && !resultJson.trim().isEmpty()) {
+                BehPardakht_pos_result = gson.fromJson(resultJson, (Type) ThirdPartyResult.class);
+            }
+        } catch (Exception ignored) {
+            // لاگش رو در DB/File می‌فرستیم، لازم نیست اینجا کاری کنیم
+        }
+
+        BasketInfopayment_request(BehPardakht_basketInfo, BehPardakht_pos_result,resultJson);
+
+
+
+    }
+
 
 
     @Override

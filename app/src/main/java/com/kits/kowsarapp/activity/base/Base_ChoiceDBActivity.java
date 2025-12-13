@@ -96,6 +96,16 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
     }
 
+
+    public void test() {
+        android.content.Intent intent = new android.content.Intent(
+                this,
+                com.kits.kowsarapp.activity.base.TestPaymentActivity.class
+        );
+        startActivity(intent);
+
+    }
+
     @SuppressLint("SdCardPath")
     public void init() {
 
@@ -103,6 +113,8 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
         binding.baseAppVersion.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : " + BuildConfig.VERSION_NAME));
         binding.baseAppRegistercode.setOnClickListener(v -> {
+            ///test();
+
             int exist=0;
             for (Activation singleactive : activations) {
                 if (Objects.requireNonNull(binding.baseAppTvGetcode.getText()).toString().equals(singleactive.getActivationCode())){
@@ -136,6 +148,8 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
             }else{
                 callMethod.showToast("این کد وارد شده است");
             }
+
+
         });
 
         callMethod.Log("activations = " +activations.size()+"");

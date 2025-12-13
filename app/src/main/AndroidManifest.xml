@@ -45,6 +45,15 @@
         android:theme="@style/GrayDefault"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".activity.base.TestPaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ocr.Ocr_Inventory_Check_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ocr.Ocr_Inventory_List_Api_Activity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ocr.Ocr_Delivery_List_Api_Activity"
             android:exported="false" />
         <activity

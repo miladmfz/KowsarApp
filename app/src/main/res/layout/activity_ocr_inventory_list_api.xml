@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layoutDirection="rtl"
+    tools:context=".activity.ocr.Ocr_Inventory_List_Api_Activity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/ocr_inventorylist_a_appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/ocr_inventorylist_a_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:titleTextColor="?attr/colorOnPrimary"
+                app:title="انتخاب فاکتور"/>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/ocr_inventorylist_a_edtsearch"
+                android:layout_margin="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="جستجو"
+                android:background="@drawable/bg_editbox"
+                android:singleLine="true"
+                android:selectAllOnFocus="true"
+                android:inputType="text"
+                android:textColor="?attr/colorOnBackground"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <LinearLayout
+                android:id="@+id/ocr_inventorylist_a_ll_counter"
+
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:layout_weight="0.4"
+                >
+                <TextView
+                    android:id="@+id/ocr_inventorylist_a_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="26sp"
+                    android:layout_weight="0.2"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="?attr/colorOnBackground"
+                    />
+                <Button
+                    android:id="@+id/ocr_inventorylist_a_refresh"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="26sp"
+                    android:gravity="center"
+                    android:layout_weight="0.8"
+
+                    android:background="@drawable/ic_refresh_24"
+                    android:textColor="?attr/colorOnBackground"
+                    />
+            </LinearLayout>
+
+
+
+            <Spinner
+                android:id="@+id/ocr_inventorylist_a_path"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="0.6"
+                android:background="@drawable/bg_editbox"
+                android:textColor="?attr/colorOnBackground"
+                android:scrollbarSize="20sp" />
+
+
+
+        </LinearLayout>
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/ocr_inventorylist_a_prog"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true"
+            android:layout_weight="0.9"
+            android:visibility="visible"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ocr_inventorylist_a_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"
+            android:layout_margin="2dp" />
+
+        <TextView
+            android:id="@+id/ocr_inventorylist_a_Tvstatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:textColor="?attr/colorOnBackground"
+            />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/ocr_inventorylist_a_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="30dp"
+        android:visibility="gone"
+        app:backgroundTint="@color/red_800"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        android:src="@drawable/ic_attach_file" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

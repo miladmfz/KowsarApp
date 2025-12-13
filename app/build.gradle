@@ -11,7 +11,7 @@ android {
         minSdk 29
         targetSdk 33
         versionCode 1
-        versionName "14.08.07"
+        versionName "14.09.03"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
@@ -48,6 +48,7 @@ dependencies {
 
     // sysdefult
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation files("libs/behThirdparty.aar")
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
@@ -80,6 +81,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.7'
     implementation 'com.google.code.gson:gson:2.9.0'
+
+    //implementation 'com.google.code.gson:gson:2.10.1'
+
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     // offline

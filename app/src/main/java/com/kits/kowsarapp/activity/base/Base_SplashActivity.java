@@ -376,7 +376,7 @@ public class Base_SplashActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 callMethod.showToast("دارای مجوز");
             } else {
-                callMethod.showToast("بدون مجوز");
+                callMethod.showToast("تمامی مجوز هارا فعال کنید یا با پشتیبانی تماس بگیرید");
             }
             requestPermission();
         } else {

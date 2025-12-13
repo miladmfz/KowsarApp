@@ -1,6 +1,7 @@
 package com.kits.kowsarapp.model.base;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,10 +9,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.location.LocationResult;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ThirdPartyResult;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,6 +51,93 @@ public class Base_DBH extends SQLiteOpenHelper {
                 "ServerIp TEXT)");
         getWritableDatabase().close();
     }
+
+
+
+    public void CreatePaymentLog() {
+        getWritableDatabase().execSQL(
+                "CREATE TABLE IF NOT EXISTS PaymentLog (" +
+                        "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
+
+                        "PreFac TEXT," +
+                        "SessionId TEXT," +
+
+                        "ResultCode TEXT," +
+                        "ResultDescription TEXT," +
+
+                        "TransactionAmount TEXT," +
+                        "ReferenceID TEXT," +
+                        "RetrievalReferencedNumber TEXT," +
+                        "MaskedCardNumber TEXT," +
+
+                        "TerminalID TEXT," +
+                        "DateOfTransaction TEXT," +
+                        "TimeOfTransaction TEXT," +
+
+                        "EchoData TEXT," +
+
+                        "RawJson TEXT," +        // کل JSON برگشتی از پوز
+                        "CreateDate TEXT" +      // زمان ثبت در برنامه
+                        ")"
+        );
+
+        getWritableDatabase().close();
+    }
+
+
+    public long InsertPaymentLog(
+            String preFac,
+            ThirdPartyResult res,
+            String rawJson
+    ) {
+        callMethod.Log("preFac =" + preFac);
+
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+
+        cv.put("PreFac", preFac);
+        cv.put("SessionId", res.sessionId);
+
+        cv.put("ResultCode", res.resultCode);
+        cv.put("ResultDescription", res.resultDescription);
+
+        cv.put("TransactionAmount", res.transactionAmount);
+        cv.put("ReferenceID", res.referenceID);
+
+        cv.put(
+                "RetrievalReferencedNumber",
+                res.retrievalReferencedNumber == null
+                        ? null
+                        : String.valueOf(res.retrievalReferencedNumber)
+        );
+
+        cv.put("MaskedCardNumber", res.maskedCardNumber);
+
+        cv.put("TerminalID", res.terminalID);
+        cv.put("DateOfTransaction", res.dateOfTransaction);
+        cv.put("TimeOfTransaction", res.timeOfTransaction);
+
+        cv.put("EchoData", res.echoData);
+
+        cv.put("RawJson", rawJson);
+
+        cv.put(
+                "CreateDate",
+                new java.text.SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm:ss",
+                        java.util.Locale.US
+                ).format(new java.util.Date())
+        );
+
+        long rowId = db.insert("PaymentLog", null, cv);
+        db.close();
+
+        return rowId;
+    }
+
+
 
 
     public void UpdateActivation(Activation activation) {

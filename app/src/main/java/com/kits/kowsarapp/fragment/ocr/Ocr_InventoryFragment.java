@@ -33,22 +33,23 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Inventory_Check_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
+import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
-import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Print;
 import com.kits.kowsarapp.model.base.Factor;
+import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
-import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.model.base.NumberFunctions;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -58,8 +59,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListener {
+public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmListener {
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     CallMethod callMethod;
@@ -92,11 +92,10 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     LinearLayoutCompat ll_send_confirm;
     LinearLayoutCompat ll_shortage_print;
 
-    ViewPager ViewPager;
+    androidx.viewpager.widget.ViewPager ViewPager;
 
     Button btn_send;
     Button btn_confirm;
-    Button btn_shortage;
     Button btn_set_stack;
     Button btn_print;
 
@@ -160,9 +159,9 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view= inflater.inflate(R.layout.ocr_fragment_collect, container, false);
-        ll_main = view.findViewById(R.id.ocr_collect_f_layout);
-        scrollView_main= view.findViewById(R.id.ocr_collect_scrollView_main);
+        view= inflater.inflate(R.layout.ocr_fragment_inventory, container, false);
+        ll_main = view.findViewById(R.id.ocr_inventory_f_layout);
+        scrollView_main= view.findViewById(R.id.ocr_inventory_scrollView_main);
         return view;
     }
 
@@ -246,7 +245,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm.setText("تاییده بخش");
         btn_send.setText("ارسال تاییده");
         btn_set_stack.setText("آغاز فرآیند انبار");
-        btn_shortage.setText("اعلام کسر موجودی");
         btn_print.setText("پرینت فاکتور");
 
 
@@ -389,7 +387,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         ll_main.addView(ll_good_body);
         if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
             if (callMethod.ReadString("Category").equals("2")) {
-                ll_shortage_print.addView(btn_shortage);
                 ll_shortage_print.addView(btn_print);
                 ll_main.addView(ll_shortage_print);
             }
@@ -438,12 +435,12 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
 //                                                    // برگردوندن فوکوس به EditText بعد از اسکرول
 //                                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-//                                                        EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
+//                                                        EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_inventory_confirm_a_barcode);
 //                                                        //edBarcode1.requestFocus();
 //                                                        edBarcode1.selectAll();
 //                                                    }, 300);  // یه تاخیر کوتاه برای برگشت فوکوس
                                                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                                                        EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
+                                                        EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_inventorycheck_a_barcode);
 
 
 
@@ -475,7 +472,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         }, 1000);
 
 
-        btn_shortage.setOnClickListener(v -> CreateView_shortage());
         btn_print.setOnClickListener(v -> ocr_print.Printing(factor,ocr_goods_visible,"0","1"));
         btn_set_stack.setOnClickListener(v -> {
 
@@ -491,7 +487,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
                         dialogProg.dismiss();
-                        intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
+                        intent = new Intent(requireActivity(), Ocr_Inventory_Check_Activity.class);
                         intent.putExtra("ScanResponse", BarcodeScan);
                         intent.putExtra("State", "0");
                         intent.putExtra("FactorImage", "");
@@ -790,7 +786,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                             conter_confirm = conter_confirm +1;
                                             if(conter_confirm==Array_GoodCodesCheck_count){
                                                 assert response.body() != null;
-                                                intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
+                                                intent = new Intent(requireActivity(), Ocr_Inventory_Check_Activity.class);
                                                 intent.putExtra("ScanResponse", BarcodeScan);
                                                 intent.putExtra("State", "0");
                                                 intent.putExtra("FactorImage", "");
@@ -877,7 +873,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                     conter_confirm = conter_confirm +1;
                                     if(conter_confirm==Array_GoodCodesCheck_count){
                                         assert response.body() != null;
-                                        intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
+                                        intent = new Intent(requireActivity(), Ocr_Inventory_Check_Activity.class);
                                         intent.putExtra("ScanResponse", BarcodeScan);
                                         intent.putExtra("State", "0");
                                         intent.putExtra("FactorImage", "");
@@ -965,7 +961,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm = new Button(requireActivity().getApplicationContext());
         btn_send = new Button(requireActivity().getApplicationContext());
         btn_set_stack = new Button(requireActivity().getApplicationContext());
-        btn_shortage = new Button(requireActivity().getApplicationContext());
         btn_print = new Button(requireActivity().getApplicationContext());
     }
 
@@ -989,7 +984,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
         btn_send.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
         btn_set_stack.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-        btn_shortage.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT,1));
         btn_print.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT,1));
 
         tv_total_amount.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -1029,7 +1023,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm.setGravity(Gravity.CENTER);
         btn_send.setGravity(Gravity.CENTER);
         btn_set_stack.setGravity(Gravity.CENTER);
-        btn_shortage.setGravity(Gravity.CENTER);
         btn_print.setGravity(Gravity.CENTER);
     }
     public void setTextSize(){
@@ -1046,7 +1039,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
         btn_send.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
         btn_set_stack.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        btn_shortage.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
         btn_print.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
         btn_print.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
 
@@ -1057,7 +1049,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm.setBackgroundResource(R.color.green_800);
         btn_send.setBackgroundResource(R.color.red_700);
         btn_set_stack.setBackgroundResource(R.color.blue_500);
-        btn_shortage.setBackgroundResource(R.color.orange_500);
         btn_print.setBackgroundResource(R.color.blue_500);
     }
 
@@ -1075,7 +1066,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm.setTextColor(requireActivity().getColor(R.color.white));
         btn_send.setTextColor(requireActivity().getColor(R.color.white));
         btn_set_stack.setTextColor(requireActivity().getColor(R.color.white));
-        btn_shortage.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         btn_print.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
     }
 
@@ -1093,7 +1083,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm.setPadding(0, 0, 30, 20);
         btn_send.setPadding(0, 0, 30, 20);
         btn_set_stack.setPadding(0, 0, 30, 20);
-        btn_shortage.setPadding(0, 0, 30, 20);
         btn_print.setPadding(0, 0, 30, 20);
     }
 
@@ -1434,7 +1423,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         btn_confirm = new Button(requireActivity().getApplicationContext());
         btn_send = new Button(requireActivity().getApplicationContext());
         btn_set_stack = new Button(requireActivity().getApplicationContext());
-        btn_shortage = new Button(requireActivity().getApplicationContext());
         btn_print = new Button(requireActivity().getApplicationContext());
 
 
@@ -1572,336 +1560,6 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     }
 
 
-
-    @SuppressLint("RtlHardcoded")
-    public void CreateView_shortage() {
-        ll_main.removeAllViews();
-        lastCunter=0;
-        Newview();
-        setLayoutParams();
-        setOrientation();
-        setLayoutDirection();
-        setGravity();
-        setTextSize();
-        setBackgroundResource();
-        setTextColor();
-        setPadding();
-
-        ll_send_confirm.setWeightSum(2);
-        ll_shortage_print.setWeightSum(2);
-
-
-        tv_company.setText(NumberFunctions.PerisanNumber("کسری صورت جمع کن"));
-        tv_appocrfactorexplain.setText(NumberFunctions.PerisanNumber(" اتبار  :   " + factor.getAppOCRFactorExplain()));
-        tv_customername.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + factor.getCustName()));
-        tv_factorcode.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " + factor.getFactorPrivateCode()));
-        tv_factordate.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + factor.getFactorDate()));
-        tv_factorexplain.setText(NumberFunctions.PerisanNumber(" توضیحات :   " + factor.getFactorDate()));
-
-        btn_confirm.setText("ارسال کسری");
-        btn_send.setText("بازگشت");
-        btn_shortage.setText("اعلام کسر موجودی");
-        btn_shortage.setTextSize(20);
-
-
-        int countergood = 0;
-        for (Ocr_Good singlegood : ocr_goods_visible) {
-            countergood++;
-
-            if (singlegood.getAppRowIsControled().equals("0")) {
-                ll_good_body_detail.addView(CreateGoodViewForshortage(singlegood, countergood));
-
-            }
-        }
-        ll_title.addView(tv_company);
-        ll_title.addView(tv_customername);
-        ll_title.addView(tv_factorcode);
-        ll_title.addView(tv_factordate);
-        ll_title.addView(tv_factorexplain);
-        ll_title.addView(ViewPager);
-        ll_send_confirm.addView(btn_confirm);
-        ll_send_confirm.addView(btn_send);
-
-
-        ll_good_body.addView(ll_good_body_detail);
-
-        ll_main.addView(ll_title);
-        ll_main.addView(ll_good_body);
-//        ll_main.addView(ll_factor_summary);
-        ll_main.addView(ll_send_confirm);
-
-
-
-        btn_shortage.setOnClickListener(v -> CreateView_shortage());
-
-        btn_send.setOnClickListener(v -> requireActivity().finish());
-
-        btn_confirm.setBackgroundResource(R.color.red_500);
-        btn_confirm.setTextColor(requireActivity().getColor(R.color.white));
-        btn_confirm.setEnabled(true);
-
-        btn_send.setBackgroundResource(R.color.green_500);
-        btn_send.setTextColor(requireActivity().getColor(R.color.white));
-        btn_send.setEnabled(true);
-
-        btn_confirm.setOnClickListener(v -> {
-
-            for (String[] goodchecks : arraygood_shortage) {
-
-                Call<RetrofitResponse> call;
-                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.GoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
-                }else{
-                    call=secendApiInterface.GoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
-                }
-
-
-                call.enqueue(new Callback<RetrofitResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                        if (response.isSuccessful()) {
-                            lastCunter++;
-
-                            if (lastCunter == arraygood_shortage.size()) {
-
-                                if (state.equals("0")){
-                                    intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
-
-                                }else if (state.equals("1")){
-                                    intent = new Intent(requireActivity(), Ocr_Check_Confirm_Activity.class);
-
-                                }
-
-                                intent.putExtra("ScanResponse", TcPrintRef );
-                                intent.putExtra("State", state);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
-                                requireActivity().finish();
-
-                                requireActivity().startActivity(intent);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-                        callMethod.Log(t.getMessage());
-                    }
-                });
-            }
-
-
-        });
-
-        if (callMethod.ReadString("Category").equals("1")) {
-            btn_send.setVisibility(View.GONE);
-            btn_confirm.setText("بازگشت به صفحه اصلی");
-            btn_confirm.setOnClickListener(v -> {
-                intent = new Intent(requireActivity(), Ocr_NavActivity.class);
-                startActivity(intent);
-                requireActivity().finish();
-            });
-        }
-
-
-    }
-
-    @SuppressLint("RtlHardcoded")
-    public View CreateGoodViewForshortage(@NonNull Ocr_Good good, int countergood) {
-
-        arraygood_shortage.add(new String[]{good.getAppOCRFactorRowCode(), good.getFacAmount()});
-        LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
-        LinearLayoutCompat ll_details = new LinearLayoutCompat(requireActivity().getApplicationContext());
-        LinearLayoutCompat ll_radif_check = new LinearLayoutCompat(requireActivity().getApplicationContext());
-        LinearLayoutCompat ll_name_price = new LinearLayoutCompat(requireActivity().getApplicationContext());
-        ViewPager vp_radif_name = new ViewPager(requireActivity().getApplicationContext());
-        ViewPager vp_rows = new ViewPager(requireActivity().getApplicationContext());
-        ViewPager vp_name_amount = new ViewPager(requireActivity().getApplicationContext());
-        ViewPager vp_amount_price = new ViewPager(requireActivity().getApplicationContext());
-        TextView tv_gap = new TextView(requireActivity().getApplicationContext());
-        TextView tv_goodname = new TextView(requireActivity().getApplicationContext());
-        TextView tv_amount = new TextView(requireActivity().getApplicationContext());
-        EditText et_amountshortage = new EditText(requireActivity().getApplicationContext());
-
-        CheckBox checkBox = new MaterialCheckBox(requireActivity());
-
-
-        ll_factor_row.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        ll_details.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        ll_radif_check.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float) 7.7));
-        ll_name_price.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float) 1.3));
-        vp_rows.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 2));
-        vp_radif_name.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        vp_name_amount.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        vp_amount_price.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        tv_gap.setLayoutParams(new LinearLayoutCompat.LayoutParams(20, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        tv_goodname.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float) 1.5));
-        tv_amount.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float) 4));
-        et_amountshortage.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float) 3.5));
-
-        checkBox.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 4));
-
-        ll_details.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        ll_radif_check.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        ll_name_price.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-
-        ll_factor_row.setOrientation(LinearLayoutCompat.VERTICAL);
-        ll_details.setOrientation(LinearLayoutCompat.HORIZONTAL);
-        ll_radif_check.setOrientation(LinearLayoutCompat.HORIZONTAL);
-        ll_name_price.setOrientation(LinearLayoutCompat.HORIZONTAL);
-
-        ll_details.setWeightSum(9);
-        ll_radif_check.setWeightSum(5);
-        ll_name_price.setWeightSum(9);
-
-        vp_name_amount.setBackgroundResource(R.color.colorPrimaryDark);
-        vp_amount_price.setBackgroundResource(R.color.colorPrimaryDark);
-        vp_rows.setBackgroundResource(R.color.colorPrimaryDark);
-        vp_radif_name.setBackgroundResource(R.color.colorPrimaryDark);
-
-        ll_radif_check.setGravity(Gravity.CENTER);
-        checkBox.setGravity(Gravity.CENTER_VERTICAL);
-        tv_gap.setGravity(Gravity.CENTER);
-        tv_goodname.setGravity(Gravity.RIGHT);
-        tv_amount.setGravity(Gravity.CENTER);
-        et_amountshortage.setGravity(Gravity.CENTER);
-
-        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
-        tv_goodname.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
-        tv_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
-        et_amountshortage.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
-
-        checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(countergood)));
-        tv_goodname.setText(NumberFunctions.PerisanNumber(good.getGoodName()));
-        tv_amount.setText(NumberFunctions.PerisanNumber(good.getFacAmount()));
-        et_amountshortage.setHint(good.getFacAmount());
-        et_amountshortage.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-        tv_gap.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        checkBox.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_goodname.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_amount.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        et_amountshortage.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-
-        et_amountshortage.setPadding(0, 10, 0, 10);
-        tv_goodname.setPadding(0, 10, 5, 10);
-
-        ll_radif_check.addView(tv_gap);
-
-
-        ll_radif_check.addView(checkBox);
-
-        ll_name_price.addView(tv_goodname);
-        ll_name_price.addView(vp_name_amount);
-        ll_name_price.addView(tv_amount);
-        ll_name_price.addView(vp_amount_price);
-        ll_name_price.addView(et_amountshortage);
-
-        ll_radif_check.setVisibility(View.INVISIBLE);
-        ll_details.addView(ll_radif_check);
-        ll_details.addView(vp_radif_name);
-        ll_details.addView(ll_name_price);
-
-
-        try {
-            if (good.getMinAmount().equals("1.000")){
-                ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
-            }
-        }catch (Exception e){
-
-            callMethod.Log(e.getMessage());
-        }
-
-
-
-        ll_factor_row.addView(ll_details);
-        ll_factor_row.addView(vp_rows);
-
-
-        int correct_row = countergood - 1;
-        if (ocr_goods_visible.get(correct_row).getAppRowIsPacked().equals("1")) {
-            checkBox.setChecked(true);
-            checkBox.setEnabled(false);
-        } else {
-            checkBox.setEnabled(true);
-        }
-        if (callMethod.ReadString("Category").equals("1")) {
-            checkBox.setVisibility(View.GONE);
-        }
-
-
-
-
-        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            String goodCode = ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode();
-            if (isChecked) {
-                ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
-                if (!Array_GoodCodesCheck.contains(goodCode)) {
-                    Array_GoodCodesCheck.add(goodCode);
-                }
-            } else {
-                ocr_goods_visible.get(correct_row).setAppRowIsControled("0");
-                Array_GoodCodesCheck.remove(goodCode);
-            }
-
-        });
-
-
-        tv_goodname.setOnClickListener(v -> good_detail_view(ocr_goods_visible.get(correct_row)));
-
-
-        et_amountshortage.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable text) {
-                try {
-                    if (firsttry == 0) {
-                        arraygood_shortage.clear();
-                        firsttry = 1;
-                    }
-
-                    String newAmount = text.toString();
-                    String goodCode = good.getAppOCRFactorRowCode();
-
-                    if (!newAmount.isEmpty()) {
-                        int amount = Integer.parseInt(newAmount);
-
-                        if (amount > Integer.parseInt(good.getFacAmount())) {
-                            et_amountshortage.setText("");  // مقدار رو پاک کن
-                            callMethod.showToast("از مقدار فاکتور بیشتر می باشد");
-                        } else {
-                            // بررسی کن که آیا این `goodCode` قبلاً در لیست هست؟
-                            boolean found = false;
-                            for (int i = 0; i < arraygood_shortage.size(); i++) {
-                                if (arraygood_shortage.get(i)[0].equals(goodCode)) {
-                                    arraygood_shortage.get(i)[1] = newAmount;  // مقدار رو آپدیت کن
-                                    found = true;
-                                    break;
-                                }
-                            }
-
-                            // اگر مقدار جدید بود، اضافه کن
-                            if (!found) {
-                                arraygood_shortage.add(new String[]{goodCode, newAmount});
-                            }
-                        }
-
-                    }
-                } catch (Exception ignored) {}
-            }
-        });
-
-
-        return ll_factor_row;
-    }
-
-
-
     @Override
     public void onGoodConfirmed(Ocr_Good singleGood) {
         try {
@@ -2009,7 +1667,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
     public void good_detail_view(Ocr_Good singleGood) {
 //        ocr_action.good_detail(singleGood,BarcodeScan);
-        ocr_action.good_detail(singleGood, BarcodeScan, this);
+        ocr_action.good_detail(singleGood, "", this);
 
     }
     public void good_amount_view(String Facamount,String shortage) {

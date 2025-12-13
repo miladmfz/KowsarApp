@@ -488,12 +488,16 @@ public class Order_Print {
             good_RowExplain_tv.setGravity(Gravity.CENTER);
             good_RowExplain_tv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
 
+try {
 
             if (FactorRow_detail.getRowExplain().length()>0){
                 good_name_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")) + 6);
                 good_RowExplain_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")) + 3);
 
             }
+}catch (Exception e){
+
+}
 
             androidx.viewpager.widget.ViewPager ViewPager_sell2 = new ViewPager(mContext);
             ViewPager_sell2.setLayoutParams(new LinearLayoutCompat.LayoutParams(1, LinearLayoutCompat.LayoutParams.MATCH_PARENT));

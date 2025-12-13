@@ -192,6 +192,27 @@ public interface Order_APIInterface {
             , @Field("PosRef") String PosRef
             , @Field("Mablagh") String Mablagh
     );
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> Factor_Payment_Pos_new(@Field("tag") String tag
+            , @Field("FactorRef") String FactorRef
+            , @Field("PosRef") String PosRef
+            , @Field("Mablagh") String Mablagh
+            , @Field("SessionId") String SessionId
+            , @Field("ResultCode") String ResultCode
+            , @Field("ResultDescription") String ResultDescription
+            , @Field("TransactionAmount") String TransactionAmount
+            , @Field("ReferenceID") String ReferenceID
+            , @Field("RetrievalReferencedNumber") String RetrievalReferencedNumber
+            , @Field("MaskedCardNumber") String MaskedCardNumber
+            , @Field("TerminalID") String TerminalID
+            , @Field("DateOfTransaction") String DateOfTransaction
+            , @Field("TimeOfTransaction") String TimeOfTransaction
+            , @Field("EchoData") String EchoData
+            , @Field("RawJson") String RawJson
+            , @Field("CreateDate") String CreateDate
+            , @Field("ObjectRef") String ObjectRef
+    );
 
 
 

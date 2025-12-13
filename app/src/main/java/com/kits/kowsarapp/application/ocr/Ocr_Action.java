@@ -955,8 +955,6 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                             lb_good_5.setText("شماره قفسه");
 
 
-
-
                         }else if (callMethod.ReadString("FactorDbName").equals("Afarinegan")){
 
                             lb_good_1.setText("موجودی کل");
@@ -1124,22 +1122,22 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
 
-        if (callMethod.ReadBoolan("ListOrSingle") || BarcodeScan.equals("")) {
-            btn_confirm.setVisibility(View.GONE);
-            btn_cansel.setVisibility(View.GONE);
-
-            if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
-                btn_confirm.setVisibility(View.VISIBLE);
-                btn_cansel.setVisibility(View.VISIBLE);
-            }else{
-                btn_confirm.setVisibility(View.GONE);
-                btn_cansel.setVisibility(View.GONE);
-            }
-        }else{
-            btn_confirm.setVisibility(View.VISIBLE);
-
-
-        }
+//        if (callMethod.ReadBoolan("ListOrSingle") || BarcodeScan.equals("")) {
+//            btn_confirm.setVisibility(View.VISIBLE);
+//            btn_cansel.setVisibility(View.VISIBLE);
+////            btn_confirm.setVisibility(View.GONE);
+////            btn_cansel.setVisibility(View.GONE);
+//
+//            if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
+//                btn_confirm.setVisibility(View.VISIBLE);
+//                btn_cansel.setVisibility(View.VISIBLE);
+//            }else{
+//                btn_confirm.setVisibility(View.GONE);
+//                btn_cansel.setVisibility(View.GONE);
+//            }
+//        }else{
+//            btn_confirm.setVisibility(View.VISIBLE);
+//        }
 
 
         btn_confirm.setOnClickListener(v -> {
@@ -1244,20 +1242,28 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
         btn_cansel.setOnClickListener(v -> {
-
+/*
             if (callMethod.ReadBoolan("ListOrSingle") ) {
                 if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
-
-
                     if (listener != null) {
                         listener.onGoodCanceled(singleGood);
                     }
-
+                    dialog.dismiss(); // بستن پنجره
+                }else{
+                    if (listener != null) {
+                        listener.onGoodCanceled(singleGood);
+                    }
                     dialog.dismiss(); // بستن پنجره
                 }
+            }else {
+
             }
+            */
 
-
+            if (listener != null) {
+                listener.onGoodCanceled(singleGood);
+            }
+            dialog.dismiss(); // بستن پنجره
         });
 
 
