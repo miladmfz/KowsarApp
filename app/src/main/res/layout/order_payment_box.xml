@@ -20,7 +20,8 @@
         android:background="@drawable/bg_card"
         android:padding="4dp"
         android:layout_margin="4dp"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        >
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -313,7 +314,6 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ord_payment_b_ll_edpay"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -392,6 +392,43 @@
             <!-- Label: Body Size -->
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ord_payment_b_ll_postopay"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp"
+        >
+
+        <!-- Label: Title Size -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|start"
+            android:text="دریافت پوز"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="16sp"
+            android:paddingStart="8dp" />
+
+        <!-- Input: Title Size -->
+        <EditText
+            android:id="@+id/ord_payment_b_postopay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:inputType="numberDecimal"
+            android:background="@drawable/bg_editbox"
+            android:padding="3dp"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="24sp"
+            android:gravity="center" />
+
+        <!-- Label: Body Size -->
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

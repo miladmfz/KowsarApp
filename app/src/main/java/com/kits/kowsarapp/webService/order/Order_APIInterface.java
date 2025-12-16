@@ -198,6 +198,7 @@ public interface Order_APIInterface {
             , @Field("FactorRef") String FactorRef
             , @Field("PosRef") String PosRef
             , @Field("Mablagh") String Mablagh
+            , @Field("Decrement") String Decrement
             , @Field("SessionId") String SessionId
             , @Field("ResultCode") String ResultCode
             , @Field("ResultDescription") String ResultDescription

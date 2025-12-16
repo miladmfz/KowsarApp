@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.gson.Gson;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
@@ -31,6 +33,8 @@ import com.kits.kowsarapp.adapter.order.Order_RstMizAdapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.ThirdPartyResult;
+import com.kits.kowsarapp.application.order.Order_Payment;
 import com.kits.kowsarapp.model.base.ObjectType;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
@@ -39,6 +43,7 @@ import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -56,7 +61,11 @@ public class Order_TableActivity extends AppCompatActivity {
     ArrayList<Order_BasketInfo> basketInfos = new ArrayList<>();
     ArrayList<ObjectType> objectTypes = new ArrayList<>();
     ArrayList<String> InfoState_array = new ArrayList<>();
+    ThirdPartyResult BehPardakht_pos_result = new ThirdPartyResult();
+    Order_Payment order_payment;
 
+    private static final int REQUEST_POS = 9001;
+    private final Gson gson = new Gson();
     Order_RstMizAdapter order_rstMizAdapter;
     Spinner spinner;
 
@@ -135,6 +144,8 @@ public class Order_TableActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(App.getContext());
+        order_payment = new Order_Payment(App.getContext());
+
         order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
         CoordinatorLayout ll_activity = findViewById(R.id.order_table_activity);
@@ -229,24 +240,7 @@ public class Order_TableActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Order_TableActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
+
                 basketInfos.clear();
                 callrecycler();
             }
@@ -288,24 +282,7 @@ public class Order_TableActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Order_TableActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }                progressBar.setVisibility(View.GONE);
+               progressBar.setVisibility(View.GONE);
             }
         });
 
@@ -352,4 +329,48 @@ public class Order_TableActivity extends AppCompatActivity {
         return Locale.getDefault().getLanguage();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode != REQUEST_POS) return;
+
+        // یک لاگ خام که همیشه ذخیره می‌کنیم (حتی اگر JSON نیاد)
+        StringBuilder rawLog = new StringBuilder();
+        rawLog.append("activityResultCode=").append(resultCode).append("\n");
+
+        if (data != null && data.getExtras() != null) {
+            rawLog.append("---- extras ----\n");
+            for (String key : data.getExtras().keySet()) {
+                Object v = data.getExtras().get(key);
+                rawLog.append(key).append("=").append(String.valueOf(v)).append("\n");
+            }
+        } else {
+            rawLog.append("extras=null\n");
+        }
+
+        // JSON نتیجه
+        String resultJson = (data == null) ? null : data.getStringExtra("paymentResult");
+        if (resultJson == null || resultJson.trim().isEmpty()) {
+            rawLog.append("paymentResult=NULL_OR_EMPTY\n");
+        } else {
+            rawLog.append("---- paymentResult ----\n");
+            rawLog.append(resultJson);
+        }
+
+        // تلاش برای parse (اگر شد)
+        BehPardakht_pos_result = null;
+        try {
+            if (resultJson != null && !resultJson.trim().isEmpty()) {
+                BehPardakht_pos_result = gson.fromJson(resultJson, (Type) ThirdPartyResult.class);
+            }
+        } catch (Exception ignored) {
+            // لاگش رو در DB/File می‌فرستیم، لازم نیست اینجا کاری کنیم
+        }
+        callMethod.Log(resultJson);
+        order_payment.BasketInfopayment_request(BehPardakht_pos_result,resultJson);
+
+
+
+    }
 }
