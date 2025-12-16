@@ -114,6 +114,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         works.add(new Ocr_SpinnerItem(4,"ارسال"));
         works.add(new Ocr_SpinnerItem(5,"مدیریت"));
         works.add(new Ocr_SpinnerItem(6,"جانمایی انبار"));
+        works.add(new Ocr_SpinnerItem(7,"انبارگردانی"));
 
         btn_config =findViewById(R.id.ocr_config_a_btn);
 
@@ -516,7 +517,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 workcategory=String.valueOf(position);
-                if(position==2){
+                if(position==2 ||position==7){
                     ll_spinner_Stack.setVisibility(View.VISIBLE);
                     ll_tv_Stack.setVisibility(View.VISIBLE);
                 }else {
@@ -524,6 +525,10 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                     ll_tv_Stack.setVisibility(View.GONE);
 
                 }
+                if (position==7){
+                    position=2;
+                }
+
                 GetJob("Ocr"+position);
 
             }

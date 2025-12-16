@@ -934,8 +934,6 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
 
 
-
-
     }
 
 

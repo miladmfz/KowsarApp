@@ -137,6 +137,8 @@ public void Config() {
             Manage();
         }else if(state_category==6){ //state 6
             StackLocation();
+        }else if(state_category==7){ //state 6
+            InventoryCheck();
         }
 
     }
@@ -156,6 +158,24 @@ public void Config() {
             intent.putExtra("FactorImage", "");
             startActivity(intent);
         });
+
+    }
+
+    public void InventoryCheck() {
+
+
+        btn1.setText("انبار گردانی");
+        btn2.setVisibility(View.GONE);
+        btn3.setVisibility(View.GONE);
+
+
+        btn1.setOnClickListener(view -> {
+            intent = new Intent(Ocr_NavActivity.this, Ocr_Inventory_List_Api_Activity.class);
+            intent.putExtra("State", "7");
+            startActivity(intent);
+
+        });
+
 
     }
 
