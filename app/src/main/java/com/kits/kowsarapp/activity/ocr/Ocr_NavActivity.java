@@ -137,7 +137,7 @@ public void Config() {
             Manage();
         }else if(state_category==6){ //state 6
             StackLocation();
-        }else if(state_category==7){ //state 6
+        }else if(state_category==7){ //state 7
             InventoryCheck();
         }
 
@@ -178,7 +178,6 @@ public void Config() {
 
 
     }
-
 
 
     public void FirstLogin() {

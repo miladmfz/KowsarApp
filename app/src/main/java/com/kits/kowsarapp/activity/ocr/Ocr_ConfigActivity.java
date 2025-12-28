@@ -65,16 +65,17 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
     ArrayList<String> printers_name=new ArrayList<>();
     ArrayList<String> ActiveDatabase_array=new ArrayList<>();
     List<Ocr_SpinnerItem> works = new ArrayList<>();
+    List<Ocr_SpinnerItem> step_count_array = new ArrayList<>();
 
 
-    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson,spinnerActiveDatabase,spinnerprintername;
+    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson,spinnerActiveDatabase,spinnerprintername,spinner_stepcount;
 
     Button btn_config;
     EditText ed_titlesize,ed_rowcall,ed_bodysize;
     TextView tv_Deliverer,tv_lastprinter,tv_barcodedelay,tv_delay,tv_accesscount,tv_laststack;
 
     SwitchMaterial sm_showdetailamount,sm_showtotalamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle,sm_shortagelist;
-    SwitchMaterial sm_checklistfromgooddetail,        sm_confirmcheckamount,    sm_sendcheckamount;
+    SwitchMaterial sm_checklistfromgooddetail,        sm_confirmcheckamount,    sm_sendcheckamount,    sm_hintamountincount;
     LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack;
 
     String stackcategory="همه";
@@ -116,6 +117,12 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         works.add(new Ocr_SpinnerItem(6,"جانمایی انبار"));
         works.add(new Ocr_SpinnerItem(7,"انبارگردانی"));
 
+        step_count_array.add(new Ocr_SpinnerItem(1,"یکبار شمارش در فاکتور"));
+        step_count_array.add(new Ocr_SpinnerItem(2,"دو بار شمارش در فاکتور"));
+        step_count_array.add(new Ocr_SpinnerItem(3,"سه بار شمارش در فاکتور"));
+
+
+
         btn_config =findViewById(R.id.ocr_config_a_btn);
 
 
@@ -126,6 +133,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         spinnerActiveDatabase =findViewById(R.id.ocr_config_a_spinneractivedatabase);
         spinnerjob =findViewById(R.id.ocr_config_a_spinnerjob);
         spinnerjobperson =findViewById(R.id.ocr_config_a_spinnerjobperson);
+        spinner_stepcount =findViewById(R.id.ocr_config_a_spinnerstepcount);
 
 
         ed_titlesize = findViewById(R.id.ocr_config_a_titlesize);
@@ -155,6 +163,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_sumamounthint = findViewById(R.id.ocr_config_a_showsumamounthint);
         sm_listorsingle = findViewById(R.id.ocr_config_a_listorsingle);
         sm_shortagelist = findViewById(R.id.ocr_config_a_shortagelist);
+        sm_hintamountincount = findViewById(R.id.ocr_config_a_hintamountcount);
 
         sm_checklistfromgooddetail = findViewById(R.id.ocr_config_a_checklistfromgooddetail);
         sm_confirmcheckamount = findViewById(R.id.ocr_config_a_confirmcheckamount);
@@ -213,6 +222,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_sumamounthint.setChecked(callMethod.ReadBoolan("ShowSumAmountHint"));
         sm_listorsingle.setChecked(callMethod.ReadBoolan("ListOrSingle"));
         sm_shortagelist.setChecked(callMethod.ReadBoolan("ShortageList"));
+        sm_hintamountincount.setChecked(callMethod.ReadBoolan("HintAmountInCount"));
 
 
         sm_checklistfromgooddetail.setChecked(callMethod.ReadBoolan("CheckListFromGoodDialog"));
@@ -350,6 +360,46 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             }
         });
 
+        sm_hintamountincount.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("HintAmountInCount")) {
+                callMethod.EditBoolan("HintAmountInCount", false);
+                callMethod.showToast("عدم نمایش تعداد در انبارگردانی");
+            } else {
+                callMethod.EditBoolan("HintAmountInCount", true);
+                callMethod.showToast(" نمایش تعداد در انبارگردانی");
+            }
+        });
+
+
+        ArrayAdapter<Ocr_SpinnerItem> spinner_stepAdapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
+                android.R.layout.simple_spinner_item,step_count_array );
+        spinner_stepAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_stepcount.setAdapter(spinner_stepAdapter);
+
+
+        int selectedValue1 = Integer.parseInt(callMethod.ReadString("CountStep"));
+        for (int i = 0; i < step_count_array.size(); i++) {
+            if (step_count_array.get(i).getValue() == selectedValue1) {
+                spinner_stepcount.setSelection(i);
+                break;
+            }
+        }
+
+
+        spinner_stepcount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                callMethod.EditString("CountStep",String.valueOf(position));
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
 
 
         ArrayAdapter<Ocr_SpinnerItem> spinnerAdapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
@@ -406,23 +456,12 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 try {
                     // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Ocr_ConfigActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
+
+
                 } catch (Exception e) {
                     callMethod.Log("Network check error: " + e.getMessage());
                     callMethod.showToast("خطا در بررسی وضعیت شبکه");
                 }
-
             }
         });
 
@@ -479,19 +518,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 callMethod.Log(t.getMessage());
                 try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Ocr_ConfigActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
+
                 } catch (Exception e) {
                     callMethod.Log("Network check error: " + e.getMessage());
                     callMethod.showToast("خطا در بررسی وضعیت شبکه");
@@ -617,18 +644,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 try {
                     // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Ocr_ConfigActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
+
                 } catch (Exception e) {
                     callMethod.Log("Network check error: " + e.getMessage());
                     callMethod.showToast("خطا در بررسی وضعیت شبکه");
@@ -659,18 +675,8 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 try {
                     // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Ocr_ConfigActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
+
+
                 } catch (Exception e) {
                     callMethod.Log("Network check error: " + e.getMessage());
                     callMethod.showToast("خطا در بررسی وضعیت شبکه");
@@ -711,18 +717,8 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 try {
                     // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Ocr_ConfigActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
+
+
                 } catch (Exception e) {
                     callMethod.Log("Network check error: " + e.getMessage());
                     callMethod.showToast("خطا در بررسی وضعیت شبکه");

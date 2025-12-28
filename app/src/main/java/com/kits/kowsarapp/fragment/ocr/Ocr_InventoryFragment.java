@@ -101,13 +101,10 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
 
     TextView tv_company;
-    TextView tv_customername;
     TextView tv_factorcode;
     TextView tv_factordate;
-    TextView tv_address;
-    TextView tv_phone;
-    TextView tv_total_amount;
-    TextView tv_total_price;
+
+
     TextView tv_appocrfactorexplain;
     TextView tv_factorexplain;
 
@@ -214,9 +211,8 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
         ll_shortage_print.setWeightSum(2);
 
 
-        tv_company.setText(NumberFunctions.PerisanNumber("بخش انبار"));
+        tv_company.setText(NumberFunctions.PerisanNumber("انبارگردانی"));
         tv_appocrfactorexplain.setText(NumberFunctions.PerisanNumber(" انبار :   " + factor.getAppOCRFactorExplain()));
-        tv_customername.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + factor.getCustName()));
         tv_factorcode.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " + factor.getFactorPrivateCode()));
 
         tv_factorcode.setOnLongClickListener(new View.OnLongClickListener() {
@@ -236,12 +232,6 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
         tv_factorexplain.setText(NumberFunctions.PerisanNumber(" توضیحات :   " + factor.getExplain()));
 
 
-        tv_address.setText(NumberFunctions.PerisanNumber(" آدرس : " + factor.getAddress()));
-        tv_phone.setText(NumberFunctions.PerisanNumber(" تلفن تماس : " + factor.getPhone()));
-        tv_total_amount.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + factor.getSumAmount()));
-        tv_total_price.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.valueOf(factor.getSumPrice())) + " ریال"));
-
-
         btn_confirm.setText("تاییده بخش");
         btn_send.setText("ارسال تاییده");
         btn_set_stack.setText("آغاز فرآیند انبار");
@@ -249,20 +239,8 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
 
 
-
-        if(!factor.getNewSumPrice().equals(factor.getSumPrice())){
-
-            TextView tv_total_newprice = new TextView(requireActivity().getApplicationContext());
-            tv_total_newprice.setText(NumberFunctions.PerisanNumber(" قیمت کل(جدید) : " + decimalFormat.format(Integer.valueOf(factor.getNewSumPrice())) + " ریال"));
-            tv_total_newprice.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            tv_total_newprice.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-            tv_total_newprice.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-            tv_total_newprice.setGravity(Gravity.RIGHT);
-
-            ll_factor_summary.addView(tv_total_newprice);
-        }
-
         row_counter= 0;
+
         for (Ocr_Good ocr_good_single : ocr_goods) {
 
 
@@ -364,13 +342,11 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
 
 
-        ll_title.addView(tv_customername);
         ll_title.addView(tv_factorcode);
         ll_title.addView(tv_factordate);
         ll_title.addView(tv_factorexplain);
 
-        ll_title.addView(tv_address);
-        ll_title.addView(tv_phone);
+
         ll_title.addView(ViewPager);
 
         ll_send_confirm.addView(btn_confirm);
@@ -378,10 +354,6 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
         ll_good_body.addView(ll_good_body_detail);
 
-        if (callMethod.ReadBoolan("ShowTotalAmount")){
-            ll_factor_summary.addView(tv_total_amount);
-        }
-        ll_factor_summary.addView(tv_total_price);
 
         ll_main.addView(ll_title);
         ll_main.addView(ll_good_body);
@@ -501,19 +473,7 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                     try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
+
                     } catch (Exception e) {
                         callMethod.Log("Network check error: " + e.getMessage());
                         callMethod.showToast("خطا در بررسی وضعیت شبکه");
@@ -947,15 +907,10 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
         ll_shortage_print = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ViewPager = new ViewPager(requireActivity().getApplicationContext());
         tv_company = new TextView(requireActivity().getApplicationContext());
-        tv_customername = new TextView(requireActivity().getApplicationContext());
         tv_appocrfactorexplain = new TextView(requireActivity().getApplicationContext());
         tv_factorcode = new TextView(requireActivity().getApplicationContext());
         tv_factordate = new TextView(requireActivity().getApplicationContext());
         tv_factorexplain = new TextView(requireActivity().getApplicationContext());
-        tv_address = new TextView(requireActivity().getApplicationContext());
-        tv_phone = new TextView(requireActivity().getApplicationContext());
-        tv_total_amount = new TextView(requireActivity().getApplicationContext());
-        tv_total_price = new TextView(requireActivity().getApplicationContext());
         btn_confirm = new Button(requireActivity().getApplicationContext());
         btn_send = new Button(requireActivity().getApplicationContext());
         btn_set_stack = new Button(requireActivity().getApplicationContext());
@@ -973,20 +928,15 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
         tv_company.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_appocrfactorexplain.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        tv_customername.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_factorcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_factordate.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_factorexplain.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        tv_address.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        tv_phone.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         btn_confirm.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
         btn_send.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
         btn_set_stack.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
         btn_print.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT,1));
 
-        tv_total_amount.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        tv_total_price.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        ViewPager.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, 3));
+         ViewPager.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, 3));
 
 
     }
@@ -1010,14 +960,9 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
     public void setGravity(){
         tv_company.setGravity(Gravity.CENTER);
         tv_appocrfactorexplain.setGravity(Gravity.RIGHT);
-        tv_customername.setGravity(Gravity.RIGHT);
         tv_factorcode.setGravity(Gravity.RIGHT);
         tv_factordate.setGravity(Gravity.RIGHT);
         tv_factorexplain.setGravity(Gravity.RIGHT);
-        tv_address.setGravity(Gravity.RIGHT);
-        tv_phone.setGravity(Gravity.RIGHT);
-        tv_total_amount.setGravity(Gravity.RIGHT);
-        tv_total_price.setGravity(Gravity.RIGHT);
         btn_confirm.setGravity(Gravity.CENTER);
         btn_send.setGravity(Gravity.CENTER);
         btn_set_stack.setGravity(Gravity.CENTER);
@@ -1026,14 +971,9 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
     public void setTextSize(){
         tv_company.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_appocrfactorexplain.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_customername.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factorcode.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factordate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factorexplain.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_address.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_phone.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_total_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_total_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         btn_confirm.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
         btn_send.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
         btn_set_stack.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
@@ -1053,15 +993,10 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
     public void setTextColor(){
         tv_company.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_appocrfactorexplain.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_customername.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_factorcode.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_factordate.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_factorexplain.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_address.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_phone.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_total_amount.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        tv_total_price.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
-        btn_confirm.setTextColor(requireActivity().getColor(R.color.white));
+       btn_confirm.setTextColor(requireActivity().getColor(R.color.white));
         btn_send.setTextColor(requireActivity().getColor(R.color.white));
         btn_set_stack.setTextColor(requireActivity().getColor(R.color.white));
         btn_print.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
@@ -1070,14 +1005,9 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
     public void setPadding(){
         tv_company.setPadding(0, 0, 30, 20);
         tv_appocrfactorexplain.setPadding(0, 0, 30, 20);
-        tv_customername.setPadding(0, 0, 30, 20);
         tv_factorcode.setPadding(0, 0, 30, 20);
         tv_factordate.setPadding(0, 0, 30, 20);
         tv_factorexplain.setPadding(0, 0, 30, 20);
-        tv_address.setPadding(0, 0, 30, 20);
-        tv_phone.setPadding(0, 0, 30, 20);
-        tv_total_amount.setPadding(0, 0, 30, 20);
-        tv_total_price.setPadding(0, 0, 30, 20);
         btn_confirm.setPadding(0, 0, 30, 20);
         btn_send.setPadding(0, 0, 30, 20);
         btn_set_stack.setPadding(0, 0, 30, 20);
@@ -1164,8 +1094,18 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
 
             tv_good_part1.setText(NumberFunctions.PerisanNumber(good_detial.getGoodName()));
+            String Conter="0";
+            if (good_detial.getCountedAmount1() == null) {
+                Conter="0";
+            } else if (good_detial.getCountedAmount2() == null) {
+                Conter="1";
+            } else if (good_detial.getCountedAmount3() == null) {
+                Conter="2";
+            }else{
+                Conter="3";
+            }
 
-            tv_good_part2.setText(NumberFunctions.PerisanNumber(good_detial.getFacAmount()));
+            tv_good_part2.setText(NumberFunctions.PerisanNumber(Conter));
 
             if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                     callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
@@ -1279,8 +1219,9 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
         checkBox.setOnClickListener(v -> {
 
+
             if (callMethod.ReadBoolan("CheckListFromGoodDialog")){
-                good_detail_view(ocr_goods_visible.get(correct_row));
+                good_detail_inventory_view(ocr_goods_visible.get(correct_row));
                 checkBox.toggle();
             }else{
                 if (callMethod.ReadBoolan("JustScanner")){
@@ -1316,7 +1257,17 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
         tv_good_part1.setOnClickListener(v -> {
             if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-                good_detail_view(ocr_goods_visible.get(correct_row));
+
+                //if(ocr_goods_visible.get(fa).getAppRowIsControled().equals("True")){
+                if(ocr_goods_visible.get(correct_row).getAppRowIsControled().equals("1")){
+                    callMethod.showToast("شمارش این آیتم تمام شده است");
+
+                }else{
+                    good_detail_inventory_view(ocr_goods_visible.get(correct_row));
+
+                }
+
+
             } else {
                 callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
             }
@@ -1324,16 +1275,16 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
         });
 
 
-
-
-        tv_good_part2.setOnClickListener(v -> {
-            if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-                good_amount_view(ocr_goods_visible.get(correct_row).getFacAmount(),ocr_goods_visible.get(correct_row).getShortageAmount()+"");
-            } else {
-                callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
-            }
-
-        });
+//
+//
+//        tv_good_part2.setOnClickListener(v -> {
+//            if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
+//                good_amount_view(ocr_goods_visible.get(correct_row).getFacAmount(),ocr_goods_visible.get(correct_row).getShortageAmount()+"");
+//            } else {
+//                callMethod.showToast("لطفا ابتدا آغاز فرایند انبار را شروع کنید");
+//            }
+//
+//        });
 
 
 
@@ -1377,7 +1328,7 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
                 } else {
                     if (isChecked) {
                         ocr_goods_visible.get(correct_row).setAppRowIsControled("1");
-                        good_detail_view(ocr_goods_visible.get(correct_row));
+                        good_detail_inventory_view(ocr_goods_visible.get(correct_row));
                         if (!Array_GoodCodesCheck.contains(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode())) {
                             Array_GoodCodesCheck.add(ocr_goods_visible.get(correct_row).getAppOCRFactorRowCode());
                         }
@@ -1410,14 +1361,9 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
         ll_send_confirm = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ViewPager = new ViewPager(requireActivity().getApplicationContext());
         tv_company = new TextView(requireActivity().getApplicationContext());
-        tv_customername = new TextView(requireActivity().getApplicationContext());
         tv_factorcode = new TextView(requireActivity().getApplicationContext());
         tv_factordate = new TextView(requireActivity().getApplicationContext());
         tv_factorexplain = new TextView(requireActivity().getApplicationContext());
-        tv_address = new TextView(requireActivity().getApplicationContext());
-        tv_phone = new TextView(requireActivity().getApplicationContext());
-        tv_total_amount = new TextView(requireActivity().getApplicationContext());
-        tv_total_price = new TextView(requireActivity().getApplicationContext());
         btn_confirm = new Button(requireActivity().getApplicationContext());
         btn_send = new Button(requireActivity().getApplicationContext());
         btn_set_stack = new Button(requireActivity().getApplicationContext());
@@ -1663,9 +1609,16 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
 
 
 
-    public void good_detail_view(Ocr_Good singleGood) {
-//        ocr_action.good_detail(singleGood,BarcodeScan);
-        ocr_action.good_detail(singleGood, "", this);
+    public void good_detail_inventory_view(Ocr_Good singleGood) {
+
+        //if(ocr_goods_visible.get(fa).getAppRowIsControled().equals("True")){
+        if(singleGood.getAppRowIsControled().equals("1")){
+            callMethod.showToast("شمارش این آیتم تمام شده است");
+        }else{
+            ocr_action.good_detail_inventory(singleGood, TcPrintRef, this);
+        }
+
+
 
     }
     public void good_amount_view(String Facamount,String shortage) {

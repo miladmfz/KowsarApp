@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
+import com.kits.kowsarapp.activity.ocr.Ocr_Inventory_Check_Activity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.Factor;
@@ -152,7 +152,7 @@ public class Ocr_Inventory_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Inve
 
                     callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
 
-                    intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
+                    intent = new Intent(mContext, Ocr_Inventory_Check_Activity.class);
 
                     intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                     intent.putExtra("State", state);

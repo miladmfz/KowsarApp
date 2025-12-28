@@ -20,9 +20,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
-import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
 import com.kits.kowsarapp.fragment.ocr.Ocr_InventoryFragment;
-import com.kits.kowsarapp.fragment.ocr.Ocr_PackFragment;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -150,10 +148,8 @@ public class Ocr_Inventory_Check_Activity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        //packFragment = new Ocr_PackFragment();
         inventoryFragment = new Ocr_InventoryFragment();
 
-        //packFragment.setBarcodeScan(BarcodeScan);
         inventoryFragment.setBarcodeScan(BarcodeScan);
 
         ocr_goods_scan.clear();
@@ -285,7 +281,7 @@ public class Ocr_Inventory_Check_Activity extends AppCompatActivity {
                             fragmentTransaction.replace(R.id.ocr_inventorycheck_a_framelayout, inventoryFragment);
                             fragmentTransaction.commit();
 
-                            Searchbox();
+//                            Searchbox();
 
                         } else {
                             finish();

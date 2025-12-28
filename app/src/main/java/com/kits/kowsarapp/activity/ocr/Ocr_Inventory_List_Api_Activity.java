@@ -26,7 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.ocr.Ocr_Check_ListApi_Adapter;
 import com.kits.kowsarapp.adapter.ocr.Ocr_Inventory_ListApi_Adapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
@@ -640,7 +639,7 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(this, Ocr_Check_List_Api_Activity.class);
+        intent = new Intent(this, Ocr_Inventory_List_Api_Activity.class);
         intent.putExtra("State", state);
         startActivity(intent);
         finish();

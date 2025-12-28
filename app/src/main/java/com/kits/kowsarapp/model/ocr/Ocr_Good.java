@@ -107,6 +107,35 @@ public class Ocr_Good implements Serializable {
     @SerializedName("GoodExplain5")private String GoodExplain5;
     @SerializedName("GoodExplain6")private String GoodExplain6;
 
+    @SerializedName("CountedAmount1")private String CountedAmount1;
+    @SerializedName("CountedAmount2")private String CountedAmount2;
+    @SerializedName("CountedAmount3")private String CountedAmount3;
+
+
+    public String getCountedAmount1() {
+        return CountedAmount1;
+    }
+
+    public void setCountedAmount1(String countedAmount1) {
+        CountedAmount1 = countedAmount1;
+    }
+
+    public String getCountedAmount2() {
+        return CountedAmount2;
+    }
+
+    public void setCountedAmount2(String countedAmount2) {
+        CountedAmount2 = countedAmount2;
+    }
+
+    public String getCountedAmount3() {
+        return CountedAmount3;
+    }
+
+    public void setCountedAmount3(String countedAmount3) {
+        CountedAmount3 = countedAmount3;
+    }
+
     @SerializedName("MinAmount")
     private String MinAmount;
 

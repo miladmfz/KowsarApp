@@ -218,6 +218,9 @@ public class Base_SplashActivity extends AppCompatActivity {
         callMethod.EditString("LastTcPrint", "0");
         callMethod.EditString("ConditionPosition", "0");
         callMethod.EditString("FactorDbName", "");
+
+        callMethod.EditBoolan("HintAmountInCount", false);
+        callMethod.EditString("CountStep", "2");
         //endregion
 
         //region $ order

@@ -52,6 +52,18 @@ public interface Ocr_APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
+    Call<RetrofitResponse> OcrCountInventory(@Field("tag") String tag
+            , @Field("AppOCRFactorRowCode") String AppOCRFactorRowCode
+            , @Field("State") String State
+            , @Field("JobPersonRef") String JobPersonRef
+            , @Field("Counted") String Counted
+            , @Field("Conter") String Conter
+            , @Field("Finished") String Finished
+
+    );
+
+    @POST("index.php")
+    @FormUrlEncoded
     Call<RetrofitResponse> GoodShortage(@Field("tag") String tag
             , @Field("OCRFactorRowCode") String OCRFactorRowCode
             , @Field("Shortage") String Shortage);
