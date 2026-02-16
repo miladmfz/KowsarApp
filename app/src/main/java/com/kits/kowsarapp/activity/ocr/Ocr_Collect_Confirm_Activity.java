@@ -17,7 +17,6 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,8 +25,6 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.fragment.ocr.Ocr_CollectFragment;
-import com.kits.kowsarapp.fragment.ocr.Ocr_PackFragment;
-import com.kits.kowsarapp.fragment.ocr.Ocr_StackFragment;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -58,7 +55,6 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
     CallMethod callMethod;
     FragmentManager fragmentManager ;
     FragmentTransaction fragmentTransaction;
-    //Ocr_PackFragment packFragment;
     Ocr_CollectFragment collectFragment;
 
     EditText ed_barcode;
@@ -67,6 +63,7 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
     String BarcodeScan;
     String OrderBy;
     String State;
+    String ShowGoodDetail;
     int width=1;
     Ocr_Action action;
     Handler handler;
@@ -89,8 +86,6 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
 
 
 
-
-
         intent();
         Config();
         try {
@@ -101,7 +96,6 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
             TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
             repw.setText("در حال خواندن اطلاعات");
             dialog1.show();
-
             Handler handler = new Handler();
             handler.postDelayed(this::init, 100);
 
@@ -110,13 +104,9 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                     dialog1.dismiss();
                 }
             }, 1000);
-
         } catch (Exception e) {
             callMethod.Log(e.getMessage());
         }
-
-
-
     }
     ////////////////////////////////////////////////////
 
@@ -126,6 +116,7 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
         assert bundle != null;
         BarcodeScan=bundle.getString("ScanResponse");
         State=bundle.getString("State");
+        ShowGoodDetail=bundle.getString("ShowGoodDetail");
 
     }
 
@@ -157,27 +148,20 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        //packFragment = new Ocr_PackFragment();
         collectFragment = new Ocr_CollectFragment();
 
-        //packFragment.setBarcodeScan(BarcodeScan);
         collectFragment.setBarcodeScan(BarcodeScan);
 
         ocr_goods_scan.clear();
     }
 
-
-
     public void init(){
-
         try {
             state_category=Integer.parseInt(callMethod.ReadString("Category"));
         }catch (Exception e){
             state_category=0;
         }
-
         Collect();
-
     }
 
     public void Searchbox(){
@@ -207,9 +191,6 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                             if (ocr_goods.size() > 0) {
 
                                 if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-
-
-
                                     ocr_goods_scan.clear();
                                     handler.removeCallbacksAndMessages(null);
                                     handler.postDelayed(() -> {
@@ -217,18 +198,14 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
 
                                         try {
                                             barcode = NumberFunctions.EnglishNumber(editable.toString().substring(2, editable.toString().length() - 2).replace("\n", ""));
-
                                         }catch (Exception e){
                                             barcode ="";
                                         }
-
                                         ed_barcode.selectAll();
-
                                         for (Ocr_Good singlegood : ocr_goods) {
                                             if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
                                                 ocr_goods_scan.add(singlegood);
                                             }
-
                                         }
                                         dialog1.dismiss();
                                         action.GoodScanDetail(ocr_goods_scan, State, BarcodeScan);
@@ -239,17 +216,12 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                             }
 
                         }, Integer.parseInt(callMethod.ReadString("BarcodeDelay")));
-
                     }
-
                 }
         );
-
-
     }
+
     public void Collect(){
-
-
 
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
              callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
@@ -262,6 +234,11 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
             OrderBy="GoodName";
         }
 
+        if (callMethod.ReadBoolan("Orderby_ASC")){
+            OrderBy=OrderBy + " ASC";
+        }else{
+            OrderBy=OrderBy + " DESC";
+        }
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
@@ -269,7 +246,6 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
         }else{
             call=secendApiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,OrderBy);
         }
-
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -289,38 +265,27 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
                             collectFragment.setocr_Goods(ocr_goods);
                             collectFragment.setState(State);
                             collectFragment.setTcPrintRef(BarcodeScan);
+                            collectFragment.setShowGoodDetail(ShowGoodDetail);
+
                             fragmentTransaction.replace(R.id.ocr_collect_confirm_a_framelayout, collectFragment);
                             fragmentTransaction.commit();
-
                             Searchbox();
-
                         } else {
                             finish();
                         }
-
                     }
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 callMethod.showToast("Connection fail ...!!!");
             }
         });
-
     }
-
-
-
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         ed_barcode.requestFocus();
         ed_barcode.selectAll();
         super.onWindowFocusChanged(hasFocus);
     }
-
-
-
-
 }

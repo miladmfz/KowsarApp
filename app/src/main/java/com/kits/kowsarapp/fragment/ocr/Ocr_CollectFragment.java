@@ -28,11 +28,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
@@ -60,6 +62,7 @@ import retrofit2.Response;
 
 
 public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListener {
+
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     CallMethod callMethod;
@@ -86,6 +89,8 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     ScrollView scrollView_main ;
     LinearLayoutCompat ll_main;
     LinearLayoutCompat ll_title;
+    LinearLayoutCompat ll_factorCode_OrderBy;
+
     LinearLayoutCompat ll_good_body_detail;
     LinearLayoutCompat ll_good_body;
     LinearLayoutCompat ll_factor_summary;
@@ -100,6 +105,9 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     Button btn_set_stack;
     Button btn_print;
 
+    SwitchMaterial sm_orderby_Ace_desc;
+
+    String Orderby_ASC_Str=" ASC";
 
     TextView tv_company;
     TextView tv_customername;
@@ -113,6 +121,10 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     TextView tv_factorexplain;
 
     String state;
+
+
+    String ShowGoodDetail;
+
     String TcPrintRef;
     String BarcodeScan;
 
@@ -123,6 +135,14 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     Integer conter_confirm = 0;
 
     Integer Sum_Confirm_Amount=0;
+
+    public String getShowGoodDetail() {
+        return ShowGoodDetail;
+    }
+
+    public void setShowGoodDetail(String showGoodDetail) {
+        ShowGoodDetail = showGoodDetail;
+    }
 
     public String getState() {
         return state;
@@ -232,6 +252,36 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         });
 
 
+        sm_orderby_Ace_desc.setChecked(callMethod.ReadBoolan("Orderby_ASC"));
+
+        if (callMethod.ReadBoolan("Orderby_ASC")){
+            sm_orderby_Ace_desc.setText("صعودی");
+        }else{
+            sm_orderby_Ace_desc.setText("نزولی");
+        }
+
+        sm_orderby_Ace_desc.setOnCheckedChangeListener((compoundButton, b) -> {
+
+            if (b) {
+                callMethod.EditBoolan("Orderby_ASC",true);
+                sm_orderby_Ace_desc.setText("صعودی");
+                callMethod.showToast("صعودی");
+            } else {
+                callMethod.EditBoolan("Orderby_ASC",false);
+
+                sm_orderby_Ace_desc.setText("نزولی");
+                callMethod.showToast("نزولی");
+            }
+            intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
+            intent.putExtra("ScanResponse", BarcodeScan);
+            intent.putExtra("State", "0");
+            intent.putExtra("FactorImage", "");
+            intent.putExtra("ShowGoodDetail", "0");
+            startActivity(intent);
+            requireActivity().finish();
+        });
+
+
 
         tv_factordate.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + factor.getFactorDate()));
         tv_factorexplain.setText(NumberFunctions.PerisanNumber(" توضیحات :   " + factor.getExplain()));
@@ -240,7 +290,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         tv_address.setText(NumberFunctions.PerisanNumber(" آدرس : " + factor.getAddress()));
         tv_phone.setText(NumberFunctions.PerisanNumber(" تلفن تماس : " + factor.getPhone()));
         tv_total_amount.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + factor.getSumAmount()));
-        tv_total_price.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.valueOf(factor.getSumPrice())) + " ریال"));
+        tv_total_price.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Double.valueOf(factor.getSumPrice())) + " ریال"));
 
 
         btn_confirm.setText("تاییده بخش");
@@ -255,7 +305,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         if(!factor.getNewSumPrice().equals(factor.getSumPrice())){
 
             TextView tv_total_newprice = new TextView(requireActivity().getApplicationContext());
-            tv_total_newprice.setText(NumberFunctions.PerisanNumber(" قیمت کل(جدید) : " + decimalFormat.format(Integer.valueOf(factor.getNewSumPrice())) + " ریال"));
+            tv_total_newprice.setText(NumberFunctions.PerisanNumber(" قیمت کل(جدید) : " + decimalFormat.format(Double.valueOf(factor.getNewSumPrice())) + " ریال"));
             tv_total_newprice.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
             tv_total_newprice.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
             tv_total_newprice.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
@@ -365,9 +415,14 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         ll_title.addView(tv_appocrfactorexplain);
 
 
+        ll_factorCode_OrderBy.addView(tv_factorcode);
+        ll_factorCode_OrderBy.addView(sm_orderby_Ace_desc);
+
+
+        ll_title.addView(ll_factorCode_OrderBy);
+
 
         ll_title.addView(tv_customername);
-        ll_title.addView(tv_factorcode);
         ll_title.addView(tv_factordate);
         ll_title.addView(tv_factorexplain);
 
@@ -430,39 +485,70 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                                             if (!cb.isChecked()) {
 
+                                                // گرفتن مدل کالا از tag
+                                                Object tag = cb.getTag();
+                                                Ocr_Good good = null;
+                                                if (tag instanceof Ocr_Good) {
+                                                    good = (Ocr_Good) tag;
+                                                }
+
+                                                // --- چک کردن shortage و رد کردن اگر کمبود داشت ---
+                                                String shortageAmount = null;
+                                                if (good != null) {
+                                                    // اگر اسم فیلدت good_detial هست، همینو با good_detial عوض کن
+                                                    shortageAmount = good.getShortageAmount();
+                                                }
+
+                                                if (shortageAmount == null) {
+                                                    callMethod.Log("ShortageAmount is null");
+                                                    // اینجا تصمیم با توئه:
+                                                    // اگر null یعنی "کمبود نامشخص" و میخوای ردش کنی، این خط رو فعال کن:
+                                                    // continue;
+                                                } else {
+                                                    try {
+                                                        if (Integer.parseInt(shortageAmount) > 0) {
+                                                            // کمبود دارد -> رد کن و برو checkbox بعدی
+                                                            continue;
+                                                        }
+                                                    } catch (Exception e) {
+                                                        callMethod.Log("ShortageAmount is not a number: " + shortageAmount);
+                                                        // اگر مقدار خراب بود و میخوای ردش کنی:
+                                                        // continue;
+                                                    }
+                                                }
+                                                // --- پایان چک shortage ---
+
+                                                // از اینجا به بعد یعنی "کمبود ندارد" و همون رفتار قبلی اجرا میشه
+                                                if ("1".equals(ShowGoodDetail)) {
+                                                    if (good != null) {
+                                                        callMethod.Log("Good Name: " + good.getGoodName());
+                                                        good_detail_view(good);
+                                                    } else {
+                                                        callMethod.Log("Checkbox tag is null or not Ocr_Good");
+                                                    }
+                                                }
 
                                                 cb.requestFocus();
 
                                                 scrollView_main.post(() -> {
                                                     cb.getParent().requestChildFocus(cb, cb);
 
-//                                                    // برگردوندن فوکوس به EditText بعد از اسکرول
-//                                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-//                                                        EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
-//                                                        //edBarcode1.requestFocus();
-//                                                        edBarcode1.selectAll();
-//                                                    }, 300);  // یه تاخیر کوتاه برای برگشت فوکوس
                                                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                                         EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
-
-
-
-                                                        // برگردوندن فوکوس و انتخاب همه متن
-                                                        //edBarcode1.requestFocus();
                                                         edBarcode1.selectAll();
-                                                        // بستن کیبورد اگر باز باشه
-                                                        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(requireActivity().INPUT_METHOD_SERVICE);
+
+                                                        InputMethodManager imm = (InputMethodManager) requireActivity()
+                                                                .getSystemService(requireActivity().INPUT_METHOD_SERVICE);
                                                         if (imm != null) {
                                                             imm.hideSoftInputFromWindow(edBarcode1.getWindowToken(), 0);
                                                         }
-
-
                                                     }, 300);
 
                                                 });
 
-                                                return;
+                                                return; // این return فقط وقتی اجرا میشه که checkbox انتخاب‌شده "کمبود نداشته باشه"
                                             }
+
                                         }
                                     }
                                 }
@@ -473,6 +559,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
             }
 
         }, 1000);
+
 
 
         btn_shortage.setOnClickListener(v -> CreateView_shortage());
@@ -495,6 +582,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                         intent.putExtra("ScanResponse", BarcodeScan);
                         intent.putExtra("State", "0");
                         intent.putExtra("FactorImage", "");
+                        intent.putExtra("ShowGoodDetail", "0");
                         dialogProg.dismiss();
                         startActivity(intent);
                         requireActivity().finish();
@@ -794,6 +882,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                                 intent.putExtra("ScanResponse", BarcodeScan);
                                                 intent.putExtra("State", "0");
                                                 intent.putExtra("FactorImage", "");
+                                                intent.putExtra("ShowGoodDetail", "0");
                                                 dialogProg.dismiss();
                                                 startActivity(intent);
                                                 requireActivity().finish();
@@ -881,6 +970,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                         intent.putExtra("ScanResponse", BarcodeScan);
                                         intent.putExtra("State", "0");
                                         intent.putExtra("FactorImage", "");
+                                        intent.putExtra("ShowGoodDetail", "0");
                                         dialogProg.dismiss();
                                         startActivity(intent);
                                         requireActivity().finish();
@@ -946,6 +1036,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     public void NewView(){
 
         ll_title = new LinearLayoutCompat(requireActivity().getApplicationContext());
+        ll_factorCode_OrderBy = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_good_body = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_good_body_detail = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_factor_summary = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -956,6 +1047,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         tv_customername = new TextView(requireActivity().getApplicationContext());
         tv_appocrfactorexplain = new TextView(requireActivity().getApplicationContext());
         tv_factorcode = new TextView(requireActivity().getApplicationContext());
+        sm_orderby_Ace_desc = new SwitchMaterial(requireActivity());
         tv_factordate = new TextView(requireActivity().getApplicationContext());
         tv_factorexplain = new TextView(requireActivity().getApplicationContext());
         tv_address = new TextView(requireActivity().getApplicationContext());
@@ -972,6 +1064,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     public void setLayoutParams(){
 
         ll_title.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+        ll_factorCode_OrderBy.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT,2));
         ll_good_body_detail.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_good_body.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_factor_summary.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -981,7 +1074,22 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         tv_company.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_appocrfactorexplain.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_customername.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        tv_factorcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+        tv_factorcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT,1));
+        sm_orderby_Ace_desc.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT,1));
+        sm_orderby_Ace_desc.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.bg_card));
+
+//        LinearLayoutCompat.LayoutParams lp =
+//                new LinearLayoutCompat.LayoutParams(
+//                        0,
+//                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+//                        1
+//                );
+//
+//        sm_orderby_Ace_desc.setLayoutParams(lp);
+//        sm_orderby_Ace_desc.setBackgroundResource(R.drawable.bg_card);
+//        sm_orderby_Ace_desc.setPadding(12, 8, 12, 8);
+
+
         tv_factordate.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_factorexplain.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_address.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -1000,6 +1108,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     }
     public void setOrientation(){
         ll_title.setOrientation(LinearLayoutCompat.VERTICAL);
+        ll_factorCode_OrderBy.setOrientation(LinearLayoutCompat.HORIZONTAL);
         ll_good_body.setOrientation(LinearLayoutCompat.HORIZONTAL);
         ll_good_body_detail.setOrientation(LinearLayoutCompat.VERTICAL);
         ll_factor_summary.setOrientation(LinearLayoutCompat.VERTICAL);
@@ -1008,6 +1117,9 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     }
     public void setLayoutDirection(){
         ll_title.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        ll_factorCode_OrderBy.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        sm_orderby_Ace_desc.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
         ll_good_body.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         ll_good_body_detail.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         ll_factor_summary.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -1020,6 +1132,8 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         tv_appocrfactorexplain.setGravity(Gravity.RIGHT);
         tv_customername.setGravity(Gravity.RIGHT);
         tv_factorcode.setGravity(Gravity.RIGHT);
+        sm_orderby_Ace_desc.setGravity(Gravity.CENTER);
+
         tv_factordate.setGravity(Gravity.RIGHT);
         tv_factorexplain.setGravity(Gravity.RIGHT);
         tv_address.setGravity(Gravity.RIGHT);
@@ -1037,6 +1151,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         tv_appocrfactorexplain.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_customername.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factorcode.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        sm_orderby_Ace_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factordate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factorexplain.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_address.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
@@ -1084,6 +1199,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         tv_appocrfactorexplain.setPadding(0, 0, 30, 20);
         tv_customername.setPadding(0, 0, 30, 20);
         tv_factorcode.setPadding(0, 0, 30, 20);
+        sm_orderby_Ace_desc.setPadding(0, 0, 30, 20);
         tv_factordate.setPadding(0, 0, 30, 20);
         tv_factorexplain.setPadding(0, 0, 30, 20);
         tv_address.setPadding(0, 0, 30, 20);
@@ -1116,6 +1232,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         TextView tv_good_part3 = new TextView(requireActivity().getApplicationContext());
 
         MaterialCheckBox checkBox = new MaterialCheckBox(requireActivity());
+        checkBox.setTag(good_detial);
 
         ll_factor_row.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_details.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -1417,6 +1534,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
     public void Newview() {
         ll_title = new LinearLayoutCompat(requireActivity().getApplicationContext());
+        ll_factorCode_OrderBy = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_good_body = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_good_body_detail = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_factor_summary = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -1425,6 +1543,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         tv_company = new TextView(requireActivity().getApplicationContext());
         tv_customername = new TextView(requireActivity().getApplicationContext());
         tv_factorcode = new TextView(requireActivity().getApplicationContext());
+        sm_orderby_Ace_desc = new SwitchMaterial(requireContext());
         tv_factordate = new TextView(requireActivity().getApplicationContext());
         tv_factorexplain = new TextView(requireActivity().getApplicationContext());
         tv_address = new TextView(requireActivity().getApplicationContext());
@@ -1614,8 +1733,13 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
             }
         }
         ll_title.addView(tv_company);
+
+        ll_factorCode_OrderBy.addView(tv_factorcode);
+        ll_factorCode_OrderBy.addView(sm_orderby_Ace_desc);
+
+        ll_title.addView(ll_factorCode_OrderBy);
+
         ll_title.addView(tv_customername);
-        ll_title.addView(tv_factorcode);
         ll_title.addView(tv_factordate);
         ll_title.addView(tv_factorexplain);
         ll_title.addView(ViewPager);
@@ -1674,6 +1798,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                                 intent.putExtra("ScanResponse", TcPrintRef );
                                 intent.putExtra("State", state);
+                                intent.putExtra("ShowGoodDetail", "0");
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                 requireActivity().finish();
 

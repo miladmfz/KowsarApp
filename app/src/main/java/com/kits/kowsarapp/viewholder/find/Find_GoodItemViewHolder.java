@@ -258,81 +258,90 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
 
     public void callimage(Find_Good good){
-        Glide.with(img)
-                .asBitmap()
-                .load(R.drawable.img_base_no_photo)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .fitCenter()
-                .into(img);
 
-        if (!good.getGoodImageName().equals("")) {
-            Glide.with(img)
-                    .asBitmap()
-                    .load(R.drawable.img_white)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .fitCenter()
-                    .into(img);
+        if (!callMethod.ReadBoolan("ShowGoodImage")) {
+            img.setVisibility(View.GONE);
+
+
+        }else{
+
             img.setVisibility(View.VISIBLE);
 
             Glide.with(img)
                     .asBitmap()
-                    .load(Base64.decode(good.getGoodFieldValue("GoodImageName"), Base64.DEFAULT))
+                    .load(R.drawable.img_base_no_photo)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .fitCenter()
                     .into(img);
 
+            if (!good.getGoodImageName().equals("")) {
+                Glide.with(img)
+                        .asBitmap()
+                        .load(R.drawable.img_white)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .fitCenter()
+                        .into(img);
+                img.setVisibility(View.VISIBLE);
 
-        } else {
+                Glide.with(img)
+                        .asBitmap()
+                        .load(Base64.decode(good.getGoodFieldValue("GoodImageName"), Base64.DEFAULT))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .fitCenter()
+                        .into(img);
 
-            Glide.with(img)
-                    .asBitmap()
-                    .load(R.drawable.img_white)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .fitCenter()
-                    .into(img);
-            img.setVisibility(View.VISIBLE);
 
-            call = find_apiInterface.GetImagefind("getImage",good.getGoodFieldValue("GoodCode"),0,150);
-            call.enqueue(new Callback<RetrofitResponse>() {
-                @Override
-                public void onResponse(Call<RetrofitResponse> call2, Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
+            } else {
 
-                        assert response.body() != null;
-                        try {
-                            if(!response.body().getText().equals("no_photo")) {
-                                good.setGoodImageName(response.body().getText());
-                                Glide.with(img)
-                                        .asBitmap()
-                                        .load(Base64.decode(response.body().getText(), Base64.DEFAULT))
-                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                        .fitCenter()
-                                        .into(img);
+                Glide.with(img)
+                        .asBitmap()
+                        .load(R.drawable.img_white)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .fitCenter()
+                        .into(img);
+                img.setVisibility(View.VISIBLE);
 
-                            } else {
-                                Glide.with(img)
-                                        .asBitmap()
-                                        .load(R.drawable.img_base_no_photo)
-                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                        .fitCenter()
-                                        .into(img);
+                call = find_apiInterface.GetImagefind("getImage",good.getGoodFieldValue("GoodCode"),0,150);
+                call.enqueue(new Callback<RetrofitResponse>() {
+                    @Override
+                    public void onResponse(Call<RetrofitResponse> call2, Response<RetrofitResponse> response) {
+                        if (response.isSuccessful()) {
 
+                            assert response.body() != null;
+                            try {
+                                if(!response.body().getText().equals("no_photo")) {
+                                    good.setGoodImageName(response.body().getText());
+                                    Glide.with(img)
+                                            .asBitmap()
+                                            .load(Base64.decode(response.body().getText(), Base64.DEFAULT))
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .fitCenter()
+                                            .into(img);
+
+                                } else {
+                                    Glide.with(img)
+                                            .asBitmap()
+                                            .load(R.drawable.img_base_no_photo)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .fitCenter()
+                                            .into(img);
+
+                                }
+                            } catch (Exception e) {
+                                e.getMessage();
                             }
-                        } catch (Exception e) {
-                            e.getMessage();
-                        }
 
+
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<RetrofitResponse> call2, Throwable t) {
+                        callMethod.Log(t.getMessage());
 
                     }
-                }
-                @Override
-                public void onFailure(Call<RetrofitResponse> call2, Throwable t) {
-                    callMethod.Log(t.getMessage());
-
-                }
-            });
+                });
+            }
         }
-
 
 
     }

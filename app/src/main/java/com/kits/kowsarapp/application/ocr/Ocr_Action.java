@@ -1207,6 +1207,11 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                 intent.putExtra("ScanResponse", BarcodeScan);
                                 intent.putExtra("State", "0");
                                 intent.putExtra("FactorImage", "");
+                                if(callMethod.ReadBoolan("ShowNextGoodDetailAfterControl")){
+                                    intent.putExtra("ShowGoodDetail", "1");
+                                }else{
+                                    intent.putExtra("ShowGoodDetail", "0");
+                                }
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                 mContext.startActivity(intent);
                                 ((Activity) mContext).finish();
@@ -1258,6 +1263,8 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
         dialog.show();
+
+
     }
 
 
@@ -1751,6 +1758,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                                     Intent intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
                                                     intent.putExtra("ScanResponse", barcodescan);
                                                     intent.putExtra("State", "0");
+                                                    intent.putExtra("ShowGoodDetail", "0");
                                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
                                                     ((Activity) mContext).finish();
                                                     mContext.startActivity(intent);

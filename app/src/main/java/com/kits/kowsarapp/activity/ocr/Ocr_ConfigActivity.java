@@ -75,7 +75,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
     TextView tv_Deliverer,tv_lastprinter,tv_barcodedelay,tv_delay,tv_accesscount,tv_laststack;
 
     SwitchMaterial sm_showdetailamount,sm_showtotalamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle,sm_shortagelist;
-    SwitchMaterial sm_checklistfromgooddetail,        sm_confirmcheckamount,    sm_sendcheckamount,    sm_hintamountincount;
+    SwitchMaterial sm_checklistfromgooddetail,        sm_confirmcheckamount,    sm_sendcheckamount,    sm_hintamountincount,sm_ShowNextGoodDetailAfterControl;
     LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack;
 
     String stackcategory="همه";
@@ -164,6 +164,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_listorsingle = findViewById(R.id.ocr_config_a_listorsingle);
         sm_shortagelist = findViewById(R.id.ocr_config_a_shortagelist);
         sm_hintamountincount = findViewById(R.id.ocr_config_a_hintamountcount);
+        sm_ShowNextGoodDetailAfterControl = findViewById(R.id.ocr_config_a_shownextgooddetail);
 
         sm_checklistfromgooddetail = findViewById(R.id.ocr_config_a_checklistfromgooddetail);
         sm_confirmcheckamount = findViewById(R.id.ocr_config_a_confirmcheckamount);
@@ -223,6 +224,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_listorsingle.setChecked(callMethod.ReadBoolan("ListOrSingle"));
         sm_shortagelist.setChecked(callMethod.ReadBoolan("ShortageList"));
         sm_hintamountincount.setChecked(callMethod.ReadBoolan("HintAmountInCount"));
+        sm_ShowNextGoodDetailAfterControl.setChecked(callMethod.ReadBoolan("ShowNextGoodDetailAfterControl"));
 
 
         sm_checklistfromgooddetail.setChecked(callMethod.ReadBoolan("CheckListFromGoodDialog"));
@@ -367,6 +369,16 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
             } else {
                 callMethod.EditBoolan("HintAmountInCount", true);
                 callMethod.showToast(" نمایش تعداد در انبارگردانی");
+            }
+        });
+
+        sm_ShowNextGoodDetailAfterControl.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ShowNextGoodDetailAfterControl")) {
+                callMethod.EditBoolan("ShowNextGoodDetailAfterControl", true);
+                callMethod.showToast("نمایش جزئیات کالای بعدی ");
+            } else {
+                callMethod.EditBoolan("ShowNextGoodDetailAfterControl", false);
+                callMethod.showToast(" عدم نمایش جزئیات کالای بعدی ");
             }
         });
 

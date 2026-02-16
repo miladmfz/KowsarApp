@@ -135,6 +135,9 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("JustScanner", true);
             callMethod.EditBoolan("ListOrSingle", true);
 
+            callMethod.EditBoolan("Orderby_ASC", true);
+            callMethod.EditBoolan("ShowNextGoodDetailAfterControl", false);
+
             callMethod.EditBoolan("ShortageList", false);
 
             callMethod.EditBoolan("CheckListFromGoodDialog", false);

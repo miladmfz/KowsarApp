@@ -64,6 +64,7 @@ public class Find_GoodAdapter extends RecyclerView.Adapter<Find_GoodItemViewHold
         holder.callimage(find_goods.get(position));
 
 
+
     }
 
     @Override

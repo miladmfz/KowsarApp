@@ -51,8 +51,17 @@ public class Find_ConfigActivity extends AppCompatActivity {
         binding.findConfigADelay.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Delay")));
         binding.findConfigATitlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
         binding.findConfigABodysize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BodySize")));
+        binding.findConfigAShowgoodimage.setChecked(callMethod.ReadBoolan("ShowGoodImage"));
 
-
+         binding.findConfigAShowgoodimage.setOnCheckedChangeListener((compoundButton, b) -> {
+             if (callMethod.ReadBoolan("ShowGoodImage")) {
+                 callMethod.EditBoolan("ShowGoodImage", false);
+                 callMethod.showToast("خیر");
+             } else {
+                 callMethod.EditBoolan("ShowGoodImage", true);
+                 callMethod.showToast("بله");
+             }
+         });
 
          String fullUrl = callMethod.ReadString("ServerURLUse"); // مقدار کامل URL
          String ipAddress = "";

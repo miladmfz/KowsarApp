@@ -242,6 +242,7 @@ public class Ocr_Inventory_Check_Activity extends AppCompatActivity {
 
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+
             OrderBy="GoodExplain2";
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
             OrderBy="FormNo";
