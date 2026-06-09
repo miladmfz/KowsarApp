@@ -26,7 +26,6 @@ import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.databinding.OrderActivitySearchBinding;
 import com.kits.kowsarapp.fragment.order.Order_SearchViewFragment;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -192,6 +191,9 @@ public class Order_SearchActivity extends AppCompatActivity {
                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
+                        if (response.body().getBasketInfos() == null || response.body().getBasketInfos().isEmpty()) {
+                            return;
+                        }
                         textCartItemCount.setText(callMethod.NumberRegion(response.body().getBasketInfos().get(0).getSumFacAmount()));
                         if (Integer.parseInt(response.body().getBasketInfos().get(0).getSumFacAmount()) > 0) {
                             if (textCartItemCount.getVisibility() != View.VISIBLE) {

@@ -1,15 +1,22 @@
 package com.kits.kowsarapp.application.base;
 
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -52,6 +59,26 @@ public class CallMethod extends Application {
 
         return shPref.getString(Key, "");
     }
+
+    public boolean IsDebugBuild(Context context) {
+
+        if (!BuildConfig.BUILD_TYPE.equals("release")) {
+            return true;
+        }
+
+        if (context == null) {
+            return false;
+        }
+
+        String androidId = Settings.Secure.getString(
+                context.getContentResolver(),
+                Settings.Secure.ANDROID_ID
+        );
+
+        return "debug".equals(androidId);
+    }
+
+
 
     public boolean ReadBoolan(String Key) {
         return shPref.getBoolean(Key, true);

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.ocr.Ocr_Inventory_Check_Activity;
+import com.kits.kowsarapp.activity.ocr.Ocr_StackEnumeration_Factor_Check_Activity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.model.base.Factor;
@@ -28,7 +28,7 @@ import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
 import java.util.ArrayList;
 
-public class Ocr_Inventory_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Inventory_ListApi_Adapter.facViewHolder> {
+public class Ocr_StackEnumeration_Factor_ListApi_Adapter extends RecyclerView.Adapter<Ocr_StackEnumeration_Factor_ListApi_Adapter.facViewHolder> {
 
     Ocr_APIInterface apiInterface ;
     Ocr_APIInterface secendApiInterface ;
@@ -42,7 +42,7 @@ public class Ocr_Inventory_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Inve
 
 
 
-    public Ocr_Inventory_ListApi_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
+    public Ocr_StackEnumeration_Factor_ListApi_Adapter(ArrayList<Factor> retrofitFactors, String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
         this.ocr_action =new Ocr_Action(context);
@@ -56,14 +56,14 @@ public class Ocr_Inventory_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Inve
 
     @NonNull
     @Override
-    public Ocr_Inventory_ListApi_Adapter.facViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ocr_inventory_listapi_card, parent, false);
-        return new Ocr_Inventory_ListApi_Adapter.facViewHolder(view);
+    public Ocr_StackEnumeration_Factor_ListApi_Adapter.facViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ocr_stackenumeration_factor_listapi_card, parent, false);
+        return new Ocr_StackEnumeration_Factor_ListApi_Adapter.facViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull final Ocr_Inventory_ListApi_Adapter.facViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final Ocr_StackEnumeration_Factor_ListApi_Adapter.facViewHolder holder, final int position) {
 
 
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
@@ -152,7 +152,7 @@ public class Ocr_Inventory_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Inve
 
                     callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
 
-                    intent = new Intent(mContext, Ocr_Inventory_Check_Activity.class);
+                    intent = new Intent(mContext, Ocr_StackEnumeration_Factor_Check_Activity.class);
 
                     intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                     intent.putExtra("State", state);
@@ -200,25 +200,25 @@ public class Ocr_Inventory_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Inve
         facViewHolder(View itemView) {
             super(itemView);
 
-            fac_customer = itemView.findViewById(R.id.ocr_inventory_listapi_c_customer);
-            fac_customercode = itemView.findViewById(R.id.ocr_inventory_listapi_c_customercode);
-            fac_factor_explain_ll = itemView.findViewById(R.id.ocr_inventory_listapi_c_ll_explain);
-            fac_factor_state_ll = itemView.findViewById(R.id.ocr_inventory_listapi_c_ll_state);
-            fac_stackclass = itemView.findViewById(R.id.ocr_inventory_listapi_c_stackclass);
+            fac_customer = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_customer);
+            fac_customercode = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_customercode);
+            fac_factor_explain_ll = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_ll_explain);
+            fac_factor_state_ll = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_ll_state);
+            fac_stackclass = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_stackclass);
 
-            fac_ocrexplain = itemView.findViewById(R.id.ocr_inventory_listapi_c_ocrexplain);
-            fac_factor_ocrexplain_ll = itemView.findViewById(R.id.ocr_inventory_listapi_c_ll_ocrexplain);
+            fac_ocrexplain = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_ocrexplain);
+            fac_factor_ocrexplain_ll = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_ll_ocrexplain);
 
-            fac_code = itemView.findViewById(R.id.ocr_inventory_listapi_c_privatecode);
-            fac_hasedite = itemView.findViewById(R.id.ocr_inventory_listapi_c_hasedited);
-            fac_hasshortage = itemView.findViewById(R.id.ocr_inventory_listapi_c_hasshortage);
-            fac_kowsardate = itemView.findViewById(R.id.ocr_inventory_listapi_c_kowsardate);
-            fac_state = itemView.findViewById(R.id.ocr_inventory_listapi_c_state);
-            fac_factor_btn = itemView.findViewById(R.id.ocr_inventory_listapi_c_btn);
-            fac_explain = itemView.findViewById(R.id.ocr_inventory_listapi_c_explain);
-            fac_rltv_ll = itemView.findViewById(R.id.ocr_inventory_listapi_c_ll_main);
+            fac_code = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_privatecode);
+            fac_hasedite = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_hasedited);
+            fac_hasshortage = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_hasshortage);
+            fac_kowsardate = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_kowsardate);
+            fac_state = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_state);
+            fac_factor_btn = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_btn);
+            fac_explain = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_explain);
+            fac_rltv_ll = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_c_ll_main);
 
-            fac_rltv = itemView.findViewById(R.id.ocr_inventory_listapi_card);
+            fac_rltv = itemView.findViewById(R.id.ocr_stackenumeration_factor_listapi_card);
         }
     }
 

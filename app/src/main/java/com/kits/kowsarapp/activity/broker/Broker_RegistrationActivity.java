@@ -179,6 +179,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         binding.bRegisterABodysize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("BodySize")));
         binding.bRegisterAPhonenumber.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PhoneNumber")));
         binding.bRegisterADbname.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("PersianCompanyNameUse")));
+        binding.bRegisterAUpdatealarmtime.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("LastUpdateAlarmTime")));
 
         binding.bRegisterABroker.setOnClickListener(v -> {
             binding.bRegisterABroker.selectAll();
@@ -244,6 +245,10 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
             builder.setMessage("آیا تنظیمات پیش فرض مجددا گرفته شود ؟");
 
             builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
+
+             //   broker_dbh.drop();
+               /// broker_dbh.DatabaseCreate();
+
                 broker_dbh.deleteColumn();
                 broker_replication.BrokerStack();
                 broker_dbh.DatabaseCreate();
@@ -275,6 +280,19 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
         binding.bRegisterAShowsearchbandactive.setChecked(callMethod.ReadBoolan("ShowSearchBand"));
         binding.bRegisterAShowgoodimage.setChecked(callMethod.ReadBoolan("ShowGoodImage"));
         binding.bRegisterAShowgoodbuybtn.setChecked(callMethod.ReadBoolan("ShowGoodBuyBtn"));
+
+        binding.bRegisterAUpdatealarm.setChecked(callMethod.ReadBoolan("LastUpdateAlarm"));
+
+
+        binding.bRegisterAUpdatealarm.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("LastUpdateAlarm")) {
+                callMethod.EditBoolan("LastUpdateAlarm", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("LastUpdateAlarm", true);
+                callMethod.showToast("بله");
+            }
+        });
 
 
         binding.bRegisterAShowgoodimage.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -408,6 +426,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
             callMethod.EditString("TitleSize", NumberFunctions.EnglishNumber(binding.bRegisterATitlesize.getText().toString()));
             callMethod.EditString("BodySize", NumberFunctions.EnglishNumber(binding.bRegisterABodysize.getText().toString()));
             callMethod.EditString("PhoneNumber", NumberFunctions.EnglishNumber(binding.bRegisterAPhonenumber.getText().toString()));
+            callMethod.EditString("LastUpdateAlarmTime", NumberFunctions.EnglishNumber(binding.bRegisterAUpdatealarmtime.getText().toString()));
 
             if(!broker_dbh.ReadConfig("BrokerCode").equals(NumberFunctions.EnglishNumber(binding.bRegisterABroker.getText().toString()))){
                 Registration();

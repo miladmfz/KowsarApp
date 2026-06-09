@@ -97,7 +97,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void bind(ArrayList<Column> Columns, Good good, Context mContext, CallMethod callMethod) {
+    public void bind(ArrayList<Column> Columns, Good good, Context mContext, CallMethod callMethod,boolean showalarm) {
 
 
 
@@ -134,19 +134,29 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 if (Column.getColumnName().equals("MaxSellPrice")) {
 
                     extra_TextView.setTextColor(getcolorresource("3", mContext));
+
+                    if (showalarm){
+                        extra_TextView.setText("نیاز به بروز رسانی قیمت");
+                    }
                 }
+
+
                 mainline.addView(extra_TextView);
             }
         }
     }
 
 
-    public void bindLine(ArrayList<Column> Columns, Good good, Context mContext, CallMethod callMethod) {
+    public void bindLine(ArrayList<Column> Columns, Good good, Context mContext, CallMethod callMethod,boolean showalarm) {
 
 
         tv_line_name.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue("GoodName")));
         tv_line_maxsellprice.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue("MaxSellPrice")));
         tv_line_amount.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue("StackAmount")));
+        if (showalarm){
+            tv_line_maxsellprice.setText("نیاز به بروز رسانی قیمت");
+        }
+
 
     }
 

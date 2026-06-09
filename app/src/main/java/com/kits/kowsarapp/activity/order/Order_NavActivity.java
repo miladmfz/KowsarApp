@@ -31,6 +31,7 @@ import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
+import com.kits.kowsarapp.activity.find.Find_RegistrationActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
 import com.kits.kowsarapp.model.base.AppPrinter;
@@ -275,13 +276,25 @@ public class Order_NavActivity extends AppCompatActivity implements NavigationVi
             startActivity(intent);
 
         } else if (id == R.id.order_nav_cfg) {
+//
+//            if (callMethod.ReadString("ActivationCode").equals("444444")) {
+//                Intent intent = new Intent(this, Order_RegistrationActivity.class);
+//                startActivity(intent);
+//            }else {
+//                order_action.LoginSetting();
+//            }
 
-            if (callMethod.ReadString("ActivationCode").equals("444444")) {
+
+            if (callMethod.IsDebugBuild(this)){
                 Intent intent = new Intent(this, Order_RegistrationActivity.class);
                 startActivity(intent);
-            }else {
+            }else{
                 order_action.LoginSetting();
             }
+
+
+
+
 
         }
         DrawerLayout drawer = findViewById(R.id.order_nav_drawer_layout);

@@ -48,11 +48,29 @@
             android:name=".activity.base.TestPaymentActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ocr.Ocr_Inventory_Check_Activity"
+            android:name=".activity.ocr.Ocr_StackEnumeration_Factor_Check_Activity"
             android:exported="false" />
         <activity
-            android:name=".activity.ocr.Ocr_Inventory_List_Api_Activity"
-            android:exported="false" />
+            android:name=".activity.ocr.Ocr_StackEnumeration_Janamaie_Check_Activity"
+            android:exported="false"
+            />
+        <activity
+            android:name=".activity.ocr.Ocr_StackEnumeration_Location_List_Api_Activity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+            />
+        <activity
+            android:name=".activity.ocr.Ocr_StackEnumeration_Good_List_Api_Activity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
+        <activity
+            android:name=".activity.ocr.Ocr_StackEnumeration_StackLocation_List_Api_Activity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
+        <activity
+            android:name=".activity.ocr.Ocr_StackEnumeration_List_Api_Activity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize"/>
         <activity
             android:name=".activity.ocr.Ocr_Delivery_List_Api_Activity"
             android:exported="false" />
@@ -104,7 +122,7 @@
         <activity android:name=".activity.ocr.Ocr_ConfigActivity" />
         <activity android:name=".activity.ocr.Ocr_FactorDetailActivity" />
         <activity android:name=".activity.ocr.Ocr_FactorListLocalActivity" />
-        <activity android:name=".activity.ocr.Ocr_NavActivity" />
+        <activity android:name=".activity.ocr.Ocr_NavActivity"/>
         <activity android:name=".activity.ocr.Ocr_PaintActivity" />
         <activity android:name=".activity.ocr.Ocr_ScanCodeActivity" />
         <activity android:name=".activity.find.Find_SearchActivity" />

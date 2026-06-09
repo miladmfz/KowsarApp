@@ -2,15 +2,11 @@ package com.kits.kowsarapp.webService.broker;
 
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
+
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface Broker_APIInterface {
 
@@ -137,6 +133,8 @@ public interface Broker_APIInterface {
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> UpdateLocation(@Field("tag") String tag, @Field("GpsLocations") String GpsLocations);
+
+
 
 
 /*

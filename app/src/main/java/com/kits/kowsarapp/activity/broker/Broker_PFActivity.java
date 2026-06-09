@@ -135,12 +135,51 @@ public class Broker_PFActivity extends AppCompatActivity {
 
 
     public void callfactor() {
-        preFactors = broker_dbh.getAllPrefactorHeader(search_target);
-        broker_pfAdapter = new Broker_PFAdapter(preFactors, this);
-        gridLayoutManager = new GridLayoutManager(this, 1);
-        binding.bPfARecyclerView.setLayoutManager(gridLayoutManager);
-        binding.bPfARecyclerView.setAdapter(broker_pfAdapter);
-        binding.bPfARecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        broker_dbh.getAllPrefactorHeaderAsync(
+                search_target,
+                new Broker_DBH.DbCallback<ArrayList<PreFactor>>() {
+
+                    @Override
+                    public void onResult(ArrayList<PreFactor> result) {
+
+                        preFactors = result;
+
+                        broker_pfAdapter =
+                                new Broker_PFAdapter(
+                                        preFactors,
+                                        Broker_PFActivity.this
+                                );
+
+                        gridLayoutManager =
+                                new GridLayoutManager(
+                                        Broker_PFActivity.this,
+                                        1
+                                );
+
+                        binding.bPfARecyclerView
+                                .setLayoutManager(gridLayoutManager);
+
+                        binding.bPfARecyclerView
+                                .setAdapter(broker_pfAdapter);
+
+                        binding.bPfARecyclerView
+                                .setItemAnimator(
+                                        new DefaultItemAnimator()
+                                );
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                        callMethod.Log(e.getMessage());
+
+                        callMethod.showToast(
+                                "خطا در دریافت فاکتورها"
+                        );
+                    }
+                }
+        );
     }
 
 

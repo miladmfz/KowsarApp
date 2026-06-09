@@ -23,6 +23,19 @@ public class Ocr_Good implements Serializable {
     @SerializedName("ShortageAmount")private String ShortageAmount;
     @SerializedName("CachedBarCode")private String CachedBarCode;
     @SerializedName("BarCodePrintState")private String BarCodePrintState;
+    @SerializedName("GoodRef")private String GoodRef;
+
+
+
+
+    @SerializedName("StackEnumerationRowCode")private String StackEnumerationRowCode	;
+    @SerializedName("FirstNumeration")private String FirstNumeration	;
+    @SerializedName("Aux11")private String Aux11	;
+    @SerializedName("Aux12")private String Aux12	;
+    @SerializedName("Aux13")private String Aux13	;
+    @SerializedName("rwno")private String rwno;
+
+
 
     @SerializedName("StackLocation")
     private String StackLocation;
@@ -111,7 +124,189 @@ public class Ocr_Good implements Serializable {
     @SerializedName("CountedAmount2")private String CountedAmount2;
     @SerializedName("CountedAmount3")private String CountedAmount3;
 
+    @SerializedName("MaxsellPrice")private String MaxsellPrice;
+    @SerializedName("GoodMainCode")private String GoodMainCode;
+    @SerializedName("GoodSubCode")private String GoodSubCode;
 
+
+    @SerializedName("Auxn11")private String Auxn11;
+    @SerializedName("Auxn12")private String Auxn12;
+    @SerializedName("Auxn13")private String Auxn13;
+
+    @SerializedName("Num1")private String Num1;
+    @SerializedName("Num2")private String Num2;
+    @SerializedName("Num3")private String Num3;
+
+
+    @SerializedName("StackEnumerationRef")private String StackEnumerationRef;
+    @SerializedName("LocationRef")private String LocationRef;
+    @SerializedName("LocationStackCode")private String LocationStackCode;
+
+
+    public String getStackEnumerationRef() {
+        return StackEnumerationRef;
+    }
+
+    public void setStackEnumerationRef(String stackEnumerationRef) {
+        StackEnumerationRef = stackEnumerationRef;
+    }
+
+    public String getLocationRef() {
+        return LocationRef;
+    }
+
+    public void setLocationRef(String locationRef) {
+        LocationRef = locationRef;
+    }
+
+    public String getLocationStackCode() {
+        return LocationStackCode;
+    }
+
+    public void setLocationStackCode(String locationStackCode) {
+        LocationStackCode = locationStackCode;
+    }
+
+    public String getNum1() {
+        return Num1;
+    }
+
+    public void setNum1(String num1) {
+        Num1 = num1;
+    }
+
+    public String getNum2() {
+        return Num2;
+    }
+
+    public void setNum2(String num2) {
+        Num2 = num2;
+    }
+
+    public String getNum3() {
+        return Num3;
+    }
+
+    public void setNum3(String num3) {
+        Num3 = num3;
+    }
+
+    public String getGoodRef() {
+        return GoodRef;
+    }
+
+    public void setGoodRef(String goodRef) {
+        GoodRef = goodRef;
+    }
+
+    public String getAuxn11() {
+        return Auxn11;
+    }
+
+    public void setAuxn11(String auxn11) {
+        Auxn11 = auxn11;
+    }
+
+    public String getAuxn12() {
+        return Auxn12;
+    }
+
+    public void setAuxn12(String auxn12) {
+        Auxn12 = auxn12;
+    }
+
+    public String getAuxn13() {
+        return Auxn13;
+    }
+
+    public void setAuxn13(String auxn13) {
+        Auxn13 = auxn13;
+    }
+
+    public String getMaxsellPrice() {
+
+        if (MaxsellPrice != null)
+        {
+            try{
+                return  MaxsellPrice.substring(0,MaxsellPrice.indexOf("."));
+
+            }
+            catch (Exception e){
+                return  MaxsellPrice;
+            }
+
+        }else {
+            return "";
+        }
+    }
+
+    public void setMaxsellPrice(String maxsellPrice) {
+        MaxsellPrice = maxsellPrice;
+    }
+
+    public String getGoodMainCode() {
+        return GoodMainCode;
+    }
+
+    public void setGoodMainCode(String goodMainCode) {
+        GoodMainCode = goodMainCode;
+    }
+
+    public String getGoodSubCode() {
+        return GoodSubCode;
+    }
+
+    public void setGoodSubCode(String goodSubCode) {
+        GoodSubCode = goodSubCode;
+    }
+
+    public String getStackEnumerationRowCode() {
+        return StackEnumerationRowCode;
+    }
+
+    public void setStackEnumerationRowCode(String stackEnumerationRowCode) {
+        StackEnumerationRowCode = stackEnumerationRowCode;
+    }
+
+    public String getFirstNumeration() {
+        return FirstNumeration;
+    }
+
+    public void setFirstNumeration(String firstNumeration) {
+        FirstNumeration = firstNumeration;
+    }
+
+    public String getAux11() {
+        return Aux11;
+    }
+
+    public void setAux11(String aux11) {
+        Aux11 = aux11;
+    }
+
+    public String getAux12() {
+        return Aux12;
+    }
+
+    public void setAux12(String aux12) {
+        Aux12 = aux12;
+    }
+
+    public String getAux13() {
+        return Aux13;
+    }
+
+    public void setAux13(String aux13) {
+        Aux13 = aux13;
+    }
+
+    public String getRwno() {
+        return rwno;
+    }
+
+    public void setRwno(String rwno) {
+        this.rwno = rwno;
+    }
     public String getCountedAmount1() {
         return CountedAmount1;
     }
@@ -249,7 +444,22 @@ public class Ocr_Good implements Serializable {
     }
 
     public String getMaxSellPrice() {
-        return MaxSellPrice;
+
+        if (MaxSellPrice != null)
+        {
+            try{
+                return  MaxSellPrice.substring(0,MaxSellPrice.indexOf("."));
+
+            }
+            catch (Exception e){
+                return  MaxSellPrice;
+            }
+
+        }else {
+            return "";
+        }
+
+
     }
 
     public void setMaxSellPrice(String maxSellPrice) {

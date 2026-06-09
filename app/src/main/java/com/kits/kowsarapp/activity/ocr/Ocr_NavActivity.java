@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -28,6 +29,7 @@ import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
+import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
@@ -164,13 +166,19 @@ public void Config() {
     public void InventoryCheck() {
 
 
-        btn1.setText("انبار گردانی");
+
+
+        if (callMethod.ReadString("InventoryType").equals("0")){
+            btn1.setText("انبار گردانی بر اساس فاکتور");
+        }else if (callMethod.ReadString("InventoryType").equals("1")){
+            btn1.setText("انبار گردانی بر اساس جا نمایی");
+        }
         btn2.setVisibility(View.GONE);
         btn3.setVisibility(View.GONE);
 
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(Ocr_NavActivity.this, Ocr_Inventory_List_Api_Activity.class);
+            intent = new Intent(Ocr_NavActivity.this, Ocr_StackEnumeration_List_Api_Activity.class);
             intent.putExtra("State", "7");
             startActivity(intent);
 
@@ -417,13 +425,19 @@ public void Config() {
 
         if (id == R.id.ocr_nav_cfg) {
 
-            if (callMethod.ReadString("ActivationCode").equals("333333")) {
+//            if (callMethod.ReadString("ActivationCode").equals("333333")) {
+//                Intent intent = new Intent(this, Ocr_ConfigActivity.class);
+//                startActivity(intent);
+//            }else {
+//                ocr_action.LoginSetting();
+//            }
+
+            if (callMethod.IsDebugBuild(this)){
                 Intent intent = new Intent(this, Ocr_ConfigActivity.class);
                 startActivity(intent);
-            }else {
+            }else{
                 ocr_action.LoginSetting();
             }
-
 
 
         }else if (id == R.id.ocr_aboutus) {

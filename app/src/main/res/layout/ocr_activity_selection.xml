@@ -16,7 +16,7 @@
             >
             <EditText
                 android:layout_width="1dp"
-                android:layout_height="25dp"
+                android:layout_height="50dp"
                 android:id="@+id/ocr_confirm_a_barcode"
                 android:background="@drawable/bg_editbox"
                 android:layout_margin="2dp"

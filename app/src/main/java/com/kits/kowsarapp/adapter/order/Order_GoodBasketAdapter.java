@@ -64,24 +64,25 @@ public class Order_GoodBasketAdapter extends RecyclerView.Adapter<Order_GoodBask
     @Override
     public void onBindViewHolder(@NonNull final Order_GoodBasketViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
+        Good good = goods.get(position);
 
-        holder.tv_goodname.setText(callMethod.NumberRegion(goods.get(position).getGoodName()));
-        holder.tv_amount.setText(goods.get(position).getAmount());
-        holder.tv_explain.setText(callMethod.NumberRegion(goods.get(position).getExplain()));
+        holder.tv_goodname.setText(callMethod.NumberRegion(good.getGoodName()));
+        holder.tv_amount.setText(good.getAmount());
+        holder.tv_explain.setText(callMethod.NumberRegion(good.getExplain()));
 
-        if (goods.get(position).getExplain().length() > 0) {
+        if (good.getExplain().length() > 0) {
             holder.ll_explain.setVisibility(View.VISIBLE);
         } else {
             holder.ll_explain.setVisibility(View.INVISIBLE);
         }
-        holder.ll_amount.setOnClickListener(v -> order_action.GoodBoxDialog(goods.get(position), "1"));
-        holder.tv_explain.setOnClickListener(v -> order_action.GoodBoxDialog(goods.get(position), "1"));
-        holder.tv_goodname.setOnClickListener(v -> order_action.GoodBoxDialog(goods.get(position), "1"));
+        holder.ll_amount.setOnClickListener(v -> order_action.GoodBoxDialog(good, "1"));
+        holder.tv_explain.setOnClickListener(v -> order_action.GoodBoxDialog(good, "1"));
+        holder.tv_goodname.setOnClickListener(v -> order_action.GoodBoxDialog(good, "1"));
 
 
-        if (goods.get(position).getFactorCode().equals("0")) {
+        if (good.getFactorCode().equals("0")) {
             holder.btn_dlt.setVisibility(View.VISIBLE);
-        } else if (Integer.parseInt(goods.get(position).getFactorCode()) > 0) {
+        } else if (Integer.parseInt(good.getFactorCode()) > 0) {
             holder.btn_dlt.setVisibility(View.INVISIBLE);
         }
 
@@ -94,8 +95,8 @@ public class Order_GoodBasketAdapter extends RecyclerView.Adapter<Order_GoodBask
             builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
                 call = order_apiInterface.DeleteGoodFromBasket(
                         "DeleteGoodFromBasket",
-                        goods.get(position).getRowCode(),
-                        goods.get(position).getAppBasketInfoRef()
+                        good.getRowCode(),
+                        good.getAppBasketInfoRef()
                 );
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @SuppressLint("NotifyDataSetChanged")

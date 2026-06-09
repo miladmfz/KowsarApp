@@ -61,10 +61,11 @@ public class Order_GoodAdapter extends RecyclerView.Adapter<Order_GoodItemViewHo
     @Override
     public void onBindViewHolder(@NonNull final Order_GoodItemViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
-        holder.tv_name.setText(callMethod.NumberRegion(goods.get(position).getGoodName()));
-        holder.tv_price.setText(callMethod.NumberRegion(decimalFormat.format(Integer.parseInt(goods.get(position).getMaxSellPrice()))));
-        holder.rltv.setOnClickListener(v -> order_action.GoodBoxDialog(goods.get(position), "0"));
-        holder.callimage(goods.get(position));
+        Good good = goods.get(position);
+        holder.tv_name.setText(callMethod.NumberRegion(good.getGoodName()));
+        holder.tv_price.setText(callMethod.NumberRegion(decimalFormat.format(Integer.parseInt(good.getMaxSellPrice()))));
+        holder.rltv.setOnClickListener(v -> order_action.GoodBoxDialog(good, "0"));
+        holder.callimage(good);
 
 
     }

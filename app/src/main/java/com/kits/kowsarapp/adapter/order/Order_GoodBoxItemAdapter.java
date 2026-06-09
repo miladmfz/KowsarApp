@@ -64,12 +64,12 @@ public class Order_GoodBoxItemAdapter extends RecyclerView.Adapter<Order_GoodBox
 
     @Override
     public void onBindViewHolder(@NonNull final Order_GoodBoxItemViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        Good good = goods.get(position);
+        holder.tv_name.setText(callMethod.NumberRegion(good.getGoodName()));
+        holder.tv_amount.setText(callMethod.NumberRegion(good.getAmount()));
+        holder.tv_explain.setText(callMethod.NumberRegion(good.getExplain()));
 
-        holder.tv_name.setText(callMethod.NumberRegion(goods.get(position).getGoodName()));
-        holder.tv_amount.setText(callMethod.NumberRegion(goods.get(position).getAmount()));
-        holder.tv_explain.setText(callMethod.NumberRegion(goods.get(position).getExplain()));
-
-        if (goods.get(position).getFactorCode().equals("0")) {
+        if (good.getFactorCode().equals("0")) {
             holder.img_dlt.setVisibility(View.VISIBLE);
             holder.img_dlt.setOnClickListener(v ->{
 
@@ -80,7 +80,7 @@ public class Order_GoodBoxItemAdapter extends RecyclerView.Adapter<Order_GoodBox
                 builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
 
 
-                    call = apiInterface.DeleteGoodFromBasket("DeleteGoodFromBasket", goods.get(position).getRowCode(), goods.get(position).getAppBasketInfoRef());
+                    call = apiInterface.DeleteGoodFromBasket("DeleteGoodFromBasket", good.getRowCode(), good.getAppBasketInfoRef());
                     call.enqueue(new Callback<RetrofitResponse>() {
                         @SuppressLint("NotifyDataSetChanged")
                         @Override
@@ -88,7 +88,7 @@ public class Order_GoodBoxItemAdapter extends RecyclerView.Adapter<Order_GoodBox
                             if (response.isSuccessful()) {
                                 assert response.body() != null;
                                 if (response.body().getText().equals("Done")) {
-                                    goods.remove(goods.get(position));
+                                    goods.remove(good);
                                     notifyDataSetChanged();
                                 }
                             }

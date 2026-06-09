@@ -350,6 +350,14 @@ public class Order_BasketActivity extends AppCompatActivity {
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+
+
+
+                if (response.body() == null ||
+                        response.body().getBasketInfos() == null ||
+                        response.body().getBasketInfos().isEmpty()) {
+                    return;
+                }
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     order_basketInfo = response.body().getBasketInfos().get(0);
@@ -411,8 +419,8 @@ public class Order_BasketActivity extends AppCompatActivity {
         }
 
 
-        assert BehPardakht_pos_result != null;
-        if (BehPardakht_pos_result.resultCode.equals("000")){
+        if (BehPardakht_pos_result != null &&
+                "000".equals(BehPardakht_pos_result.resultCode)) {
             order_payment.BasketInfopayment_request(BehPardakht_pos_result,resultJson);
 
         }else{

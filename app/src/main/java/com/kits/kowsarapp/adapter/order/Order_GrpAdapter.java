@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.fragment.order.Order_SearchViewFragment;
 import com.kits.kowsarapp.model.base.GoodGroup;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -74,10 +73,10 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
     @Override
     public void onBindViewHolder(@NonNull GoodGroupViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        GoodGroup goodGroup = GoodGroups.get(position);
 
-
-        holder.grpname.setText(GoodGroups.get(position).getGoodGroupFieldValue("Name"));
-        if (Integer.parseInt(GoodGroups.get(position).getGoodGroupFieldValue("ChildNo")) > 0) {
+        holder.grpname.setText(goodGroup.getGoodGroupFieldValue("Name"));
+        if (Integer.parseInt(goodGroup.getGoodGroupFieldValue("ChildNo")) > 0) {
             holder.extraimg.setVisibility(View.VISIBLE);
         } else {
             holder.extraimg.setVisibility(View.GONE);
@@ -93,7 +92,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
         context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedValue, true);
         int colorOnPrimary = typedValue.data;
 
-        if (selectedGroup.equals(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"))) {
+        if (selectedGroup.equals(goodGroup.getGoodGroupFieldValue("GroupCode"))) {
             holder.rltv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_primary));
             holder.grpname.setTextColor(colorOnPrimary);
         } else {
@@ -103,15 +102,15 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
 
 
-        if (!GoodGroups.get(position).getGoodGroupFieldValue("GoodGroupImageName").equals("")) {
+        if (!goodGroup.getGoodGroupFieldValue("GoodGroupImageName").equals("")) {
 
             holder.img.setVisibility(View.VISIBLE);
-            Glide.with(holder.img).asBitmap().load(Base64.decode(GoodGroups.get(position).getGoodGroupFieldValue("GoodGroupImageName"), Base64.DEFAULT)).diskCacheStrategy(DiskCacheStrategy.NONE).fitCenter().into(holder.img);
+            Glide.with(holder.img).asBitmap().load(Base64.decode(goodGroup.getGoodGroupFieldValue("GoodGroupImageName"), Base64.DEFAULT)).diskCacheStrategy(DiskCacheStrategy.NONE).fitCenter().into(holder.img);
 
 
         } else {
 
-            call2 = order_apiInterface.GetImage("getImage", GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"), "TGoodsGrp", "0", "400");
+            call2 = order_apiInterface.GetImage("getImage", goodGroup.getGoodGroupFieldValue("GroupCode"), "TGoodsGrp", "0", "400");
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
@@ -120,7 +119,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
                         assert response.body() != null;
                         if (!response.body().getText().equals("no_photo")) {
-                            GoodGroups.get(position).setGoodGroupImageName(response.body().getText());
+                            goodGroup.setGoodGroupImageName(response.body().getText());
                             notifyItemChanged(position);
                         }else{
                             callMethod.Log("test"+position+" = "+response.body().getText());
@@ -140,7 +139,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
         holder.grpname.setOnClickListener(v -> {
             Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
             searchViewFragment.setParent_GourpCode(Parent_GourpCode);
-            searchViewFragment.setGood_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
+            searchViewFragment.setGood_GourpCode(goodGroup.getGoodGroupFieldValue("GroupCode"));
             fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
             fragmentTransaction.commit();
 
@@ -149,7 +148,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
         holder.rltv.setOnClickListener(v -> {
             Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
             searchViewFragment.setParent_GourpCode(Parent_GourpCode);
-            searchViewFragment.setGood_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
+            searchViewFragment.setGood_GourpCode(goodGroup.getGoodGroupFieldValue("GroupCode"));
             fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
             fragmentTransaction.commit();
 
@@ -159,7 +158,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
         holder.extraimg.setOnClickListener(v -> {
             Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
             searchViewFragment.setParent_GourpCode(Parent_GourpCode);
-            searchViewFragment.setGood_GourpCode(GoodGroups.get(position).getGoodGroupFieldValue("GroupCode"));
+            searchViewFragment.setGood_GourpCode(goodGroup.getGoodGroupFieldValue("GroupCode"));
             fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
             fragmentTransaction.commit();
 

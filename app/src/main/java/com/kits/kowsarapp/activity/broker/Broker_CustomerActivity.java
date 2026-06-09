@@ -243,12 +243,53 @@ public class Broker_CustomerActivity extends AppCompatActivity {
 
 
     public void allCustomer() {
-        customers = broker_dbh.AllCustomer(srch, activecustomer);
-        adapter = new Broker_CustomerAdapter(customers, this, edit, factor_target);
-        gridLayoutManager = new GridLayoutManager(this, 1);
-        binding.bCustomerAR1.setLayoutManager(gridLayoutManager);
-        binding.bCustomerAR1.setAdapter(adapter);
-        binding.bCustomerAR1.setItemAnimator(new DefaultItemAnimator());
+
+        broker_dbh.AllCustomerAsync(
+                srch,
+                activecustomer,
+                new Broker_DBH.DbCallback<ArrayList<Customer>>() {
+
+                    @Override
+                    public void onResult(ArrayList<Customer> result) {
+
+                        customers = result;
+
+                        adapter = new Broker_CustomerAdapter(
+                                customers,
+                                Broker_CustomerActivity.this,
+                                edit,
+                                factor_target
+                        );
+
+                        gridLayoutManager =
+                                new GridLayoutManager(
+                                        Broker_CustomerActivity.this,
+                                        1
+                                );
+
+                        binding.bCustomerAR1
+                                .setLayoutManager(gridLayoutManager);
+
+                        binding.bCustomerAR1
+                                .setAdapter(adapter);
+
+                        binding.bCustomerAR1
+                                .setItemAnimator(
+                                        new DefaultItemAnimator()
+                                );
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                        callMethod.Log(e.getMessage());
+
+                        callMethod.showToast(
+                                "خطا در دریافت مشتریان"
+                        );
+                    }
+                }
+        );
     }
 
 

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.databinding.FindActivityConfigBinding;
@@ -92,12 +93,25 @@ public class Find_ConfigActivity extends AppCompatActivity {
 
      void setButtonListeners() {
         binding.findConfigABtnToReg.setOnClickListener(view -> {
-            if (callMethod.ReadString("ActivationCode").equals("888888")) {
+//            if (callMethod.ReadString("ActivationCode").equals("888888")) {
+//                Intent intent = new Intent(this, Find_RegistrationActivity.class);
+//                startActivity(intent);
+//            }else {
+//                LoginSetting();
+//            }
+//
+
+            if (callMethod.IsDebugBuild(this)){
                 Intent intent = new Intent(this, Find_RegistrationActivity.class);
                 startActivity(intent);
-            }else {
+            }else{
                 LoginSetting();
             }
+
+
+
+
+
         });
     }
     public void LoginSetting() {

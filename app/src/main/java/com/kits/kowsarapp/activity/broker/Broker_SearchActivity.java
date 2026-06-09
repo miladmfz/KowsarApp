@@ -442,50 +442,140 @@ public class Broker_SearchActivity extends AppCompatActivity {
     }
 
     public void GetDataFromDataBase() {
+
         goods.clear();
         Multi_Good.clear();
         PageMoreData = "0";
 
         binding.bSearchAFab.setVisibility(View.GONE);
-        item_multi.findItem(R.id.b_menu_multi).setVisible(false);
+
+        if (item_multi != null) {
+            item_multi.findItem(R.id.b_menu_multi).setVisible(false);
+        }
 
         loading = true;
         Moregoods.clear();
 
+        Broker_DBH.DbCallback<ArrayList<Good>> callback =
+                new Broker_DBH.DbCallback<ArrayList<Good>>() {
+
+                    @Override
+                    public void onResult(ArrayList<Good> result) {
+
+                        Moregoods = result;
+
+                        if (goods.isEmpty()) {
+                            goods.addAll(Moregoods);
+                        }
+
+                        CallRecyclerView();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                        callMethod.Log(e.getMessage());
+
+                        binding.bSearchAProg.setVisibility(View.GONE);
+
+                        callMethod.showToast("خطا در دریافت کالاها");
+                    }
+                };
+
         if (proSearchCondition.equals("")) {
-            Moregoods = broker_dbh.getAllGood(NumberFunctions.EnglishNumber(AutoSearch), id, PageMoreData);
+
+            broker_dbh.getAllGoodAsync(
+                    NumberFunctions.EnglishNumber(AutoSearch),
+                    id,
+                    PageMoreData,
+                    callback
+            );
+
         } else {
-            Moregoods = broker_dbh.getAllGood_Extended(NumberFunctions.EnglishNumber(proSearchCondition), id, PageMoreData);
+
+            broker_dbh.getAllGood_ExtendedAsync(
+                    NumberFunctions.EnglishNumber(proSearchCondition),
+                    id,
+                    PageMoreData,
+                    callback
+            );
         }
-        if (goods.isEmpty()) {
-            goods.addAll(Moregoods);
-        }
-        CallRecyclerView();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void GetMoreDataFromDataBase() {
+
         Moregoods.clear();
+
+        Broker_DBH.DbCallback<ArrayList<Good>> callback =
+                new Broker_DBH.DbCallback<ArrayList<Good>>() {
+
+                    @Override
+                    public void onResult(ArrayList<Good> result) {
+
+                        Moregoods = result;
+
+                        if (Moregoods.size() > 0) {
+
+                            if (goods.isEmpty()) {
+                                goods.addAll(Moregoods);
+                            }
+
+                            if (goods.size() > (Integer.parseInt(callMethod.ReadString("Grid")) * 10)) {
+                                goods.addAll(Moregoods);
+                            }
+
+                            broker_goodAdapter.notifyDataSetChanged();
+
+                            binding.bSearchAProg.setVisibility(View.GONE);
+
+                            loading = true;
+
+                        } else {
+
+                            loading = false;
+
+                            binding.bSearchAProg.setVisibility(View.GONE);
+
+                            callMethod.showToast("کالای بیشتری یافت نشد");
+
+                            PageMoreData =
+                                    String.valueOf(
+                                            Integer.parseInt(PageMoreData) - 1
+                                    );
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                        callMethod.Log(e.getMessage());
+
+                        binding.bSearchAProg.setVisibility(View.GONE);
+
+                        loading = true;
+
+                        callMethod.showToast("خطا در دریافت ادامه کالاها");
+                    }
+                };
+
         if (proSearchCondition.equals("")) {
-            Moregoods = broker_dbh.getAllGood(NumberFunctions.EnglishNumber(AutoSearch), id, PageMoreData);
+
+            broker_dbh.getAllGoodAsync(
+                    NumberFunctions.EnglishNumber(AutoSearch),
+                    id,
+                    PageMoreData,
+                    callback
+            );
+
         } else {
-            Moregoods = broker_dbh.getAllGood_Extended(NumberFunctions.EnglishNumber(proSearchCondition), id, PageMoreData);
-        }
-        if (Moregoods.size() > 0) {
-            if (goods.isEmpty()) {
-                goods.addAll(Moregoods);
-            }
-            if (goods.size() > (Integer.parseInt(callMethod.ReadString("Grid")) * 10)) {
-                goods.addAll(Moregoods);
-            }
-            broker_goodAdapter.notifyDataSetChanged();
-            binding.bSearchAProg.setVisibility(View.GONE);
-            loading = true;
-        } else {
-            loading = false;
-            binding.bSearchAProg.setVisibility(View.GONE);
-            callMethod.showToast("کالای بیشتری یافت نشد");
-            PageMoreData = String.valueOf(Integer.parseInt(PageMoreData) - 1);
+
+            broker_dbh.getAllGood_ExtendedAsync(
+                    NumberFunctions.EnglishNumber(proSearchCondition),
+                    id,
+                    PageMoreData,
+                    callback
+            );
         }
     }
 

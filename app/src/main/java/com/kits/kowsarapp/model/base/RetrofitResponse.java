@@ -2,6 +2,8 @@ package com.kits.kowsarapp.model.base;
 
 import com.google.gson.annotations.SerializedName;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
+import com.kits.kowsarapp.model.ocr.Ocr_Location;
+import com.kits.kowsarapp.model.ocr.Ocr_StackEnumeration;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.model.order.Order_RstMiz;
 import com.kits.kowsarapp.model.find.Find_Good;
@@ -52,10 +54,20 @@ public class RetrofitResponse {
     @SerializedName("PosDrivers")
     private ArrayList<PosDriver> posDrivers;
 
+    @SerializedName("StackEnumerations")
+    private ArrayList<Ocr_StackEnumeration> stackEnumerations;
 
+    @SerializedName("OcrLocations")
+    private ArrayList<Ocr_Location> Locations;
 
     @SerializedName("Good")
     private Good good;
+
+    @SerializedName("StackEnumeration")
+    private Ocr_StackEnumeration stackEnumeration;
+    @SerializedName("OcrLocation")
+    private Ocr_Location location;
+
 
     @SerializedName("OcrGood")
     private Ocr_Good ocr_good;
@@ -65,7 +77,7 @@ public class RetrofitResponse {
     @SerializedName("Customer")
     private Customer customer;
     @SerializedName("PreFactor")
-    private PreFactor preFactor;
+    private PreFactor preFactor  ;
     @SerializedName("Factor")
     private Factor Factor;
 
@@ -104,6 +116,37 @@ public class RetrofitResponse {
     private String ErrDesc;
 
 
+    public ArrayList<Ocr_Location> getLocations() {
+        return Locations;
+    }
+
+    public void setLocations(ArrayList<Ocr_Location> locations) {
+        Locations = locations;
+    }
+
+    public Ocr_Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Ocr_Location location) {
+        this.location = location;
+    }
+
+    public ArrayList<Ocr_StackEnumeration> getStackEnumerations() {
+        return stackEnumerations;
+    }
+
+    public void setStackEnumerations(ArrayList<Ocr_StackEnumeration> stackEnumerations) {
+        this.stackEnumerations = stackEnumerations;
+    }
+
+    public Ocr_StackEnumeration getStackEnumeration() {
+        return stackEnumeration;
+    }
+
+    public void setStackEnumeration(Ocr_StackEnumeration stackEnumeration) {
+        this.stackEnumeration = stackEnumeration;
+    }
     public ArrayList<PosDriver> getPosDrivers() {
         return posDrivers;
     }

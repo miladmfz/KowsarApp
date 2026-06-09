@@ -16,25 +16,30 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_BasketItemHistoryAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.databinding.BrokerActivityBaskethistoryBinding;
-import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.broker.Broker_DBH;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
 
 public class Broker_BasketHistoryActivity extends AppCompatActivity {
 
     private String itemPosition = "0";
     private String searchQuery = "";
+
     GridLayoutManager gridLayoutManager;
+
     private CallMethod callMethod;
+
     private ArrayList<Good> goods = new ArrayList<>();
+
     private Broker_DBH broker_dbh;
+
     private Handler handler;
+
     private Broker_BasketItemHistoryAdapter broker_basketItemHistoryAdapter;
-    
+
     private BrokerActivityBaskethistoryBinding binding;
 
     private Dialog progressDialog;
@@ -42,88 +47,221 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
-        binding = BrokerActivityBaskethistoryBinding.inflate(getLayoutInflater());
+
+        setTheme(
+                getSharedPreferences(
+                        "ThemePrefs",
+                        MODE_PRIVATE
+                ).getInt(
+                        "selectedTheme",
+                        R.style.RoyalGoldTheme
+                )
+        );
+
+        binding =
+                BrokerActivityBaskethistoryBinding.inflate(
+                        getLayoutInflater()
+                );
+
         setContentView(binding.getRoot());
 
         progressDialog = new Dialog(this);
-        progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        progressDialog.setContentView(R.layout.broker_spinner_box);
-        TextView repw = progressDialog.findViewById(R.id.b_spinner_text);
+        progressDialog.requestWindowFeature(
+                Window.FEATURE_NO_TITLE
+        );
+
+        progressDialog.getWindow()
+                .setBackgroundDrawableResource(
+                        android.R.color.transparent
+                );
+
+        progressDialog.setContentView(
+                R.layout.broker_spinner_box
+        );
+
+        TextView repw =
+                progressDialog.findViewById(R.id.b_spinner_text);
+
         repw.setText("در حال خواندن اطلاعات");
+
         progressDialog.show();
 
         handler = new Handler();
+
         handler.postDelayed(this::init, 100);
     }
 
-
-
-
     public void init() {
-        DecimalFormat decimalFormat = new DecimalFormat("0,000");
+
+        DecimalFormat decimalFormat =
+                new DecimalFormat("0,000");
+
         callMethod = new CallMethod(this);
-        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
 
-        binding.bBaskethistoryAEdtsearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+        broker_dbh =
+                new Broker_DBH(
+                        this,
+                        callMethod.ReadString("DatabaseName")
+                );
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+        binding.bBaskethistoryAEdtsearch
+                .addTextChangedListener(
+                        new TextWatcher() {
 
-            @Override
-            public void afterTextChanged(final Editable editable) {
-                handler.removeCallbacksAndMessages(null);
-                handler.postDelayed(() -> {
-                    searchQuery = NumberFunctions.EnglishNumber(editable.toString());
-                    goods = broker_dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
+                            @Override
+                            public void beforeTextChanged(
+                                    CharSequence charSequence,
+                                    int i,
+                                    int i1,
+                                    int i2
+                            ) {
+                            }
 
-//                    int backgroundResourceId = itemPosition.equals("1") ?
-//                            R.drawable.bg_round_green_history_line : R.drawable.bg_round_green_history;
-//
-//                    binding.bBaskethistoryARow.setBackground(ContextCompat.getDrawable(
-//                            App.getContext(), backgroundResourceId));
-//                    // update the list view with the new data
-                    broker_basketItemHistoryAdapter.updateList(goods, itemPosition);
-                }, Integer.parseInt(callMethod.ReadString("Delay")));
-            }
-        });
-        // set listener for the list item
-//        binding.bBaskethistoryARow.setOnClickListener(view -> {
-//            int backgroundResourceId;
-//            if (itemPosition.equals("1")) {
-//                itemPosition = "0";
-//                backgroundResourceId = R.drawable.bg_round_green_history_line;
-//            } else {
-//                itemPosition = "1";
-//                backgroundResourceId = R.drawable.bg_round_green_history;
-//            }
-//            binding.bBaskethistoryARow.setBackground(ContextCompat.getDrawable(
-//                    this, backgroundResourceId));
-//
-//            broker_basketItemHistoryAdapter.updateList(goods, itemPosition);
-//        });
+                            @Override
+                            public void onTextChanged(
+                                    CharSequence charSequence,
+                                    int i,
+                                    int i1,
+                                    int i2
+                            ) {
+                            }
 
-        goods = broker_dbh.getAllPreFactorRows(searchQuery, callMethod.ReadString("PreFactorGood"));
+                            @Override
+                            public void afterTextChanged(
+                                    final Editable editable
+                            ) {
 
-        broker_basketItemHistoryAdapter = new Broker_BasketItemHistoryAdapter(goods, itemPosition, this);
-        gridLayoutManager = new GridLayoutManager(this, 1);
-        binding.bBaskethistoryAR1.setLayoutManager(gridLayoutManager);
-        binding.bBaskethistoryAR1.setAdapter(broker_basketItemHistoryAdapter);
-        binding.bBaskethistoryAR1.setItemAnimator(new DefaultItemAnimator());
+                                handler.removeCallbacksAndMessages(null);
 
-        binding.bBaskethistoryATotalPriceBuy.setText(NumberFunctions.PerisanNumber(
-                decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorGood"))))));
-        binding.bBaskethistoryATotalAmountBuy.setText(NumberFunctions.PerisanNumber(
-                broker_dbh.getFactorSumAmount(callMethod.ReadString("PreFactorGood"))));
-        binding.bBaskethistoryATotalRowBuy.setText(NumberFunctions.PerisanNumber(
-                String.valueOf(goods.size())));
+                                handler.postDelayed(() -> {
 
-        progressDialog.dismiss();
+                                    searchQuery =
+                                            NumberFunctions.EnglishNumber(
+                                                    editable.toString()
+                                            );
+
+                                    broker_dbh.getAllPreFactorRowsAsync(
+                                            searchQuery,
+                                            callMethod.ReadString("PreFactorGood"),
+                                            new Broker_DBH.DbCallback<ArrayList<Good>>() {
+
+                                                @Override
+                                                public void onResult(
+                                                        ArrayList<Good> result
+                                                ) {
+
+                                                    goods = result;
+
+                                                    broker_basketItemHistoryAdapter
+                                                            .updateList(
+                                                                    goods,
+                                                                    itemPosition
+                                                            );
+                                                }
+
+                                                @Override
+                                                public void onError(
+                                                        Exception e
+                                                ) {
+
+                                                    callMethod.Log(
+                                                            e.getMessage()
+                                                    );
+                                                }
+                                            }
+                                    );
+
+                                }, Integer.parseInt(
+                                        callMethod.ReadString("Delay")
+                                ));
+                            }
+                        }
+                );
+
+        broker_dbh.getAllPreFactorRowsAsync(
+                searchQuery,
+                callMethod.ReadString("PreFactorGood"),
+                new Broker_DBH.DbCallback<ArrayList<Good>>() {
+
+                    @Override
+                    public void onResult(
+                            ArrayList<Good> result
+                    ) {
+
+                        goods = result;
+
+                        broker_basketItemHistoryAdapter =
+                                new Broker_BasketItemHistoryAdapter(
+                                        goods,
+                                        itemPosition,
+                                        Broker_BasketHistoryActivity.this
+                                );
+
+                        gridLayoutManager =
+                                new GridLayoutManager(
+                                        Broker_BasketHistoryActivity.this,
+                                        1
+                                );
+
+                        binding.bBaskethistoryAR1
+                                .setLayoutManager(gridLayoutManager);
+
+                        binding.bBaskethistoryAR1
+                                .setAdapter(
+                                        broker_basketItemHistoryAdapter
+                                );
+
+                        binding.bBaskethistoryAR1
+                                .setItemAnimator(
+                                        new DefaultItemAnimator()
+                                );
+
+                        binding.bBaskethistoryATotalPriceBuy.setText(
+                                NumberFunctions.PerisanNumber(
+                                        decimalFormat.format(
+                                                Integer.parseInt(
+                                                        broker_dbh.getFactorSum(
+                                                                callMethod.ReadString(
+                                                                        "PreFactorGood"
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        );
+
+                        binding.bBaskethistoryATotalAmountBuy.setText(
+                                NumberFunctions.PerisanNumber(
+                                        broker_dbh.getFactorSumAmount(
+                                                callMethod.ReadString(
+                                                        "PreFactorGood"
+                                                )
+                                        )
+                                )
+                        );
+
+                        binding.bBaskethistoryATotalRowBuy.setText(
+                                NumberFunctions.PerisanNumber(
+                                        String.valueOf(goods.size())
+                                )
+                        );
+
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                        progressDialog.dismiss();
+
+                        callMethod.Log(e.getMessage());
+
+                        callMethod.showToast(
+                                "خطا در دریافت اطلاعات"
+                        );
+                    }
+                }
+        );
     }
 }

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 
 public class Ocr_StackFragment extends Fragment {
+
     CallMethod callMethod;
     Handler handler;
     View view;

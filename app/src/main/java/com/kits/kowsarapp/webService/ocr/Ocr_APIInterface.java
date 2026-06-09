@@ -2,14 +2,10 @@ package com.kits.kowsarapp.webService.ocr;//package com.kits.test.webService;
 
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 
-import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface Ocr_APIInterface {
 
@@ -237,12 +233,75 @@ public interface Ocr_APIInterface {
 
 
 
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> StackEnumeration(@Field("tag") String tag
+            , @Field("SearchTarget") String SearchTarget
+    );
 
 
 
 
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> StackEnumerationRow(@Field("tag") String tag
+            , @Field("StackEnumerationRef") String StackEnumerationRef
+            , @Field("SearchTarget") String SearchTarget
+            , @Field("OrderBy") String OrderBy
+    );
 
 
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> SetNumeration(@Field("tag") String tag
+            , @Field("StackEnumerationRowCode") String StackEnumerationRowCode
+            , @Field("NumerationState") String NumerationState
+            , @Field("Count") String Count
+    );
+
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> GetLocationList(@Field("tag") String tag
+            , @Field("StackEnumerationCode") String StackEnumerationCode
+            , @Field("SearchTarget") String SearchTarget
+            , @Field("PageNo") String PageNo
+            , @Field("RowCount") String RowCount
+            , @Field("OnlyEnumLocations") String OnlyEnumLocations
+    );
+
+
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> GetEnumGoodList(@Field("tag") String tag
+            , @Field("StackEnumerationCode") String StackEnumerationCode
+            , @Field("SearchTarget") String SearchTarget
+            , @Field("Active") String Active
+            , @Field("PageNo") String PageNo
+            , @Field("RowCount") String RowCount
+            , @Field("LocationRef") String LocationRef
+
+    );
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> GetEnum_Rows(@Field("tag") String tag
+            , @Field("StackEnumerationCode") String StackEnumerationCode
+            , @Field("LocationCode") String LocationCode
+            , @Field("GoodRef") String GoodRef
+
+    );
+
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> GetEnum_SetRow(@Field("tag") String tag
+            , @Field("StackEnumerationCode") String StackEnumerationCode
+            , @Field("LocationCode") String LocationCode
+            , @Field("LocationStackCode") String LocationStackCode
+            , @Field("GoodRef") String GoodRef
+            , @Field("Auxn1") String Auxn1
+            , @Field("Auxn2") String Auxn2
+            , @Field("Auxn3") String Auxn3
+
+    );
 /*
 
     @POST(Ocr_Url+"GetOcrFactor")

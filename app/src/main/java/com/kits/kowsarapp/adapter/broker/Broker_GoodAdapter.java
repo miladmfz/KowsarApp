@@ -18,6 +18,7 @@ import com.kits.kowsarapp.activity.broker.Broker_PFOpenActivity;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
+import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
@@ -37,6 +38,8 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
     final ImageInfo image_info;
     public boolean multi_select;
     ArrayList<Column> Columns;
+    Broker_Action broker_action;
+    boolean showalarm = false;
 
 
     public Broker_GoodAdapter(ArrayList<Good> goods, Context context) {
@@ -44,9 +47,20 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
         this.goods = goods;
         this.callMethod = new CallMethod(mContext);
         this.image_info = new ImageInfo(mContext);
+        this.broker_action = new Broker_Action(mContext);
         this.broker_dbh = new Broker_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.Columns = broker_dbh.GetColumns("id", "", "1");
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
+
+        if (callMethod.ReadBoolan("LastUpdateAlarm")){
+            showalarm= broker_action.IsLastUpdateOlderThanMinutes(Integer.parseInt(callMethod.ReadString("LastUpdateAlarmTime")));
+        }else{
+            showalarm=false;
+
+        }
+
+
+
     }
 
     @NonNull
@@ -55,7 +69,6 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
 
 
         View view;
-        callMethod.Log("callMethod.ReadBoolan(LineView) =" + callMethod.ReadBoolan("LineView"));
 
 
         if (callMethod.ReadBoolan("LineView")) {
@@ -82,10 +95,10 @@ public class Broker_GoodAdapter extends RecyclerView.Adapter<Broker_GoodItemView
     public void onBindViewHolder(@NonNull final Broker_GoodItemViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
         if (!callMethod.ReadBoolan("LineView")) {
-            holder.bind(Columns, goods.get(position), mContext, callMethod);
+            holder.bind(Columns, goods.get(position), mContext, callMethod,showalarm);
 
         }else {
-            holder.bindLine(Columns, goods.get(position), mContext, callMethod);
+            holder.bindLine(Columns, goods.get(position), mContext, callMethod,showalarm);
         }
 
         holder.callimage(goods.get(position));

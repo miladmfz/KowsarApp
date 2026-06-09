@@ -11,12 +11,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.ThirdPartyRequest;
 import com.kits.kowsarapp.application.base.ThirdPartyResult;
-import com.kits.kowsarapp.model.base.Base_DBH;
 
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TestPaymentActivity extends AppCompatActivity {
 

@@ -159,7 +159,7 @@ public class Ocr_MergingActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 callMethod.Log(t.getMessage());
-                callMethod.showToast("Connection fail ...!!!");
+                callMethod.showToast("مشکلی در برقراری ارتباط");
             }
         });
 

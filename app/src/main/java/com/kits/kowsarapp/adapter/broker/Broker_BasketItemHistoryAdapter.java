@@ -19,7 +19,7 @@ import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 
 import java.util.ArrayList;
 
-public class Broker_BasketItemHistoryAdapter extends RecyclerView.Adapter<Broker_BasketItemHistoryViewHolder> {
+public class  Broker_BasketItemHistoryAdapter extends RecyclerView.Adapter<Broker_BasketItemHistoryViewHolder> {
     ArrayList<Good> goods;
     Context mContext;
     CallMethod callMethod;

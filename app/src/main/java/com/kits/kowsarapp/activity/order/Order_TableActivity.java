@@ -32,7 +32,6 @@ import com.kits.kowsarapp.adapter.order.Order_ObjectTypeAdapter;
 import com.kits.kowsarapp.adapter.order.Order_RstMizAdapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.base.ThirdPartyResult;
 import com.kits.kowsarapp.application.order.Order_Payment;
 import com.kits.kowsarapp.model.base.ObjectType;
@@ -68,7 +67,8 @@ public class Order_TableActivity extends AppCompatActivity {
     private final Gson gson = new Gson();
     Order_RstMizAdapter order_rstMizAdapter;
     Spinner spinner;
-
+    private boolean isTableLoading = false;
+    private String lastCallState = "";
     public String State = "0";
     public String EditTable = "0";
 
@@ -144,7 +144,7 @@ public class Order_TableActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(App.getContext());
-        order_payment = new Order_Payment(App.getContext());
+        order_payment = new Order_Payment(Order_TableActivity.this);
 
         order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
@@ -213,17 +213,11 @@ public class Order_TableActivity extends AppCompatActivity {
         img_lottiestatus.setVisibility(View.GONE);
         tv_lottiestatus.setVisibility(View.GONE);
 
-
-
-        String Body_str  = "";
-
-        Body_str =callMethod.CreateJson("MizType", callMethod.ReadString("ObjectType"), Body_str);
-        Body_str =callMethod.CreateJson("InfoState", State, Body_str);
-
-
-       // Call<RetrofitResponse> call1 = apiInterface.OrderMizList(callMethod.RetrofitBody(Body_str));
-        Call<RetrofitResponse> call1 = order_apiInterface.OrderMizList("OrderMizList", State,callMethod.ReadString("ObjectType"));
-
+        Call<RetrofitResponse> call1 = order_apiInterface.OrderMizList(
+                "OrderMizList",
+                State,
+                callMethod.ReadString("ObjectType")
+        );
 
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -240,7 +234,7 @@ public class Order_TableActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
+                isTableLoading = false;
                 basketInfos.clear();
                 callrecycler();
             }

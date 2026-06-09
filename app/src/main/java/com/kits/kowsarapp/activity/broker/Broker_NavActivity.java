@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -19,6 +20,7 @@ import android.content.Intent;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,12 +35,14 @@ import com.kits.kowsarapp.activity.base.Base_AboutUsActivity;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
 import com.kits.kowsarapp.application.base.LocationService;
+import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -66,6 +70,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     Broker_APIInterface broker_apiInterface;
     Broker_DBH broker_dbh;
     Base_Action base_action;
+    Broker_Action broker_action;
     Broker_Replication broker_replication;
 
     PersianCalendar persianCalendar = new PersianCalendar();
@@ -139,6 +144,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     public void Config() {
 
         base_action= new Base_Action(this);
+        broker_action= new Broker_Action(this);
         callMethod = new CallMethod(this);
         workManager = WorkManager.getInstance(Broker_NavActivity.this);
         broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
@@ -153,7 +159,9 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
         toolbar = findViewById(R.id.b_main_a_toolbar);
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
-        persianCalendar.setTimeZone(TimeZone.getDefault());
+        persianCalendar.setTimeZone(
+                TimeZone.getTimeZone("Asia/Tehran")
+        );
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.b_nav_a_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -228,29 +236,74 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             dialog.show();
         }
     }
+    public void StartAutoReplicationWorker() {
+
+        workManager.cancelAllWork();
+
+        callMethod.Log("All previous works canceled");
+
+        if (callMethod.ReadBoolan("AutoReplication")) {
+
+            Constraints constraints = new Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build();
+
+            PeriodicWorkRequest request =
+                    new PeriodicWorkRequest.Builder(
+                            WManager.class,
+                            15,
+                            TimeUnit.MINUTES
+                    )
+                            .setConstraints(constraints)
+                            .build();
+
+            workManager.enqueueUniquePeriodicWork(
+                    "AUTO_REPLICATION_WORKER",
+                    ExistingPeriodicWorkPolicy.REPLACE,
+                    request
+            );
+
+            callMethod.Log("AutoReplication worker started every 15 minutes");
+
+        } else {
+
+            callMethod.Log("AutoReplication is disabled");
+
+        }
+    }
+
+
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void init() {
         noti();
         CheckConfig();
-
-        Constraints conster = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
-        PeriodicWorkRequest req = new PeriodicWorkRequest.Builder(WManager.class, 1, TimeUnit.MINUTES)
-                .setConstraints(conster)
-                .build();
-
-        workManager.enqueue(req);
-
-        if (callMethod.ReadBoolan("AutoReplication")) {
-            workManager.cancelAllWork();
-        }
+        StartAutoReplicationWorker();
 
 
 
         tv_versionname.setText(NumberFunctions.PerisanNumber(BuildConfig.VERSION_NAME));
         tv_dbname.setText(callMethod.ReadString("PersianCompanyNameUse"));
         toolbar.setTitle(callMethod.ReadString("PersianCompanyNameUse"));
-        tv_lastupdate.setText(NumberFunctions.PerisanNumber(broker_dbh.ReadConfig("LastUpdate")));
+
+        try {
+            if (callMethod.ReadBoolan("LastUpdateAlarm")){
+                if (broker_action.IsLastUpdateOlderThanMinutes(Integer.parseInt(callMethod.ReadString("LastUpdateAlarmTime")))) {
+
+                    tv_lastupdate.setText("بیشتر از "+NumberFunctions.PerisanNumber(callMethod.ReadString("LastUpdateAlarmTime"))+" دقیقه از بروزرسانی گذشته");
+                }else{
+
+                    tv_lastupdate.setText(NumberFunctions.PerisanNumber(broker_dbh.ReadConfig("LastUpdate")));
+                }
+            }else{
+
+                tv_lastupdate.setText(NumberFunctions.PerisanNumber(broker_dbh.ReadConfig("LastUpdate")));
+            }
+        }catch (Exception e){
+
+            callMethod.Log(""+e.getMessage());
+        }
+
 
 
 
@@ -458,9 +511,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
     @Override
     protected void onStop() {
-        if (callMethod.ReadBoolan("AutoReplication")) {
-            workManager.cancelAllWork();
-        }
+
         super.onStop();
     }
 

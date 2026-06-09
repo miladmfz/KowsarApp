@@ -72,15 +72,18 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
 
 
 
-        holder.goodnameTextView.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getGoodName()));
-        holder.sellprice_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getMaxSellPrice().substring(0,ocr_goods.get(position).getMaxSellPrice().indexOf("."))));
-        holder.amount_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getStackAmount().substring(0,ocr_goods.get(position).getStackAmount().indexOf("."))));
-        holder.stacklocation_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getStackLocation()));
+        String goodName = ocr_goods.get(position).getGoodName();
 
-        holder.goodnameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        holder.sellprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        holder.amount_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        holder.stacklocation_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        if (goodName != null && goodName.length() > 50) {
+            goodName = goodName.substring(0, 50) + "...";
+        }
+
+        holder.goodnameTextView.setText(
+                NumberFunctions.PerisanNumber(goodName)
+        );
+        holder.sellprice_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getMaxSellPrice()));
+        holder.amount_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getStackAmount()));
+        holder.stacklocation_tv.setText(NumberFunctions.PerisanNumber(ocr_goods.get(position).getStackLocation()));
 
         if (!ocr_goods.get(position).getGoodImageName().equals("")) {
 

@@ -7,9 +7,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -20,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -34,9 +30,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
-import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
-import com.kits.kowsarapp.activity.ocr.Ocr_Inventory_Check_Activity;
+import com.kits.kowsarapp.activity.ocr.Ocr_StackEnumeration_Factor_Check_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.NetworkUtils;
@@ -59,7 +53,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmListener {
+public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements OnGoodConfirmListener {
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     CallMethod callMethod;
@@ -459,7 +453,7 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
                         dialogProg.dismiss();
-                        intent = new Intent(requireActivity(), Ocr_Inventory_Check_Activity.class);
+                        intent = new Intent(requireActivity(), Ocr_StackEnumeration_Factor_Check_Activity.class);
                         intent.putExtra("ScanResponse", BarcodeScan);
                         intent.putExtra("State", "0");
                         intent.putExtra("FactorImage", "");
@@ -746,7 +740,7 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
                                             conter_confirm = conter_confirm +1;
                                             if(conter_confirm==Array_GoodCodesCheck_count){
                                                 assert response.body() != null;
-                                                intent = new Intent(requireActivity(), Ocr_Inventory_Check_Activity.class);
+                                                intent = new Intent(requireActivity(), Ocr_StackEnumeration_Factor_Check_Activity.class);
                                                 intent.putExtra("ScanResponse", BarcodeScan);
                                                 intent.putExtra("State", "0");
                                                 intent.putExtra("FactorImage", "");
@@ -833,7 +827,7 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
                                     conter_confirm = conter_confirm +1;
                                     if(conter_confirm==Array_GoodCodesCheck_count){
                                         assert response.body() != null;
-                                        intent = new Intent(requireActivity(), Ocr_Inventory_Check_Activity.class);
+                                        intent = new Intent(requireActivity(), Ocr_StackEnumeration_Factor_Check_Activity.class);
                                         intent.putExtra("ScanResponse", BarcodeScan);
                                         intent.putExtra("State", "0");
                                         intent.putExtra("FactorImage", "");
@@ -1615,7 +1609,7 @@ public class Ocr_InventoryFragment extends Fragment implements OnGoodConfirmList
         if(singleGood.getAppRowIsControled().equals("1")){
             callMethod.showToast("شمارش این آیتم تمام شده است");
         }else{
-            ocr_action.good_detail_inventory(singleGood, TcPrintRef, this);
+            ocr_action.good_detail_StackEnumeration_Factor(singleGood, TcPrintRef, this);
         }
 
 

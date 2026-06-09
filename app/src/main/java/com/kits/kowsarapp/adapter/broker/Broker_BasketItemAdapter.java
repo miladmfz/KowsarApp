@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.activity.order.Order_RegistrationActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.application.base.NetworkUtils;

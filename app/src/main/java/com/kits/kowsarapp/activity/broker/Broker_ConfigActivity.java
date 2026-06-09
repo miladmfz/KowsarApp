@@ -60,23 +60,36 @@ public class Broker_ConfigActivity extends AppCompatActivity {
         binding.bConfigADetailshow.setChecked(callMethod.ReadBoolan("ShowDetail"));
         binding.bConfigALineview.setChecked(callMethod.ReadBoolan("LineView"));
         binding.bConfigACanuseinactive.setChecked(callMethod.ReadBoolan("CanUseInactive"));
-        binding.bConfigAShowsearchbandactive.setChecked(callMethod.ReadBoolan("ShowSearchBand"));
+         binding.bConfigAShowsearchbandactive.setChecked(callMethod.ReadBoolan("ShowSearchBand"));
+
+         binding.bConfigAUpdatealarmtime.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("LastUpdateAlarmTime")));
+
+         binding.bConfigAUpdatealarm.setChecked(callMethod.ReadBoolan("LastUpdateAlarm"));
     }
 
      void setButtonListeners() {
         binding.bConfigAToReg.setOnClickListener(view -> {
 
+//
+//            if (callMethod.ReadString("ActivationCode").equals("111111") ||callMethod.ReadString("ActivationCode").equals("555555")) {
+//
+//            }else {
+//
+//            }
+//
 
-            if (callMethod.ReadString("ActivationCode").equals("111111") ||callMethod.ReadString("ActivationCode").equals("555555")) {
+            if (callMethod.IsDebugBuild(this)){
                 Intent intent = new Intent(this, Broker_RegistrationActivity.class);
                 startActivity(intent);
-            }else {
+            }else{
                 LoginSetting();
             }
 
+
+
         });
     }
-    public void LoginSetting() {
+    public void  LoginSetting() {
 
 
 

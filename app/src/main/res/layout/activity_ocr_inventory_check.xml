@@ -4,8 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ocr.Ocr_Inventory_Check_Activity">
+    tools:context=".activity.ocr.Ocr_StackEnumeration_Factor_Check_Activity"
+    android:layoutDirection="rtl">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/ord_search_a_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/ocr_inventorycheck_a_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:title="@string/searchactivity_titlename"
+            >
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -14,9 +36,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:orientation="horizontal">
+
+
             <EditText
-                android:layout_width="1dp"
-                android:layout_height="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/ocr_inventorycheck_a_barcode"
                 android:background="@drawable/bg_editbox"
                 android:layout_margin="2dp"
@@ -24,40 +53,12 @@
                 android:hint="جستجو ..."
                 android:textColor="?attr/colorOnBackground"
                 android:autofillHints=""
-                android:inputType="text" />
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/ocr_inventorycheck_a_good_prog"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading"
-                android:visibility="gone"/>
+                android:inputType="text"
+                android:layout_weight="0.9"/>
 
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/ocr_inventorycheck_a_good_lottie"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/notfind"
-                android:visibility="gone"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <TextView
-                android:id="@+id/ocr_inventorycheck_a_good_tvstatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="40sp"
-                android:visibility="gone"
-                android:textColor="?attr/colorOnBackground"
-                />
             <FrameLayout
                 android:id="@+id/ocr_inventorycheck_a_framelayout"
                 android:layout_width="match_parent"

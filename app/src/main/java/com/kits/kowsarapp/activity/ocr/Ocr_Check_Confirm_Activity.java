@@ -273,7 +273,7 @@ public class Ocr_Check_Confirm_Activity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                callMethod.showToast("Connection fail ...!!!");
+                callMethod.showToast("مشکلی در برقراری ارتباط");
             }
         });
 

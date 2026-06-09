@@ -28,7 +28,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.adapter.base.Base_ThemeSpinnerAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.model.base.AppPrinter;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
@@ -66,9 +65,11 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
     ArrayList<String> ActiveDatabase_array=new ArrayList<>();
     List<Ocr_SpinnerItem> works = new ArrayList<>();
     List<Ocr_SpinnerItem> step_count_array = new ArrayList<>();
+    List<Ocr_SpinnerItem> Inventory_Type = new ArrayList<>();
 
 
-    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson,spinnerActiveDatabase,spinnerprintername,spinner_stepcount;
+
+    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson,spinnerActiveDatabase,spinnerprintername,spinner_stepcount,spinner_inventory_type;
 
     Button btn_config;
     EditText ed_titlesize,ed_rowcall,ed_bodysize;
@@ -76,7 +77,8 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
     SwitchMaterial sm_showdetailamount,sm_showtotalamount,sm_autosend,sm_sendtimetype,sm_printbarcode,sm_justscanner,sm_sumamounthint,sm_arabictext,sm_listorsingle,sm_shortagelist;
     SwitchMaterial sm_checklistfromgooddetail,        sm_confirmcheckamount,    sm_sendcheckamount,    sm_hintamountincount,sm_ShowNextGoodDetailAfterControl;
-    LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack;
+    SwitchMaterial sm_onlylocation,sm_hintmoghayerat;
+    LinearLayoutCompat ll_spinner_Stack,ll_tv_Stack,ll_spinner_countednumber,ll_spinner_inventorytype;
 
     String stackcategory="همه";
     String workcategory="0";
@@ -117,9 +119,12 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         works.add(new Ocr_SpinnerItem(6,"جانمایی انبار"));
         works.add(new Ocr_SpinnerItem(7,"انبارگردانی"));
 
-        step_count_array.add(new Ocr_SpinnerItem(1,"یکبار شمارش در فاکتور"));
-        step_count_array.add(new Ocr_SpinnerItem(2,"دو بار شمارش در فاکتور"));
-        step_count_array.add(new Ocr_SpinnerItem(3,"سه بار شمارش در فاکتور"));
+        step_count_array.add(new Ocr_SpinnerItem(1,"یکبار شمارش "));
+        step_count_array.add(new Ocr_SpinnerItem(2,"دو بار شمارش "));
+        step_count_array.add(new Ocr_SpinnerItem(3,"سه بار شمارش "));
+
+        Inventory_Type.add(new Ocr_SpinnerItem(0,"شمارش در فاکتور"));
+        Inventory_Type.add(new Ocr_SpinnerItem(1,"شمارش با جا نمایی"));
 
 
 
@@ -134,6 +139,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         spinnerjob =findViewById(R.id.ocr_config_a_spinnerjob);
         spinnerjobperson =findViewById(R.id.ocr_config_a_spinnerjobperson);
         spinner_stepcount =findViewById(R.id.ocr_config_a_spinnerstepcount);
+        spinner_inventory_type =findViewById(R.id.ocr_config_a_spinnerinventorytype);
 
 
         ed_titlesize = findViewById(R.id.ocr_config_a_titlesize);
@@ -170,8 +176,13 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_confirmcheckamount = findViewById(R.id.ocr_config_a_confirmcheckamount);
         sm_sendcheckamount = findViewById(R.id.ocr_config_a_sendcheckamount);
 
+        sm_onlylocation = findViewById(R.id.ocr_config_a_onlylocation        );
+        sm_hintmoghayerat = findViewById(R.id.ocr_config_a_hintmoghayerat);
+
 
         ll_spinner_Stack=findViewById(R.id.ocr_config_a_line_stack_spinner);
+        ll_spinner_countednumber=findViewById(R.id.ocr_config_a_line_countednumber_spinner);
+        ll_spinner_inventorytype=findViewById(R.id.ocr_config_a_line_inventorytype_spinner);
         ll_tv_Stack=findViewById(R.id.ocr_config_a_line_stack_tv);
 
 
@@ -231,6 +242,9 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         sm_confirmcheckamount.setChecked(callMethod.ReadBoolan("ConfirmCheckAmount"));
         sm_sendcheckamount.setChecked(callMethod.ReadBoolan("SendCheckAmount"));
 
+        sm_onlylocation.setChecked(callMethod.ReadBoolan("OnlyGoodLocation"));
+        sm_hintmoghayerat.setChecked(callMethod.ReadBoolan("HintMoghayerat"));
+
 
         btn_config.setOnClickListener(v -> {
             callMethod.EditString("Deliverer",tv_Deliverer.getText().toString());
@@ -280,6 +294,28 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                 callMethod.showToast("خیر");
             } else {
                 callMethod.EditBoolan("SendCheckAmount", true);
+                callMethod.showToast("بله");
+            }
+        });
+
+
+        sm_onlylocation.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("OnlyGoodLocation")) {
+                callMethod.EditBoolan("OnlyGoodLocation", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("OnlyGoodLocation", true);
+                callMethod.showToast("بله");
+            }
+        });
+
+
+        sm_hintmoghayerat.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("HintMoghayerat")) {
+                callMethod.EditBoolan("HintMoghayerat", false);
+                callMethod.showToast("خیر");
+            } else {
+                callMethod.EditBoolan("HintMoghayerat", true);
                 callMethod.showToast("بله");
             }
         });
@@ -389,13 +425,35 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         spinner_stepcount.setAdapter(spinner_stepAdapter);
 
 
-        int selectedValue1 = Integer.parseInt(callMethod.ReadString("CountStep"));
+        int selectedValue_step = Integer.parseInt(callMethod.ReadString("CountStep"));
         for (int i = 0; i < step_count_array.size(); i++) {
-            if (step_count_array.get(i).getValue() == selectedValue1) {
+            if (step_count_array.get(i).getValue() == selectedValue_step) {
                 spinner_stepcount.setSelection(i);
                 break;
             }
         }
+
+        ArrayAdapter<Ocr_SpinnerItem> spinner_inventory_type_Adapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
+                android.R.layout.simple_spinner_item,Inventory_Type);
+        spinner_inventory_type_Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_inventory_type.setAdapter(spinner_inventory_type_Adapter);
+
+
+        int selectedValue_inventory_type ;
+        try {
+            selectedValue_inventory_type = Integer.parseInt(callMethod.ReadString("InventoryType"));
+        }catch (Exception e){
+            callMethod.EditString("InventoryType","0");
+            selectedValue_inventory_type = Integer.parseInt(callMethod.ReadString("InventoryType"));
+
+        }
+        for (int i = 0; i < Inventory_Type.size(); i++) {
+            if (Inventory_Type.get(i).getValue() == selectedValue_inventory_type) {
+                spinner_inventory_type.setSelection(i);
+                break;
+            }
+        }
+
 
 
         spinner_stepcount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -410,6 +468,24 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
             }
         });
+
+
+
+        spinner_inventory_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                callMethod.EditString("InventoryType",String.valueOf(position));
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
 
 
 
@@ -564,6 +640,15 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
                     ll_tv_Stack.setVisibility(View.GONE);
 
                 }
+
+                if(position==7){
+                    ll_spinner_countednumber.setVisibility(View.VISIBLE);
+                    ll_spinner_inventorytype.setVisibility(View.VISIBLE);
+                }else {
+                    ll_spinner_countednumber.setVisibility(View.GONE);
+                    ll_spinner_inventorytype.setVisibility(View.GONE);
+                }
+
                 if (position==7){
                     position=2;
                 }

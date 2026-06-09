@@ -411,7 +411,41 @@
 
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
+
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/ocr_config_a_line_inventorytype_spinner"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+
+                        android:text="نوع انبار گردانی"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|start"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="16sp"
+                        android:paddingStart="8dp"/>
+                    <Spinner
+                        android:id="@+id/ocr_config_a_spinnerinventorytype"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:background="@drawable/bg_editbox"
+                        android:padding="8dp"
+                        android:gravity="center"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="16sp"
+                        />
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/ocr_config_a_line_countednumber_spinner"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -439,6 +473,8 @@
 
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -890,6 +926,9 @@
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -912,6 +951,76 @@
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/ocr_config_a_shownextgooddetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:layout_gravity="center"
+                    />
+
+
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp">
+
+                <TextView
+
+                    android:text="فقط کالاهای جانمایی را در لیست نمایش بدهد"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/ocr_config_a_onlylocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:layout_gravity="center"
+                    />
+
+
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_card"
+                android:elevation="4dp">
+
+                <TextView
+
+                    android:text="در صورت مغایرت شمارش دوباره شمارش شود تا ثبت بشود"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp"
+                    android:paddingStart="8dp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/ocr_config_a_hintmoghayerat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"

@@ -1,14 +1,10 @@
 package com.kits.kowsarapp.adapter.ocr;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,7 +24,6 @@ import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 public class Ocr_Manage_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Manage_ListApi_Adapter.facViewHolder> {

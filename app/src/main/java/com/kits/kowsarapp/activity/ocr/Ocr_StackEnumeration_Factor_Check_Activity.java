@@ -20,7 +20,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
-import com.kits.kowsarapp.fragment.ocr.Ocr_InventoryFragment;
+import com.kits.kowsarapp.fragment.ocr.Ocr_StackEnumeration_Factor_Fragment;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -36,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_Inventory_Check_Activity extends AppCompatActivity {
+public class Ocr_StackEnumeration_Factor_Check_Activity extends AppCompatActivity {
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
@@ -50,7 +50,7 @@ public class Ocr_Inventory_Check_Activity extends AppCompatActivity {
     CallMethod callMethod;
     FragmentManager fragmentManager ;
     FragmentTransaction fragmentTransaction;
-    Ocr_InventoryFragment inventoryFragment;
+    Ocr_StackEnumeration_Factor_Fragment inventoryFragment;
 
     EditText ed_barcode;
 
@@ -136,9 +136,6 @@ public class Ocr_Inventory_Check_Activity extends AppCompatActivity {
 
         ll_main = findViewById(R.id.ocr_inventorycheck_a_layout);
         ed_barcode = findViewById(R.id.ocr_inventorycheck_a_barcode);
-        progressBar = findViewById(R.id.ocr_inventorycheck_a_good_prog);
-        img_lottiestatus = findViewById(R.id.ocr_inventorycheck_a_good_lottie);
-        tv_lottiestatus = findViewById(R.id.ocr_inventorycheck_a_good_tvstatus);
         ed_barcode.setFocusable(true);
 
 
@@ -148,7 +145,7 @@ public class Ocr_Inventory_Check_Activity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        inventoryFragment = new Ocr_InventoryFragment();
+        inventoryFragment = new Ocr_StackEnumeration_Factor_Fragment();
 
         inventoryFragment.setBarcodeScan(BarcodeScan);
 
@@ -294,7 +291,7 @@ public class Ocr_Inventory_Check_Activity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                callMethod.showToast("Connection fail ...!!!");
+                callMethod.showToast("مشکلی در برقراری ارتباط");
             }
         });
 

@@ -315,7 +315,7 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 action.dialogProg_dismiss();
-                callMethod.showToast("Connection fail ...!!!");
+                callMethod.showToast("مشکلی در برقراری ارتباط");
                 tv_lottiestatus.setText("موردی یافت نشد");
                 img_lottiestatus.setVisibility(View.VISIBLE);
                 tv_lottiestatus.setVisibility(View.VISIBLE);

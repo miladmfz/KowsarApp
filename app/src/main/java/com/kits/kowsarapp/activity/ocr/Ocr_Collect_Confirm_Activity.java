@@ -7,15 +7,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -240,12 +236,22 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
             OrderBy=OrderBy + " DESC";
         }
 
+        callMethod.Log("GetOcrFactor_new");
+        callMethod.Log("BarcodeScan"+BarcodeScan);
+        callMethod.Log("OrderBy"+OrderBy);
+
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
             call=apiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,OrderBy);
         }else{
             call=secendApiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,OrderBy);
         }
+
+        callMethod.Log("GetOcrFactor_new");
+        callMethod.Log("BarcodeScan= "+BarcodeScan);
+        callMethod.Log("OrderBy= "+OrderBy);
+        callMethod.Log("call = "+call.request().url());
+
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -278,7 +284,7 @@ public class Ocr_Collect_Confirm_Activity extends AppCompatActivity {
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                callMethod.showToast("Connection fail ...!!!");
+                callMethod.showToast("مشکلی در برقراری ارتباط");
             }
         });
     }

@@ -251,7 +251,7 @@
                                 android:text="@string/config_item"
                                 android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
-                                android:layout_weight="1"
+                                android:layout_weight="2"
 
                                 android:paddingStart="8dp" />
 
@@ -267,7 +267,7 @@
                                 android:maxLength="1"
                                 android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
-                                android:layout_weight="2"
+                                android:layout_weight="1"
 
                                 android:gravity="center" />
                         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -286,7 +286,7 @@
                                 android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:paddingStart="8dp"
-                                android:layout_weight="1"
+                                android:layout_weight="2"
                                 />
 
                             <!-- Input: Config Delay -->
@@ -300,7 +300,7 @@
                                 android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:gravity="center"
-                                android:layout_weight="2"
+                                android:layout_weight="1"
                                 />
 
                             <!-- Label: Config Item -->
@@ -321,7 +321,7 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="2"
                                 android:gravity="center_vertical|start"
                                 android:text="سایز اطلاعات"
                                 android:textColor="?attr/colorOnBackground"
@@ -333,7 +333,7 @@
                                 android:id="@+id/b_register_a_bodysize"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="2"
+                                android:layout_weight="1"
                                 android:background="@drawable/bg_editbox"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
@@ -352,7 +352,7 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="2"
                                 android:gravity="center_vertical|start"
                                 android:text="سایز عنوان ها"
                                 android:textColor="?attr/colorOnBackground"
@@ -364,13 +364,49 @@
                                 android:id="@+id/b_register_a_titlesize"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="2"
+                                android:layout_weight="1"
                                 android:background="@drawable/bg_editbox"
                                 android:padding="8dp"
                                 android:inputType="numberDecimal"
                                 android:textColor="?attr/colorOnBackground"
                                 android:textSize="16sp"
                                 android:gravity="center" />
+
+                            <!-- Label: Body Size -->
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="8dp"
+                            >
+
+                            <!-- Label: Title Size -->
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="center_vertical|start"
+                                android:maxLines="2"
+                                android:text="زمان گذشته از بروزرسانی برای هشدار (دقیقه)"
+                                android:textColor="?attr/colorOnBackground"
+                                android:textSize="16sp"
+                                android:paddingStart="8dp"/>
+
+                            <!-- Input: Title Size -->
+                            <EditText
+                                android:id="@+id/b_register_a_updatealarmtime"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_editbox"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:maxLength="5"
+                                android:padding="8dp"
+                                android:textColor="?attr/colorOnBackground"
+                                android:textSize="16sp"/>
 
                             <!-- Label: Body Size -->
 
@@ -730,6 +766,37 @@
                         <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_canuseinactive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:enabled="true"
+                            android:layout_gravity="center"
+                            />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="8dp"
+                        android:padding="8dp"
+                        android:background="@drawable/bg_card"
+                        android:elevation="4dp">
+
+                        <!-- Label Text -->
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:text="هشدار اطلاعات قدیمی در صورت بروز رسانی نشدن"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="16sp"
+                            android:paddingStart="8dp" />
+
+                        <!-- Switch -->
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/b_register_a_updatealarm"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"

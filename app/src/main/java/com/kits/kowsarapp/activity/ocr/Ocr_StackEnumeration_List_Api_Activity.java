@@ -25,14 +25,18 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.adapter.ocr.Ocr_Inventory_ListApi_Adapter;
+import com.kits.kowsarapp.adapter.ocr.Ocr_StackEnumeration_Factor_ListApi_Adapter;
+import com.kits.kowsarapp.adapter.ocr.Ocr_StackEnumeration_Janamie_ListApi_Adapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
+import com.kits.kowsarapp.model.ocr.Ocr_Location;
+import com.kits.kowsarapp.model.ocr.Ocr_StackEnumeration;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.ocr.APIClientSecond;
 import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
@@ -44,42 +48,47 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
+public class Ocr_StackEnumeration_List_Api_Activity extends AppCompatActivity {
 
 
     Intent intent;
     ProgressBar prog;
     GridLayoutManager gridLayoutManager;
     Dialog dialog1;
+
     Call<RetrofitResponse> Requset_List_call;
     Call<RetrofitResponse> Requset_ListCount_call;
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
-    Ocr_Inventory_ListApi_Adapter ocr_inventory_listApi_adapter;
+    Ocr_StackEnumeration_Factor_ListApi_Adapter ocr_stackEnumeration_factor_listApi_adapter;
+    Ocr_StackEnumeration_Janamie_ListApi_Adapter ocr_stackEnumeration_janamie_listApi_adapter;
+
+
 
     Handler handler;
     Handler counthandler=new Handler();
     CallMethod callMethod;
     Ocr_DBH ocr_dbh;
+    Button btn_refresh_list;
 
+    Toolbar toolbar;
+    LinearLayout Inventory_ll_counter_path;
+    RecyclerView Inventory_list_recycler;
+
+    TextView textView_Count,textView_status;
+    LottieAnimationView animationView;
+
+
+    ArrayList<Factor> all_factors=new ArrayList<>();
     ArrayList<Factor> factors=new ArrayList<>();
     ArrayList<Factor> visible_factors=new ArrayList<>();
     ArrayList<String> customerpath=new ArrayList<>();
-    ArrayList<Factor> all_factors=new ArrayList<>();
 
 
-    Button btn_refresh_list;
-
-
-    LinearLayout factorlist_ll_counter;
-
-    RecyclerView factor_list_recycler;
-
-    TextView textView_Count,textView_status;
+    ArrayList<Ocr_StackEnumeration> stackEnumerations=new ArrayList<>();
 
     AppCompatEditText edtsearch;
-
     Spinner spinnerPath;
 
     String Row="10",state="0",StateEdited="0",StateShortage="0",TotallistCount="0",srch="",path="همه";
@@ -94,8 +103,6 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
     private int clickCount = 0;
     private long lastClickTime = 0;
     private static final long DOUBLE_CLICK_TIME_DELTA = 500;
-
-
 
 
     @Override
@@ -134,7 +141,6 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
 
 
     }
-
     public void Config() {
         callMethod = new CallMethod(this);
         ocr_dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
@@ -146,22 +152,36 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.ocr_inventorylist_a_toolbar);
         setSupportActionBar(toolbar);
 
-
-        factor_list_recycler=findViewById(R.id.ocr_inventorylist_a_recyclerView);
-        factorlist_ll_counter=findViewById(R.id.ocr_inventorylist_a_ll_counter);
+    }
 
 
+    public void init(){
 
+
+        Inventory_list_recycler=findViewById(R.id.ocr_inventorylist_a_recyclerView);
+        Inventory_ll_counter_path=findViewById(R.id.ocr_inventorylist_a_ll_counter_path);
         textView_Count=findViewById(R.id.ocr_inventorylist_a_count);
-        textView_status=findViewById(R.id.ocr_inventorylist_a_Tvstatus);
-        edtsearch = findViewById(R.id.ocr_inventorylist_a_edtsearch);
-        spinnerPath= findViewById(R.id.ocr_inventorylist_a_path);
-
+        textView_status=findViewById(R.id.ocr_inventorylist_a_tvstatus);
+        animationView=findViewById(R.id.ocr_inventorylist_a_lottie);
         btn_refresh_list=findViewById(R.id.ocr_inventorylist_a_refresh);
+        spinnerPath= findViewById(R.id.ocr_inventorylist_a_path);
+        edtsearch = findViewById(R.id.ocr_inventorylist_a_edtsearch);
+
+
+        toolbar = findViewById(R.id.ocr_inventorylist_a_toolbar);
+
+        if (callMethod.ReadString("InventoryType").equals("0")){
+            toolbar.setTitle("انتخاب فاکتور");
+        }else if (callMethod.ReadString("InventoryType").equals("1")){
+            toolbar.setTitle("انتخاب انبارگردانی");
+        }
+        setSupportActionBar(toolbar);
 
 
 
-        factorlist_ll_counter.setOnClickListener(v -> {
+        Inventory_ll_counter_path.setVisibility(View.GONE);
+
+        Inventory_ll_counter_path.setOnClickListener(v -> {
             long currentClickTime = System.currentTimeMillis();
 
             if (lastClickTime != 0 && (currentClickTime - lastClickTime) > DOUBLE_CLICK_TIME_DELTA) {
@@ -177,75 +197,94 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
                 pastVisiblesItems =   0;
                 prog.setVisibility(View.VISIBLE);
                 loading = false;
-                RetrofitRequset_List();
+                if (callMethod.ReadString("InventoryType").equals("0")){
+                    RetrofitRequset_List_Factor();
+                }else if (callMethod.ReadString("InventoryType").equals("1")){
+                    RetrofitRequset_List_Janamaie();
+                }
+
             }
 
             lastClickTime = currentClickTime;
         });
 
-        btn_refresh_list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long currentClickTime = System.currentTimeMillis(); // Zaman click ro ghabl az in sabt mikonim
+        btn_refresh_list.setOnClickListener(v -> {
+            long currentClickTime = System.currentTimeMillis(); // Zaman click ro ghabl az in sabt mikonim
 
-                // Agar 5 saniye gap bod, click ro reset mikonim
-                if (lastClickTime != 0 && (currentClickTime - lastClickTime) > DOUBLE_CLICK_TIME_DELTA) {
-                    clickCount = 0; // Reset click ha agar be mehr zaman (5 saniye) bemoone
-                }
-
-                clickCount++;
-
-                if (clickCount == 2) {
-
-                    visibleItemCount =  0;
-                    totalItemCount =   0;
-                    pastVisiblesItems =   0;
-                    prog.setVisibility(View.VISIBLE);
-                    loading = false;
-                    RetrofitRequset_List();
-                }
-
-                lastClickTime = currentClickTime; // Update zamani ke click anjam shode
+            // Agar 5 saniye gap bod, click ro reset mikonim
+            if (lastClickTime != 0 && (currentClickTime - lastClickTime) > DOUBLE_CLICK_TIME_DELTA) {
+                clickCount = 0; // Reset click ha agar be mehr zaman (5 saniye) bemoone
             }
+
+            clickCount++;
+
+            if (clickCount == 2) {
+
+                visibleItemCount =  0;
+                totalItemCount =   0;
+                pastVisiblesItems =   0;
+                prog.setVisibility(View.VISIBLE);
+                loading = false;
+                if (callMethod.ReadString("InventoryType").equals("0")){
+                    RetrofitRequset_List_Factor();
+                }else if (callMethod.ReadString("InventoryType").equals("1")){
+                    RetrofitRequset_List_Janamaie();
+                }
+            }
+
+            lastClickTime = currentClickTime;
         });
 
-    }
-
-
-    public void init(){
-
-
-        customerpath.add("همه");
-
-        srch=callMethod.ReadString("Last_search");
+        srch=callMethod.ReadString("Last_search_StackEnum");
 
         edtsearch.setText(srch);
+
+
         edtsearch.addTextChangedListener(
                 new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
                     @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {   }
                     @Override
                     public void afterTextChanged( Editable editable) {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
                             srch = NumberFunctions.EnglishNumber(ocr_dbh.GetRegionText(editable.toString()));
                             srch=srch.replace(" ","%");
-                            callMethod.EditString("Last_search", srch);
-                            RetrofitRequset_List();
+                            callMethod.EditString("Last_search_StackEnum", srch);
+                            if (callMethod.ReadString("InventoryType").equals("0")){
+                                RetrofitRequset_List_Factor();
+                            }else if (callMethod.ReadString("InventoryType").equals("1")){
+                                RetrofitRequset_List_Janamaie();
+                            }
                         }, 1000);
 
                     }
                 });
 
+        if (callMethod.ReadString("InventoryType").equals("0")){
+            Inventory_Factor();
+        }else if (callMethod.ReadString("InventoryType").equals("1")){
+            Inventory_Janamaie();
+        }
 
 
-        factor_list_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+    }
+
+
+    public void Inventory_Janamaie() {
+
+            RetrofitRequset_List_Janamaie();
+
+    }
+    public void Inventory_Factor() {
+
+        spinnerPath.setVisibility(View.VISIBLE);
+
+        customerpath.add("همه");
+
+        Inventory_list_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) { //check for scroll down
@@ -270,7 +309,7 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
                 path=customerpath.get(position);
                 callMethod.EditString("ConditionPosition",String.valueOf(position));
 
-                RetrofitRequset_List();
+                RetrofitRequset_List_Factor();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -279,9 +318,9 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
 
 
 
-
-
         RetrofitRequset_Path();
+
+
 
     }
 
@@ -366,10 +405,10 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
                     factors.addAll(factor_page);
                     visible_factors=factors;
 
-                    ocr_inventory_listApi_adapter.notifyDataSetChanged();
+                    ocr_stackEnumeration_factor_listApi_adapter.notifyDataSetChanged();
 
-                    CallRecycle();
-                    String textView_st="تعداد "+ocr_inventory_listApi_adapter.getItemCount()+" از "+TotallistCount+"";
+                    CallRecycle_Facotr();
+                    String textView_st="تعداد "+ocr_stackEnumeration_factor_listApi_adapter.getItemCount()+" از "+TotallistCount+"";
                     textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
                     loading=true;
 
@@ -389,30 +428,62 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
 
 
     }
+    public void CallRecycle_Janamaie() {
 
-    public void CallRecycle() {
+            // TODO CallRecycle_Janamaie
 
-        ocr_inventory_listApi_adapter = new Ocr_Inventory_ListApi_Adapter(visible_factors,state, App.getContext());
-        if (ocr_inventory_listApi_adapter.getItemCount()==0){
+        ocr_stackEnumeration_janamie_listApi_adapter = new Ocr_StackEnumeration_Janamie_ListApi_Adapter(stackEnumerations,state, App.getContext());
+        if (ocr_stackEnumeration_janamie_listApi_adapter.getItemCount()==0){
+            prog.setVisibility(View.GONE);
+
+            textView_status.setText("انبار گردانی یافت نشد");
+            textView_status.setVisibility(View.VISIBLE);
+            animationView.setVisibility(View.VISIBLE);
+        } else {
+
+            textView_status.setVisibility(View.GONE);
+            animationView.setVisibility(View.GONE);
+        }
+
+        counthandler.postDelayed(() -> {
+            String textView_st="تعداد "+ocr_stackEnumeration_janamie_listApi_adapter.getItemCount()+" از "+TotallistCount+"";
+            textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
+        }, 500);
+        gridLayoutManager = new GridLayoutManager(this, 1);//grid
+        Inventory_list_recycler.setLayoutManager(gridLayoutManager);
+        Inventory_list_recycler.setAdapter(ocr_stackEnumeration_janamie_listApi_adapter);
+        Inventory_list_recycler.setItemAnimator(new DefaultItemAnimator());
+        Inventory_list_recycler.scrollToPosition(pastVisiblesItems);
+
+
+
+        dialog1.dismiss();
+    }
+
+
+    public void CallRecycle_Facotr() {
+
+        ocr_stackEnumeration_factor_listApi_adapter = new Ocr_StackEnumeration_Factor_ListApi_Adapter(visible_factors,state, App.getContext());
+        if (ocr_stackEnumeration_factor_listApi_adapter.getItemCount()==0){
             prog.setVisibility(View.GONE);
 
             callMethod.showToast("فاکتوری یافت نشد");
         }
 
         counthandler.postDelayed(() -> {
-            String textView_st="تعداد "+ocr_inventory_listApi_adapter.getItemCount()+" از "+TotallistCount+"";
+            String textView_st="تعداد "+ocr_stackEnumeration_factor_listApi_adapter.getItemCount()+" از "+TotallistCount+"";
             textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
         }, 500);
         gridLayoutManager = new GridLayoutManager(this, 1);//grid
-        factor_list_recycler.setLayoutManager(gridLayoutManager);
-        factor_list_recycler.setAdapter(ocr_inventory_listApi_adapter);
-        factor_list_recycler.setItemAnimator(new DefaultItemAnimator());
-        factor_list_recycler.scrollToPosition(pastVisiblesItems);
+        Inventory_list_recycler.setLayoutManager(gridLayoutManager);
+        Inventory_list_recycler.setAdapter(ocr_stackEnumeration_factor_listApi_adapter);
+        Inventory_list_recycler.setItemAnimator(new DefaultItemAnimator());
+        Inventory_list_recycler.scrollToPosition(pastVisiblesItems);
 
         if (Integer.parseInt(callMethod.ReadString("LastTcPrint"))>0){
             for (Factor singlefactor :factors) {
                 if(singlefactor.getAppTcPrintRef().equals(callMethod.ReadString("LastTcPrint")))
-                    factor_list_recycler.scrollToPosition(factors.indexOf(singlefactor));
+                    Inventory_list_recycler.scrollToPosition(factors.indexOf(singlefactor));
             }
 
         }
@@ -474,8 +545,86 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
 
 
 
+    public void RetrofitRequset_List_Janamaie() {
+        if (Requset_List_call != null && !Requset_List_call.isExecuted() && !Requset_List_call.isCanceled()) {
+            Requset_List_call.cancel();
+        }
 
-    public void RetrofitRequset_List() {
+/*
+        PageNo=0;
+        RetrofitRequset_ListCount();
+        pastVisiblesItems=0;
+
+
+        String Body_str  = "";
+
+        Body_str =callMethod.CreateJson("State", state, Body_str);
+        Body_str =callMethod.CreateJson("SearchTarget", srch, Body_str);
+        Body_str =callMethod.CreateJson("Stack",  callMethod.ReadString("StackCategory"), Body_str);
+        Body_str =callMethod.CreateJson("path", path, Body_str);
+        Body_str =callMethod.CreateJson("HasShortage", StateShortage, Body_str);
+        Body_str =callMethod.CreateJson("IsEdited", StateEdited, Body_str);
+        Body_str =callMethod.CreateJson("Row", Row, Body_str);
+        Body_str =callMethod.CreateJson("PageNo", "0", Body_str);
+        Body_str =callMethod.CreateJson("CountFlag", "0", Body_str);
+        Body_str =callMethod.CreateJson("DbName", "", Body_str);
+
+
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
+*/
+        dialog1.show();
+
+        textView_status.setVisibility(View.GONE);
+        //RetrofitRequset_ListCount();
+        PageNo=0;
+        pastVisiblesItems=0;
+
+        Requset_List_call=apiInterface.StackEnumeration(
+                "StackEnumeration"
+                ,srch
+        );
+
+        Requset_List_call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+
+                if(response.isSuccessful()) {
+                    dialog1.dismiss();
+                    prog.setVisibility(View.GONE);
+                    loading = true;
+                    recallcount=0;
+                    assert response.body() != null;
+                    stackEnumerations.clear();
+                    stackEnumerations= response.body().getStackEnumerations();
+
+                    CallRecycle_Janamaie();
+
+                }
+            }
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                callMethod.Log("sa"+ t.getMessage());
+                recallcount++;
+                loading = true;
+
+                try {
+                    stackEnumerations.clear();
+                    dialog1.dismiss();
+                    prog.setVisibility(View.GONE);
+                    animationView.setVisibility(View.VISIBLE);
+                    textView_status.setVisibility(View.VISIBLE);
+                    textView_status.setText("انبار گردانی یافت نشد");
+                    ocr_stackEnumeration_janamie_listApi_adapter.notifyDataSetChanged();
+
+                }catch (Exception ignored){}
+            }
+        });
+
+
+    }
+
+    public void RetrofitRequset_List_Factor() {
 
         if (Requset_List_call != null && !Requset_List_call.isExecuted() && !Requset_List_call.isCanceled()) {
             Requset_List_call.cancel();
@@ -520,8 +669,8 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
                 "0",
                 callMethod.ReadString("ActiveDatabase")
         );
-        callMethod.Log(Requset_List_call.request().url()+"");
-        callMethod.Log(""+Requset_List_call.request().body());
+
+
         Requset_List_call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -541,7 +690,7 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
                     callMethod.showToast("بارگیری شد");
 
                     if(factors.size()>0){
-                        CallRecycle();
+                        CallRecycle_Facotr();
 
                     }else {
                         finish();
@@ -558,13 +707,13 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
                 loading = true;
 
                 if(recallcount<2){
-                    RetrofitRequset_List();
+                    RetrofitRequset_List_Factor();
                 }else if (recallcount==2){
 
-                    callMethod.EditString("Last_search", "");
-                    srch=callMethod.ReadString("Last_search");
+                    callMethod.EditString("Last_search_StackEnum", "");
+                    srch=callMethod.ReadString("Last_search_StackEnum");
                     edtsearch.setText(srch);
-                    RetrofitRequset_List();
+                    RetrofitRequset_List_Factor();
                 }else {
                     try {
                         factors.clear();
@@ -573,7 +722,7 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
                         textView_status.setVisibility(View.VISIBLE);
                         textView_status.setText("فاکتوری یافت نشد");
                         textView_Count.setText(NumberFunctions.PerisanNumber("تعداد 0"));
-                        ocr_inventory_listApi_adapter.notifyDataSetChanged();
+                        ocr_stackEnumeration_factor_listApi_adapter.notifyDataSetChanged();
 
                     }catch (Exception ignored){}
 
@@ -639,7 +788,7 @@ public class Ocr_Inventory_List_Api_Activity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(this, Ocr_Inventory_List_Api_Activity.class);
+        intent = new Intent(this, Ocr_StackEnumeration_List_Api_Activity.class);
         intent.putExtra("State", state);
         startActivity(intent);
         finish();

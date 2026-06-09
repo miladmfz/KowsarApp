@@ -107,6 +107,9 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("ShowGoodImage", true);
             callMethod.EditBoolan("ShowGoodBuyBtn", true);
 
+            callMethod.EditBoolan("LastUpdateAlarm", false);
+            callMethod.EditString("LastUpdateAlarmTime", "60");
+
             //endregion
 
 
@@ -143,6 +146,12 @@ public class Base_SplashActivity extends AppCompatActivity {
             callMethod.EditBoolan("CheckListFromGoodDialog", false);
             callMethod.EditBoolan("ConfirmCheckAmount", false);
             callMethod.EditBoolan("SendCheckAmount", false);
+            callMethod.EditBoolan("HintAmountInCount", false);
+            callMethod.EditBoolan("OnlyGoodLocation", false);
+            callMethod.EditBoolan("HintMoghayerat", false);
+
+            callMethod.EditString("CountStep", "2");
+            callMethod.EditString("InventoryType", "1");
 
 
             //endregion
@@ -222,8 +231,12 @@ public class Base_SplashActivity extends AppCompatActivity {
         callMethod.EditString("ConditionPosition", "0");
         callMethod.EditString("FactorDbName", "");
 
-        callMethod.EditBoolan("HintAmountInCount", false);
-        callMethod.EditString("CountStep", "2");
+        callMethod.EditString("Last_search_StackEnum", "");
+        callMethod.EditString("Last_search_Location", "");
+        callMethod.EditString("Last_search_Good", "");
+        callMethod.EditString("Last_search_LocationStack", "");
+
+
         //endregion
 
         //region $ order
@@ -233,6 +246,7 @@ public class Base_SplashActivity extends AppCompatActivity {
         callMethod.EditString("InfoState", "");
         callMethod.EditString("RstMizName", "");
         //endregion
+
 
 
 

@@ -35,13 +35,16 @@ import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
+import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Objects;
+import java.util.TimeZone;
 
 
 import okhttp3.MediaType;
@@ -75,6 +78,80 @@ public class Broker_Action extends Base_Action {
         url = callMethod.ReadString("ServerURLUse");
         broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Broker_APIInterface.class);
 
+    }
+    public boolean IsLastUpdateOlderThanMinutes(int minutes) {
+
+        try {
+
+            String lastUpdate =
+                    broker_dbh.ReadConfig("LastUpdate");
+
+            if (lastUpdate == null || lastUpdate.trim().equals("")) {
+                return true;
+            }
+
+            String[] parts = lastUpdate.split(" ");
+
+            if (parts.length != 2) {
+                return true;
+            }
+
+            String[] dateParts = parts[0].split("/");
+            String[] timeParts = parts[1].split(":");
+
+            PersianCalendar lastCalendar =
+                    new PersianCalendar();
+
+            lastCalendar.setTimeZone(
+                    TimeZone.getTimeZone("Asia/Tehran")
+            );
+
+            lastCalendar.setPersianDate(
+                    Integer.parseInt(dateParts[0]),
+                    Integer.parseInt(dateParts[1]) - 1,
+                    Integer.parseInt(dateParts[2])
+            );
+
+            lastCalendar.set(
+                    Calendar.HOUR_OF_DAY,
+                    Integer.parseInt(timeParts[0])
+            );
+
+            lastCalendar.set(
+                    Calendar.MINUTE,
+                    Integer.parseInt(timeParts[1])
+            );
+
+            lastCalendar.set(
+                    Calendar.SECOND,
+                    Integer.parseInt(timeParts[2])
+            );
+
+            PersianCalendar nowCalendar =
+                    new PersianCalendar();
+
+            nowCalendar.setTimeZone(
+                    TimeZone.getTimeZone("Asia/Tehran")
+            );
+
+            long diffMinutes =
+                    (nowCalendar.getTimeInMillis()
+                            - lastCalendar.getTimeInMillis())
+                            / (60 * 1000);
+
+
+
+            return diffMinutes >= minutes;
+
+        } catch (Exception e) {
+
+            callMethod.Log(
+                    "IsLastUpdateOlderThanMinutes Error = "
+                            + e.getMessage()
+            );
+
+            return true;
+        }
     }
 
 
