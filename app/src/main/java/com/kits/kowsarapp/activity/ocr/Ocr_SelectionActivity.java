@@ -258,7 +258,7 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
         searchtarget = searchtarget.replaceAll(" ", "%");
 
 
-        call=apiInterface.GetOcrGoodList("GetOcrGoodList_new",searchtarget);
+        call=apiInterface.GetOcrGoodList("GetOcrGoodList",searchtarget);
         action.dialogProg();
 
 

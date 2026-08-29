@@ -346,7 +346,7 @@ public class Base_AllAppViewHolder extends RecyclerView.ViewHolder {
 
 
         //String downloadurl="http://5.160.152.173:60005/api/kits/GetDb?Code="+activation.getActivationCode();
-        String downloadurl="http://itmali.ir/webapi/kits/GetDb?Code="+activation.getActivationCode();
+        String downloadurl="https://itmali.ir/webapi/kits/GetDb?Code="+activation.getActivationCode();
 
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)

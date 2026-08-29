@@ -21,8 +21,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.viewpager.widget.ViewPager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 
+import com.google.android.material.color.MaterialColors;
+
+import java.io.ByteArrayOutputStream;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
@@ -142,9 +150,9 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call =apiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,"GoodName");
+                call =apiInterface.GetFactor("GetOcrFactor",BarcodeScan,"GoodName");
             }else {
-                call =secendApiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,"GoodName");
+                call =secendApiInterface.GetFactor("GetOcrFactor",BarcodeScan,"GoodName");
             }
 
 
@@ -227,315 +235,802 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
     }
 
+    private LinearLayoutCompat createInfoRow(
+            String label,
+            String value,
+            int bodySize,
+            int textColor,
+            int mutedTextColor,
+            int maxLines
+    ) {
 
+        LinearLayoutCompat row = new LinearLayoutCompat(this);
 
+        row.setOrientation(LinearLayoutCompat.HORIZONTAL);
+        row.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(0, dp(2), 0, dp(2));
+        row.setMinimumHeight(dp(36));
+
+        TextView labelView = createReceiptText(
+                label,
+                9,
+                mutedTextColor,
+                Gravity.RIGHT | Gravity.CENTER_VERTICAL,
+                false
+        );
+
+        labelView.setPadding(dp(4), 0, dp(4), 0);
+
+        labelView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        dp(88),
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                )
+        );
+
+        TextView valueView = createReceiptText(
+                NumberFunctions.PerisanNumber(value),
+                bodySize,
+                textColor,
+                Gravity.RIGHT | Gravity.CENTER_VERTICAL,
+                true
+        );
+
+        valueView.setMaxLines(maxLines);
+        valueView.setPadding(dp(5), dp(3), dp(5), dp(3));
+
+        valueView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        0,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                        1f
+                )
+        );
+
+        row.addView(labelView);
+        row.addView(valueView);
+
+        return row;
+    }
+
+    private LinearLayoutCompat createMetricCell(
+            String label,
+            String value,
+            int bodySize,
+            int valueColor,
+            int labelColor
+    ) {
+
+        LinearLayoutCompat cell = new LinearLayoutCompat(this);
+
+        cell.setOrientation(LinearLayoutCompat.VERTICAL);
+        cell.setGravity(Gravity.CENTER);
+        cell.setPadding(dp(2), dp(2), dp(2), dp(2));
+
+        cell.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        0,
+                        dp(48),
+                        1f
+                )
+        );
+
+        TextView labelView = createReceiptText(
+                label,
+                8,
+                labelColor,
+                Gravity.CENTER,
+                false
+        );
+
+        labelView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(18)
+                )
+        );
+
+        TextView valueView = createReceiptText(
+                NumberFunctions.PerisanNumber(value),
+                bodySize,
+                valueColor,
+                Gravity.CENTER,
+                true
+        );
+
+        valueView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(26)
+                )
+        );
+
+        cell.addView(labelView);
+        cell.addView(valueView);
+
+        return cell;
+    }
+
+    private LinearLayoutCompat createTotalRow(
+            String label,
+            String value,
+            int textSize,
+            int valueColor,
+            boolean bold
+    ) {
+
+        LinearLayoutCompat row = new LinearLayoutCompat(this);
+
+        row.setOrientation(LinearLayoutCompat.HORIZONTAL);
+        row.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setMinimumHeight(dp(34));
+
+        TextView labelView = createReceiptText(
+                label,
+                Math.max(textSize - 1, 9),
+                Color.rgb(70, 70, 70),
+                Gravity.RIGHT | Gravity.CENTER_VERTICAL,
+                bold
+        );
+
+        labelView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        0,
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        1f
+                )
+        );
+
+        TextView valueView = createReceiptText(
+                NumberFunctions.PerisanNumber(value),
+                textSize,
+                valueColor,
+                Gravity.LEFT | Gravity.CENTER_VERTICAL,
+                true
+        );
+
+        valueView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        0,
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        1.4f
+                )
+        );
+
+        row.addView(labelView);
+        row.addView(valueView);
+
+        return row;
+    }
+    private View createReceiptDivider(int color) {
+
+        View divider = new View(this);
+
+        LinearLayoutCompat.LayoutParams params =
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(1)
+                );
+
+        params.setMargins(0, dp(2), 0, dp(2));
+
+        divider.setLayoutParams(params);
+        divider.setBackgroundColor(color);
+
+        return divider;
+    }
+
+    private View createVerticalReceiptDivider(int color) {
+
+        View divider = new View(this);
+
+        LinearLayoutCompat.LayoutParams params =
+                new LinearLayoutCompat.LayoutParams(
+                        dp(1),
+                        dp(34)
+                );
+
+        params.gravity = Gravity.CENTER_VERTICAL;
+
+        divider.setLayoutParams(params);
+        divider.setBackgroundColor(color);
+
+        return divider;
+    }
+
+    private GradientDrawable createReceiptBackground(
+            int backgroundColor,
+            int strokeColor,
+            int strokeWidth,
+            int radius
+    ) {
+
+        GradientDrawable drawable = new GradientDrawable();
+
+        drawable.setColor(backgroundColor);
+        drawable.setCornerRadius(dp(radius));
+
+        if (strokeWidth > 0) {
+            drawable.setStroke(dp(strokeWidth), strokeColor);
+        }
+
+        return drawable;
+    }
+
+    private String formatReceiptNumber(double value) {
+
+        if (value == Math.rint(value)) {
+            return decimalFormat.format((long) value);
+        }
+
+        return decimalFormat.format(value);
+    }
+    private String safeReceiptText(String value) {
+
+        if (value == null || value.trim().isEmpty()) {
+            return "-";
+        }
+
+        return value.trim();
+    }
+    private int dp(int value) {
+
+        return Math.round(
+                value * getResources().getDisplayMetrics().density
+        );
+    }
+
+    private double safeReceiptNumber(String value) {
+
+        if (value == null || value.trim().isEmpty()) {
+            return 0;
+        }
+
+        try {
+
+            String normalized = value
+                    .trim()
+                    .replace("٬", "")
+                    .replace(" ", "");
+
+            if (normalized.contains(",") && !normalized.contains(".")) {
+                normalized = normalized.replace(",", ".");
+            } else {
+                normalized = normalized.replace(",", "");
+            }
+
+            return Double.parseDouble(normalized);
+
+        } catch (Exception ignored) {
+            return 0;
+        }
+    }
+
+    private int readReceiptTextSize(String key, int fallback) {
+
+        try {
+
+            String value = callMethod.ReadString(key);
+
+            if (value == null || value.trim().isEmpty()) {
+                return fallback;
+            }
+
+            return Integer.parseInt(value.trim());
+
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+
+    private TextView createReceiptText(
+            String text,
+            int textSize,
+            int textColor,
+            int gravity,
+            boolean bold
+    ) {
+
+        TextView textView = new TextView(this);
+
+        textView.setText(text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+        textView.setTextColor(textColor);
+        textView.setGravity(gravity);
+        textView.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+
+        if (bold) {
+            textView.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        }
+
+        return textView;
+    }
     @SuppressLint("RtlHardcoded")
-    public void CreateView(){
+    public void CreateView() {
 
-        title_layout = new LinearLayoutCompat(getApplicationContext());
-        boby_good_layout = new LinearLayoutCompat(getApplicationContext());
-        good_layout = new LinearLayoutCompat(getApplicationContext());
-        total_layout = new LinearLayoutCompat(getApplicationContext());
-        ViewPager = new ViewPager(getApplicationContext());
-        ViewPager_rast = new ViewPager(getApplicationContext());
-        ViewPager_chap = new ViewPager(getApplicationContext());
+        final int titleSize = readReceiptTextSize("TitleSize", 14);
+        final int bodySize = readReceiptTextSize("BodySize", 12);
 
-        title_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+        final int primaryColor = MaterialColors.getColor(
+                this,
+                com.google.android.material.R.attr.colorPrimary,
+                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+        );
+
+        final int textColor = Color.rgb(35, 35, 35);
+        final int mutedTextColor = Color.rgb(90, 90, 90);
+        final int dividerColor = ColorUtils.setAlphaComponent(primaryColor, 65);
+        final int paperColor = Color.WHITE;
+        final int softBackground = Color.rgb(248, 248, 248);
+
+        main_layout.removeAllViews();
+        main_layout.setOrientation(LinearLayoutCompat.VERTICAL);
+        main_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        main_layout.setPadding(dp(6), dp(6), dp(6), dp(6));
+        main_layout.setBackgroundColor(paperColor);
+
+        /*
+         * Header
+         */
+        title_layout = new LinearLayoutCompat(this);
         title_layout.setOrientation(LinearLayoutCompat.VERTICAL);
         title_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        title_layout.setPadding(dp(8), dp(7), dp(8), dp(7));
+        title_layout.setBackground(
+                createReceiptBackground(paperColor, primaryColor, 1, 8)
+        );
 
+        LinearLayoutCompat.LayoutParams sectionParams =
+                new LinearLayoutCompat.LayoutParams(
+                        width,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                );
 
-        TextView company_tv = new TextView(getApplicationContext());
-        company_tv.setText(NumberFunctions.PerisanNumber("فاکتور فروش"));
-        company_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        company_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-        company_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-        company_tv.setGravity(Gravity.CENTER);
-        company_tv.setPadding(0, 0, 0, 20);
+        sectionParams.setMargins(0, 0, 0, dp(5));
+        title_layout.setLayoutParams(sectionParams);
 
+        TextView companyText = createReceiptText(
+                NumberFunctions.PerisanNumber("فاکتور فروش"),
+                titleSize + 2,
+                primaryColor,
+                Gravity.CENTER,
+                true
+        );
 
+        LinearLayoutCompat.LayoutParams companyParams =
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(38)
+                );
 
+        companyText.setLayoutParams(companyParams);
+        title_layout.addView(companyText);
+        title_layout.addView(createReceiptDivider(dividerColor));
 
-        boby_good_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        good_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        total_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+        title_layout.addView(
+                createInfoRow(
+                        "نام مشتری",
+                        safeReceiptText(factor.getCustName()),
+                        bodySize,
+                        textColor,
+                        mutedTextColor,
+                        2
+                )
+        );
 
+        title_layout.addView(
+                createInfoRow(
+                        "کد فاکتور",
+                        safeReceiptText(factor.getFactorPrivateCode()),
+                        bodySize,
+                        textColor,
+                        mutedTextColor,
+                        1
+                )
+        );
 
-        good_layout.setOrientation(LinearLayoutCompat.HORIZONTAL);
-        boby_good_layout.setOrientation(LinearLayoutCompat.VERTICAL);
-        total_layout.setOrientation(LinearLayoutCompat.VERTICAL);
+        title_layout.addView(
+                createInfoRow(
+                        "تاریخ فاکتور",
+                        safeReceiptText(factor.getFactorDate()),
+                        bodySize,
+                        textColor,
+                        mutedTextColor,
+                        1
+                )
+        );
 
+        title_layout.addView(
+                createInfoRow(
+                        "آدرس",
+                        safeReceiptText(factor.getAddress()),
+                        bodySize,
+                        textColor,
+                        mutedTextColor,
+                        3
+                )
+        );
+
+        title_layout.addView(
+                createInfoRow(
+                        "تلفن تماس",
+                        safeReceiptText(factor.getPhone()),
+                        bodySize,
+                        textColor,
+                        mutedTextColor,
+                        1
+                )
+        );
+
+        /*
+         * Goods
+         */
+        good_layout = new LinearLayoutCompat(this);
+        good_layout.setOrientation(LinearLayoutCompat.VERTICAL);
         good_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        good_layout.setPadding(dp(5), dp(5), dp(5), dp(5));
+        good_layout.setBackground(
+                createReceiptBackground(paperColor, dividerColor, 1, 8)
+        );
+
+        LinearLayoutCompat.LayoutParams goodsParams =
+                new LinearLayoutCompat.LayoutParams(
+                        width,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                );
+
+        goodsParams.setMargins(0, 0, 0, dp(5));
+        good_layout.setLayoutParams(goodsParams);
+
+        int goodsCount = ocr_goods == null ? 0 : ocr_goods.size();
+
+        TextView goodsTitle = createReceiptText(
+                NumberFunctions.PerisanNumber(
+                        "اقلام فاکتور  (" + goodsCount + ")"
+                ),
+                titleSize,
+                primaryColor,
+                Gravity.RIGHT | Gravity.CENTER_VERTICAL,
+                true
+        );
+
+        goodsTitle.setPadding(dp(5), 0, dp(5), 0);
+        goodsTitle.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(34)
+                )
+        );
+
+        good_layout.addView(goodsTitle);
+        good_layout.addView(createReceiptDivider(dividerColor));
+
+        boby_good_layout = new LinearLayoutCompat(this);
+        boby_good_layout.setOrientation(LinearLayoutCompat.VERTICAL);
         boby_good_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        total_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        boby_good_layout.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        width,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                )
+        );
 
+        int counterGood = 0;
 
-        ViewPager.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, 3));
-        ViewPager.setBackgroundResource(R.color.colorPrimaryDark);
-        ViewPager_rast.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        ViewPager_rast.setBackgroundResource(R.color.red_800);
-        ViewPager_chap.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-        ViewPager_chap.setBackgroundResource(R.color.green_800);
+        if (ocr_goods != null) {
 
+            for (Ocr_Good good : ocr_goods) {
 
+                counterGood++;
 
+                LinearLayoutCompat itemLayout = new LinearLayoutCompat(this);
+                itemLayout.setOrientation(LinearLayoutCompat.VERTICAL);
+                itemLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                itemLayout.setPadding(dp(5), dp(4), dp(5), dp(4));
+                itemLayout.setBackground(
+                        createReceiptBackground(
+                                softBackground,
+                                ColorUtils.setAlphaComponent(primaryColor, 45),
+                                1,
+                                6
+                        )
+                );
 
-            TextView customername_tv = new TextView(getApplicationContext());
-            customername_tv.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + factor.getCustName()));
-            customername_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            customername_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            customername_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            customername_tv.setGravity(Gravity.RIGHT);
-            customername_tv.setPadding(0, 0, 0, 15);
+                LinearLayoutCompat.LayoutParams itemParams =
+                        new LinearLayoutCompat.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                        );
 
-            TextView factorcode_tv = new TextView(getApplicationContext());
-            factorcode_tv.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " + factor.getFactorPrivateCode()));
-            factorcode_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            factorcode_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            factorcode_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            factorcode_tv.setGravity(Gravity.RIGHT);
-            factorcode_tv.setPadding(0, 0, 0, 15);
+                itemParams.setMargins(0, dp(3), 0, dp(3));
+                itemLayout.setLayoutParams(itemParams);
 
-            TextView factordate_tv = new TextView(getApplicationContext());
-            factordate_tv.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + factor.getFactorDate()));
-            factordate_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            factordate_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            factordate_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            factordate_tv.setGravity(Gravity.RIGHT);
-            factordate_tv.setPadding(0, 0, 0, 35);
-            TextView address_tv = new TextView(getApplicationContext());
-            address_tv.setText(NumberFunctions.PerisanNumber(" آدرس : " + factor.getAddress()));
-            address_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            address_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            address_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            address_tv.setGravity(Gravity.RIGHT);
-            TextView phone_tv = new TextView(getApplicationContext());
-            phone_tv.setText(NumberFunctions.PerisanNumber(" تلفن تماس : " + factor.getPhone()));
-            phone_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            phone_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            phone_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            phone_tv.setGravity(Gravity.RIGHT);
+                /*
+                 * Product name row
+                 */
+                LinearLayoutCompat nameRow = new LinearLayoutCompat(this);
+                nameRow.setOrientation(LinearLayoutCompat.HORIZONTAL);
+                nameRow.setGravity(Gravity.CENTER_VERTICAL);
+                nameRow.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                nameRow.setMinimumHeight(dp(38));
 
-            title_layout.addView(company_tv);
-            title_layout.addView(customername_tv);
-            title_layout.addView(factorcode_tv);
-            title_layout.addView(factordate_tv);
-            title_layout.addView(address_tv);
-            title_layout.addView(phone_tv);
-            title_layout.addView(ViewPager);
+                TextView rowNumber = createReceiptText(
+                        NumberFunctions.PerisanNumber(String.valueOf(counterGood)),
+                        bodySize,
+                        Color.WHITE,
+                        Gravity.CENTER,
+                        true
+                );
 
-            TextView total_amount_tv = new TextView(getApplicationContext());
-            total_amount_tv.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + factor.getSumAmount()));
-            total_amount_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            total_amount_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            total_amount_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            total_amount_tv.setGravity(Gravity.RIGHT);
-            total_amount_tv.setPadding(0, 20, 0, 10);
+                rowNumber.setBackground(
+                        createReceiptBackground(primaryColor, primaryColor, 0, 6)
+                );
 
+                rowNumber.setLayoutParams(
+                        new LinearLayoutCompat.LayoutParams(
+                                dp(32),
+                                dp(32)
+                        )
+                );
 
+                TextView goodName = createReceiptText(
+                        NumberFunctions.PerisanNumber(
+                                safeReceiptText(good.getGoodName())
+                        ),
+                        titleSize,
+                        textColor,
+                        Gravity.RIGHT | Gravity.CENTER_VERTICAL,
+                        true
+                );
 
-            TextView total_price_tv = new TextView(getApplicationContext());
-            total_price_tv.setText(NumberFunctions.PerisanNumber(" قیمت  : " + decimalFormat.format(Integer.valueOf(factor.getSumPrice())) + " ریال"));
-            total_price_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            total_price_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            total_price_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            total_price_tv.setGravity(Gravity.RIGHT);
+                goodName.setMaxLines(3);
+                goodName.setPadding(dp(7), dp(2), dp(7), dp(2));
 
+                goodName.setLayoutParams(
+                        new LinearLayoutCompat.LayoutParams(
+                                0,
+                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                                1f
+                        )
+                );
 
-            total_layout.addView(total_amount_tv);
-            total_layout.addView(total_price_tv);
+                nameRow.addView(rowNumber);
+                nameRow.addView(goodName);
 
-        if (Integer.parseInt(factor.getSumTax())>0){
-            TextView total_tax_tv = new TextView(getApplicationContext());
-            total_tax_tv.setText(NumberFunctions.PerisanNumber(" مالیات  : " + decimalFormat.format(Integer.valueOf(factor.getSumTax())) + " ریال"));
-            total_tax_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            total_tax_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            total_tax_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            total_tax_tv.setGravity(Gravity.RIGHT);
+                itemLayout.addView(nameRow);
+                itemLayout.addView(createReceiptDivider(dividerColor));
 
-            TextView total_total_taxprice_tv = new TextView(getApplicationContext());
-            total_total_taxprice_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.parseInt(factor.getSumPrice())+Integer.parseInt(factor.getSumTax())) + " ریال"));
-            total_total_taxprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            total_total_taxprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-            total_total_taxprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            total_total_taxprice_tv.setGravity(Gravity.RIGHT);
+                /*
+                 * Amount and prices
+                 */
+                double price = safeReceiptNumber(good.getPrice());
+                double amount = safeReceiptNumber(good.getFacAmount());
+                double totalPrice = price * amount;
 
-            total_layout.addView(total_tax_tv);
-            total_layout.addView(total_total_taxprice_tv);
+                LinearLayoutCompat detailRow = new LinearLayoutCompat(this);
+                detailRow.setOrientation(LinearLayoutCompat.HORIZONTAL);
+                detailRow.setGravity(Gravity.CENTER);
+                detailRow.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                detailRow.setPadding(0, dp(3), 0, 0);
 
+                detailRow.addView(
+                        createMetricCell(
+                                "تعداد",
+                                formatReceiptNumber(amount),
+                                bodySize,
+                                textColor,
+                                mutedTextColor
+                        )
+                );
 
+                detailRow.addView(
+                        createVerticalReceiptDivider(dividerColor)
+                );
+
+                detailRow.addView(
+                        createMetricCell(
+                                "فی",
+                                formatReceiptNumber(price),
+                                bodySize,
+                                textColor,
+                                mutedTextColor
+                        )
+                );
+
+                detailRow.addView(
+                        createVerticalReceiptDivider(dividerColor)
+                );
+
+                detailRow.addView(
+                        createMetricCell(
+                                "مبلغ",
+                                formatReceiptNumber(totalPrice),
+                                bodySize,
+                                primaryColor,
+                                mutedTextColor
+                        )
+                );
+
+                itemLayout.addView(detailRow);
+                boby_good_layout.addView(itemLayout);
+            }
         }
 
-
-        // TODO after update 24.8.0
-
-
-//        if(!factor.getNewSumPrice().equals(factor.getSumPrice())){
-//            TextView total_newprice_tv = new TextView(getApplicationContext());
-//            total_newprice_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل(جدید) : " + decimalFormat.format(Integer.valueOf(factor.getNewSumPrice())) + " ریال"));
-//            total_newprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-//            total_newprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-//            total_newprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-//            total_newprice_tv.setGravity(Gravity.RIGHT);
-//
-//            total_layout.addView(total_newprice_tv);
-//
-//        }
-
-
-
-
-        int CounterGood = 0;
-        for (Ocr_Good g : ocr_goods) {
-            CounterGood++;
-            LinearLayoutCompat first_layout = new LinearLayoutCompat(getApplicationContext());
-            first_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            first_layout.setOrientation(LinearLayoutCompat.VERTICAL);
-
-            LinearLayoutCompat name_detail = new LinearLayoutCompat(getApplicationContext());
-            name_detail.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            name_detail.setOrientation(LinearLayoutCompat.HORIZONTAL);
-            name_detail.setWeightSum(6);
-            name_detail.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-
-            TextView radif = new TextView(getApplicationContext());
-            radif.setText(NumberFunctions.PerisanNumber(String.valueOf(CounterGood)));
-            radif.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 5));
-            radif.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-            radif.setGravity(Gravity.CENTER);
-            radif.setTextColor(getColor(R.color.colorPrimaryDark));
-            radif.setPadding(0, 10, 0, Integer.parseInt(callMethod.ReadString("TitleSize")));
-
-            androidx.viewpager.widget.ViewPager ViewPager_goodname = new ViewPager(getApplicationContext());
-            ViewPager_goodname.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-            ViewPager_goodname.setBackgroundResource(R.color.colorPrimaryDark);
-
-            TextView good_name_tv = new TextView(getApplicationContext());
-            good_name_tv.setText(NumberFunctions.PerisanNumber(g.getGoodName()));
-            good_name_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 1));
-            good_name_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-            good_name_tv.setGravity(Gravity.RIGHT);
-            good_name_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            good_name_tv.setPadding(0, 10, 5, 0);
-
-            name_detail.addView(radif);
-            name_detail.addView(ViewPager_goodname);
-            name_detail.addView(good_name_tv);
-
-            LinearLayoutCompat detail = new LinearLayoutCompat(getApplicationContext());
-            detail.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            detail.setOrientation(LinearLayoutCompat.HORIZONTAL);
-            detail.setWeightSum(9);
-            detail.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-
-            TextView good_price_tv = new TextView(getApplicationContext());
-
-            String g_getPrice = g.getPrice().replace(",", ".");
-            good_price_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format( Float.parseFloat(g_getPrice))));
-
-            //good_price_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getPrice()))));
-            good_price_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
-            good_price_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-            good_price_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            good_price_tv.setGravity(Gravity.CENTER);
-
-            TextView good_amount_tv = new TextView(getApplicationContext());
-            good_amount_tv.setText(NumberFunctions.PerisanNumber(String.valueOf(g.getFacAmount())));
-            good_amount_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
-            good_amount_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-            good_amount_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            good_amount_tv.setGravity(Gravity.CENTER);
-
-            TextView good_totalprice_tv = new TextView(getApplicationContext());
-
-
-            good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format( Float.parseFloat(g_getPrice)*Float.parseFloat(g.getFacAmount()))));
-
-            good_totalprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
-            good_totalprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-            good_totalprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));
-            good_totalprice_tv.setPadding(0, 0, 0, 10);
-            good_totalprice_tv.setGravity(Gravity.CENTER);
-
-            androidx.viewpager.widget.ViewPager ViewPager_sell1 = new ViewPager(getApplicationContext());
-            ViewPager_sell1.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-            ViewPager_sell1.setBackgroundResource(R.color.colorPrimaryDark);
-            androidx.viewpager.widget.ViewPager ViewPager_sell2 = new ViewPager(getApplicationContext());
-            ViewPager_sell2.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-            ViewPager_sell2.setBackgroundResource(R.color.colorPrimaryDark);
-
-            detail.addView(good_price_tv);
-            detail.addView(ViewPager_sell1);
-            detail.addView(good_amount_tv);
-            detail.addView(ViewPager_sell2);
-            detail.addView(good_totalprice_tv);
-
-            androidx.viewpager.widget.ViewPager extra_ViewPager = new ViewPager(getApplicationContext());
-            extra_ViewPager.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 2));
-            extra_ViewPager.setBackgroundResource(R.color.colorPrimaryDark);
-
-            androidx.viewpager.widget.ViewPager extra_ViewPager1 = new ViewPager(getApplicationContext());
-            extra_ViewPager1.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 2));
-            extra_ViewPager1.setBackgroundResource(R.color.colorPrimaryDark);
-
-
-            first_layout.addView(name_detail);
-            first_layout.addView(extra_ViewPager);
-            first_layout.addView(detail);
-            first_layout.addView(extra_ViewPager1);
-
-            boby_good_layout.addView(first_layout);
-
-
-        }
-        good_layout.addView(ViewPager_rast);
         good_layout.addView(boby_good_layout);
-        good_layout.addView(ViewPager_chap);
 
+        /*
+         * Totals
+         */
+        total_layout = new LinearLayoutCompat(this);
+        total_layout.setOrientation(LinearLayoutCompat.VERTICAL);
+        total_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        total_layout.setPadding(dp(7), dp(6), dp(7), dp(6));
+        total_layout.setBackground(
+                createReceiptBackground(
+                        softBackground,
+                        primaryColor,
+                        1,
+                        8
+                )
+        );
 
+        total_layout.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        width,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                )
+        );
 
+        double sumAmount = safeReceiptNumber(factor.getSumAmount());
+        double sumPrice = safeReceiptNumber(factor.getSumPrice());
+        double sumTax = safeReceiptNumber(factor.getSumTax());
+        double finalPrice = sumPrice + sumTax;
 
+        total_layout.addView(
+                createTotalRow(
+                        "تعداد کل",
+                        formatReceiptNumber(sumAmount),
+                        bodySize,
+                        textColor,
+                        false
+                )
+        );
+
+        total_layout.addView(
+                createTotalRow(
+                        "جمع مبلغ",
+                        formatReceiptNumber(sumPrice) + " ریال",
+                        bodySize,
+                        textColor,
+                        false
+                )
+        );
+
+        if (sumTax > 0) {
+
+            total_layout.addView(
+                    createTotalRow(
+                            "مالیات",
+                            formatReceiptNumber(sumTax) + " ریال",
+                            bodySize,
+                            textColor,
+                            false
+                    )
+            );
+
+            total_layout.addView(createReceiptDivider(dividerColor));
+
+            total_layout.addView(
+                    createTotalRow(
+                            "قیمت نهایی",
+                            formatReceiptNumber(finalPrice) + " ریال",
+                            titleSize,
+                            primaryColor,
+                            true
+                    )
+            );
+
+        } else {
+
+            total_layout.addView(createReceiptDivider(dividerColor));
+
+            total_layout.addView(
+                    createTotalRow(
+                            "قیمت نهایی",
+                            formatReceiptNumber(sumPrice) + " ریال",
+                            titleSize,
+                            primaryColor,
+                            true
+                    )
+            );
+        }
+
+        /*
+         * Add printable content
+         */
         main_layout.addView(title_layout);
         main_layout.addView(good_layout);
         main_layout.addView(total_layout);
-        bitmap_factor=loadBitmapFromView(main_layout);
 
+        /*
+         * Create image before adding the action button
+         */
+        bitmap_factor = loadBitmapFromView(main_layout);
 
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
+        bitmap_factor.compress(
+                Bitmap.CompressFormat.JPEG,
+                80,
+                outputStream
+        );
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap_factor.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        byte[] imageBytes = outputStream.toByteArray();
 
+        bitmap_factor_base64 = Base64.encodeToString(
+                imageBytes,
+                Base64.NO_WRAP
+        );
 
-        bitmap_factor_base64= Base64.encodeToString(byteArray, Base64.DEFAULT);
-        ocr_dbh.Insert_factorImage(BarcodeScan,bitmap_factor_base64);
+        ocr_dbh.Insert_factorImage(
+                BarcodeScan,
+                bitmap_factor_base64
+        );
 
+        /*
+         * Action button
+         */
+        Button confirmButton = new Button(this);
 
+        LinearLayoutCompat.LayoutParams buttonParams =
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(46)
+                );
 
+        buttonParams.setMargins(0, dp(7), 0, 0);
+        confirmButton.setLayoutParams(buttonParams);
 
+        confirmButton.setText("تأیید و امضای رسید");
+        confirmButton.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                Math.max(bodySize, 12)
+        );
 
+        confirmButton.setTextColor(Color.WHITE);
+        confirmButton.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        confirmButton.setGravity(Gravity.CENTER);
+        confirmButton.setAllCaps(false);
+        confirmButton.setMinWidth(0);
+        confirmButton.setMinHeight(0);
 
-        Button button=  new Button(getApplicationContext());
-        button.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        button.setBackgroundResource(R.color.green_700);
-        button.setText("تایید و امضای رسید");
-        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        button.setTextColor(getColor(R.color.white));
-        button.setOnClickListener(v -> {
+        confirmButton.setBackgroundTintList(
+                ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                                this,
+                                R.color.green_700
+                        )
+                )
+        );
 
-            intent = new Intent(Ocr_FactorDetailActivity.this, Ocr_PaintActivity.class);
+        confirmButton.setOnClickListener(view -> {
+
+            intent = new Intent(
+                    Ocr_FactorDetailActivity.this,
+                    Ocr_PaintActivity.class
+            );
+
             intent.putExtra("ScanResponse", BarcodeScan);
             intent.putExtra("FactorImage", "hasimage");
             intent.putExtra("Width", String.valueOf(width));
+
             startActivity(intent);
             finish();
         });
-        main_layout.addView(button);
 
-
-
-
+        main_layout.addView(confirmButton);
     }
 
     public Bitmap loadBitmapFromView(View v) {

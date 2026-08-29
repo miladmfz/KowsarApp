@@ -499,7 +499,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         } else {
             llsumfactor.setVisibility(View.VISIBLE);
             tv_customer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            tv_sumfac.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            tv_sumfac.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
     }
 

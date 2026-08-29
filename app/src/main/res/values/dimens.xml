@@ -22,5 +22,15 @@
 
     <dimen name="loading">48dp</dimen>
 
+    <dimen name="controlHeight">56dp</dimen>
+    <dimen name="iconTouchSize">48dp</dimen>
 
+    <dimen name="radiusSmall">8dp</dimen>
+    <dimen name="radiusMedium">12dp</dimen>
+    <dimen name="radiusLarge">16dp</dimen>
+
+    <dimen name="elevationSmall">2dp</dimen>
+    <dimen name="elevationMedium">4dp</dimen>
+
+    <dimen name="emptyAnimationSize">160dp</dimen>
 </resources>

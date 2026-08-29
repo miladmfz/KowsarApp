@@ -38,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -54,7 +55,7 @@ public class Broker_Replication {
     private final Broker_DBH broker_dbh;
     ArrayList<KowsarLocation> locations = new ArrayList<>();
     ArrayList<KowsarLocationNew> locationsNew = new ArrayList<>();
-    private final ArrayList<String> changedGoodCodesForFTS = new ArrayList<>();
+    private final LinkedHashSet<String> changedGoodCodesForFTS = new LinkedHashSet<>();
     KowsarLocation location;
     KowsarLocationNew locationnew;
 
@@ -90,6 +91,30 @@ public class Broker_Replication {
     }
 
 
+    private boolean isTextColumnType(String type) {
+        if (type == null) {
+            return false;
+        }
+
+        String normalized = type.trim().toUpperCase();
+
+        return normalized.startsWith("CHAR") ||
+                normalized.startsWith("NCHAR") ||
+                normalized.startsWith("VARCHAR") ||
+                normalized.startsWith("NVARCHAR") ||
+                normalized.startsWith("TEXT") ||
+                normalized.startsWith("CLOB");
+    }
+
+    private boolean isBooleanColumnType(String type) {
+        if (type == null) {
+            return false;
+        }
+
+        return type.trim().toUpperCase().startsWith("BO");
+    }
+
+
     public void DoingReplicate() {
 
         dialog = new Dialog(mContext);
@@ -112,6 +137,7 @@ public class Broker_Replication {
                     assert response.body() != null;
                     callMethod.Log(response.body().getText()+"");
                     broker_dbh.SaveConfig("MaxRepLogCode", Objects.requireNonNull(response.body()).getText());
+                    changedGoodCodesForFTS.clear();
                     RetrofitReplicate(0);
                 }
 
@@ -150,29 +176,30 @@ public class Broker_Replication {
                 assert response.body() != null;
 
                 broker_dbh.SaveConfig("MaxRepLogCode", response.body().getText());
+                changedGoodCodesForFTS.clear();
                 RetrofitReplicateAuto(0);
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                try {
+                    // 🟢 بررسی وضعیت اتصال
+                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                        callMethod.showToast("اتصال اینترنت قطع است!");
+                    } else if (NetworkUtils.isVPNActive()) {
+                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+                    } else {
+                        String serverUrl = callMethod.ReadString("ServerURLUse");
+                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
                         } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
+                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
                         }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
                     }
+                } catch (Exception e) {
+                    callMethod.Log("Network check error: " + e.getMessage());
+                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                }
             }
         });
 
@@ -193,6 +220,92 @@ public class Broker_Replication {
 
 
     }
+
+    private void GoNextReplicationStepAfterFTS(int currentStep, int nextLevel) {
+
+        if ((currentStep == 1 || currentStep == 16) && broker_dbh.IsGoodSearchFTSReady() && changedGoodCodesForFTS.size() > 0) {
+
+            broker_dbh.SyncGoodsSearchFTSBatchAsync(
+                    new ArrayList<>(changedGoodCodesForFTS),
+                    new Broker_DBH.OneGoodFTSCallback() {
+
+                        @Override
+                        public void onStart(String message) {
+                            if (tv_step != null) {
+                                tv_step.setVisibility(View.VISIBLE);
+                                tv_step.setText(NumberFunctions.PerisanNumber(message));
+                            }
+                        }
+
+                        @Override
+                        public void onDone(String message) {
+                            changedGoodCodesForFTS.clear();
+
+                            if (tv_step != null) {
+                                tv_step.setVisibility(View.GONE);
+                            }
+
+                            callMethod.Log(message);
+                            RetrofitReplicate(nextLevel);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            changedGoodCodesForFTS.clear();
+
+                            if (tv_step != null) {
+                                tv_step.setVisibility(View.GONE);
+                            }
+
+                            callMethod.Log("FTS Batch Error = " + e.getMessage());
+                            RetrofitReplicate(nextLevel);
+                        }
+                    }
+            );
+
+        } else {
+
+            if (tv_step != null) {
+                tv_step.setVisibility(View.GONE);
+            }
+
+            RetrofitReplicate(nextLevel);
+        }
+    }
+
+    private void GoNextReplicationAutoStepAfterFTS(int currentStep, int nextLevel) {
+
+        if ((currentStep == 1 || currentStep == 16) && broker_dbh.IsGoodSearchFTSReady() && changedGoodCodesForFTS.size() > 0) {
+
+            broker_dbh.SyncGoodsSearchFTSBatchAsync(
+                    new ArrayList<>(changedGoodCodesForFTS),
+                    new Broker_DBH.OneGoodFTSCallback() {
+
+                        @Override
+                        public void onStart(String message) {
+                            callMethod.Log(message);
+                        }
+
+                        @Override
+                        public void onDone(String message) {
+                            changedGoodCodesForFTS.clear();
+                            callMethod.Log(message);
+                            RetrofitReplicateAuto(nextLevel);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            changedGoodCodesForFTS.clear();
+                            callMethod.Log("FTS Auto Batch Error = " + e.getMessage());
+                            RetrofitReplicateAuto(nextLevel);
+                        }
+                    }
+            );
+
+        } else {
+            RetrofitReplicateAuto(nextLevel);
+        }
+    }
     public void RetrofitReplicate(Integer replevel) {
         broker_dbh.closedb();
         replicatelevel = replevel;
@@ -206,7 +319,7 @@ public class Broker_Replication {
             String RowExec;
 
             int currentStep = replicatedetail.getReplicationCode();
-            int totalSteps = 15;
+            int totalSteps = 16;
 
             switch (currentStep) {
                 case 1:
@@ -269,6 +382,10 @@ public class Broker_Replication {
                     tableName = "واحد سنجش";
                     RowExec = "200";
                     break;
+                case 16:
+                    tableName = "بارکدهای کالا";
+                    RowExec = "500";
+                    break;
                 default:
                     tableName = "نامشخص";
                     RowExec = "100";
@@ -307,8 +424,7 @@ public class Broker_Replication {
                             }
 
                             if (arrayobject == null || arrayobject.length() == 0) {
-                                tv_step.setVisibility(View.GONE);
-                                RetrofitReplicate(replicatelevel + 1);
+                                GoNextReplicationStepAfterFTS(currentStep, replicatelevel + 1);
                                 return;
                             }
 
@@ -402,10 +518,10 @@ public class Broker_Replication {
                                                                     qCol.append(" , ");
                                                                 }
 
-                                                                String valuetype = tableDetails.get(z).getType().substring(0, 2);
+                                                                String valueType = tableDetails.get(z).getType();
 
                                                                 if (!tableDetails.get(z).getText().equals("null")) {
-                                                                    if (valuetype.equals("CH")) {
+                                                                    if (isTextColumnType(valueType)) {
                                                                         qCol.append(" '").append(tableDetails.get(z).getText()).append("' ");
                                                                     } else {
                                                                         qCol.append(" ").append(tableDetails.get(z).getText());
@@ -433,9 +549,9 @@ public class Broker_Replication {
 
                                                                 if (!tableDetails.get(z).getText().equals("null")) {
 
-                                                                    String valuetype = tableDetails.get(z).getType().substring(0, 2);
+                                                                    String valueType = tableDetails.get(z).getType();
 
-                                                                    if (valuetype.equals("CH")) {
+                                                                    if (isTextColumnType(valueType)) {
 
                                                                         qCol.append(" ")
                                                                                 .append(tableDetails.get(z).getName())
@@ -443,7 +559,7 @@ public class Broker_Replication {
                                                                                 .append(tableDetails.get(z).getText())
                                                                                 .append("' ");
 
-                                                                    } else if (valuetype.equals("BO")) {
+                                                                    } else if (isBooleanColumnType(valueType)) {
 
                                                                         if (!tableDetails.get(z).getText().equals("")) {
                                                                             qCol.append(" ")
@@ -488,8 +604,8 @@ public class Broker_Replication {
                                                     callMethod.Log("kowsar_qCol=" + repcode + " = " + qCol.toString());
                                                     database.execSQL(qCol.toString());
 
-                                                    if (currentStep == 1 && broker_dbh.IsGoodSearchFTSReady()) {
-                                                        broker_dbh.SyncOneGoodSearchFTS(code);
+                                                    if ((currentStep == 1 || currentStep == 16) && broker_dbh.IsGoodSearchFTSReady()) {
+                                                        changedGoodCodesForFTS.add(code);
                                                     }
 
                                                     LastRepCode = repcode;
@@ -519,8 +635,13 @@ public class Broker_Replication {
                                                     try {
                                                         database.execSQL(qCol.toString());
 
-                                                        if (currentStep == 1 && broker_dbh.IsGoodSearchFTSReady()) {
-                                                            broker_dbh.DeleteOneGoodSearchFTS(repObjectCode);
+                                                        if (broker_dbh.IsGoodSearchFTSReady()) {
+                                                            if (currentStep == 1) {
+                                                                broker_dbh.DeleteOneGoodSearchFTS(repObjectCode);
+                                                            } else if (currentStep == 16) {
+                                                                // Only the barcode row was deleted; rebuild the Good FTS row without it.
+                                                                changedGoodCodesForFTS.add(repObjectCode);
+                                                            }
                                                         }
 
                                                         LastRepCode = repcode;
@@ -565,8 +686,7 @@ public class Broker_Replication {
 
                                 } else {
 
-                                    tv_step.setVisibility(View.GONE);
-                                    RetrofitReplicate(replicatelevel + 1);
+                                    GoNextReplicationStepAfterFTS(currentStep, replicatelevel + 1);
                                 }
                             }
 
@@ -609,397 +729,9 @@ public class Broker_Replication {
         }
     }
     public void RetrofitReplicate1(Integer replevel) {
-        broker_dbh.closedb();
-        replicatelevel = replevel;
-        replicationModels = broker_dbh.GetReplicationTable();
-        if (replicatelevel < replicationModels.size()) {
-            ReplicationModel replicatedetail = replicationModels.get(replicatelevel);
-
-
-
-            String tableName;
-            String RowExec;
-
-            int currentStep = replicatedetail.getReplicationCode();
-            int totalSteps = 15;
-
-
-            switch (currentStep) {
-                case 1:
-                    tableName = "کالا";
-                    RowExec = "100";
-                    break;
-                case 2:
-                    tableName = "موجودی انبار";
-                    RowExec = "400";
-                    break;
-                case 3:
-                    tableName = "سرگروه";
-                    RowExec = "400";
-                    break;
-                case 4:
-                    tableName = "گروه کالا";
-                    RowExec = "600";
-                    break;
-                case 5:
-                    tableName = "اجزای پایه";
-                    RowExec = "300";
-                    break;
-                case 6:
-                    tableName = "شهر";
-                    RowExec = "400";
-                    break;
-                case 7:
-                    tableName = "ادرس";
-                    RowExec = "300";
-                    break;
-                case 8:
-                    tableName = "مشتری";
-                    RowExec = "300";
-                    break;
-                case 9:
-                    tableName = "خصوصیات اضافه";
-                    RowExec = "200";
-                    break;
-                case 10:
-                    tableName = "گروهیندی ها";
-                    RowExec = "600";
-                    break;
-                case 11:
-                    tableName = "سمت";
-                    RowExec = "600";
-                    break;
-                case 12:
-                    tableName = "سمت شخص";
-                    RowExec = "600";
-                    break;
-                case 13:
-                    tableName = "سمت شخص کالا";
-                    RowExec = "300";
-                    break;
-                case 14:
-                    tableName = "مشتریان بازاریاب";
-                    RowExec = "500";
-                    break;
-                case 15:
-                    tableName = "واحد سنجش";
-                    RowExec = "200";
-                    break;
-                default:
-                    tableName = "نامشخص";
-                    RowExec = "100";
-                    break;
-            }
-
-            String message = "مرحله " + currentStep + " از " + totalSteps + " در حال بروز رسانی " + tableName;
-            tv_rep.setText(NumberFunctions.PerisanNumber(message));
-
-
-
-
-            tableDetails = broker_dbh.GetTableDetail(replicatedetail.getClientTable());
-            FinalStep = 0;
-            LastRepCode = String.valueOf(replicatedetail.getLastRepLogCode());
-            UserInfo userInfo = broker_dbh.LoadPersonalInfo();
-
-//            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("RetrofitReplicate",
-            Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
-                    String.valueOf(replicatedetail.getLastRepLogCode()),
-                    replicatedetail.getServerTable(),
-                    "",
-                    "1",
-                    RowExec
-            );
-            callMethod.Log(call1.request().toString());
-
-
-            callMethod.Log("lastreplog= "+String.valueOf(replicatedetail.getLastRepLogCode()));
-            call1.enqueue(new Callback<RetrofitResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-
-                    if (response.isSuccessful()) {
-                        try {
-                            callMethod.Log("8");
-                            JSONArray arrayobject = null;
-                            if (response.body() != null) {
-                                arrayobject = new JSONArray(response.body().getText());
-                            }
-                            int ObjectSize = arrayobject.length();
-                            JSONObject singleobject = arrayobject.getJSONObject(0);
-                            String state = singleobject.getString("RLOpType");
-                            FinalStep = Integer.parseInt(singleobject.getString("RowsCount"));
-                            tv_step.setText(NumberFunctions.PerisanNumber(singleobject.getString("RowsCount") + "تعداد"));
-                            tv_step.setVisibility(View.VISIBLE);
-
-                            switch (state) {
-                                case "n":
-                                case "N":
-                                    break;
-                                default:
-
-                                    for (int i = 0; i < ObjectSize; i++) {
-
-                                        singleobject = arrayobject.getJSONObject(i);
-                                        String reptype = singleobject.getString("RLOpType");
-                                        String repcode = singleobject.getString("RepLogDataCode");
-
-                                        String code = singleobject.getString(replicatedetail.getServerPrimaryKey());
-                                        int columnDetail = tableDetails.size();
-                                        StringBuilder qCol = new StringBuilder();
-
-                                        switch (reptype) {
-                                            case "U":
-                                            case "u":
-                                            case "I":
-                                            case "i":
-
-                                                for (TableDetail singletabale : tableDetails) {
-
-                                                    if (singleobject.has(singletabale.getName())) {
-                                                        singletabale.setText(singleobject.getString(singletabale.getName()));
-                                                        if (singletabale.getText() != null)
-                                                            singletabale.setText(singletabale.getText().replace("'", " "));
-                                                    }
-                                                }
-
-                                                @SuppressLint("Recycle") Cursor d = database.rawQuery("Select Count(*) AS cntRec From " + replicatedetail.getClientTable() + " Where " + replicatedetail.getClientPrimaryKey() + " = " + code, null);
-                                                d.moveToFirst();
-                                                @SuppressLint("Range") int nc = d.getInt(d.getColumnIndex("cntRec"));
-                                                if (nc == 0) {
-
-
-                                                    qCol = new StringBuilder("INSERT INTO " + replicatedetail.getClientTable() + " ( ");
-                                                    int QueryConditionCount = 0;
-                                                    for (int z = 0; z < columnDetail; z++) {
-                                                        if (tableDetails.get(z).getText() != null) {
-                                                            if (QueryConditionCount > 0)
-                                                                qCol.append(" , ");
-                                                            qCol.append(" ").append(tableDetails.get(z).getName());
-                                                            QueryConditionCount++;
-                                                        }
-                                                    }
-                                                    qCol.append(" ) Select  ");
-                                                    QueryConditionCount = 0;
-
-                                                    for (int z = 0; z < columnDetail; z++) {
-                                                        if (tableDetails.get(z).getText() != null) {
-                                                            if (QueryConditionCount > 0)
-                                                                qCol.append(" , ");
-                                                            String valuetype = tableDetails.get(z).getType().substring(0, 2);
-                                                            if (!tableDetails.get(z).getText().equals("null")) {
-                                                                if (valuetype.equals("CH")) {
-                                                                    qCol.append(" '").append(tableDetails.get(z).getText()).append("' ");
-                                                                } else {
-                                                                    qCol.append(" ").append(tableDetails.get(z).getText());
-                                                                }
-                                                            } else {
-                                                                qCol.append(" ").append(tableDetails.get(z).getText());
-                                                            }
-                                                            QueryConditionCount++;
-                                                        }
-                                                    }
-                                                } else {
-                                                    qCol = new StringBuilder("Update " + replicatedetail.getClientTable() + "  Set ");
-                                                    int QueryConditionCount = 0;
-                                                    for (int z = 1; z < columnDetail; z++) {
-                                                        if (tableDetails.get(z).getText() != null) {
-                                                            if (QueryConditionCount > 0)
-                                                                qCol.append(" , ");
-                                                            if (!tableDetails.get(z).getText().equals("null")) {
-
-                                                                String valuetype = tableDetails.get(z).getType().substring(0, 2);
-                                                                if (valuetype.equals("CH")) {
-                                                                    qCol.append(" ").append(tableDetails.get(z).getName()).append(" = '").append(tableDetails.get(z).getText()).append("' ");
-                                                                } else if (valuetype.equals("BO")) {
-                                                                    if (!tableDetails.get(z).getText().equals(""))
-                                                                    {
-                                                                        qCol.append(" ").append(tableDetails.get(z).getName()).append(" = ").append(tableDetails.get(z).getText()).append(" ");
-
-                                                                    }else{
-                                                                        qCol.append(" ").append(tableDetails.get(z).getName()).append(" = null ");
-                                                                    }
-
-                                                                }else {
-                                                                    qCol.append(" ").append(tableDetails.get(z).getName()).append(" = ").append(tableDetails.get(z).getText()).append(" ");
-                                                                }
-
-
-                                                            } else {
-                                                                qCol.append(" ").append(tableDetails.get(z).getName()).append(" = ").append(tableDetails.get(z).getText()).append(" ");
-                                                            }
-                                                            QueryConditionCount++;
-                                                        }
-                                                    }
-                                                    qCol.append(" Where ").append(replicatedetail.getClientPrimaryKey()).append(" = ").append(code);
-
-                                                }
-
-                                                try {
-                                                    callMethod.Log("kowsar_qCol="+repcode + " = " + qCol.toString());
-                                                    database.execSQL(qCol.toString());
-                                                    if (currentStep == 1 && broker_dbh.IsGoodSearchFTSReady()) {
-                                                        broker_dbh.SyncOneGoodSearchFTSAsync(
-                                                                code,
-                                                                new Broker_DBH.OneGoodFTSCallback() {
-
-                                                                    @Override
-                                                                    public void onStart(String message) {
-                                                                        tv_step.setVisibility(View.VISIBLE);
-                                                                        tv_step.setText(message);
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onDone(String message) {
-                                                                        callMethod.Log(message);
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onError(Exception e) {
-                                                                        callMethod.Log(e.getMessage());
-                                                                    }
-                                                                }
-                                                        );                                                    }
-
-                                                    LastRepCode = repcode;
-                                                } catch (Exception e) {
-                                                    callMethod.Log(e.getMessage());
-                                                }
-
-                                                d.close();
-                                                break;
-                                            case "D":
-                                            case "d":
-
-
-                                                if (!replicatedetail.getServerTable().equals("")) {
-                                                    String repObjectCode = singleobject.getString("RLObjectRef");
-                                                    qCol = new StringBuilder("Delete from " + replicatedetail.getClientTable() + "  Where ").append(replicatedetail.getClientPrimaryKey()).append(" = ").append(repObjectCode);
-                                                    try {
-                                                        database.execSQL(qCol.toString());
-// TODO
-                                                        if (currentStep == 1 && broker_dbh.IsGoodSearchFTSReady()) {
-                                                            changedGoodCodesForFTS.add(code);
-                                                        }
-
-//                                                        if (currentStep == 1 && broker_dbh.IsGoodSearchFTSReady()) {
-//                                                            broker_dbh.DeleteOneGoodSearchFTSAsync(
-//                                                                    repObjectCode,
-//                                                                    new Broker_DBH.OneGoodFTSCallback() {
-//
-//                                                                        @Override
-//                                                                        public void onStart(String message) {
-//                                                                            tv_step.setVisibility(View.VISIBLE);
-//                                                                            tv_step.setText(message);
-//                                                                        }
-//
-//                                                                        @Override
-//                                                                        public void onDone(String message) {
-//                                                                            callMethod.Log(message);
-//                                                                        }
-//
-//                                                                        @Override
-//                                                                        public void onError(Exception e) {
-//                                                                            callMethod.Log(e.getMessage());
-//                                                                        }
-//                                                                    }
-//                                                            );
-//                                                        }
-
-                                                        LastRepCode = repcode;
-                                                    } catch (Exception ignored) {
-                                                    }
-                                                }
-
-                                                break;
-                                        }
-                                    }
-
-                                    database.execSQL("Update ReplicationTable Set LastRepLogCode = " + LastRepCode + " Where ServerTable = '" + replicatedetail.getServerTable() + "' ");
-                                    break;
-                            }
-
-                            if (arrayobject.length() >= RepRowCount) {
-                                RetrofitReplicate(replicatelevel);
-                            } else {
-
-                                if (Integer.parseInt(LastRepCode) < 0) {
-
-                                    database.execSQL("Update ReplicationTable Set LastRepLogCode = " + broker_dbh.ReadConfig("MaxRepLogCode") + " Where ServerTable = '" + replicatedetail.getServerTable() + "' ");
-
-                                    RetrofitReplicate(replicatelevel);
-                                } else {
-
-                                    if (currentStep == 1 && broker_dbh.IsGoodSearchFTSReady()) {
-                                        broker_dbh.SyncGoodsSearchFTSBatchAsync(
-                                                new ArrayList<>(changedGoodCodesForFTS),
-                                                new Broker_DBH.OneGoodFTSCallback() {
-                                                    @Override
-                                                    public void onStart(String message) {
-                                                        tv_step.setVisibility(View.VISIBLE);
-                                                        tv_step.setText(message);
-                                                    }
-
-                                                    @Override
-                                                    public void onDone(String message) {
-                                                        changedGoodCodesForFTS.clear();
-                                                        tv_step.setVisibility(View.GONE);
-                                                        RetrofitReplicate(replicatelevel + 1);
-                                                    }
-
-                                                    @Override
-                                                    public void onError(Exception e) {
-                                                        changedGoodCodesForFTS.clear();
-                                                        callMethod.Log(e.getMessage());
-                                                        tv_step.setVisibility(View.GONE);
-                                                        RetrofitReplicate(replicatelevel + 1);
-                                                    }
-                                                }
-                                        );
-                                    } else {
-                                        tv_step.setVisibility(View.GONE);
-                                        RetrofitReplicate(replicatelevel + 1);
-                                    }
-
-                                    tv_step.setVisibility(View.GONE);
-                                    RetrofitReplicate(replicatelevel + 1);
-                                }
-                            }
-                        } catch (Exception ignored) {
-
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
-                    callMethod.Log("9");
-                    callMethod.Log("kowsar_____"+t.getMessage());
-                    RetrofitReplicate(replicatelevel);
-                }
-            });
-
-        } else {
-            replicateGoodImageChange();
-        }
+        // نسخه قدیمی برای جلوگیری از دو مسیر متفاوت نگه داشته شده است.
+        // مسیر اصلی بروزرسانی از RetrofitReplicate استفاده می‌کند تا FTS فقط بعد از آماده بودن، Batch شود.
+        RetrofitReplicate(replevel);
     }
 
 
@@ -1024,7 +756,7 @@ public class Broker_Replication {
             String RowExec;
 
             int currentStep = replicatedetail.getReplicationCode();
-            int totalSteps = 15;
+            int totalSteps = 16;
 
 
             switch (currentStep) {
@@ -1088,6 +820,10 @@ public class Broker_Replication {
                     tableName = "واحد سنجش";
                     RowExec = "200";
                     break;
+                case 16:
+                    tableName = "بارکدهای کالا";
+                    RowExec = "500";
+                    break;
                 default:
                     tableName = "نامشخص";
                     RowExec = "100";
@@ -1095,8 +831,6 @@ public class Broker_Replication {
             }
 
 
-
-            String where = replicatedetail.getCondition().replace("BrokerCondition", broker_dbh.ReadConfig("BrokerCode"));
 
             Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
                     LastRepCode,
@@ -1176,9 +910,9 @@ public class Broker_Replication {
                                                             if (tableDetails.get(z).getText() != null) {
                                                                 if (QueryConditionCount > 0)
                                                                     qCol.append(" , ");
-                                                                String valuetype = tableDetails.get(z).getType().substring(0, 2);
+                                                                String valueType = tableDetails.get(z).getType();
                                                                 if (!tableDetails.get(z).getText().equals("null")) {
-                                                                    if (valuetype.equals("CH")) {
+                                                                    if (isTextColumnType(valueType)) {
                                                                         qCol.append(" '").append(tableDetails.get(z).getText()).append("' ");
                                                                     } else {
                                                                         qCol.append(" ").append(tableDetails.get(z).getText());
@@ -1201,9 +935,11 @@ public class Broker_Replication {
                                                                 if (QueryConditionCount > 0)
                                                                     qCol.append(" , ");
                                                                 if (!tableDetails.get(z).getText().equals("null")) {
-                                                                    String valuetype = tableDetails.get(z).getType().substring(0, 2);
-                                                                    if (valuetype.equals("CH")) {
+                                                                    String valueType = tableDetails.get(z).getType();
+                                                                    if (isTextColumnType(valueType)) {
                                                                         qCol.append(" ").append(tableDetails.get(z).getName()).append(" = '").append(tableDetails.get(z).getText()).append("' ");
+                                                                    } else if (isBooleanColumnType(valueType) && tableDetails.get(z).getText().equals("")) {
+                                                                        qCol.append(" ").append(tableDetails.get(z).getName()).append(" = null ");
                                                                     } else {
                                                                         qCol.append(" ").append(tableDetails.get(z).getName()).append(" = ").append(tableDetails.get(z).getText()).append(" ");
                                                                     }
@@ -1219,28 +955,8 @@ public class Broker_Replication {
 
                                                     try {
                                                         database.execSQL(qCol.toString());
-                                                        if (currentStep == 1 && broker_dbh.IsGoodSearchFTSReady()) {
-                                                            broker_dbh.SyncOneGoodSearchFTSAsync(
-                                                                    code,
-                                                                    new Broker_DBH.OneGoodFTSCallback() {
-
-                                                                        @Override
-                                                                        public void onStart(String message) {
-                                                                            tv_step.setVisibility(View.VISIBLE);
-                                                                            tv_step.setText(message);
-                                                                        }
-
-                                                                        @Override
-                                                                        public void onDone(String message) {
-                                                                            callMethod.Log(message);
-                                                                        }
-
-                                                                        @Override
-                                                                        public void onError(Exception e) {
-                                                                            callMethod.Log(e.getMessage());
-                                                                        }
-                                                                    }
-                                                            );
+                                                        if ((currentStep == 1 || currentStep == 16) && broker_dbh.IsGoodSearchFTSReady()) {
+                                                            changedGoodCodesForFTS.add(code);
                                                         }
 
                                                         LastRepCode = repcode;
@@ -1260,28 +976,35 @@ public class Broker_Replication {
                                                         qCol = new StringBuilder("Delete from " + replicatedetail.getClientTable() + "  Where ").append(replicatedetail.getClientPrimaryKey()).append(" = ").append(repObjectCode);
                                                         try {
                                                             database.execSQL(qCol.toString());
-                                                            if (currentStep == 1 && broker_dbh.IsGoodSearchFTSReady()) {
-                                                                broker_dbh.DeleteOneGoodSearchFTSAsync(
-                                                                        repObjectCode,
-                                                                        new Broker_DBH.OneGoodFTSCallback() {
+                                                            if (broker_dbh.IsGoodSearchFTSReady()) {
+                                                                if (currentStep == 1) {
+                                                                    broker_dbh.DeleteOneGoodSearchFTSAsync(
+                                                                            repObjectCode,
+                                                                            new Broker_DBH.OneGoodFTSCallback() {
 
-                                                                            @Override
-                                                                            public void onStart(String message) {
-                                                                                tv_step.setVisibility(View.VISIBLE);
-                                                                                tv_step.setText(message);
-                                                                            }
+                                                                                @Override
+                                                                                public void onStart(String message) {
+                                                                                    if (tv_step != null) {
+                                                                                        tv_step.setVisibility(View.VISIBLE);
+                                                                                        tv_step.setText(message);
+                                                                                    }
+                                                                                }
 
-                                                                            @Override
-                                                                            public void onDone(String message) {
-                                                                                callMethod.Log(message);
-                                                                            }
+                                                                                @Override
+                                                                                public void onDone(String message) {
+                                                                                    callMethod.Log(message);
+                                                                                }
 
-                                                                            @Override
-                                                                            public void onError(Exception e) {
-                                                                                callMethod.Log(e.getMessage());
+                                                                                @Override
+                                                                                public void onError(Exception e) {
+                                                                                    callMethod.Log(e.getMessage());
+                                                                                }
                                                                             }
-                                                                        }
-                                                                );
+                                                                    );
+                                                                } else if (currentStep == 16) {
+                                                                    // Only the barcode row was deleted; rebuild the Good FTS row without it.
+                                                                    changedGoodCodesForFTS.add(repObjectCode);
+                                                                }
                                                             }
                                                             LastRepCode = repcode;
                                                         } catch (Exception ignored) {
@@ -1303,7 +1026,7 @@ public class Broker_Replication {
 
                                         RetrofitReplicateAuto(replevel);
                                     } else {
-                                        RetrofitReplicateAuto(replevel + 1);
+                                        GoNextReplicationAutoStepAfterFTS(currentStep, replevel + 1);
                                     }
                                 }
                             } catch (JSONException ignored) {
@@ -1335,7 +1058,7 @@ public class Broker_Replication {
         cursor.close();
 
         Call<RetrofitResponse> call1 = broker_apiInterface.RetrofitReplicate("repinfo",
-                 LastRepCode
+                LastRepCode
                 , RepTable
                 ,""
                 , "1"
@@ -1431,12 +1154,15 @@ public class Broker_Replication {
                             } else {
 
 
-                                if (!broker_dbh.IsGoodSearchFTSReady()) {
+                                if (!broker_dbh.IsGoodSearchFTSHealthy()) {
+
+                                    broker_dbh.ForceRebuildGoodSearchFTS();
 
                                     tv_step.setVisibility(View.VISIBLE);
                                     tv_rep.setVisibility(View.VISIBLE);
 
-                                    tv_rep.setText("در حال آماده‌سازی جستجو...");
+                                    tv_rep.setText(NumberFunctions.PerisanNumber("در حال آماده‌سازی جستجوی کالا..."));
+                                    tv_step.setText(NumberFunctions.PerisanNumber("شروع ساخت جستجو"));
 
                                     broker_dbh.SyncGoodSearchFTSAsync(
                                             new Broker_DBH.ProgressCallback() {
@@ -1452,23 +1178,81 @@ public class Broker_Replication {
                                                                     " از " +
                                                                     NumberFunctions.PerisanNumber(String.valueOf(total))
                                                     );
+
+                                                    callMethod.Log(
+                                                            "FTS Progress => " +
+                                                                    percent + "% , done=" +
+                                                                    done + " , total=" + total
+                                                    );
                                                 }
 
                                                 @Override
                                                 public void onDone() {
-                                                    FinishUpdate();
+
+                                                    if (broker_dbh.IsGoodSearchFTSHealthy()) {
+
+                                                        callMethod.Log("FTS Build Done And Healthy");
+                                                        FinishUpdate();
+
+                                                    } else {
+
+                                                        int goodCount = broker_dbh.GetGoodTableCount();
+                                                        int ftsCount = broker_dbh.GetGoodSearchFTSCount();
+                                                        int stateCount = broker_dbh.GetGoodSearchFTSStateTableCount();
+
+                                                        callMethod.Log(
+                                                                "FTS Build Done But Not Healthy => Good=" +
+                                                                        goodCount +
+                                                                        " FTS=" +
+                                                                        ftsCount +
+                                                                        " State=" +
+                                                                        stateCount
+                                                        );
+
+                                                        broker_dbh.SaveFTSReady("0");
+
+                                                        tv_rep.setText(NumberFunctions.PerisanNumber("جستجوی کالا کامل ساخته نشد"));
+                                                        tv_step.setText(
+                                                                NumberFunctions.PerisanNumber(
+                                                                        "Good=" + goodCount +
+                                                                                " FTS=" + ftsCount +
+                                                                                " State=" + stateCount
+                                                                )
+                                                        );
+
+                                                        callMethod.showToast("ساخت جستجوی کالا کامل نشد. دوباره بروزرسانی بزنید.");
+                                                    }
                                                 }
 
                                                 @Override
                                                 public void onError(Exception e) {
-                                                    callMethod.Log(e.getMessage());
-                                                    FinishUpdate();
+
+                                                    String errorMessage = "unknown";
+
+                                                    if (e != null && e.getMessage() != null) {
+                                                        errorMessage = e.getMessage();
+                                                    }
+
+                                                    callMethod.Log("FTS Build Error = " + errorMessage);
+
+                                                    broker_dbh.SaveFTSReady("0");
+
+                                                    tv_rep.setText(NumberFunctions.PerisanNumber("خطا در ساخت جستجوی کالا"));
+                                                    tv_step.setVisibility(View.VISIBLE);
+                                                    tv_step.setText(errorMessage);
+
+                                                    callMethod.showToast("خطا در ساخت جستجوی کالا؛ لاگ را بررسی کنید");
+
+                                                    // مهم:
+                                                    // اینجا FinishUpdate نزن.
+                                                    // چون اگر خطا بخورد، نباید برنامه فکر کند بروزرسانی کامل شده.
                                                 }
                                             }
                                     );
 
                                 } else {
 
+                                    callMethod.Log("FTS Is Healthy. FinishUpdate");
                                     FinishUpdate();
                                 }
                             }
@@ -1654,7 +1438,7 @@ public class Broker_Replication {
 
     public void columnReplication(Integer i) {
 
-callMethod.Log(""+i);
+        callMethod.Log(""+i);
         if (i < 4) {
             Call<RetrofitResponse> call2 = broker_apiInterface.GetColumnList( "GetColumnList","" + i, "1", "1");
             callMethod.Log(call2.request().toString());

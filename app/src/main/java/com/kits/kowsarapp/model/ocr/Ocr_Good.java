@@ -34,6 +34,7 @@ public class Ocr_Good implements Serializable {
     @SerializedName("Aux12")private String Aux12	;
     @SerializedName("Aux13")private String Aux13	;
     @SerializedName("rwno")private String rwno;
+    @SerializedName("CustName")private String CustName;
 
 
 
@@ -113,6 +114,14 @@ public class Ocr_Good implements Serializable {
     @SerializedName("MaxSellPrice")
     private String MaxSellPrice;
 
+    public String getCustName() {
+        return CustName;
+    }
+
+    public void setCustName(String custName) {
+        CustName = custName;
+    }
+
     @SerializedName("GoodExplain1")private String GoodExplain1;
     @SerializedName("GoodExplain2")private String GoodExplain2;
     @SerializedName("GoodExplain3")private String GoodExplain3;
@@ -136,12 +145,20 @@ public class Ocr_Good implements Serializable {
     @SerializedName("Num1")private String Num1;
     @SerializedName("Num2")private String Num2;
     @SerializedName("Num3")private String Num3;
+    @SerializedName("LocationTitle")private String LocationTitle;
 
 
     @SerializedName("StackEnumerationRef")private String StackEnumerationRef;
     @SerializedName("LocationRef")private String LocationRef;
     @SerializedName("LocationStackCode")private String LocationStackCode;
 
+    public String getLocationTitle() {
+        return LocationTitle;
+    }
+
+    public void setLocationTitle(String locationTitle) {
+        LocationTitle = locationTitle;
+    }
 
     public String getStackEnumerationRef() {
         return StackEnumerationRef;

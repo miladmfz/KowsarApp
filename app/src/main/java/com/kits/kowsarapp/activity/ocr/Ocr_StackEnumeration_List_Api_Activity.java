@@ -3,6 +3,7 @@ package com.kits.kowsarapp.activity.ocr;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -70,7 +71,7 @@ public class Ocr_StackEnumeration_List_Api_Activity extends AppCompatActivity {
     Handler counthandler=new Handler();
     CallMethod callMethod;
     Ocr_DBH ocr_dbh;
-    Button btn_refresh_list;
+    AppCompatImageButton btn_refresh_list;
 
     Toolbar toolbar;
     LinearLayout Inventory_ll_counter_path;
@@ -390,6 +391,7 @@ public class Ocr_StackEnumeration_List_Api_Activity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 String.valueOf(PageNo),
+                "0",
                 callMethod.ReadString("ActiveDatabase")
         );
         call.enqueue(new Callback<RetrofitResponse>() {
@@ -430,7 +432,6 @@ public class Ocr_StackEnumeration_List_Api_Activity extends AppCompatActivity {
     }
     public void CallRecycle_Janamaie() {
 
-            // TODO CallRecycle_Janamaie
 
         ocr_stackEnumeration_janamie_listApi_adapter = new Ocr_StackEnumeration_Janamie_ListApi_Adapter(stackEnumerations,state, App.getContext());
         if (ocr_stackEnumeration_janamie_listApi_adapter.getItemCount()==0){
@@ -667,6 +668,7 @@ public class Ocr_StackEnumeration_List_Api_Activity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 "0",
+                "0",
                 callMethod.ReadString("ActiveDatabase")
         );
 
@@ -759,7 +761,7 @@ public class Ocr_StackEnumeration_List_Api_Activity extends AppCompatActivity {
 
 
         Requset_ListCount_call=apiInterface.GetOcrFactorList(
-                "GetFactorListCount",
+                "GetFactorList",
                 state,
                 srch,
                 callMethod.ReadString("StackCategory"),
@@ -768,6 +770,7 @@ public class Ocr_StackEnumeration_List_Api_Activity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 "0",
+                "1",
                 callMethod.ReadString("ActiveDatabase")
         );
         Requset_ListCount_call.enqueue(new Callback<RetrofitResponse>() {

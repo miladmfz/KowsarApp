@@ -3,6 +3,8 @@ package com.kits.kowsarapp.activity.ocr;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -52,6 +54,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,10 +90,10 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
         ArrayList<Factor> all_factors=new ArrayList<>();
 
 
-        Button btn_refresh_list;
+    AppCompatImageButton btn_refresh_list;
 
 
-        LinearLayout factorlist_ll_counter,factorlistActivity_combocheck;
+    LinearLayoutCompat factorlist_ll_counter,factorlistActivity_combocheck;
 
         RecyclerView factor_list_recycler,stacks_list_recycler;
 
@@ -279,52 +282,55 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
         }
 
-        @SuppressLint("NotifyDataSetChanged")
-        public void CheckStackList() {
+    @SuppressLint("NotifyDataSetChanged")
+    public void CheckStackList() {
 
-            visible_factors_temp.clear();
+        final String TAG = "CheckStackList";
+        visible_factors_temp.clear();
+        List<String> selectedItems = ocr_stacksAdapter.getSelectedItems();
+        if (selectedItems.size() > 0) {
 
-            List<String> selectedItems = ocr_stacksAdapter.getSelectedItems();
-            if (selectedItems.size()>0) {
-
-                for (Factor factor : factors) {
-                    List<String> factorStacks = Arrays.asList(factor.getStackClass().split(","));
-                    if (new HashSet<>(factorStacks).equals(new HashSet<>(selectedItems))) {
-                        visible_factors_temp.add(factor);
-                    }
-
+            Set<String> selectedSet = new HashSet<>(selectedItems);
+            for (Factor factor : factors) {
+                if (factor.getStackClass() == null ||
+                        factor.getStackClass().trim().isEmpty()) {
+                    continue;
                 }
 
+                List<String> factorStacks =
+                        Arrays.asList(factor.getStackClass().split(","));
+                Set<String> factorStackSet = new HashSet<>();
 
-
-                if(visible_factors_temp.size()>0){
-
-                    visible_factors=visible_factors_temp;
-                    ocr_collect_listApi_adapter.notifyDataSetChanged();
-
-                    CallRecycle();
-
-                }else {
-
-                    callMethod.showToast("فاکتوری موجود نمی باشد");
+                for (String stack : factorStacks) {
+                    factorStackSet.add(stack.trim());
                 }
-            } else {
 
-
-                visible_factors=factors;
-                ocr_collect_listApi_adapter.notifyDataSetChanged();
-
-                CallRecycle();
-
+                boolean isMatch = factorStackSet.containsAll(selectedSet);
+                if (isMatch) {
+                    visible_factors_temp.add(factor);
+                }
             }
 
+            if (visible_factors_temp.size() > 0) {
+
+                visible_factors = new ArrayList<>(visible_factors_temp);
+                ocr_collect_listApi_adapter.notifyDataSetChanged();
+                CallRecycle();
+            }
+
+        } else {
+            visible_factors = new ArrayList<>(factors);
+            ocr_collect_listApi_adapter.notifyDataSetChanged();
+            CallRecycle();
 
         }
+
+    }
 
 
         public void init(){
 
-            Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory_new");
+            Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -552,6 +558,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     StateEdited,
                     Row,
                     String.valueOf(PageNo),
+                    "0",
                     callMethod.ReadString("ActiveDatabase")
             );
             call.enqueue(new Callback<RetrofitResponse>() {
@@ -718,6 +725,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     StateEdited,
                     Row,
                     "0",
+                    "0",
                     callMethod.ReadString("ActiveDatabase")
             );
             callMethod.Log(Requset_List_call.request().url()+"");
@@ -810,7 +818,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
 
             Requset_ListCount_call=apiInterface.GetOcrFactorList(
-                    "GetFactorListCount",
+                    "GetFactorList",
                     state,
                     srch,
                     callMethod.ReadString("StackCategory"),
@@ -819,6 +827,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     StateEdited,
                     Row,
                     "0",
+                    "1",
                     callMethod.ReadString("ActiveDatabase")
             );
             Requset_ListCount_call.enqueue(new Callback<RetrofitResponse>() {
@@ -856,7 +865,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
             Call<RetrofitResponse> call;
 
             call=apiInterface.GetOcrFactorList(
-                    "GetFactorListCount",
+                    "GetFactorList",
                     state,
                     "0",
                     "همه",
@@ -865,6 +874,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     "1",
                     "10000",
                     "0",
+                    "1",
                     callMethod.ReadString("ActiveDatabase")
             );
             call.enqueue(new Callback<RetrofitResponse>() {
@@ -907,7 +917,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                 call=apiInterface.GetOcrFactorList(
-                        "GetFactorListCount",
+                        "GetFactorList",
                         state,
                         "",
                         "همه",
@@ -916,12 +926,13 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                         "0",
                         "10000",
                         "0",
+                        "1",
                         callMethod.ReadString("ActiveDatabase")
                 );
 
             }else{
                 call=secendApiInterface.GetOcrFactorList(
-                        "GetFactorListCount",
+                        "GetFactorList",
                         state,
                         "",
                         "همه",
@@ -930,6 +941,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                         "0",
                         "10000",
                         "0",
+                        "1",
                         callMethod.ReadString("ActiveDatabase")
 
                 );

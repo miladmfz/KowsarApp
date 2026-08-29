@@ -1,282 +1,384 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.broker.Broker_SearchActivity"
-    android:layoutDirection="rtl">
-
+    android:layoutDirection="rtl"
+    android:background="?attr/colorSurface"
+    tools:context=".activity.broker.Broker_SearchActivity">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/b_search_a_appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            >
+            android:background="?attr/colorPrimary"
+            app:elevation="3dp">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/b_search_a_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:titleTextColor="?attr/colorOnPrimary"
+                app:contentInsetEndWithActions="8dp"
+                app:contentInsetStartWithNavigation="8dp"
                 app:title="جستجوی کالا"
-                >
-
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/b_search_a_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:checked="true"
-                    android:text="@string/active_activeswitch"
-                    android:textColor="@color/white"
-
-                    />
-
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/b_search_a_switch_amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:checked="true"
-                    android:text="@string/amount_activeswitch"
-                    android:textColor="@color/white"
-
-                    />
-
-
-            </androidx.appcompat.widget.Toolbar>
-
+                app:titleTextColor="?attr/colorOnPrimary" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/b_search_a_ll_customer"
-
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="4dp"
-            android:background="@drawable/bg_card"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingStart="4dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="4dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/b_search_a_switch_card"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="9dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/b_search_a_switch"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:gravity="start|center_vertical"
+                        android:maxLines="1"
+                        android:text="@string/active_activeswitch"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="11sp" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="26dp"
+                        android:alpha="0.15"
+                        android:background="?attr/colorOnBackground" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/b_search_a_switch_amount"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:gravity="start|center_vertical"
+                        android:maxLines="1"
+                        android:text="@string/amount_activeswitch"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="11sp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:gravity="center"
-                    android:text="@string/customerfactorheader"
-                    android:textSize="14sp"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/b_search_a_customer"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/b_search_a_ll_sum_factor"
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:gravity="center"
-                    android:text="@string/totalfactorheader"
-                    android:textSize="14sp"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/b_search_a_sum_factor"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                     android:textColor="?attr/colorOnBackground"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/b_search_a_ll_btngrp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/b_search_a_grp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    android:gravity="center"
-                    android:text="@string/search_grp"
-                    android:layout_margin="3dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:backgroundTint="?attr/colorPrimary"
-                    android:textColor="?attr/colorOnPrimary" />
-
-
-                <Button
-                    android:id="@+id/b_search_a_pro_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:gravity="center"
-                    android:text="@string/prosearch_active"
-                    android:layout_margin="3dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:backgroundTint="?attr/colorSecondary"
-                    android:textColor="?attr/colorOnSecondary"
-                    />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/b_search_a_grp_recy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:visibility="gone" />
-
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:id="@+id/b_search_a_ll_customer"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_card"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/b_search_a_switch_card">
 
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="3dp">
 
-                <EditText
-                    android:id="@+id/b_search_a_edtsearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight="0.2"
-                    android:background="@drawable/bg_editbox"
-                    android:hint="@string/search_et"
-                    android:inputType="text"
-                    android:paddingStart="5dp"
-                    android:selectAllOnFocus="true"
-                    android:singleLine="true"
-                    tools:ignore="LabelFor"
-                    android:textColor="?attr/colorOnBackground"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/customerfactorheader"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="10sp" />
 
-                <Button
-                    android:layout_margin="5dp"
-                    android:id="@+id/b_search_a_scan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="40dp"
-                    android:layout_weight="0.2"
-                    android:layout_gravity="center"
-                    android:background="@drawable/ic_qr_code"
-                    android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/b_search_a_customer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:text="فاکتوری انتخاب نشده" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="32dp"
+                    android:alpha="0.15"
+                    android:background="?attr/colorOnBackground" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/b_search_a_ll_sum_factor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.15"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/totalfactorheader"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/b_search_a_sum_factor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:text="۱۲۵,۰۰۰,۰۰۰" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/b_search_a_ll_btngrp"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="4dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="9dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/b_search_a_ll_customer"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-       >
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/b_search_a_allgood"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_margin="10sp"
-            android:visibility="visible"/>
-        <ProgressBar
-            android:id="@+id/b_search_a_prog"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            />
+                    <Button
+                        android:id="@+id/b_search_a_grp"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
+                        android:text="@string/search_grp"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="8dp" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/b_search_a_lottie"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_margin="2dp"
-            app:lottie_rawRes="@raw/notfind"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            />
+                    <Button
+                        android:id="@+id/b_search_a_pro_search"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="?attr/colorSecondary"
+                        android:gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
+                        android:text="@string/prosearch_active"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="8dp" />
 
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <TextView
-            android:id="@+id/b_search_a_tvstatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="40sp"
-            android:layout_gravity="center"
-            android:textColor="?attr/colorOnBackground"
+            </com.google.android.material.card.MaterialCardView>
 
-            />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/b_search_a_grp_recy"
+                android:layout_width="0dp"
+                android:layout_height="104dp"
+                android:layout_marginTop="3dp"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:padding="2dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/b_search_a_ll_btngrp"
+                tools:listitem="@android:layout/simple_list_item_1" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/b_search_a_search_card"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="4dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="9dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/b_search_a_grp_recy"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="3dp">
+
+                    <EditText
+                        android:id="@+id/b_search_a_edtsearch"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:gravity="start|center_vertical"
+                        android:hint="@string/search_et"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="8dp"
+                        android:selectAllOnFocus="true"
+                        android:singleLine="true"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textColorHint="?attr/colorOnBackground"
+                        android:textSize="13sp"
+                        tools:ignore="LabelFor" />
+
+                    <Button
+                        android:id="@+id/b_search_a_scan"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/ic_qr_code"
+                        android:contentDescription="اسکن بارکد"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:padding="9dp"
+                        android:text=""
+                        android:visibility="gone" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <FrameLayout
+                android:id="@+id/b_search_a_list_container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/b_search_a_search_card">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/b_search_a_allgood"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    android:paddingStart="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="64dp"
+                    android:visibility="visible"
+                    tools:listitem="@android:layout/simple_list_item_2" />
+
+                <ProgressBar
+                    android:id="@+id/b_search_a_prog"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center"
+                    android:indeterminate="true" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/b_search_a_lottie"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/notfind" />
+
+                <TextView
+                    android:id="@+id/b_search_a_tvstatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:maxLines="3"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:text="کالایی پیدا نشد" />
+
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -284,16 +386,15 @@
         android:id="@+id/b_search_a_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="30dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="12dp"
+        android:contentDescription="افزودن به سبد خرید"
         android:visibility="gone"
-        app:backgroundTint="@color/red_800"
+        app:backgroundTint="?attr/colorPrimary"
         app:borderWidth="0dp"
-        app:elevation="6dp"
-        app:fabSize="normal"
-        android:src="@drawable/ic_add_shopping_white" />
+        app:elevation="5dp"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_add_shopping_white"
+        app:tint="?attr/colorOnPrimary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-

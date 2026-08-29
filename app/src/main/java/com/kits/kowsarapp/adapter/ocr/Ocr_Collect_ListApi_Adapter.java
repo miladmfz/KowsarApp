@@ -111,31 +111,31 @@ public class Ocr_Collect_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Collec
 
         holder.fac_factor_state_ll.setVisibility(View.GONE);
 
+        try {
             try {
-                try {
-                    if (factors.get(position).getStackClass().charAt(0) == ','){
-                        holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
-                    }else{
-                        holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass()));
-                    }
-                }catch (Exception ignored){
-                    holder.fac_stackclass.setText("انبار مشخص نیست");
+                if (factors.get(position).getStackClass().charAt(0) == ','){
+                    holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
+                }else{
+                    holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass()));
                 }
-                //if(factor.getIsEdited().equals("True")){
-                if(factor.getIsEdited().equals("1")){
-                    holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
-                    holder.fac_hasedite.setText("اصلاح شده");
-                }else {
-                    holder.fac_hasedite.setText(" ");
-                }
-                //if(factor.getHasShortage().equals("True")){
-                if(factor.getHasShortage().equals("1")){
-                    holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
-                    holder.fac_hasshortage.setText("کسری موجودی");
-                }else {
-                    holder.fac_hasshortage.setText(" ");
-                }
-            }catch (Exception ignored){}
+            }catch (Exception ignored){
+                holder.fac_stackclass.setText("انبار مشخص نیست");
+            }
+            //if(factor.getIsEdited().equals("True")){
+            if(factor.getIsEdited().equals("1")){
+                holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
+                holder.fac_hasedite.setText("اصلاح شده");
+            }else {
+                holder.fac_hasedite.setText(" ");
+            }
+            //if(factor.getHasShortage().equals("True")){
+            if(factor.getHasShortage().equals("1")){
+                holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
+                holder.fac_hasshortage.setText("کسری موجودی");
+            }else {
+                holder.fac_hasshortage.setText(" ");
+            }
+        }catch (Exception ignored){}
 
 
         holder.fac_kowsardate.setText(NumberFunctions.PerisanNumber(factor.getFactorDate()));
@@ -143,28 +143,59 @@ public class Ocr_Collect_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Collec
 
         holder.fac_factor_btn.setOnClickListener(v -> {
             callMethod.EditString("FactorDbName", factors.get(position).getDbname());
+            String stackCategory = callMethod.ReadString("StackCategory");
+            int accessCount = Integer.parseInt(callMethod.ReadString("AccessCount"));
 
-            if(factors.get(position).getStackClass().length()>1){
+            boolean isAllCategory = "همه".equals(stackCategory);
 
-                    if (position < Integer.parseInt(callMethod.ReadString("AccessCount"))) {
-
-                        callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
-
-                        intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
-
-                        intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
-                        intent.putExtra("State", state);
-                        intent.putExtra("ShowGoodDetail", "0");
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mContext.startActivity(intent);
-                    } else {
-                        Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
-                    }
+            String stackClass = factors.get(position).getStackClass();
+            boolean hasStack = stackClass != null && !stackClass.trim().isEmpty();
 
 
-            }else{
-                Toast.makeText(mContext, "فاکتور خالی می باشد", Toast.LENGTH_SHORT).show();
+// اگر دسته‌بندی "همه" نیست، فاکتور باید Stack داشته باشد
+            if (!isAllCategory && !hasStack) {
+                Toast.makeText(
+                        mContext,
+                        "فاکتور خالی می باشد",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                return;
             }
+
+
+// بررسی دسترسی به فاکتور
+            if (position >= accessCount) {
+                Toast.makeText(
+                        mContext,
+                        "فاکتور های قبلی را تکمیل کنید",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                return;
+            }
+
+
+// ورود به فاکتور
+            callMethod.EditString(
+                    "LastTcPrint",
+                    factors.get(position).getAppTcPrintRef()
+            );
+
+            Intent intent = new Intent(
+                    mContext,
+                    Ocr_Collect_Confirm_Activity.class
+            );
+
+            intent.putExtra("ScanResponse", factors.get(position).getAppTcPrintRef());
+            intent.putExtra("State", state);
+            intent.putExtra("ShowGoodDetail", "0");
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            mContext.startActivity(intent);
+
+
 
 
         });
@@ -187,10 +218,10 @@ public class Ocr_Collect_ListApi_Adapter extends RecyclerView.Adapter<Ocr_Collec
         private final TextView fac_explain;
         private final TextView fac_stackclass;
         private final Button fac_factor_btn;
-        private final LinearLayout fac_factor_explain_ll;
-        private final LinearLayout fac_factor_state_ll;
+        private final LinearLayoutCompat fac_factor_explain_ll;
+        private final LinearLayoutCompat fac_factor_state_ll;
 
-        private final LinearLayout fac_factor_ocrexplain_ll;
+        private final LinearLayoutCompat fac_factor_ocrexplain_ll;
         private final TextView fac_ocrexplain;
 
         MaterialCardView fac_rltv;

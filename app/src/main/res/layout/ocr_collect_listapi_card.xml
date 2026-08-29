@@ -1,341 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ocr_collect_listapi_card"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layoutDirection="rtl"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="6dp"
+    android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    android:checkable="true"
-
-    android:layoutDirection="rtl">
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true"
+    app:checkedIconVisible="false"
+    app:rippleColor="?attr/colorPrimary"
+    app:strokeColor="#DCE3EA"
+    app:strokeWidth="1dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ocr_collect_listapi_c_ll_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
         android:orientation="vertical"
-        android:background="@drawable/bg_card"
-        >
+        android:paddingStart="14dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="12dp">
 
+        <!-- Customer title -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/ocr_collect_listapi_c_ll_main"
-            android:layout_margin="3dp"
-            android:layout_weight="1">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="74dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1">
+                android:gravity="right|center_vertical"
+                android:text="مشتری"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:textStyle="bold"/>
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:gravity="center"
-                    android:text="نام :"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/ocr_collect_listapi_c_customer"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.6"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:id="@+id/ocr_collect_listapi_c_customercode"
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.8"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/ocr_collect_listapi_c_ll_ocrexplain"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_customer"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:visibility="gone">
+                android:ellipsize="end"
+                android:gravity="right|center_vertical"
+                android:maxLines="2"
+                android:minHeight="42dp"
+                android:paddingStart="8dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="5dp"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
-                    android:gravity="center"
-                    android:text="جمع آوری:"
-                    android:textColor="#FF0000"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    />
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_customercode"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:minWidth="74dp"
+                android:paddingStart="9dp"
+                android:paddingEnd="9dp"
+                android:background="@drawable/bg_ocr_list_badge"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <!-- OCR collection explanation -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ocr_collect_listapi_c_ll_ocrexplain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_ocr_list_warning"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="8dp"
+            android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/ocr_collect_listapi_c_ocrexplain"
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.7"
-                    android:textColor="#FF0000"
-                    android:textSize="22dp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-
-
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ocr_collect_listapi_c_ll_explain"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="84dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:layout_margin="5dp"
+                android:gravity="right|center_vertical"
+                android:text="جمع‌آوری"
+                android:textColor="@color/red_800"
+                android:textSize="13sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_ocrexplain"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:visibility="gone">
+                android:gravity="right|center_vertical"
+                android:maxLines="3"
+                android:textColor="@color/red_800"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Factor explanation -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ocr_collect_listapi_c_ll_explain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_ocr_list_info"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="8dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="84dp"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:text="توضیحات"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_explain"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:maxLines="4"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Shortage / edited state -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ocr_collect_listapi_c_ll_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_hasshortage"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_ocr_list_warning"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textColor="@color/red_800"
+                android:textSize="14sp"
+
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_hasedited"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_ocr_list_info"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Factor code and state -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.3"
+                    android:layout_width="74dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right|center_vertical"
+                    android:text="کد فاکتور"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="13sp"/>
+
+                <TextView
+                    android:id="@+id/ocr_collect_listapi_c_privatecode"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_ocr_list_value"
                     android:gravity="center"
-                    android:text="توضیحات :"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-                <TextView
-                    android:id="@+id/ocr_collect_listapi_c_explain"
-                    android:background="@drawable/bg_editbox"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.7"
-                    android:textColor="#FF0000"
-                    android:textSize="22dp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-
-
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/ocr_collect_listapi_c_ll_state"
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_state"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_ocr_list_badge"
                 android:visibility="gone"
-                >
+                android:gravity="center"
+                android:minWidth="94dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <!-- Date and stack -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            >
 
-                <TextView
-                    android:id="@+id/ocr_collect_listapi_c_hasshortage"
-                    android:background="@drawable/bg_editbox"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:textColor="#FF0000"
-                    android:textSize="20sp"
-                    android:gravity="center"
-                    />
-
-
-                <TextView
-                    android:id="@+id/ocr_collect_listapi_c_hasedited"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:textColor="#FF0000"
-                    android:textSize="20sp"
-                    android:gravity="center"
-                    />
-
-
-            </LinearLayout>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:text="تاریخ"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:layout_margin="1dp"
+
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_kowsardate"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
                 android:layout_weight="1"
-                android:layout_margin="5dp"
-                >
+                android:background="@drawable/bg_ocr_list_value"
+                android:gravity="center"
 
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp"
+                android:layout_margin="1dp"
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp"
-                    android:layout_weight="0.4">
-
-                    <TextView
-                        android:layout_width="150dp"
-                        android:layout_height="31dp"
-                        android:layout_weight="0.25"
-                        android:gravity="center"
-                        android:text="کد فاکتور:"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"/>
-
-                    <TextView
-                        android:id="@+id/ocr_collect_listapi_c_privatecode"
-                        android:background="@drawable/bg_editbox"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.25"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-
-                </LinearLayout>
-                <TextView
-                    android:id="@+id/ocr_collect_listapi_c_state"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="2dp"
-                    android:layout_weight="0.6"
-                    android:textSize="20sp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/ocr_collect_listapi_c_stackclass"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_margin="5dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_ocr_list_value"
+                android:gravity="center"
 
-                android:layout_weight="1">
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp"
+                android:layout_margin="1dp"
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="150dp"
-                        android:layout_height="31dp"
-                        android:layout_weight="0.25"
-                        android:gravity="center"
-                        android:text="تاریخ سفارش:"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_collect_listapi_c_kowsardate"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.5"
-                        android:gravity="center"
-                        android:background="@drawable/bg_editbox"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/ocr_collect_listapi_c_stackclass"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.5"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-
-                </LinearLayout>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="1">
-
-                <Button
-                    android:id="@+id/ocr_collect_listapi_c_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text="نمایش فاکتور"
-                    android:layout_margin="3dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:backgroundTint="?attr/colorPrimary"
-                    android:textColor="?attr/colorOnPrimary" />
-
-
-
-
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-            <androidx.viewpager.widget.ViewPager
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorPrimary" />
+                android:textStyle="bold"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <Button
+            android:id="@+id/ocr_collect_listapi_c_btn"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="نمایش فاکتور"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="10dp"
+            android:background="?attr/colorPrimary"/>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </com.google.android.material.card.MaterialCardView>

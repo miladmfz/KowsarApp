@@ -1,135 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layoutDirection="rtl"
+    android:background="?attr/colorSurface"
     tools:context=".activity.ocr.Ocr_StackEnumeration_Location_List_Api_Activity">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/ocr_locationlist_a_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="?attr/colorPrimary"
+        app:elevation="4dp">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/ocr_locationlist_a_appbar"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/ocr_locationlist_a_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="انتخاب موقعیت"
+            app:titleCentered="true"
+            app:titleTextColor="?attr/colorOnPrimary" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/ocr_locationlist_a_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:titleTextColor="?attr/colorOnPrimary"
-                app:title="انتخاب فاکتور"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/gapLarge"
+        android:paddingTop="@dimen/gapMedium"
+        android:paddingEnd="@dimen/gapLarge"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/ocr_locationlist_a_search_card"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/ocr_locationlist_a_edtsearch"
-                android:layout_margin="2dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="جستجو"
-                android:background="@drawable/bg_editbox"
-                android:singleLine="true"
-                android:selectAllOnFocus="true"
-                android:inputType="text"
-                android:textColor="?attr/colorOnBackground"
-                android:layout_weight="0.1"
-                />
-
-            <Button
-                android:id="@+id/ocr_locationlist_a_refresh"
-
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="26sp"
-                android:gravity="center"
-                android:layout_weight="0.9"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/gapLarge"
+                android:paddingEnd="@dimen/gapSmall">
 
-                android:background="@drawable/ic_refresh_24"
-                android:textColor="?attr/colorOnBackground"
-                />
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/ocr_locationlist_a_edtsearch"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="start|center_vertical"
+                    android:hint="جستجوی موقعیت"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="@dimen/gapMedium"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textColorHint="?attr/colorOnBackground"
+                    android:textSize="@dimen/textSizeSmall" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ocr_locationlist_a_refresh"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="به‌روزرسانی"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:padding="12dp"
+                    android:text=""
+                    app:cornerRadius="14dp"
+                    app:icon="@drawable/ic_refresh_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconTint="?attr/colorPrimary"
+                    app:rippleColor="?attr/colorPrimary" />
 
-        </LinearLayout>
+            </LinearLayout>
 
+        </com.google.android.material.card.MaterialCardView>
 
-
-
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/ocr_locationlist_a_prog"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:indeterminate="true"
-            android:layout_weight="0.9"
-            android:visibility="visible"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ocr_locationlist_a_recyclerView"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/ocr_locationlist_a_list_container"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingBottom="80dp"
-            android:layout_margin="2dp" />
+            android:layout_marginTop="@dimen/gapMedium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ocr_locationlist_a_search_card">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ocr_locationlist_a_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingTop="@dimen/gapSmall"
+                android:paddingBottom="88dp"
+                tools:listitem="@android:layout/simple_list_item_2" />
 
+            <androidx.core.widget.ContentLoadingProgressBar
+                android:id="@+id/ocr_locationlist_a_prog"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="@dimen/loading"
+                android:layout_height="@dimen/loading"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="visible" />
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/ocr_locationlist_a_lottie"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_margin="2dp"
-            app:lottie_rawRes="@raw/notfind"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            />
+            <LinearLayout
+                android:id="@+id/ocr_locationlist_a_empty_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/gapLarge">
 
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/ocr_locationlist_a_lottie"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/notfind" />
 
-        <TextView
-            android:id="@+id/ocr_locationlist_a_tvstatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="40sp"
-            android:layout_gravity="center"
-            android:textColor="?attr/colorOnBackground"
+                <TextView
+                    android:id="@+id/ocr_locationlist_a_tvstatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/gapMedium"
+                    android:gravity="center"
+                    android:maxLines="3"
+                    android:paddingStart="@dimen/gapLarge"
+                    android:paddingEnd="@dimen/gapLarge"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="@dimen/textSizeMedium"
+                    android:textStyle="bold"
+                    tools:text="موقعیتی پیدا نشد" />
 
-            />
+            </LinearLayout>
 
+        </FrameLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/ocr_locationlist_a_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="30dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="پیوست"
         android:visibility="gone"
-        app:backgroundTint="@color/red_800"
+        app:backgroundTint="?attr/colorSecondary"
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:fabSize="normal"
-        android:src="@drawable/ic_attach_file" />
+        app:srcCompat="@drawable/ic_attach_file"
+        app:tint="?attr/colorOnPrimary" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

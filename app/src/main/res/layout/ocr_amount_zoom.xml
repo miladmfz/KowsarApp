@@ -4,112 +4,141 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/image_zoom_page"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layoutDirection="rtl"
-    android:padding="16dp"
-    >
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
+        android:layout_margin="6dp"
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardUseCompatPadding="true">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/bg_card"
-            android:padding="16dp">
+            android:paddingStart="14dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="14dp">
 
-            <!-- Row: تعداد اقلام -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="وضعیت تعداد کالا"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:paddingBottom="12dp"/>
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_ocr_amount_row"
+                android:gravity="center_vertical"
+                android:minHeight="58dp"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/bg_round">
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
                     android:text="تعداد اقلام"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/ocr_amountzoome_tv1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:textSize="20sp"
-                    android:textColor="?attr/colorOnBackground"
-                    android:gravity="center"/>
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="19sp"
+                    android:textStyle="bold"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <!-- Row: جمع شده -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_ocr_amount_row"
+                android:gravity="center_vertical"
+                android:minHeight="58dp"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/bg_round">
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
                     android:text="جمع شده"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/ocr_amountzoome_tv2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:textSize="20sp"
-                    android:textColor="?attr/colorOnBackground"
-                    android:gravity="center"/>
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="19sp"
+                    android:textStyle="bold"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <!-- Row: کسری -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_ocr_amount_shortage"
+                android:gravity="center_vertical"
+                android:minHeight="62dp"
                 android:orientation="horizontal"
-                android:weightSum="1"
-                android:paddingBottom="8dp">
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:weightSum="2">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
                     android:text="کسری"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:textColor="@color/red_800"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/ocr_amountzoome_tv3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:textSize="20sp"
-                    android:textColor="@color/colorAccent"
-                    android:gravity="center"/>
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/red_800"
+                    android:textSize="22sp"
+                    android:textStyle="bold"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

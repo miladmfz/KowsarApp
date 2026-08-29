@@ -23,7 +23,7 @@ public class PreFactor {
     @SerializedName("Customer")
     private String Customer;
     @SerializedName("SumPrice")
-    private long SumPrice;
+    private Double SumPrice;
     @SerializedName("SumAmount")
     private Integer SumAmount;
     @SerializedName("RowCount")
@@ -141,7 +141,7 @@ public class PreFactor {
         Customer = customer;
     }
 
-    public void setSumPrice(long sumPrice) {
+    public void setSumPrice(double sumPrice) {
         SumPrice = sumPrice;
     }
 

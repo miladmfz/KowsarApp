@@ -98,20 +98,26 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
 
         } else
         {
+//callMethod.Log("getGoodImageName empty");
+//
+//            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//                callMethod.Log("getGoodImageName true");
+//
+//            }else{
+//                call2=secendApiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode(),0,400);
+//                callMethod.Log("getGoodImageName false");
+//
+//            }
+            call2=apiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode(),0,400);
 
-
-            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call2=apiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode(),0,400);
-            }else{
-                call2=secendApiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode(),0,400);
-            }
-
-
+//            callMethod.Log("getGoodImageName call create");
+//
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
                     if (response.isSuccessful()) {
+                        callMethod.Log("getGoodImageName response");
 
                         assert response.body() != null;
                         try {
@@ -140,6 +146,7 @@ public class Ocr_Good_StackFragment_Adapter extends RecyclerView.Adapter<Ocr_Goo
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
                     callMethod.Log(t.getMessage());
+                    callMethod.Log("getGoodImageName false");
 
                 }
             });

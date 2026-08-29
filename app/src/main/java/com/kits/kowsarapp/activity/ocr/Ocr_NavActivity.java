@@ -194,7 +194,20 @@ public void Config() {
         btn1.setText("تنظیمات");
         btn2.setVisibility(View.GONE);
         btn3.setVisibility(View.GONE);
-        btn1.setOnClickListener(view -> ocr_action.LoginSetting());
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callMethod.IsDebugBuild(Ocr_NavActivity.this)){
+
+                    Intent intent = new Intent(Ocr_NavActivity.this, Ocr_ConfigActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+                    startActivity(intent);
+                }else{
+                    ocr_action.LoginSetting();
+                }
+            }
+        });
+
 
     }
     public void Scan() {
@@ -267,20 +280,21 @@ public void Config() {
 
         if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
                 callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
-            btn3.setText("لیست کسری فاکتور ها");
 
+            btn3.setText("لیست کسری فاکتور ها");
+            btn3.setVisibility(View.VISIBLE);
 
         } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
-
-
-
+            btn3.setVisibility(View.VISIBLE);
+        }else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrCheshme")){
+            btn3.setVisibility(View.VISIBLE);
         }else{
             btn3.setVisibility(View.GONE);
-
         }
 
 
         btn1.setOnClickListener(view -> {
+
             intent = new Intent(Ocr_NavActivity.this, Ocr_Collect_List_Api_Activity.class);
             intent.putExtra("State", "0");
             startActivity(intent);
@@ -288,6 +302,7 @@ public void Config() {
         });
 
         btn2.setOnClickListener(view -> {
+
             intent = new Intent(Ocr_NavActivity.this, Ocr_Manage_List_Api_Activity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
@@ -295,18 +310,17 @@ public void Config() {
         });
 
         if (callMethod.ReadBoolan("ShortageList")){
+
             btn3.setText("لیست کسری فاکتور ها");
             btn3.setOnClickListener(view -> {
                 intent = new Intent(Ocr_NavActivity.this, Ocr_MergingActivity.class);
                 intent.putExtra("State", "4");
                 startActivity(intent);
-
             });
+
         }else{
             btn3.setVisibility(View.GONE);
         }
-
-
 
 
     }
@@ -436,7 +450,14 @@ public void Config() {
                 Intent intent = new Intent(this, Ocr_ConfigActivity.class);
                 startActivity(intent);
             }else{
-                ocr_action.LoginSetting();
+                if (callMethod.IsDebugBuild(Ocr_NavActivity.this)){
+
+                    Intent intent = new Intent(Ocr_NavActivity.this, Ocr_ConfigActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+                    startActivity(intent);
+                }else{
+                    ocr_action.LoginSetting();
+                }
             }
 
 

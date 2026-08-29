@@ -120,9 +120,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("JobPersonRef"));
+                    call=apiInterface.OcrControlled("OcrControlled", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("JobPersonRef"));
                 }else{
-                    call=secendApiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("JobPersonRef"));
+                    call=secendApiInterface.OcrControlled("OcrControlled", ocr_goods.get(position).getAppOCRFactorRowCode(), "0", callMethod.ReadString("JobPersonRef"));
                 }
 
                 call.enqueue(new Callback<RetrofitResponse>() {
@@ -166,9 +166,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("JobPersonRef"));
+                    call=apiInterface.OcrControlled("OcrControlled", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("JobPersonRef"));
                 }else{
-                    call=secendApiInterface.OcrControlled("OcrControlled_new", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("JobPersonRef"));
+                    call=secendApiInterface.OcrControlled("OcrControlled", ocr_goods.get(position).getAppOCRFactorRowCode(), "2", callMethod.ReadString("JobPersonRef"));
                 }
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override

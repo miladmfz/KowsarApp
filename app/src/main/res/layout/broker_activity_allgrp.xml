@@ -1,43 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layoutDirection="rtl"
-    tools:viewBindingIgnore="true"
+    android:background="?attr/colorSurface"
     tools:context=".activity.broker.Broker_AllGrpActivity"
-
-    >
+    tools:viewBindingIgnore="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/b_allgrp_a_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        >
+        android:background="?attr/colorPrimary"
+        app:elevation="4dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/b_allgrp_a_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary"
-            app:title="دسته بندی">
-
-        </androidx.appcompat.widget.Toolbar>
-
+            app:contentInsetEndWithActions="@dimen/gapMedium"
+            app:contentInsetStartWithNavigation="@dimen/gapMedium"
+            app:title="دسته‌بندی‌ها"
+            app:titleTextColor="?attr/colorOnPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/gapMedium"
+        android:paddingTop="@dimen/gapMedium"
+        android:paddingEnd="@dimen/gapMedium"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/b_allgrp_a_rc"
-            android:layout_width="match_parent"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="10dp"/>
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/b_allgrp_a_rc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingStart="@dimen/gapMedium"
+                android:paddingTop="@dimen/gapMedium"
+                android:paddingEnd="@dimen/gapMedium"
+                android:paddingBottom="@dimen/gapLarge"
+                tools:listitem="@android:layout/simple_list_item_2" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

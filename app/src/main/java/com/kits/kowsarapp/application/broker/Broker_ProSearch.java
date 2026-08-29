@@ -23,7 +23,16 @@ import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.inputmethod.EditorInfo;
+import androidx.core.graphics.ColorUtils;
 
+import com.google.android.material.color.MaterialColors;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -107,6 +116,273 @@ public class Broker_ProSearch {
 
     }
 
+    private int dp(int value) {
+        return Math.round(
+                TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        value,
+                        mContext.getResources()
+                                .getDisplayMetrics()
+                )
+        );
+    }
+
+    private int safeInt(
+            String value,
+            int fallback
+    ) {
+        try {
+            return Integer.parseInt(
+                    safeText(value)
+            );
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+
+    private String safeText(String value) {
+        return value == null
+                ? ""
+                : value.trim();
+    }
+    private GradientDrawable createSimpleBackground(
+            int backgroundColor,
+            float radius
+    ) {
+        GradientDrawable drawable = new GradientDrawable();
+
+        drawable.setColor(backgroundColor);
+        drawable.setCornerRadius(radius);
+
+        return drawable;
+    }
+    private GradientDrawable createSearchRowBackground(
+            int surfaceColor,
+            int primaryColor
+    ) {
+        GradientDrawable drawable = new GradientDrawable();
+
+        drawable.setColor(surfaceColor);
+        drawable.setCornerRadius(dp(8));
+
+        drawable.setStroke(
+                dp(1),
+                ColorUtils.setAlphaComponent(
+                        primaryColor,
+                        45
+                )
+        );
+
+        return drawable;
+    }
+    private LinearLayoutCompat createSearchRow(
+            Column column,
+            int sortOrder
+    ) {
+        int primaryColor = MaterialColors.getColor(
+                mContext,
+                com.google.android.material.R.attr.colorPrimary,
+                Color.DKGRAY
+        );
+
+        int surfaceColor = MaterialColors.getColor(
+                mContext,
+                com.google.android.material.R.attr.colorSurface,
+                Color.WHITE
+        );
+
+        int onBackgroundColor = MaterialColors.getColor(
+                mContext,
+                com.google.android.material.R.attr.colorOnBackground,
+                Color.BLACK
+        );
+
+        int softPrimaryColor = ColorUtils.blendARGB(
+                surfaceColor,
+                primaryColor,
+                0.08f
+        );
+
+        LinearLayoutCompat row = new LinearLayoutCompat(mContext);
+
+        row.setOrientation(LinearLayoutCompat.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        row.setPadding(dp(4), dp(3), dp(4), dp(3));
+
+        LinearLayoutCompat.LayoutParams rowParams =
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(46)
+                );
+
+        rowParams.setMargins(
+                0,
+                0,
+                0,
+                dp(4)
+        );
+
+        row.setLayoutParams(rowParams);
+
+        row.setBackground(
+                createSearchRowBackground(
+                        surfaceColor,
+                        primaryColor
+                )
+        );
+
+        TextView titleView = new TextView(mContext);
+
+        titleView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        0,
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        0.40f
+                )
+        );
+
+        titleView.setText(
+                NumberFunctions.PerisanNumber(
+                        safeText(
+                                column.getColumnFieldValue("ColumnDesc")
+                        )
+                )
+        );
+
+        titleView.setGravity(
+                Gravity.START | Gravity.CENTER_VERTICAL
+        );
+
+        titleView.setPaddingRelative(
+                dp(7),
+                0,
+                dp(6),
+                0
+        );
+
+        titleView.setMaxLines(1);
+        titleView.setEllipsize(TextUtils.TruncateAt.END);
+        titleView.setTextColor(onBackgroundColor);
+        titleView.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                11
+        );
+
+        titleView.setTypeface(
+                titleView.getTypeface(),
+                Typeface.BOLD
+        );
+
+        titleView.setBackground(
+                createSimpleBackground(
+                        softPrimaryColor,
+                        dp(6)
+                )
+        );
+
+        row.addView(titleView);
+
+        View divider = new View(mContext);
+
+        LinearLayoutCompat.LayoutParams dividerParams =
+                new LinearLayoutCompat.LayoutParams(
+                        dp(1),
+                        dp(28)
+                );
+
+        dividerParams.setMargins(
+                dp(4),
+                0,
+                dp(4),
+                0
+        );
+
+        divider.setLayoutParams(dividerParams);
+
+        divider.setBackgroundColor(
+                ColorUtils.setAlphaComponent(
+                        primaryColor,
+                        45
+                )
+        );
+
+        row.addView(divider);
+
+        EditText searchInput = new EditText(mContext);
+
+        searchInput.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        0,
+                        dp(38),
+                        0.60f
+                )
+        );
+
+        /*
+         * در کد قبلی setId دو مرتبه انجام می‌شد
+         * و مقدار اول بلافاصله از بین می‌رفت.
+         */
+        searchInput.setId(View.generateViewId());
+
+        searchInput.setHint(
+                safeText(
+                        column.getColumnFieldValue("ColumnCode")
+                )
+        );
+
+        searchInput.setText(
+                safeText(
+                        column.getColumnFieldValue("Condition")
+                )
+        );
+
+        searchInput.setTag(column);
+        searchInput.setBackgroundResource(R.drawable.bg_editbox);
+
+        searchInput.setGravity(
+                Gravity.START | Gravity.CENTER_VERTICAL
+        );
+
+        searchInput.setPaddingRelative(
+                dp(9),
+                0,
+                dp(9),
+                0
+        );
+
+        searchInput.setSingleLine(true);
+        searchInput.setSelectAllOnFocus(true);
+        searchInput.setTextDirection(
+                View.TEXT_DIRECTION_FIRST_STRONG_RTL
+        );
+
+        searchInput.setTextColor(onBackgroundColor);
+
+        searchInput.setHintTextColor(
+                ColorUtils.setAlphaComponent(
+                        onBackgroundColor,
+                        130
+                )
+        );
+
+        searchInput.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                12
+        );
+
+        searchInput.setInputType(
+                InputType.TYPE_CLASS_TEXT
+        );
+
+        searchInput.setImeOptions(
+                EditorInfo.IME_ACTION_NEXT
+        );
+
+        row.addView(searchInput);
+
+        return row;
+    }
 
     public void pro_c(String Goodtype) {
 
@@ -117,44 +393,28 @@ public class Broker_ProSearch {
         }
 
 
-        for (Column Column : Columns) {
+        layout_view.removeAllViews();
+        layout_view.setOrientation(LinearLayoutCompat.VERTICAL);
 
-            Column.setSearch("");
+        for (Column column : Columns) {
 
-            if (Integer.parseInt(Column.getColumnFieldValue("SortOrder")) > 1) {
+            column.setSearch("");
 
-                layout_view.setOrientation(LinearLayoutCompat.VERTICAL);
-                LinearLayoutCompat layout_view_child = new LinearLayoutCompat(mContext);
-                layout_view_child.setOrientation(LinearLayoutCompat.HORIZONTAL);
-                layout_view_child.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                layout_view_child.setWeightSum(1);
-                layout_view_child.setPadding(5, 5, 5, 5);
+            int sortOrder = safeInt(
+                    column.getColumnFieldValue("SortOrder"),
+                    0
+            );
 
-                TextView extra_TextView1 = new TextView(mContext);
-                extra_TextView1.setText(NumberFunctions.PerisanNumber(Column.getColumnFieldValue("ColumnDesc")));
-                extra_TextView1.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float) 0.7));
-                extra_TextView1.setTextSize(14);
-                extra_TextView1.setPadding(2, 2, 2, 2);
-                extra_TextView1.setGravity(Gravity.CENTER);
-                layout_view_child.addView(extra_TextView1);
-
-                EditText extra_EditText = new EditText(mContext);
-                extra_EditText.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, (float) 0.3));
-                extra_EditText.setTextSize(15);
-                extra_EditText.setId(Integer.parseInt(Column.getColumnFieldValue("sortorder")));
-                extra_EditText.setHint(Column.getColumnFieldValue("ColumnCode"));
-                extra_EditText.setText(Column.getColumnFieldValue("Condition"));
-                extra_EditText.setBackgroundResource(R.drawable.bg_editbox);
-                extra_EditText.setId(View.generateViewId());
-                extra_EditText.setPadding(2, 2, 2, 2);
-                extra_EditText.setGravity(Gravity.CENTER);
-                layout_view_child.addView(extra_EditText);
-
-
-                layout_view.addView(layout_view_child);
-
-
+            if (sortOrder <= 1) {
+                continue;
             }
+
+            LinearLayoutCompat row = createSearchRow(
+                    column,
+                    sortOrder
+            );
+
+            layout_view.addView(row);
         }
 
 

@@ -1,324 +1,354 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/broker_pfopenitem_card"
-    android:layoutDirection="rtl"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="6dp">
-
+    android:layoutDirection="rtl"
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:rippleColor="?attr/colorSecondary"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/bg_card"
-        android:layout_margin="2dp"
-        android:layout_weight="1">
+        android:padding="5dp">
 
-
+        <!-- Customer -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_height="42dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="68dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="@string/customerfactorheader"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
+            <TextView
+                android:id="@+id/b_pfopenitem_c_customer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:text="@string/customerfactorheader"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="فروشگاه نمونه تهران" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.14"
+            android:background="?attr/colorOnBackground" />
+
+        <!-- Date, code and time -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
-                    android:text="@string/prefactor_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
+                    android:maxLines="1"
+                    android:text="@string/prefactor_date"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="8sp" />
 
                 <TextView
                     android:id="@+id/b_pfopenitem_c_date"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:gravity="center"
+                    android:maxLines="1"
                     android:text="@string/prefactor_date"
-
-                    android:textSize="16sp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="11sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
+                    tools:text="۱۴۰۵/۰۵/۱۲" />
 
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:alpha="0.14"
+                android:background="?attr/colorOnBackground" />
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="31dp"
-                    android:layout_weight="0.25"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:maxLines="1"
                     android:text="@string/prefactor_code"
-
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnBackground"/>
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="8sp" />
 
                 <TextView
                     android:id="@+id/b_pfopenitem_c_code"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:gravity="center"
+                    android:maxLines="1"
                     android:text="@string/prefactor_code"
-
-                    android:textSize="16sp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="11sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
+                    tools:text="۱۲۵۴۸" />
 
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:alpha="0.14"
+                android:background="?attr/colorOnBackground" />
 
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
-                    android:text="@string/prefactor_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnBackground"/>
+                    android:maxLines="1"
+                    android:text="@string/prefactor_time"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="8sp" />
 
                 <TextView
                     android:id="@+id/b_pfopenitem_c_time"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:gravity="center"
+                    android:maxLines="1"
                     android:text="@string/prefactor_time"
-
-                    android:textSize="16sp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textDirection="ltr"
+                    android:textSize="11sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
+                    tools:text="12:35" />
 
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
-                    android:text="@string/buy_rows"
-                    android:gravity="center"
-
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/b_pfopenitem_c_row"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text="@string/buy_rows"
-
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.14"
+            android:background="?attr/colorOnBackground" />
 
+        <!-- Amount information -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="3dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.75"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buy_rows"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:id="@+id/b_pfopenitem_c_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buy_rows"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:text="۱۲" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.15"
+                    android:background="?attr/colorOnBackground" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.9"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buy_totalamount"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:id="@+id/b_pfopenitem_c_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buy_totalamount"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:text="۲۵" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.15"
+                    android:background="?attr/colorOnBackground" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.45"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/totalfactorheader"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:id="@+id/b_pfopenitem_c_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/totalfactorheader"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:text="۱۲۵,۰۰۰,۰۰۰" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Description -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
-                    android:text="@string/buy_totalamount"
-                    android:gravity="center"
-
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/b_pfopenitem_c_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text="@string/buy_totalamount"
-
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
-                    android:text="@string/totalfactorheader"
-                    android:gravity="center"
-
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/b_pfopenitem_c_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text="@string/totalfactorheader"
-
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </LinearLayout>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:layout_weight="1">
+            android:layout_height="46dp"
+            android:layout_marginTop="3dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="200dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
-                android:text="@string/customerfactorheader"
-                android:gravity="center"
-
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnBackground"/>
-
-            <TextView
-                android:id="@+id/b_pfopenitem_c_customer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.25"
-                android:gravity="center"
-                android:text="@string/customerfactorheader"
-
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnBackground"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
                 android:text="@string/prefactor_explain"
-                android:gravity="center"
-
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnBackground"/>
-
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/b_pfopenitem_c_detail"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.25"
-                android:gravity="center"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="2"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
                 android:text="@string/prefactor_explain"
-
-                android:textSize="16sp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnBackground"/>
+                tools:text="توضیحات مربوط به پیش‌فاکتور مشتری" />
 
-
-        </LinearLayout>
-
-        <androidx.viewpager.widget.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/red_900" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 
 </com.google.android.material.card.MaterialCardView>

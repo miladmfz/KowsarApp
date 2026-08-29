@@ -1,114 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.base.Base_ChoiceDBActivity"
-    android:background="@drawable/bg_input_activation_gradient"
     android:layoutDirection="rtl"
-    >
+    android:background="@drawable/bg_input_activation_gradient"
+    android:padding="6dp"
+    tools:context=".activity.base.Base_ChoiceDBActivity">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/base_app_content_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="1dp">
 
-
-        <TextView
-            android:id="@+id/base_app_version"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="?attr/colorOnBackground"
-            android:textSize="30dp"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:text="Software version"/>
+            android:padding="6dp">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp"
-            android:weightSum="1">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/base_app_tv_getcode"
+            <TextView
+                android:id="@+id/base_app_version"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-
-                android:background="@drawable/bg_activation_editbox"
-                android:textDirection="rtl"
-                android:inputType="number"
-                android:textSize="18sp"
+                android:layout_height="48dp"
+                android:ellipsize="end"
                 android:gravity="center"
-                android:padding="12dp"
-                android:textColor="?attr/colorOnBackground"
-                android:maxLength="6"
-                app:backgroundTint="@color/grey_100"
-                app:strokeColor="@color/grey_300"
-                app:strokeWidth="1dp"
-                android:layout_weight="0.7"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:importantForAccessibility="yes"
-                android:contentDescription="Activation Code Input"
-                android:hint="@string/databaseactivity_activation"
-                style="?attr/editTextBackground"
-                />
-
-
-            <Button
-                android:id="@+id/base_app_registercode"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/databaseactivity_set"
-                android:padding="12dp"
-                android:layout_weight="0.3"
-                android:layout_marginEnd="12dp"
-                android:layout_marginStart="12dp"
-                android:importantForAccessibility="yes"
-                android:contentDescription="Submit Button"
-                android:layout_margin="3dp"
-                android:textSize="16sp"
+                android:maxLines="1"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="Software version"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                style="@style/Widget.MaterialComponents.Button"
-                android:backgroundTint="?attr/colorPrimary"
-                android:textColor="?attr/colorOnPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="نسخه نرم‌افزار 3.2.1" />
 
+            <View
+                android:id="@+id/base_app_header_divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:alpha="0.15"
+                android:background="?attr/colorOnBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/base_app_version" />
 
-                />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/base_app_activation_card"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="5dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="9dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/base_app_header_divider"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
 
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/base_app_tv_getcode"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_activation_editbox"
+                        android:contentDescription="Activation Code Input"
+                        android:gravity="center"
+                        android:hint="@string/databaseactivity_activation"
+                        android:importantForAccessibility="yes"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:maxLength="6"
+                        android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:selectAllOnFocus="true"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textColorHint="?attr/colorOnBackground"
+                        android:textDirection="ltr"
+                        android:textSize="14sp"
+                        tools:text="123456" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                    <Button
+                        android:id="@+id/base_app_registercode"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="88dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="4dp"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:contentDescription="Submit Button"
+                        android:gravity="center"
+                        android:importantForAccessibility="yes"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/databaseactivity_set"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/base_app_line"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical" >
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/base_app_activation_card">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/base_app_allapp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_margin="2sp"
-                    android:visibility="visible"/>
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    android:paddingStart="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="8dp"
+                    android:visibility="visible"
+                    tools:listitem="@android:layout/simple_list_item_2" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
-        </ScrollView>
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

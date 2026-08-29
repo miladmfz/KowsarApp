@@ -69,11 +69,11 @@ public class Broker_CustomerViewHolder extends RecyclerView.ViewHolder {
         }
 
 
-        if (Integer.parseInt(customer.getCustomerFieldValue("Bestankar")) > -1) {
-            cus_bes.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(customer.getCustomerFieldValue("Bestankar")))));
+        if (Double.parseDouble(customer.getCustomerFieldValue("Bestankar")) > -1) {
+            cus_bes.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(customer.getCustomerFieldValue("Bestankar")))));
             cus_bes.setTextColor(ContextCompat.getColor(App.getContext(), R.color.green_900));
         } else {
-            int a = (Integer.parseInt(customer.getCustomerFieldValue("Bestankar"))) * (-1);
+            Double a = (Double.parseDouble(customer.getCustomerFieldValue("Bestankar"))) * (-1);
             cus_bes.setText(NumberFunctions.PerisanNumber(decimalFormat.format(a)));
             cus_bes.setTextColor(ContextCompat.getColor(App.getContext(), R.color.red_900));
         }

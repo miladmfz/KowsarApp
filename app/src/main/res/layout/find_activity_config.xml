@@ -1,492 +1,639 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activity.find.Find_ConfigActivity"
-    android:orientation="vertical"
     android:layoutDirection="rtl"
-    >
-
+    android:background="?attr/colorSurface"
+    tools:context=".activity.find.Find_ConfigActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/find_config_a_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:background="?attr/colorPrimary"
+        app:elevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary"
+            app:contentInsetEndWithActions="8dp"
+            app:contentInsetStartWithNavigation="8dp"
             app:title="تنظیمات"
-            >
-
-        </androidx.appcompat.widget.Toolbar>
-
+            app:titleTextColor="?attr/colorOnPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="10dp"
-            >
+            android:paddingStart="6dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="12dp">
 
+            <!-- Main action -->
             <Button
                 android:id="@+id/find_config_a_btn_to_reg"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:backgroundTint="?attr/colorPrimary"
+                android:gravity="center"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:text="@string/config_change"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_weight="0.5"
-android:layout_margin="3dp"
-android:textSize="16sp"
-android:textStyle="bold"
-style="@style/Widget.MaterialComponents.Button"
-android:backgroundTint="?attr/colorPrimary"
-android:textColor="?attr/colorOnPrimary"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-                />
-
-
-
-
-            <Button
-                android:id="@+id/find_config_a_to_home"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/config_returnhome"
-                android:textColor="#ffffff"
-                android:textStyle="bold"
-                android:textSize="12sp"
-                android:layout_weight="0.5"
-                app:backgroundTint="@color/green_500"
-                app:strokeColor="?attr/colorOnBackground"
-                app:strokeWidth="1dp"
-                style="?attr/materialButtonOutlinedStyle"
-                android:visibility="gone"
-                />
-            <Button
-                android:id="@+id/find_config_a_repcolumn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="بارگیری مجدد تنظیمات پیشفرض"
-                android:textColor="#ffffff"
-                android:textStyle="bold"
-                android:textSize="12sp"
-                android:layout_weight="0.5"
-                app:backgroundTint="@color/cyan_500"
-                app:strokeColor="?attr/colorOnBackground"
-                app:strokeWidth="1dp"
-                style="?attr/materialButtonOutlinedStyle"
-                android:visibility="gone"
-                />
-
-
-
+            <!-- Hidden actions -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="16dp"
-                android:padding="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp">
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/find_config_a_to_home"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/green_500"
+                    android:gravity="center"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="@string/config_returnhome"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/find_config_a_repcolumn"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="?attr/colorPrimaryVariant"
+                    android:gravity="center"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="بارگیری مجدد تنظیمات پیشفرض"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- General information -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_margin="16dp"
-                    android:padding="8dp"
-                    android:background="@drawable/bg_card"
-                    android:elevation="4dp">
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
-                    <!-- Label -->
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|start"
-                        android:text="@string/config_broker"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp" />
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
+                        android:text="اطلاعات تنظیمات"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
-                    <!-- Value -->
-                    <TextView
-                        android:id="@+id/find_config_a_broker"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:background="@drawable/bg_editbox"
-                        android:padding="8dp"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.15"
+                        android:background="?attr/colorOnBackground" />
 
+                    <!-- Broker -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="105dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="6dp"
+                            android:text="@string/config_broker"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/find_config_a_broker"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            tools:text="بازاریاب نمونه" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.1"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Server -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="105dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="6dp"
+                            android:text="آدرس سرور"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/find_config_a_serverurl"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="middle"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textDirection="ltr"
+                            android:textSize="10sp"
+                            tools:text="https://example.com/api/" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.1"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Delay and grid -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="3dp"
+                            android:paddingEnd="3dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:text="@string/config_delay"
+                                android:textColor="?attr/colorOnBackground"
+                                android:textSize="8sp" />
+
+                            <TextView
+                                android:id="@+id/find_config_a_delay"
+                                android:layout_width="match_parent"
+                                android:layout_height="26dp"
+                                android:background="@drawable/bg_editbox"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                tools:text="500" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center_vertical"
+                            android:alpha="0.14"
+                            android:background="?attr/colorOnBackground" />
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="3dp"
+                            android:paddingEnd="3dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:text="@string/config_item"
+                                android:textColor="?attr/colorOnBackground"
+                                android:textSize="8sp" />
+
+                            <TextView
+                                android:id="@+id/find_config_a_grid"
+                                android:layout_width="match_parent"
+                                android:layout_height="26dp"
+                                android:background="@drawable/bg_editbox"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                tools:text="2" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.1"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Font sizes -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="3dp"
+                            android:paddingEnd="3dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:text="سایز عنوان‌ها"
+                                android:textColor="?attr/colorOnBackground"
+                                android:textSize="8sp" />
+
+                            <TextView
+                                android:id="@+id/find_config_a_titlesize"
+                                android:layout_width="match_parent"
+                                android:layout_height="26dp"
+                                android:background="@drawable/bg_editbox"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                tools:text="14" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center_vertical"
+                            android:alpha="0.14"
+                            android:background="?attr/colorOnBackground" />
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="3dp"
+                            android:paddingEnd="3dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:text="سایز اطلاعات"
+                                android:textColor="?attr/colorOnBackground"
+                                android:textSize="8sp" />
+
+                            <TextView
+                                android:id="@+id/find_config_a_bodysize"
+                                android:layout_width="match_parent"
+                                android:layout_height="26dp"
+                                android:background="@drawable/bg_editbox"
+                                android:gravity="center"
+                                android:maxLines="1"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                tools:text="12" />
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Switch settings -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
-                    <!-- Label -->
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="آدرس سرور :"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp"
-                        android:gravity="center_vertical|start"
-                        android:paddingStart="8dp" />
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
+                        android:text="تنظیمات نمایش و جستجو"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
-                    <!-- Value -->
-                    <TextView
-                        android:id="@+id/find_config_a_serverurl"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_editbox"
-                        android:padding="8dp"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.15"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Select all -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="2"
+                            android:text="انتخاب کلی متن تایپ‌شده بعد از جستجو"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/find_config_a_selectallaftersearch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:enabled="false"
+                            android:gravity="center" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.1"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Good image -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:text="نمایش عکس کالا"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/find_config_a_showgoodimage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:enabled="true"
+                            android:gravity="center" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.1"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Keyboard -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:text="بسته شدن کیبورد"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/find_config_a_keyboardrunnable"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:enabled="false"
+                            android:gravity="center" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.1"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Edit selected -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:text="غیرفعال بودن تغییر توضیحات"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/find_config_a_editselected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:enabled="false"
+                            android:gravity="center" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.1"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Full screen -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:text="نمایش تمام صفحه"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/find_config_a_showallpage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:enabled="false"
+                            android:gravity="center" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.1"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Search lock -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:text="قفل کردن قسمت جستجو"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/find_config_a_searchlock"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checked="true"
+                            android:enabled="false"
+                            android:gravity="center" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <!-- Row 1 -->
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <!-- Label -->
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/config_delay"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp"
-                        android:gravity="center_vertical|start"
-                        android:paddingStart="8dp" />
-
-                    <!-- Value -->
-                    <TextView
-                        android:id="@+id/find_config_a_delay"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_editbox"
-                        android:padding="8dp"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <!-- Row 2 -->
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <!-- Label -->
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/config_item"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp"
-                        android:gravity="center_vertical|start"
-                        android:paddingStart="8dp" />
-
-                    <!-- Value -->
-                    <TextView
-                        android:id="@+id/find_config_a_grid"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_editbox"
-                        android:padding="8dp"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <!-- Label: سایز عنوان ها -->
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="سایز عنوان ها"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp"
-                        android:gravity="center_vertical|start"
-                        android:paddingStart="8dp" />
-
-                    <!-- Value: Title Size -->
-                    <TextView
-                        android:id="@+id/find_config_a_titlesize"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_editbox"
-                        android:padding="8dp"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <!-- Row 2: Body Size -->
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Label: سایز اطلاعات -->
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="سایز اطلاعات"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp"
-                        android:gravity="center_vertical|start"
-                        android:paddingStart="8dp" />
-
-                    <!-- Value: Body Size -->
-                    <TextView
-                        android:id="@+id/find_config_a_bodysize"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_editbox"
-                        android:padding="8dp"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp">
-
-                <!-- Label Text -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|start"
-                    android:text="انتخاب کلی متن تایپ شده بعد از جستجو "
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="16sp"
-                    android:paddingStart="8dp" />
-
-                <!-- Switch -->
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/find_config_a_selectallaftersearch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="false"
-                    android:layout_gravity="center"
-                    />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp">
-
-                <!-- Label Text -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|start"
-                    android:text="نمایش عکس کالا "
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="16sp"
-                    android:paddingStart="8dp" />
-
-                <!-- Switch -->
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/find_config_a_showgoodimage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="true"
-                    android:layout_gravity="center"
-                    />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp">
-
-                <!-- Label Text -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|start"
-                    android:text="بسته شدن کیبورد"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="16sp"
-                    android:paddingStart="8dp" />
-
-                <!-- Switch -->
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/find_config_a_keyboardrunnable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="false"
-                    android:layout_gravity="center"
-                    />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp">
-
-                <!-- Label Text -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|start"
-                    android:text="غیر فعال بودن تغییر توضیحات"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="16sp"
-                    android:paddingStart="8dp" />
-
-                <!-- Switch -->
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/find_config_a_editselected"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="false"
-                    android:layout_gravity="center"
-                    />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp">
-
-                <!-- Label Text -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|start"
-                    android:text="نمایش تمام صفحه"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="16sp"
-                    android:paddingStart="8dp" />
-
-                <!-- Switch -->
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/find_config_a_showallpage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="false"
-                    android:layout_gravity="center"
-                    />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:background="@drawable/bg_card"
-                android:elevation="4dp">
-
-                <!-- Label Text -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|start"
-                    android:text="قفل کردن قسمت جستجو"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="16sp"
-                    android:paddingStart="8dp" />
-
-                <!-- Switch -->
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/find_config_a_searchlock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="false"
-                    android:layout_gravity="center"
-                    />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.core.widget.NestedScrollView>
 
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

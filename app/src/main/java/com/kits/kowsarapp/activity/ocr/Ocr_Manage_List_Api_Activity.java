@@ -354,6 +354,7 @@ public class Ocr_Manage_List_Api_Activity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 String.valueOf(PageNo),
+                "0",
                 callMethod.ReadString("ActiveDatabase")
         );
         call.enqueue(new Callback<RetrofitResponse>() {
@@ -520,6 +521,7 @@ public class Ocr_Manage_List_Api_Activity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 "0",
+                "0",
                 callMethod.ReadString("ActiveDatabase")
         );
         callMethod.Log(Requset_List_call.request().url()+"");
@@ -612,7 +614,7 @@ public class Ocr_Manage_List_Api_Activity extends AppCompatActivity {
 
 
         Requset_ListCount_call=apiInterface.GetOcrFactorList(
-                "GetFactorListCount",
+                "GetFactorList",
                 state,
                 srch,
                 callMethod.ReadString("StackCategory"),
@@ -621,6 +623,7 @@ public class Ocr_Manage_List_Api_Activity extends AppCompatActivity {
                 StateEdited,
                 Row,
                 "0",
+                "1",
                 callMethod.ReadString("ActiveDatabase")
         );
         Requset_ListCount_call.enqueue(new Callback<RetrofitResponse>() {

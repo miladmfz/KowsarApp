@@ -1,64 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ocr_checkamount"
-    android:layout_width="match_parent"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_gravity="center"
     android:layoutDirection="rtl"
-    android:background="@drawable/bg_card"
-    android:layout_margin="5dp"
+    android:orientation="vertical"
+    android:padding="5dp">
 
-
-    >
-
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="300dp"
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center"
-        android:layout_margin="25dp"
-        >
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="1dp">
 
-        <TextView
-            android:textColor="?attr/colorOnBackground"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="تعداد کل اقلام را وارد کنید"
-            android:textSize="26sp"
-            android:gravity="center"
-            android:singleLine="true"
+            android:orientation="vertical"
+            android:padding="7dp">
 
-            />
-        <EditText
-            android:id="@+id/ocr_checkamount_c_edamount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="تعداد کل "
-            android:textSize="26sp"
-            android:gravity="center"
-            android:singleLine="true"
-            android:maxLength="5"
-            android:layout_margin="2dp"
-            android:inputType="number"
-            android:background="@drawable/bg_editbox"
-            android:textColor="?attr/colorOnBackground"
-            />
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/ocr_checkamount_c_btncheckamount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ثبت"
-            android:layout_margin="3dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            style="@style/Widget.MaterialComponents.Button"
-            android:backgroundTint="?attr/colorPrimary"
-            android:textColor="?attr/colorOnPrimary"
-            />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:text="ثبت تعداد کل اقلام"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.15"
+                android:background="?attr/colorOnBackground" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:text="تعداد کل اقلام را وارد کنید"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/ocr_checkamount_c_edamount"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_editbox"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:hint="تعداد کل"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:maxLength="5"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:textColor="?attr/colorOnBackground"
+                android:textColorHint="?attr/colorOnBackground"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="LabelFor"
+                tools:text="125" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ocr_checkamount_c_btncheckamount"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="6dp"
+                android:backgroundTint="?attr/colorPrimary"
+                android:gravity="center"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="ثبت تعداد"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

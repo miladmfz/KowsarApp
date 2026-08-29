@@ -1,132 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_reserve_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layoutDirection="rtl"
-    android:orientation="vertical"
->
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
-
-    <LinearLayout
-        android:background="@drawable/bg_card"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="2dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:padding="6dp">
 
-
-        <LinearLayout
+        <!-- Broker and date -->
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/ord_reserve_c_reservebrokername"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:textSize="14sp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                tools:ignore="NestedWeights" />
+                tools:text="رزرو توسط کاربر صندوق" />
 
             <TextView
                 android:id="@+id/ord_reserve_c_reservedate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.4"
+                android:layout_width="104dp"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
                 android:gravity="center"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="۱۴۰۵/۰۵/۱۴" />
 
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </LinearLayout>
-
-
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:alpha="0.12"
+            android:background="?attr/colorOnBackground" />
+
+        <!-- Reserve time -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="زمان"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ord_reserve_c_reservestart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
-                android:gravity="left"
-                android:textSize="16sp"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                tools:ignore="NestedWeights,RtlHardcoded" />
+                tools:text="۲۰:۰۰" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="38dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
                 android:gravity="center"
                 android:text="@string/reserveitem_until"
-                android:textSize="14sp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="8sp"
                 android:textStyle="bold" />
-
 
             <TextView
                 android:id="@+id/ord_reserve_c_reserveend"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
-                android:gravity="right"
-                android:textSize="16sp"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                tools:ignore="RtlHardcoded" />
+                tools:text="۲۲:۰۰" />
 
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </LinearLayout>
-
-
-        <LinearLayout
+        <!-- Customer info -->
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/ord_reserve_c_reserveeplain"
-                android:layout_width="match_parent"
-                android:layout_height="31dp"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:textSize="12sp"
-                tools:ignore="NestedWeights" />
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="مشتری"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ord_reserve_c_reservepersonname"
-                android:layout_width="match_parent"
-                android:layout_height="31dp"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:textSize="12sp" />
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingStart="7dp"
+                android:paddingEnd="7dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="میلاد فلاح" />
 
             <TextView
                 android:id="@+id/ord_reserve_c_reservemobileno"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
+                android:layout_width="112dp"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
                 android:gravity="center"
-                android:textSize="14sp"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textDirection="ltr"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                tools:text="09121234567" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Explanation -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="توضیحات"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/ord_reserve_c_reserveeplain"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingStart="7dp"
+                android:paddingEnd="7dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                tools:text="میز کنار پنجره باشد" />
 
-        </LinearLayout>
-    </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="2dp"
+            android:background="?attr/colorPrimary" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </com.google.android.material.card.MaterialCardView>

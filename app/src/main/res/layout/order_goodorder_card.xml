@@ -1,91 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_goodorder_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="3dp"
     android:layoutDirection="rtl"
-    android:orientation="vertical"
-    >
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
-
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="2dp"
-        android:orientation="horizontal"
-        android:weightSum="1"
-        tools:ignore="DisableBaselineAlignment"
-        android:background="@drawable/bg_card"
-        >
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:padding="6dp">
 
-        <LinearLayout
+        <!-- Product name, amount and delete -->
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:layout_weight="0.1"
-            android:orientation="vertical">
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/ord_goodorder_c_goodname"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                tools:ignore="InefficientWeight,NestedWeights">
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="2"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                tools:text="نام کامل کالای اضافه‌شده به سفارش" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="74dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="3dp">
 
                 <TextView
-                    android:id="@+id/ord_goodorder_c_goodname"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.5"
+                    android:layout_height="14dp"
                     android:gravity="center"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
+                    android:text="تعداد"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/ord_goodorder_c_amount"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.4"
+                    android:layout_height="24dp"
+                    android:background="@drawable/bg_editbox"
+                    android:ellipsize="end"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:maxLines="1"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="3dp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="11sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
+                    tools:text="۱۲" />
 
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/ord_goodorder_c_explain"
-                android:layout_width="match_parent"
-                android:layout_height="31dp"
-                android:gravity="center"
-                android:textSize="18sp"
-                android:textColor="?attr/colorOnBackground"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:layout_weight="0.9"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <ImageView
                 android:id="@+id/ord_goodorder_c_delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="4dp"
                 android:background="@drawable/ic_delete"
-                tools:ignore="ContentDescription" />
-        </LinearLayout>
-    </LinearLayout>
+                android:clickable="true"
+                android:contentDescription="حذف کالا از سفارش"
+                android:focusable="true"
+                android:padding="7dp"
+                android:scaleType="centerInside" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.12"
+            android:background="?attr/colorOnBackground" />
+
+        <!-- Explanation -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="62dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="توضیحات"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ord_goodorder_c_explain"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingStart="7dp"
+                android:paddingEnd="7dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                tools:text="توضیحات ثبت‌شده برای این کالا" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="2dp"
+            android:background="?attr/colorPrimary" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </com.google.android.material.card.MaterialCardView>

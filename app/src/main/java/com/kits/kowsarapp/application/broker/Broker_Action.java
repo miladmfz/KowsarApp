@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
@@ -165,6 +166,8 @@ public class Broker_Action extends Base_Action {
 
         NewPrice[0] = good.getGoodFieldValue("SellPrice");
 
+        Gson gson = new Gson();
+        callMethod.Log("GOOD OBJECT => " + gson.toJson(good));
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -904,7 +907,7 @@ public class Broker_Action extends Base_Action {
                         intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                         ((Activity) mContext).finish();
                         ((Activity) mContext).overridePendingTransition(0, 0);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         mContext.startActivity(intent);
                         ((Activity) mContext).overridePendingTransition(0, 0);
                     }

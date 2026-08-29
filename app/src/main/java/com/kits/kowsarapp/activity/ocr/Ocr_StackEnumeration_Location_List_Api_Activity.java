@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.ocr.Ocr_StackEnumeration_Factor_ListApi_Adapter;
 import com.kits.kowsarapp.adapter.ocr.Ocr_StackEnumeration_Janamie_ListApi_Adapter;
@@ -73,7 +74,7 @@ public class Ocr_StackEnumeration_Location_List_Api_Activity extends AppCompatAc
 
     Ocr_DBH ocr_dbh;
 
-    Button btn_refresh_list;
+    MaterialButton btn_refresh_list;
 
     RecyclerView recycler;
 

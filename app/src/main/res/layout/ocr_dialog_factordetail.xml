@@ -1,708 +1,761 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ocr_factordetail_dialog"
-    android:layout_width="350dp"
-    android:layout_height="wrap_content"
-    android:layoutDirection="rtl"
+    android:layout_width="340dp"
+    android:layout_height="560dp"
     android:layout_gravity="center"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    android:padding="5dp">
 
-    >
-
-    <ScrollView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="3dp"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="1dp">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ocr_factordialog_d_ll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
+            android:layout_height="match_parent"
+            android:layoutDirection="rtl"
             android:orientation="vertical">
 
-
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <!-- Header -->
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
+                android:layout_height="44dp"
+                android:background="?attr/colorPrimary"
+                android:gravity="start|center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="جزئیات فاکتور"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="فاکتور : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-
-                        android:id="@+id/ocr_factordialog_d_factorprivatecode"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="تاریخ : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="19sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_factordate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="بایگانی: "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_appocrfactorcode"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="پرینت :"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_apptcprintref"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="منطقه : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_ersall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-
-                        android:textSize="22sp"
-                        android:textColor="?attr/colorOnBackground"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="مشتری:"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_customercode"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="نام مشتری : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_custName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="بازایاب : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_brokername"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="وضعیت فاکتور : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_appfactorstate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text=" توضیحات : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_appfactorexplain"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="تاریخ اتمام انبار : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp"
-                        />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_appcontroldate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:background="@color/white"
-                android:orientation="vertical">
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:fillViewport="true"
+                android:overScrollMode="never">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:orientation="vertical"
+                    android:padding="6dp">
 
+                    <!-- Main information -->
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="تاریخ اتمام بسته بندی : "
-                        android:textSize="20sp"
-                        android:textColor="?attr/colorOnBackground"/>
+                        android:layout_height="30dp"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="5dp"
+                        android:text="اطلاعات اصلی"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_apppackdate"
+                    <!-- Factor code / date -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="فاکتور"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_factorprivatecode"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            tools:text="۱۴۰۵۲۵۸" />
+
+                        <TextView
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="تاریخ"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_factordate"
+                            android:layout_width="92dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="۱۴۰۵/۰۵/۱۲" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Archive / print -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="بایگانی"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_appocrfactorcode"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            tools:text="۱۲۵۴۸" />
+
+                        <TextView
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="پرینت"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_apptcprintref"
+                            android:layout_width="92dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="۴۵۶" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Region / customer code -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="منطقه"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_ersall"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="منطقه یک" />
+
+                        <TextView
+                            android:layout_width="52dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="کد مشتری"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_customercode"
+                            android:layout_width="82dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="۱۲۵۸" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Customer name -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="نام مشتری"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_custName"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="فروشگاه نمونه مشتری" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Broker -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="بازاریاب"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_brokername"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="آقای محمدی" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- State -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="وضعیت فاکتور"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_appfactorstate"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            tools:text="آماده تحویل" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Explanation -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="توضیحات"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_appfactorexplain"
+                            android:layout_width="0dp"
+                            android:layout_height="52dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="2"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            tools:text="توضیحات مربوط به پردازش و تحویل فاکتور" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="3dp"
+                        android:alpha="0.15"
+                        android:background="?attr/colorOnBackground" />
+
+                    <!-- Workflow information -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="5dp"
+                        android:text="اطلاعات عملیات"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <!-- Control / pack dates -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="54dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="اتمام انبار"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="8sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_appcontroldate"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            tools:text="۱۴۰۵/۰۵/۱۲" />
+
+                        <TextView
+                            android:layout_width="64dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="اتمام بسته‌بندی"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="8sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_apppackdate"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            tools:text="۱۴۰۵/۰۵/۱۳" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Reader -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="اعلام‌کننده"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_appreader"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="آقای رضایی" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Controller -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="کنترل‌کننده"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_appcontroler"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="آقای احمدی" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Packer -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="بسته‌بند"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_apppacker"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="آقای اکبری" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Deliverer -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="76dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="تحویل‌دهنده"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_appdeliverer"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:ellipsize="end"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="آقای محمدی" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Package count / exit date -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="تعداد"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_apppackcount"
+                            android:layout_width="64dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="۵" />
+
+                        <TextView
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="خروج"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_apppackdeliverdate"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            tools:text="۱۴۰۵/۰۵/۱۴ ۱۲:۳۰" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Edited / signature -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="4dp"
+                            android:text="اصلاحی"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_isedited"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="خیر" />
+
+                        <TextView
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="امضا"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="9sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ocr_factordialog_d_hassignature"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            tools:text="دارد" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <!-- Actions -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.15"
+                android:background="?attr/colorOnBackground" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
+                android:layout_height="52dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="4dp">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                <Button
+                    android:id="@+id/ocr_factordialog_d_btn1"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/red_800"
+                    android:gravity="center"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:text="لغو تحویل"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="اعلام کننده : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
+                <Button
+                    android:id="@+id/ocr_factordialog_d_btn2"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:gravity="center"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:text="اصلاح اطلاعات"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_appreader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="کنترل کننده : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_appcontroler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="بسته بند  : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_apppacker"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="تحویل دهنده: "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_appdeliverer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="تعداد : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_apppackcount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="خروج : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_apppackdeliverdate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="16sp" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="اصلاحی : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_isedited"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="امضا : "
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_factordialog_d_hassignature"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="2dp"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/bg_editbox"
-                        android:gravity="center"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-
-                    <Button
-                        android:id="@+id/ocr_factordialog_d_btn1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="لغو تحویل"
-                        android:layout_margin="3dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        style="@style/Widget.MaterialComponents.Button"
-                        android:backgroundTint="?attr/colorPrimary"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:layout_weight="0.5"
-                        />
-
-                    <Button
-                        android:id="@+id/ocr_factordialog_d_btn2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="اصلاح اطلاعات"
-                        android:layout_margin="3dp"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        style="@style/Widget.MaterialComponents.Button"
-                        android:backgroundTint="?attr/colorSecondary"
-                        android:textColor="?attr/colorOnSecondary"
-                        android:layout_weight="0.5"
-
-                        />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-    </ScrollView>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

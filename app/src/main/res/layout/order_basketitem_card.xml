@@ -1,160 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_basketitem_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layoutDirection="rtl"
-    android:orientation="vertical"
-    app:cardCornerRadius="2dp"
->
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_margin="5dp"
-        android:background="@drawable/bg_card"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:padding="6dp">
 
-
+        <!-- Product name -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="56dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:orientation="horizontal">
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="@string/goodbasketitem_name"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.75"
-                    android:gravity="center"
-                    android:text="@string/goodbasketitem_name"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:ignore="NestedWeights"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/ord_basketitem_c_goodname"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:hint="@string/goodbasketitem_goodname"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </LinearLayout>
-
-
-            <androidx.viewpager.widget.ViewPager
-                android:layout_width="2dp"
+            <TextView
+                android:id="@+id/ord_basketitem_c_goodname"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/grey_500" />
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:hint="@string/goodbasketitem_goodname"
+                android:maxLines="2"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="نام کامل کالای موجود در سبد سفارش" />
 
-            <LinearLayout
-
-                android:id="@+id/ord_basketitem_c_ll_amount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:orientation="horizontal">
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.3"
-                    android:gravity="center"
-                    android:text="@string/goodbasketitem_amount"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:ignore="NestedWeights"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/ord_basketitem_c_amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7"
-                    android:gravity="center"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/red_900"/>
-
-            </LinearLayout>
         </LinearLayout>
 
-        <androidx.viewpager.widget.ViewPager
+        <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/grey_500" />
+            android:layout_height="1dp"
+            android:alpha="0.12"
+            android:background="?attr/colorOnBackground" />
 
+        <!-- Amount -->
+        <LinearLayout
+            android:id="@+id/ord_basketitem_c_ll_amount"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="@string/goodbasketitem_amount"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ord_basketitem_c_amount"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:textColor="@color/red_800"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="۱۲" />
+
+        </LinearLayout>
+
+        <!-- Explanation and delete -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/ord_basketitem_c_ll_explain"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="0.1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="56dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.75"
-                    android:gravity="center"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="5dp"
                     android:text="@string/goodbasketitem_explain"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:ignore="NestedWeights"
-                    android:textColor="?attr/colorOnBackground"/>
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/ord_basketitem_c_explain"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_editbox"
+                    android:ellipsize="end"
+                    android:gravity="start|center_vertical"
                     android:hint="@string/goodbasketitem_explain"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
+                    android:maxLines="1"
+                    android:paddingStart="7dp"
+                    android:paddingEnd="7dp"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="10sp"
+                    tools:text="توضیحات ثبت‌شده برای این کالا" />
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/ord_basketitem_c_dlt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="2dp"
-                android:layout_weight="0.9"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:background="@drawable/ic_delete"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                tools:ignore="ContentDescription" />
+                android:clickable="true"
+                android:contentDescription="حذف کالا"
+                android:focusable="true"
+                android:padding="7dp"
+                android:scaleType="centerInside" />
+
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="2dp"
+            android:background="?attr/colorPrimary" />
+
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

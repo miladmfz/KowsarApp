@@ -1,59 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="start"
-    android:layout_margin="3dp"
     android:layoutDirection="rtl"
-    android:orientation="vertical"
-    android:elevation="12dp"
-    android:clipToOutline="true"
-    android:outlineSpotShadowColor="?attr/colorPrimary"
-    >
-
-
-
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-
-
         android:id="@+id/ord_grp_c_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/ord_grp_c_image"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:layoutDirection="rtl"
-            tools:ignore="ContentDescription"
-            android:padding="5dp"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/ord_grp_c_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:text="@string/grplist_name"
-            android:textSize="18dp"
-            android:textColor="?attr/colorOnSecondary"/>
+            android:layout_height="90dp"
+            android:contentDescription="تصویر گروه کالا"
+            android:padding="4dp"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            tools:src="@drawable/img_base_no_photo"
+            tools:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/ord_grp_c_imgv"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_arrow_down"
-            android:gravity="center"
-            android:textColor="?attr/colorOnBackground"
-            android:textSize="16sp"
-            tools:ignore="ContentDescription" />
+            android:layout_height="46dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ord_grp_c_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="2"
+                android:paddingStart="7dp"
+                android:paddingEnd="5dp"
+                android:text="@string/grplist_name"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                tools:text="گروه کالا" />
+
+            <ImageView
+                android:id="@+id/ord_grp_c_imgv"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:background="@drawable/ic_arrow_down"
+                android:contentDescription="نمایش زیرگروه‌ها"
+                android:padding="7dp"
+                android:scaleType="centerInside" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="2dp"
+            android:background="?attr/colorPrimary" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>

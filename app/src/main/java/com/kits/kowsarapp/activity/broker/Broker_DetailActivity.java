@@ -1,10 +1,15 @@
 package com.kits.kowsarapp.activity.broker;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,17 +18,19 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 
+import com.google.android.material.color.MaterialColors;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_SliderAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.databinding.BrokerActivityDetailBinding;
 import com.kits.kowsarapp.model.base.Column;
-import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
+import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
 import com.smarteist.autoimageslider.IndicatorAnimations;
@@ -33,57 +40,67 @@ import com.smarteist.autoimageslider.SliderView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-
 public class Broker_DetailActivity extends AppCompatActivity {
 
-    DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    private final DecimalFormat decimalFormat = new DecimalFormat("#,##0");
 
-    CallMethod callMethod;
-    Broker_DBH broker_dbh;
-    Intent intent;
+    private CallMethod callMethod;
+    private Broker_DBH broker_dbh;
+    private Broker_Action broker_action;
+    private Broker_APIInterface broker_apiInterface;
 
-    Broker_Action broker_action;
-    Broker_APIInterface broker_apiInterface;
-    Good gooddetail;
+    private Good gooddetail;
 
-    ArrayList<Column> Columns = new ArrayList<>();
-    ArrayList<Good> imagelists = new ArrayList<>();
+    private ArrayList<Column> Columns = new ArrayList<>();
+    private ArrayList<Good> imagelists = new ArrayList<>();
 
-    String id;
+    private String id = "";
+    private Intent intent;
 
-    BrokerActivityDetailBinding binding;
+    private BrokerActivityDetailBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE)
-                .getInt("selectedTheme", R.style.RoyalGoldTheme));
+
+        setTheme(
+                getSharedPreferences("ThemePrefs", MODE_PRIVATE)
+                        .getInt("selectedTheme", R.style.RoyalGoldTheme)
+        );
 
         binding = BrokerActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        intent();
+        readIntent();
         Config();
 
-        try {
-            Handler handler = new Handler();
-            handler.postDelayed(this::init, 100);
-        } catch (Exception e) {
-            callMethod.Log(e.getMessage());
-        }
+        new Handler(Looper.getMainLooper()).postDelayed(this::init, 100);
     }
 
-    public void intent() {
+    private void readIntent() {
         Bundle data = getIntent().getExtras();
-        assert data != null;
-        id = data.getString("id");
+
+        if (data != null) {
+            String receivedId = data.getString("id");
+
+            if (receivedId != null) {
+                id = receivedId;
+            }
+        }
     }
 
     public void Config() {
         callMethod = new CallMethod(this);
-        broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
+
+        broker_dbh = new Broker_DBH(
+                this,
+                callMethod.ReadString("DatabaseName")
+        );
+
         broker_action = new Broker_Action(this);
-        broker_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse"))
+
+        broker_apiInterface = APIClient
+                .getCleint(callMethod.ReadString("ServerURLUse"))
                 .create(Broker_APIInterface.class);
 
         Columns = new ArrayList<>();
@@ -91,8 +108,11 @@ public class Broker_DetailActivity extends AppCompatActivity {
         setSupportActionBar(binding.bDetailAToolbar);
     }
 
-    @SuppressLint("UseCompatLoadingForColorStateLists")
     public void init() {
+        if (id == null || id.trim().isEmpty()) {
+            callMethod.showToast("شناسه کالا مشخص نشده است");
+            return;
+        }
 
         broker_dbh.getGoodByCodeAsync(
                 id,
@@ -100,6 +120,10 @@ public class Broker_DetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onResult(Good result) {
+                        if (result == null) {
+                            callMethod.showToast("اطلاعات کالا پیدا نشد");
+                            return;
+                        }
 
                         gooddetail = result;
                         Columns = broker_dbh.GetColumns(id, "", "0");
@@ -112,7 +136,11 @@ public class Broker_DetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Exception e) {
-                        callMethod.Log(e.getMessage());
+                        String message = e.getMessage() == null
+                                ? "Unknown error"
+                                : e.getMessage();
+
+                        callMethod.Log(message);
                         callMethod.showToast("خطا در دریافت اطلاعات کالا");
                     }
                 }
@@ -120,42 +148,53 @@ public class Broker_DetailActivity extends AppCompatActivity {
     }
 
     private void loadFactorInfo() {
+        String preFactorCode = callMethod.ReadString("PreFactorCode");
 
-        if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) == 0) {
+        if (safeInt(preFactorCode, 0) == 0) {
             binding.bDetailACustomer.setText("فاکتوری انتخاب نشده");
             binding.bDetailALlSumFactor.setVisibility(View.GONE);
-        } else {
-            binding.bDetailALlSumFactor.setVisibility(View.VISIBLE);
-
-            binding.bDetailACustomer.setText(
-                    NumberFunctions.PerisanNumber(
-                            broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))
-                    )
-            );
-
-            binding.bDetailASumFactor.setText(
-                    NumberFunctions.PerisanNumber(
-                            decimalFormat.format(
-                                    Integer.parseInt(
-                                            broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))
-                                    )
-                            )
-                    )
-            );
+            return;
         }
+
+        binding.bDetailALlSumFactor.setVisibility(View.VISIBLE);
+
+        String customerName = broker_dbh.getFactorCustomer(preFactorCode);
+        binding.bDetailACustomer.setText(
+                NumberFunctions.PerisanNumber(customerName)
+        );
+
+        String factorSum = broker_dbh.getFactorSum(preFactorCode);
+        binding.bDetailASumFactor.setText(formatNumber(factorSum));
     }
 
     private void loadGoodProperties() {
+        /*
+         * اولین View داخل این Container، عنوان بخش است.
+         * Viewهای ساخته‌شده قبلی حذف می‌شوند تا اطلاعات تکراری نشوند.
+         */
+        while (binding.bDetailALineProperty.getChildCount() > 1) {
+            binding.bDetailALineProperty.removeViewAt(1);
+        }
 
-        for (Column Column : Columns) {
-            if (Integer.parseInt(Column.getColumnFieldValue("SortOrder")) > 0) {
-                CreateView(
-                        Column.getColumnFieldValue("ColumnDesc"),
-                        gooddetail.getGoodFieldValue(
-                                Column.getColumnFieldValue("columnname")
-                        )
-                );
+        if (Columns == null || Columns.isEmpty()) {
+            return;
+        }
+
+        for (Column column : Columns) {
+            int sortOrder = safeInt(
+                    column.getColumnFieldValue("SortOrder"),
+                    0
+            );
+
+            if (sortOrder <= 0) {
+                continue;
             }
+
+            String title = column.getColumnFieldValue("ColumnDesc");
+            String columnName = column.getColumnFieldValue("columnname");
+            String body = gooddetail.getGoodFieldValue(columnName);
+
+            CreateView(title, body);
         }
     }
 
@@ -167,155 +206,368 @@ public class Broker_DetailActivity extends AppCompatActivity {
         SliderView();
     }
 
-    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void setupBuyButton() {
+        boolean isActive = "1".equals(
+                gooddetail.getGoodFieldValue("ActiveStack")
+        );
 
-        if (gooddetail.getGoodFieldValue("ActiveStack").equals("1")) {
-            binding.bDetailABtnbuy.setBackgroundTintList(
-                    getResources().getColorStateList(R.color.green_600)
-            );
-        } else {
-            binding.bDetailABtnbuy.setBackgroundTintList(
-                    getResources().getColorStateList(R.color.grey_700)
-            );
+        int activeColor = MaterialColors.getColor(
+                this,
+                com.google.android.material.R.attr.colorPrimary,
+                ContextCompat.getColor(this, R.color.green_600)
+        );
+
+        int inactiveColor = ContextCompat.getColor(
+                this,
+                R.color.grey_700
+        );
+
+        binding.bDetailABtnbuy.setBackgroundTintList(
+                ColorStateList.valueOf(
+                        isActive ? activeColor : inactiveColor
+                )
+        );
+
+        if (!callMethod.ReadBoolan("ShowGoodBuyBtn")) {
+            binding.bDetailABtnbuy.setVisibility(View.GONE);
+            return;
         }
 
-        if (callMethod.ReadBoolan("ShowGoodBuyBtn")) {
-            binding.bDetailABtnbuy.setVisibility(View.VISIBLE);
+        binding.bDetailABtnbuy.setVisibility(View.VISIBLE);
 
-            if (callMethod.ReadBoolan("CanUseInactive")) {
-                binding.bDetailABtnbuy.setText("غیر فعال ");
-            }
+        if (callMethod.ReadBoolan("CanUseInactive")) {
+            binding.bDetailABtnbuy.setText("افزودن به سبد خرید");
+        } else if (isActive) {
+            binding.bDetailABtnbuy.setText("افزودن به سبد خرید");
         } else {
-            binding.bDetailABtnbuy.setVisibility(View.GONE);
+            binding.bDetailABtnbuy.setText("کالای غیرفعال");
         }
 
         binding.bDetailABtnbuy.setOnClickListener(view -> {
+            boolean canUseInactive =
+                    callMethod.ReadBoolan("CanUseInactive");
 
-            if (callMethod.ReadBoolan("CanUseInactive")) {
-
-                if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                    broker_action.buydialog(
-                            gooddetail.getGoodFieldValue("GoodCode"),
-                            "0"
-                    );
-                } else {
-                    intent = new Intent(
-                            Broker_DetailActivity.this,
-                            Broker_PFOpenActivity.class
-                    );
-                    intent.putExtra("fac", "0");
-                    startActivity(intent);
-                }
-
-            } else {
-
-                if (gooddetail.getGoodFieldValue("ActiveStack").equals("1")) {
-
-                    if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                        broker_action.buydialog(
-                                gooddetail.getGoodFieldValue("GoodCode"),
-                                "0"
-                        );
-                    } else {
-                        intent = new Intent(
-                                Broker_DetailActivity.this,
-                                Broker_PFOpenActivity.class
-                        );
-                        intent.putExtra("fac", "0");
-                        startActivity(intent);
-                    }
-
-                } else {
-                    callMethod.showToast("این کالا غیر فعال می باشد");
-                }
+            if (!canUseInactive && !isActive) {
+                callMethod.showToast("این کالا غیرفعال می‌باشد");
+                return;
             }
+
+            openBuyDialogOrFactor();
         });
     }
 
-    public void CreateView(String title, String body) {
+    private void openBuyDialogOrFactor() {
+        int preFactorCode = safeInt(
+                callMethod.ReadString("PreFactorCode"),
+                0
+        );
 
-        LinearLayoutCompat ll_1 = new LinearLayoutCompat(this);
-        ll_1.setOrientation(LinearLayoutCompat.HORIZONTAL);
-        ll_1.setLayoutParams(new LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-        ));
-        ll_1.setWeightSum(1);
+        if (preFactorCode != 0) {
+            broker_action.buydialog(
+                    gooddetail.getGoodFieldValue("GoodCode"),
+                    "0"
+            );
 
-        TextView extra_TextView1 = new TextView(this);
-        extra_TextView1.setText(NumberFunctions.PerisanNumber(title));
-        extra_TextView1.setBackgroundResource(R.color.grey_20);
-        extra_TextView1.setLayoutParams(new LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                (float) 0.7
-        ));
-        extra_TextView1.setTextSize(Integer.parseInt(callMethod.ReadString("TitleSize")));
-        extra_TextView1.setPadding(2, 5, 2, 5);
-        extra_TextView1.setGravity(Gravity.CENTER);
-        extra_TextView1.setTextColor(getResources().getColor(R.color.grey_800));
-
-        ll_1.addView(extra_TextView1);
-
-        TextView extra_TextView2 = new TextView(this);
-
-        try {
-            if (Integer.parseInt(body) > 999) {
-                extra_TextView2.setText(
-                        NumberFunctions.PerisanNumber(
-                                decimalFormat.format(Integer.parseInt(body))
-                        )
-                );
-            } else {
-                extra_TextView2.setText(NumberFunctions.PerisanNumber(body));
-            }
-        } catch (Exception e) {
-            extra_TextView2.setText(NumberFunctions.PerisanNumber(body));
+            return;
         }
 
-        extra_TextView2.setBackgroundResource(R.color.white);
-        extra_TextView2.setLayoutParams(new LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                (float) 0.3
-        ));
-        extra_TextView2.setTextSize(Integer.parseInt(callMethod.ReadString("BodySize")));
-        extra_TextView2.setPadding(2, 2, 2, 2);
-        extra_TextView2.setGravity(Gravity.CENTER);
-        extra_TextView2.setTextColor(getResources().getColor(R.color.grey_1000));
+        intent = new Intent(
+                Broker_DetailActivity.this,
+                Broker_PFOpenActivity.class
+        );
 
-        ll_1.addView(extra_TextView2);
+        intent.putExtra("fac", "0");
+        startActivity(intent);
+    }
 
-        ViewPager extra_ViewPager = new ViewPager(this);
-        extra_ViewPager.setLayoutParams(new LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                3
-        ));
-        extra_ViewPager.setBackgroundResource(R.color.grey_40);
+    public void CreateView(String title, String body) {
+        int primaryColor = MaterialColors.getColor(
+                this,
+                com.google.android.material.R.attr.colorPrimary,
+                Color.DKGRAY
+        );
 
-        binding.bDetailALineProperty.addView(ll_1);
-        binding.bDetailALineProperty.addView(extra_ViewPager);
+        int surfaceColor = MaterialColors.getColor(
+                this,
+                com.google.android.material.R.attr.colorSurface,
+                Color.WHITE
+        );
+
+        int onSurfaceColor = MaterialColors.getColor(
+                this,
+                com.google.android.material.R.attr.colorOnSurface,
+                Color.BLACK
+        );
+
+        int softPrimaryColor = ColorUtils.blendARGB(
+                surfaceColor,
+                primaryColor,
+                0.10f
+        );
+
+        int dividerColor = ColorUtils.setAlphaComponent(
+                primaryColor,
+                45
+        );
+
+        int titleSize = clamp(
+                safeInt(callMethod.ReadString("TitleSize"), 12),
+                10,
+                15
+        );
+
+        int bodySize = clamp(
+                safeInt(callMethod.ReadString("BodySize"), 13),
+                11,
+                16
+        );
+
+        LinearLayoutCompat row = new LinearLayoutCompat(this);
+
+        row.setOrientation(LinearLayoutCompat.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        row.setPadding(dp(3), dp(2), dp(3), dp(2));
+
+        row.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(44)
+                )
+        );
+
+        TextView titleView = new TextView(this);
+
+        titleView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        0,
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        0.40f
+                )
+        );
+
+        titleView.setText(
+                NumberFunctions.PerisanNumber(
+                        safeText(title)
+                )
+        );
+
+        titleView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        titleView.setPaddingRelative(dp(8), 0, dp(6), 0);
+        titleView.setMaxLines(1);
+        titleView.setEllipsize(TextUtils.TruncateAt.END);
+        titleView.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG_RTL);
+        titleView.setTextColor(primaryColor);
+        titleView.setTypeface(null, Typeface.BOLD);
+
+        titleView.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                titleSize
+        );
+
+        titleView.setBackground(
+                createBackground(
+                        softPrimaryColor,
+                        dp(6),
+                        Color.TRANSPARENT,
+                        0
+                )
+        );
+
+        row.addView(titleView);
+
+        View verticalDivider = new View(this);
+
+        LinearLayoutCompat.LayoutParams verticalDividerParams =
+                new LinearLayoutCompat.LayoutParams(
+                        dp(1),
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                );
+
+        verticalDividerParams.setMargins(
+                dp(3),
+                dp(5),
+                dp(3),
+                dp(5)
+        );
+
+        verticalDivider.setLayoutParams(verticalDividerParams);
+        verticalDivider.setBackgroundColor(dividerColor);
+
+        row.addView(verticalDivider);
+
+        TextView bodyView = new TextView(this);
+
+        bodyView.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        0,
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        0.60f
+                )
+        );
+
+        bodyView.setText(formatValue(body));
+        bodyView.setGravity(Gravity.CENTER);
+        bodyView.setPaddingRelative(dp(6), 0, dp(6), 0);
+        bodyView.setMaxLines(2);
+        bodyView.setEllipsize(TextUtils.TruncateAt.END);
+        bodyView.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG_RTL);
+        bodyView.setTextColor(onSurfaceColor);
+        bodyView.setTextIsSelectable(true);
+
+        bodyView.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                bodySize
+        );
+
+        bodyView.setBackground(
+                createBackground(
+                        surfaceColor,
+                        dp(6),
+                        Color.TRANSPARENT,
+                        0
+                )
+        );
+
+        row.addView(bodyView);
+
+        View horizontalDivider = new View(this);
+
+        horizontalDivider.setLayoutParams(
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        dp(1)
+                )
+        );
+
+        horizontalDivider.setBackgroundColor(dividerColor);
+
+        binding.bDetailALineProperty.addView(row);
+        binding.bDetailALineProperty.addView(horizontalDivider);
+    }
+
+    private String formatValue(String value) {
+        String safeValue = safeText(value);
+
+        if (safeValue.isEmpty()) {
+            return "-";
+        }
+
+        try {
+            double number = Double.parseDouble(
+                    safeValue.replace(",", "")
+            );
+
+            if (Math.abs(number) >= 1000) {
+                return NumberFunctions.PerisanNumber(
+                        decimalFormat.format(number)
+                );
+            }
+        } catch (Exception ignored) {
+        }
+
+        return NumberFunctions.PerisanNumber(safeValue);
+    }
+
+    private String formatNumber(String value) {
+        try {
+            double number = Double.parseDouble(
+                    safeText(value).replace(",", "")
+            );
+
+            return NumberFunctions.PerisanNumber(
+                    decimalFormat.format(number)
+            );
+
+        } catch (Exception ignored) {
+            return NumberFunctions.PerisanNumber(
+                    safeText(value)
+            );
+        }
+    }
+
+    private GradientDrawable createBackground(
+            int backgroundColor,
+            float radius,
+            int strokeColor,
+            int strokeWidth
+    ) {
+        GradientDrawable drawable = new GradientDrawable();
+
+        drawable.setColor(backgroundColor);
+        drawable.setCornerRadius(radius);
+
+        if (strokeWidth > 0) {
+            drawable.setStroke(strokeWidth, strokeColor);
+        }
+
+        return drawable;
+    }
+
+    private int dp(int value) {
+        return Math.round(
+                TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        value,
+                        getResources().getDisplayMetrics()
+                )
+        );
+    }
+
+    private int safeInt(String value, int fallback) {
+        try {
+            return Integer.parseInt(safeText(value));
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+
+    private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(value, max));
+    }
+
+    private String safeText(String value) {
+        return value == null ? "" : value.trim();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.broker_options_menu, menu);
+        getMenuInflater().inflate(
+                R.menu.broker_options_menu,
+                menu
+        );
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (item.getItemId() == R.id.b_bag_shop) {
+            int preFactorCode = safeInt(
+                    callMethod.ReadString("PreFactorCode"),
+                    0
+            );
 
-            if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
-                intent = new Intent(this, Broker_BasketActivity.class);
-                intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
+            if (preFactorCode != 0) {
+                intent = new Intent(
+                        this,
+                        Broker_BasketActivity.class
+                );
+
+                intent.putExtra(
+                        "PreFac",
+                        callMethod.ReadString("PreFactorCode")
+                );
+
                 intent.putExtra("showflag", "2");
+
             } else {
-                callMethod.showToast("سبد خرید خالی می باشد");
-                intent = new Intent(this, Broker_PFOpenActivity.class);
+                callMethod.showToast("سبد خرید خالی می‌باشد");
+
+                intent = new Intent(
+                        this,
+                        Broker_PFOpenActivity.class
+                );
             }
 
             startActivity(intent);
@@ -326,26 +578,51 @@ public class Broker_DetailActivity extends AppCompatActivity {
     }
 
     private void SliderView() {
+        if (imagelists == null || imagelists.isEmpty()) {
+            binding.bDetailALnImageSlider.setVisibility(View.GONE);
+            return;
+        }
+
+        binding.bDetailALnImageSlider.setVisibility(View.VISIBLE);
 
         Broker_SliderAdapter adapter =
-                new Broker_SliderAdapter(imagelists, true, this);
+                new Broker_SliderAdapter(
+                        imagelists,
+                        true,
+                        this
+                );
 
         binding.bDetailAImageSlider.setSliderAdapter(adapter);
-        binding.bDetailAImageSlider.setIndicatorAnimation(IndicatorAnimations.SCALE);
-        binding.bDetailAImageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+
+        binding.bDetailAImageSlider.setIndicatorAnimation(
+                IndicatorAnimations.SCALE
+        );
+
+        binding.bDetailAImageSlider.setSliderTransformAnimation(
+                SliderAnimations.SIMPLETRANSFORMATION
+        );
+
         binding.bDetailAImageSlider.setAutoCycleDirection(
                 SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH
         );
-        binding.bDetailAImageSlider.setIndicatorSelectedColor(Color.WHITE);
-        binding.bDetailAImageSlider.setIndicatorUnselectedColor(Color.GRAY);
+
+        binding.bDetailAImageSlider.setIndicatorSelectedColor(
+                Color.WHITE
+        );
+
+        binding.bDetailAImageSlider.setIndicatorUnselectedColor(
+                Color.GRAY
+        );
+
         binding.bDetailAImageSlider.setScrollTimeInSec(3);
         binding.bDetailAImageSlider.startAutoCycle();
     }
 
     @Override
-    public void onRestart() {
+    protected void onRestart() {
+        super.onRestart();
+
         finish();
         startActivity(getIntent());
-        super.onRestart();
     }
 }

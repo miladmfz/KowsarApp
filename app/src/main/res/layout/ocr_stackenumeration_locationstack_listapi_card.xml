@@ -1,518 +1,547 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ocr_stackenumeration_locationstack_listapi_card"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layoutDirection="rtl"
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    android:checkable="true"
-
-    android:layoutDirection="rtl">
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
         android:orientation="vertical"
-        android:background="@drawable/bg_card"
-        >
+        android:padding="6dp">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <!-- Product name -->
+        <TextView
+            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_goodname"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_main"
-            android:layout_margin="3dp"
-            android:layout_weight="1">
+            android:layout_height="48dp"
+            android:ellipsize="end"
+            android:gravity="start|center_vertical"
+            android:maxLines="2"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:text="نام کامل کالای موجود در موقعیت انبار" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.12"
+            android:background="?attr/colorOnBackground" />
 
-            <LinearLayout
+        <!-- First enumeration -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_firstenum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="5dp"
-                android:layout_weight="1">
-
+                android:layout_height="44dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_goodname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.6"
+                    android:layout_width="116dp"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="5dp"
+                    android:text="مجموع شمارش اول"
                     android:textColor="?attr/colorOnBackground"
-                    android:textSize="18sp"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_firstnum"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_editbox"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    android:gravity="center"/>
+                    tools:text="۱۲۵" />
 
-
-            </LinearLayout>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_firstenum"
-                android:layout_margin="1dp"
-                android:layout_weight="1">
-
-                <LinearLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.5"
-                        android:gravity="center"
-                        android:text="مجموع شمارش اول"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_firstnum"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.5"
-                        android:gravity="center"
-                        android:background="@drawable/bg_editbox"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-
-                </LinearLayout>
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:visibility="gone"
-                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_first_auxn"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_margin="5dp"
-
-                    android:weightSum="3">
-
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn11"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
-
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="11"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn11"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn12"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="12"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn12"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn13"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="13"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn13"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_first_auxn"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
                 android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_secondenum"
-                android:layout_margin="3dp"
-                android:layout_weight="1">
+                tools:visibility="visible">
 
                 <LinearLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn11"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.5"
+                        android:layout_height="18dp"
                         android:gravity="center"
-                        android:text="مجموع شمارش دوم"
+                        android:text="شمارش ۱-۱"
                         android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_secondnum"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.5"
-                        android:gravity="center"
-                        android:background="@drawable/bg_editbox"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"
+                        android:textSize="8sp"
                         android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn11"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۰" />
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_second_auxn"
-                    android:visibility="visible"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_margin="5dp"
-
-                    android:weightSum="3">
-
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn21"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
-
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="21"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn21"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn22"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="22"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn22"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn23"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="23"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn23"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_thirdenum"
-                android:layout_margin="3dp"
-                android:layout_weight="1">
                 <LinearLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1">
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn12"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.5"
+                        android:layout_height="18dp"
                         android:gravity="center"
-                        android:text="مجموع شمارش سوم"
+                        android:text="شمارش ۱-۲"
                         android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_thirdnum"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.5"
-                        android:gravity="center"
-                        android:background="@drawable/bg_editbox"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"
+                        android:textSize="8sp"
                         android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn12"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۵" />
 
                 </LinearLayout>
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_third_auxn"
-                    android:visibility="visible"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_margin="5dp"
+                <LinearLayout
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn13"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
 
-                    android:weightSum="3">
-
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn31"
-
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
+                        android:layout_height="18dp"
+                        android:gravity="center"
+                        android:text="شمارش ۱-۳"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
 
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="31"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn31"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn32"
-
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn13"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۰" />
 
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="32"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn32"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn33"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="2dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="150dp"
-                            android:layout_height="31dp"
-                            android:layout_weight="0.8"
-                            android:gravity="center"
-                            android:text="33"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn33"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.2"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Second enumeration -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_secondenum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.1"
+                android:background="?attr/colorOnBackground" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="116dp"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="5dp"
+                    android:text="مجموع شمارش دوم"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_secondnum"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_editbox"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="۱۲۴" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_second_auxn"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn21"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:gravity="center"
+                        android:text="شمارش ۲-۱"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn21"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۰" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn22"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:gravity="center"
+                        android:text="شمارش ۲-۲"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn22"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۴" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn23"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:gravity="center"
+                        android:text="شمارش ۲-۳"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn23"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۰" />
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- Third enumeration -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_thirdenum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.1"
+                android:background="?attr/colorOnBackground" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="116dp"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="5dp"
+                    android:text="مجموع شمارش سوم"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_thirdnum"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_editbox"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="۱۲۵" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_third_auxn"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn31"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:gravity="center"
+                        android:text="شمارش ۳-۱"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn31"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۲" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn32"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:gravity="center"
+                        android:text="شمارش ۳-۲"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn32"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۳" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_ll_auxn33"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:gravity="center"
+                        android:text="شمارش ۳-۳"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/ocr_stackenumeration_locationstack_listapi_c_auxn33"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_editbox"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        tools:text="۴۰" />
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="3dp"
+            android:background="?attr/colorPrimary" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </com.google.android.material.card.MaterialCardView>

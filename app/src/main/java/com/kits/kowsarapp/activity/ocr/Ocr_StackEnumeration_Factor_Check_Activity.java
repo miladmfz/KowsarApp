@@ -252,9 +252,9 @@ public class Ocr_StackEnumeration_Factor_Check_Activity extends AppCompatActivit
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,OrderBy);
+            call=apiInterface.GetFactor("GetOcrFactor",BarcodeScan,OrderBy);
         }else{
-            call=secendApiInterface.GetFactor("GetOcrFactor_new",BarcodeScan,OrderBy);
+            call=secendApiInterface.GetFactor("GetOcrFactor",BarcodeScan,OrderBy);
         }
 
         call.enqueue(new Callback<RetrofitResponse>() {

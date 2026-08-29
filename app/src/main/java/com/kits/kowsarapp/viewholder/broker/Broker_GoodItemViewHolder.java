@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -16,10 +18,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.gson.Gson;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_PFOpenActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
@@ -33,7 +38,9 @@ import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.webService.base.APIClient;
 import com.kits.kowsarapp.webService.broker.Broker_APIInterface;
-
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.TextUtils;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -96,62 +103,284 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    public void bind(
+            ArrayList<Column> Columns,
+            Good good,
+            Context mContext,
+            CallMethod callMethod,
+            boolean showalarm
+    ) {
 
-    public void bind(ArrayList<Column> Columns, Good good, Context mContext, CallMethod callMethod,boolean showalarm) {
+        mainline.removeAllViews();
+
+
+        for (Column column : Columns) {
+
+            int sortOrder = safeInt(column.getSortOrder(), 0);
+
+            if (sortOrder <= 1) {
+                continue;
+            }
+
+            String columnName =
+                    column.getColumnFieldValue("columnname");
+
+            String rawValue =
+                    good.getGoodFieldValue(columnName);
+
+            TextView valueView = createGoodValueView(
+                    column,
+                    columnName,
+                    rawValue,
+                    sortOrder,
+                    showalarm
+            );
+
+            // تست خیلی واضح
+            valueView.setTextColor(Color.BLACK);
+            valueView.setTextSize(16);
+
+            mainline.addView(valueView);
+
+        }
+
+        mainline.post(() -> {
+
+            callMethod.Log(
+                    "MAINLINE SIZE => width=" +
+                            mainline.getWidth() +
+                            " height=" +
+                            mainline.getHeight() +
+                            " childCount=" +
+                            mainline.getChildCount()
+            );
+
+        });
+    }
+    public void bind1(ArrayList<Column> Columns, Good good, Context mContext, CallMethod callMethod,boolean showalarm) {
 
 
 
         mainline.removeAllViews();
+        for (Column column : Columns) {
 
-        for (Column Column : Columns) {
-            if (Integer.parseInt(Column.getSortOrder()) > 1) {
-                TextView extra_TextView = new TextView(mContext);
-                extra_TextView.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue(Column.getColumnFieldValue("columnname"))));
-                extra_TextView.setBackgroundResource(R.color.white);
-                extra_TextView.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-                extra_TextView.setTextSize(Integer.parseInt(callMethod.ReadString("BodySize")));
-                extra_TextView.setGravity(Gravity.CENTER);
-                extra_TextView.setTextColor(mContext.getColor(R.color.grey_1000));
+            int sortOrder = safeInt(column.getSortOrder(), 0);
 
-                try {
-                    if (Integer.parseInt(good.getGoodFieldValue(Column.getColumnFieldValue("columnname"))) > 999) {
-                        extra_TextView.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue(Column.getColumnFieldValue("columnname"))))));
-                    } else {
-                        extra_TextView.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue(Column.getColumnFieldValue("columnname"))));
-                    }
-                } catch (Exception e) {
-                    extra_TextView.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue(Column.getColumnFieldValue("columnname"))));
-                }
-
-                if (Column.getSortOrder().equals("2")) {
-                    extra_TextView.setLines(3);
-                    if (extra_TextView.getText().toString().length() > 50) {
-                        String lowText = extra_TextView.getText().toString().substring(0, 50) + "...";
-                        extra_TextView.setText(lowText);
-                    }
-                }
-
-                if (Column.getColumnName().equals("MaxSellPrice")) {
-
-                    extra_TextView.setTextColor(getcolorresource("3", mContext));
-
-                    if (showalarm){
-                        extra_TextView.setText("نیاز به بروز رسانی قیمت");
-                    }
-                }
-
-
-                mainline.addView(extra_TextView);
+            if (sortOrder <= 1) {
+                continue;
             }
+
+            String columnName = column.getColumnFieldValue("columnname");
+            String rawValue = good.getGoodFieldValue(columnName);
+
+            TextView valueView = createGoodValueView(
+                    column,
+                    columnName,
+                    rawValue,
+                    sortOrder,
+                    showalarm
+            );
+
+            mainline.addView(valueView);
         }
     }
 
+    private String formatGoodValue(
+            String columnName,
+            String rawValue
+    ) {
+        String value = rawValue == null
+                ? ""
+                : rawValue.trim();
+
+        if (value.isEmpty()) {
+            return "-";
+        }
+
+        if (columnName != null &&
+                columnName.contains("FirstBarCode")) {
+            return value;
+        }
+
+        try {
+            double number = Double.parseDouble(
+                    value.replace(",", "")
+            );
+
+            if (Math.abs(number) > 999) {
+                return decimalFormat.format(number);
+            }
+
+        } catch (Exception ignored) {
+        }
+
+        return value;
+    }
+    private int dp(int value) {
+        return Math.round(
+                TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        value,
+                        mContext.getResources()
+                                .getDisplayMetrics()
+                )
+        );
+    }
+
+    private int safeInt(
+            String value,
+            int fallback
+    ) {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+    private GradientDrawable createRowBackground(
+            int backgroundColor,
+            int primaryColor
+    ) {
+        GradientDrawable drawable = new GradientDrawable();
+
+        drawable.setColor(backgroundColor);
+        drawable.setCornerRadius(dp(6));
+
+        drawable.setStroke(
+                dp(1),
+                ColorUtils.setAlphaComponent(
+                        primaryColor,
+                        35
+                )
+        );
+
+        return drawable;
+    }
+
+
+    private TextView createGoodValueView(
+            Column column,
+            String columnName,
+            String rawValue,
+            int sortOrder,
+            boolean showAlarm
+    ) {
+        TextView textView = new TextView(mContext);
+
+        int bodySize = safeInt(
+                callMethod.ReadString("BodySize"),
+                13
+        );
+
+        if (!callMethod.ReadBoolan("LineView")) {
+            bodySize = Math.min(bodySize, 13);
+        }
+
+        int primaryColor = MaterialColors.getColor(
+                mContext,
+                com.google.android.material.R.attr.colorPrimary,
+                Color.DKGRAY
+        );
+
+        int surfaceColor = MaterialColors.getColor(
+                mContext,
+                com.google.android.material.R.attr.colorSurface,
+                Color.WHITE
+        );
+
+        int onSurfaceColor = MaterialColors.getColor(
+                mContext,
+                com.google.android.material.R.attr.colorOnSurface,
+                Color.BLACK
+        );
+
+        int backgroundColor = ColorUtils.blendARGB(
+                surfaceColor,
+                primaryColor,
+                0.07f
+        );
+
+        int height = sortOrder == 2 ? dp(54) : dp(36);
+
+        LinearLayoutCompat.LayoutParams params =
+                new LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        height
+                );
+
+        params.setMargins(0, 0, 0, dp(3));
+
+        textView.setLayoutParams(params);
+        textView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        textView.setPaddingRelative(dp(7), dp(2), dp(7), dp(2));
+        textView.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG_RTL);
+        textView.setTextColor(onSurfaceColor);
+        textView.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                bodySize
+        );
+
+        textView.setBackground(
+                createRowBackground(
+                        backgroundColor,
+                        primaryColor
+                )
+        );
+
+        String displayValue = formatGoodValue(
+                columnName,
+                rawValue
+        );
+
+        if (sortOrder == 2) {
+            textView.setMaxLines(3);
+            textView.setEllipsize(TextUtils.TruncateAt.END);
+
+            if (displayValue.length() > 50) {
+                displayValue = displayValue.substring(0, 50) + "...";
+            }
+        } else {
+            textView.setMaxLines(1);
+            textView.setEllipsize(TextUtils.TruncateAt.END);
+        }
+
+        if (columnName != null && columnName.contains("FirstBarCode")) {
+            textView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_SP,
+                    Math.max(10, bodySize - 3)
+            );
+
+            textView.setTextDirection(View.TEXT_DIRECTION_LTR);
+            textView.setGravity(Gravity.CENTER);
+        }
+
+        if ("MaxSellPrice".equals(column.getColumnName())) {
+//            textView.setTextColor(
+//                    getcolorresource("3", mContext)
+//            );
+
+            textView.setTypeface(
+                    textView.getTypeface(),
+                    Typeface.BOLD
+            );
+
+            if (showAlarm) {
+                displayValue = "نیاز به بروز رسانی قیمت";
+            }
+        }
+
+        textView.setText(
+                NumberFunctions.PerisanNumber(displayValue)
+        );
+
+        return textView;
+    }
 
     public void bindLine(ArrayList<Column> Columns, Good good, Context mContext, CallMethod callMethod,boolean showalarm) {
 
 
         tv_line_name.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue("GoodName")));
-        tv_line_maxsellprice.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue("MaxSellPrice")));
+        tv_line_maxsellprice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(good.getGoodFieldValue("MaxSellPrice")))));
         tv_line_amount.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue("StackAmount")));
         if (showalarm){
             tv_line_maxsellprice.setText("نیاز به بروز رسانی قیمت");
@@ -215,7 +444,6 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
     public void callimage(Good good) {
         String imagecode = broker_dbh.GetLastksrImageCode(good.getGoodFieldValue("GoodCode"));
-        callMethod.Log("imagecode = " + imagecode);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -293,7 +521,6 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
     public void callimage1(Good good){
         String imagecode = broker_dbh.GetLastksrImageCode(good.getGoodFieldValue("GoodCode"));
-        callMethod.Log("imagecode = " + imagecode);
 
         if (image_info.Image_exist(imagecode)) {
             String root = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -350,7 +577,7 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public int getcolorresource(String colortarget, Context mContext) {
+    public int getcolorresource1(String colortarget, Context mContext) {
         int intcolor;
         switch (colortarget) {
             case ("2"):

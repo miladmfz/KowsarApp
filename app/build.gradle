@@ -5,14 +5,14 @@ plugins {
 android {
     namespace 'com.kits.kowsarapp'
     compileSdk 33
+
     defaultConfig {
         applicationId "com.kits.kowsarapp"
         minSdk 29
         targetSdk 33
         versionCode 1
-        versionName "15.03.09"
+        versionName "15.05.04"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     lintOptions {
@@ -25,20 +25,18 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     viewBinding.enabled = true
     buildFeatures {
         viewBinding true
         buildConfig true
-
     }
-
 }
 
 
@@ -92,6 +90,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.gms:google-services:4.3.15'
     implementation 'com.karumi:dexter:4.2.0'
-
 
 }

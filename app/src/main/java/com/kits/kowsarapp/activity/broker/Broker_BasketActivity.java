@@ -129,7 +129,7 @@ public class Broker_BasketActivity extends AppCompatActivity {
         binding.bBasketATotalPriceBuy.setText(
                 NumberFunctions.PerisanNumber(
                         decimalFormat.format(
-                                Integer.parseInt(broker_dbh.getFactorSum(PreFac))
+                                Double.parseDouble(broker_dbh.getFactorSum(PreFac))
                         )
                 )
         );

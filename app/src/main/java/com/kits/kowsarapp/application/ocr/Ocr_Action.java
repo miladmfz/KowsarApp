@@ -12,18 +12,25 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -64,6 +71,7 @@ import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -99,6 +107,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     Ocr_Print print;
     Handler handler = new Handler();
     ArrayList<Ocr_Good> Empty_goods = new ArrayList<>();
+
     public Ocr_Action(Context mcontxt) {
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
@@ -294,7 +303,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             Call<RetrofitResponse> call2;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                 call2=apiInterface.SetPackDetail(
-                        "SetPackDetail_new",
+                        "SetPackDetail",
                         factor.getAppOCRFactorCode(),
                         "",
                         callMethod.ReadString("Deliverer"),
@@ -307,7 +316,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                 );
             }else{
                 call2=secendApiInterface.SetPackDetail(
-                        "SetPackDetail_new",
+                        "SetPackDetail",
                         factor.getAppOCRFactorCode(),
                         "",
                         callMethod.ReadString("Deliverer"),
@@ -388,9 +397,9 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             sendtime=NumberFunctions.PerisanNumber(date);
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call=apiInterface.GetJob("TestJob", "Ocr3");
+                call=apiInterface.GetJob("GetJob", "Ocr3");
             }else{
-                call=secendApiInterface.GetJob("TestJob", "Ocr3");
+                call=secendApiInterface.GetJob("GetJob", "Ocr3");
             }
 
             call.enqueue(new Callback<RetrofitResponse>() {
@@ -424,9 +433,9 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                             Call<RetrofitResponse> call1;
                             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                call1=apiInterface.GetJobPerson("TestJobPerson", job.getTitle());
+                                call1=apiInterface.GetJobPerson("GetJobPerson", job.getTitle());
                             }else{
-                                call1=secendApiInterface.GetJobPerson("TestJobPerson", job.getTitle());
+                                call1=secendApiInterface.GetJobPerson("GetJobPerson", job.getTitle());
                             }
 
                             call1.enqueue(new Callback<RetrofitResponse>() {
@@ -559,19 +568,57 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                 for (Job job : jobs) {
 
 
-                    // TODO qoqnos shod 1-2-3
-                    // TODO gostaresh shod 3-4-5
 
                     if (!job.getText().equals("برای انتخاب کلیک کنید")) {
-                        if (job.getJobCode().equals("1")) {
-                            coltrol_s = job.getText();
+
+
+                        if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
+                                callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
+                            if (job.getJobCode().equals("1")) {
+                                coltrol_s = job.getText();
+                            }
+                            if (job.getJobCode().equals("2")) {
+                                reader_s = job.getText();
+                            }
+                            if (job.getJobCode().equals("3")) {
+                                pack_s = job.getText();
+                            }
+                        } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
+                            if (job.getJobCode().equals("3")) {
+                                coltrol_s = job.getText();
+                            }
+                            if (job.getJobCode().equals("4")) {
+                                reader_s = job.getText();
+                            }
+                            if (job.getJobCode().equals("5")) {
+                                pack_s = job.getText();
+                            }
+                        }else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrCheshme")){
+                            if (job.getJobCode().equals("8")) {
+                                coltrol_s = job.getText();
+                            }
+                            if (job.getJobCode().equals("7")) {
+                                reader_s = job.getText();
+                            }
+                            if (job.getJobCode().equals("5")) {
+                                pack_s = job.getText();
+                            }
+                        }else{
+                            if (job.getJobCode().equals("1")) {
+                                coltrol_s = job.getText();
+                            }
+                            if (job.getJobCode().equals("2")) {
+                                reader_s = job.getText();
+                            }
+                            if (job.getJobCode().equals("3")) {
+                                pack_s = job.getText();
+                            }
                         }
-                        if (job.getJobCode().equals("2")) {
-                            reader_s = job.getText();
-                        }
-                        if (job.getJobCode().equals("3")) {
-                            pack_s = job.getText();
-                        }
+
+
+
+
+
                     } else {
                         falt = true;
                         falt_message = job.getTitle();
@@ -592,7 +639,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     Call<RetrofitResponse> call2;
                     if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
                         call2 = apiInterface.SetPackDetail(
-                                "SetPackDetail_new",
+                                "SetPackDetail",
                                 factor.getAppOCRFactorCode(),
                                 reader_s,
                                 coltrol_s,
@@ -603,7 +650,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         );
                     } else {
                         call2 = secendApiInterface.SetPackDetail(
-                                "SetPackDetail_new",
+                                "SetPackDetail",
                                 factor.getAppOCRFactorCode(),
                                 reader_s,
                                 coltrol_s,
@@ -663,14 +710,14 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                     if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
                         call3 = apiInterface.OcrControlled(
-                                "OcrControlled_new",
+                                "OcrControlled",
                                 factor.getAppOCRFactorCode(),
                                 "3",
                                 callMethod.ReadString("JobPersonRef")
                         );
                     } else {
                         call3 = secendApiInterface.OcrControlled(
-                                "OcrControlled_new",
+                                "OcrControlled",
                                 factor.getAppOCRFactorCode(),
                                 "3",
                                 callMethod.ReadString("JobPersonRef")
@@ -711,7 +758,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                             Call<RetrofitResponse> call2;
                             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
                                 call2 = apiInterface.SetPackDetail(
-                                        "SetPackDetail_new",
+                                        "SetPackDetail",
                                         factor.getAppOCRFactorCode(),
                                         reader_s,
                                         coltrol_s,
@@ -722,7 +769,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                 );
                             } else {
                                 call2 = secendApiInterface.SetPackDetail(
-                                        "SetPackDetail_new",
+                                        "SetPackDetail",
                                         factor.getAppOCRFactorCode(),
                                         reader_s,
                                         coltrol_s,
@@ -818,23 +865,6 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
     }
 
-    public void goodamount_detail(String amount,String shortage) {
-        final Dialog dialog = new Dialog(mContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.setContentView(R.layout.ocr_amount_zoom);
-        TextView tv_good_1 = dialog.findViewById(R.id.ocr_amountzoome_tv1);
-        TextView tv_good_2 = dialog.findViewById(R.id.ocr_amountzoome_tv2);
-        TextView tv_good_3 = dialog.findViewById(R.id.ocr_amountzoome_tv3);
-
-        tv_good_1.setText(NumberFunctions.PerisanNumber(amount));
-        int finalShortage = (shortage != null||shortage != "null") ? Integer.parseInt(shortage) : 0;
-        tv_good_2.setText(NumberFunctions.PerisanNumber(String.valueOf(Integer.parseInt(amount) - finalShortage)));
-
-        tv_good_3.setText(NumberFunctions.PerisanNumber(shortage));
-
-        dialog.show();
-    }
     public void checkSumAmounthint(Factor factor) {
 
         final Dialog dialog = new Dialog(mContext);
@@ -881,398 +911,6 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
     @SuppressLint("ClickableViewAccessibility")
-        public void good_detail(Ocr_Good singleGood, String BarcodeScan, OnGoodConfirmListener listener) {
-
-            final Dialog dialog = new Dialog(mContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.setContentView(R.layout.ocr_gooddetail_box);
-        ImageView iv_good = dialog.findViewById(R.id.ocr_gooddetail_b_img);
-        TextView tv_good_1 = dialog.findViewById(R.id.ocr_gooddetail_b_tv1);
-        TextView tv_good_2 = dialog.findViewById(R.id.ocr_gooddetail_b_tv2);
-        TextView tv_good_3 = dialog.findViewById(R.id.ocr_gooddetail_b_tv3);
-        TextView tv_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_tv4);
-        TextView tv_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_tv5);
-        TextView tv_good_6 = dialog.findViewById(R.id.ocr_gooddetail_b_tv6);
-        TextView tv_good_7 = dialog.findViewById(R.id.ocr_gooddetail_b_tv7);
-
-
-        TextView lb_good_1 = dialog.findViewById(R.id.ocr_gooddetail_b_lb1);
-        TextView lb_good_2 = dialog.findViewById(R.id.ocr_gooddetail_b_lb2);
-        TextView lb_good_3 = dialog.findViewById(R.id.ocr_gooddetail_b_lb3);
-        TextView lb_good_4 = dialog.findViewById(R.id.ocr_gooddetail_b_lb4);
-        TextView lb_good_5 = dialog.findViewById(R.id.ocr_gooddetail_b_lb5);
-        TextView lb_good_6 = dialog.findViewById(R.id.ocr_gooddetail_b_lb6);
-        TextView lb_good_7 = dialog.findViewById(R.id.ocr_gooddetail_b_lb7);
-
-        LinearLayoutCompat ll_good_1= dialog.findViewById(R.id.ocr_gooddetail_ll_lb1);
-        LinearLayoutCompat ll_good_2= dialog.findViewById(R.id.ocr_gooddetail_ll_lb2);
-        LinearLayoutCompat ll_good_3= dialog.findViewById(R.id.ocr_gooddetail_ll_lb3);
-        LinearLayoutCompat ll_good_4= dialog.findViewById(R.id.ocr_gooddetail_ll_lb4);
-        LinearLayoutCompat ll_good_5= dialog.findViewById(R.id.ocr_gooddetail_ll_lb5);
-        LinearLayoutCompat ll_good_6= dialog.findViewById(R.id.ocr_gooddetail_ll_lb6);
-        LinearLayoutCompat ll_good_7= dialog.findViewById(R.id.ocr_gooddetail_ll_lb7);
-
-
-
-        LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.ocr_gooddetail_ll_lb1);
-
-        MaterialButton btn_confirm = dialog.findViewById(R.id.ocr_gooddetail_b_btn_confirm);
-        MaterialButton btn_cansel = dialog.findViewById(R.id.ocr_gooddetail_b_btn_cancel);
-
-
-
-        Call<RetrofitResponse> call;
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
-//        }else{
-//            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
-//        }
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
-        }else{
-            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
-        }
-
-        callMethod.Log(singleGood.getGoodCode());
-        call.enqueue(new Callback<RetrofitResponse>() {
-
-            @Override
-            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    ArrayList<Ocr_Good> ocr_goods = response.body().getOcr_Goods();
-
-
-                    if (!callMethod.ReadBoolan("ShowDetailAmount")){
-                        ll_amonut.setVisibility(View.GONE);
-                    }
-
-                    if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoos") ||
-                            callMethod.ReadString("EnglishCompanyNameUse").equals("OcrQoqnoosOnline")) {
-
-                        if (callMethod.ReadString("FactorDbName").equals("PakhshQOQNOOS")){
-
-                            lb_good_1.setText("موجودی کل");
-                            lb_good_2.setText("قطع");
-                            lb_good_3.setText("نوع جلد");
-                            lb_good_4.setText("پشت جلد");
-                            lb_good_5.setText("شماره قفسه");
-
-
-                        }else if (callMethod.ReadString("FactorDbName").equals("Afarinegan")){
-
-                            lb_good_1.setText("موجودی کل");
-                            lb_good_2.setText("قطع");
-                            lb_good_3.setText("نوع جلد");
-                            lb_good_4.setText("پشت جلد");
-                            lb_good_5.setText("شماره قفسه");
-
-
-                        }
-
-
-
-                        tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
-                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
-                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
-                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getPageNo()));
-                        tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodExplain2()));
-                        ll_good_6.setVisibility(View.GONE);
-                        ll_good_7.setVisibility(View.GONE);
-
-
-                    } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
-
-                        lb_good_1.setText("نام");
-                        lb_good_2.setText("شماره قفسه");
-                        lb_good_3.setText("تعداد فاکتور");
-                        lb_good_4.setText("قیمت");
-                        lb_good_5.setText("موجودی کل");
-                        lb_good_6.setText("قطع-جلد");
-                        lb_good_7.setText("کد کالا سیستم");
-
-
-                        lb_good_1.setVisibility(View.GONE);
-
-                        tv_good_1.setText(NumberFunctions.PerisanNumber(singleGood.getGoodName()));
-                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
-                        tv_good_3.setText(NumberFunctions.PerisanNumber(singleGood.getFacAmount()));
-                        tv_good_4.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(singleGood.getGoodMaxSellPrice()))));
-
-                        tv_good_5.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
-                        tv_good_6.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType() +" - "+ocr_goods.get(0).getSize()));
-                        tv_good_7.setText(NumberFunctions.PerisanNumber(singleGood.getGoodCode()));
-
-
-                        tv_good_3.setTextColor(ContextCompat.getColor(mContext, R.color.red_900));
-                        float currentSize = tv_good_3.getTextSize() / mContext.getResources().getDisplayMetrics().scaledDensity;
-
-                        tv_good_3.setTextSize(currentSize + 5);
-
-                        tv_good_3.setTypeface(tv_good_3.getTypeface(), Typeface.BOLD);
-
-                        ll_good_3.setBackgroundResource(R.drawable.bg_round_green);
-
-
-
-                    }else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
-                        lb_good_1.setText("موجودی کل");
-                        lb_good_2.setText("قطع");
-                        lb_good_3.setText("نوع جلد");
-                        lb_good_4.setText("پشت جلد");
-                        lb_good_5.setText("شماره قفسه");
-                        lb_good_6.setText("نیاز فاکتور");
-                        lb_good_7.setText("کد کالا ");
-
-
-                        tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
-                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
-                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getCoverType()));
-                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodMaxSellPrice()));
-                        tv_good_5.setText(NumberFunctions.PerisanNumber(singleGood.getGoodExplain3()));
-                        tv_good_6.setText(NumberFunctions.PerisanNumber(singleGood.getFacAmount()));
-
-                        tv_good_7.setText(NumberFunctions.PerisanNumber(singleGood.getGoodCode()));
-
-                    }else{
-                        ll_good_6.setVisibility(View.GONE);
-
-                        lb_good_1.setText("موجودی کل");
-                        lb_good_2.setText("قطع");
-                        lb_good_3.setText("نوع جلد");
-                        lb_good_4.setText("پشت جلد");
-                        lb_good_5.setText("شماره قفسه");
-
-                        tv_good_1.setText(ocr_goods.get(0).getTotalAvailable());
-                        tv_good_2.setText(ocr_goods.get(0).getSize());
-                        tv_good_3.setText(ocr_goods.get(0).getCoverType());
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
-            }
-        });
-        byte[] BaseImageByte;
-        BaseImageByte = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
-        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
-        //iv_good.setOnTouchListener(new ZoomHelper());
-
-        Call<RetrofitResponse> call2;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2=apiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 400);
-        }else{
-            call2=secendApiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 400);
-        }
-
-        call2.enqueue(new Callback<RetrofitResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        assert response.body() != null;
-                        byte[] imageByteArray1;
-                        imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
-                        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
-
-                    } catch (Exception ignored) {
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }            }
-        });
-
-
-
-
-//        if (callMethod.ReadBoolan("ListOrSingle") || BarcodeScan.equals("")) {
-//            btn_confirm.setVisibility(View.VISIBLE);
-//            btn_cansel.setVisibility(View.VISIBLE);
-////            btn_confirm.setVisibility(View.GONE);
-////            btn_cansel.setVisibility(View.GONE);
-//
-//            if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
-//                btn_confirm.setVisibility(View.VISIBLE);
-//                btn_cansel.setVisibility(View.VISIBLE);
-//            }else{
-//                btn_confirm.setVisibility(View.GONE);
-//                btn_cansel.setVisibility(View.GONE);
-//            }
-//        }else{
-//            btn_confirm.setVisibility(View.VISIBLE);
-//        }
-
-
-        btn_confirm.setOnClickListener(v -> {
-
-            if (callMethod.ReadBoolan("ListOrSingle") ) {
-                if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
-
-                    callMethod.Log("Item selected locally: " + singleGood.getGoodCode() + " - " + singleGood.getGoodName()+" - " + singleGood.getCheckBoxId());
-
-                    // اگر لازم داری در فرگمنت ثبت بشه:
-                    if (listener != null) {
-                        listener.onGoodConfirmed(singleGood);
-                    }
-
-                    dialog.dismiss(); // بستن پنجره
-                }
-            }else{
-
-
-                if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
-
-                    callMethod.Log("Item selected locally: " + singleGood.getGoodCode() + " - " + singleGood.getGoodName()+" - " + singleGood.getCheckBoxId());
-
-                    // اگر لازم داری در فرگمنت ثبت بشه:
-                    if (listener != null) {
-                        listener.onGoodConfirmed(singleGood);
-                    }
-
-                    dialog.dismiss(); // بستن پنجره
-                }else{
-
-                    callMethod.Log("ListOrSingle: " + callMethod.ReadBoolan("CheckListFromGoodDialog") );
-
-                    Call<RetrofitResponse> call1;
-                    if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
-                        call1 = apiInterface.OcrControlled(
-                                "OcrControlled_new",
-                                singleGood.getAppOCRFactorRowCode(),
-                                "0",
-                                callMethod.ReadString("JobPersonRef")
-                        );
-                    } else {
-                        call1 = secendApiInterface.OcrControlled(
-                                "OcrControlled_new",
-                                singleGood.getAppOCRFactorRowCode(),
-                                "0",
-                                callMethod.ReadString("JobPersonRef")
-                        );
-                    }
-
-
-                    callMethod.Log("call=" + call1.request().url());
-                    callMethod.Log("call=" + call1.request().toString());
-
-
-                    call1.enqueue(new Callback<RetrofitResponse>() {
-                        @Override
-                        public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
-                            if (response.isSuccessful()) {
-                                callMethod.Log("step 2");
-
-                                assert response.body() != null;
-                                Intent intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
-
-                                intent.putExtra("ScanResponse", BarcodeScan);
-                                intent.putExtra("State", "0");
-                                intent.putExtra("FactorImage", "");
-                                if(callMethod.ReadBoolan("ShowNextGoodDetailAfterControl")){
-                                    intent.putExtra("ShowGoodDetail", "1");
-                                }else{
-                                    intent.putExtra("ShowGoodDetail", "0");
-                                }
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
-                                mContext.startActivity(intent);
-                                ((Activity) mContext).finish();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-
-                            try {
-
-                            } catch (Exception e) {
-                                callMethod.Log("Network check error: " + e.getMessage());
-                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                            }
-                        }
-                    });
-                }
-
-            }
-
-        });
-
-
-        btn_cansel.setOnClickListener(v -> {
-/*
-            if (callMethod.ReadBoolan("ListOrSingle") ) {
-                if (callMethod.ReadBoolan("CheckListFromGoodDialog") ) {
-                    if (listener != null) {
-                        listener.onGoodCanceled(singleGood);
-                    }
-                    dialog.dismiss(); // بستن پنجره
-                }else{
-                    if (listener != null) {
-                        listener.onGoodCanceled(singleGood);
-                    }
-                    dialog.dismiss(); // بستن پنجره
-                }
-            }else {
-
-            }
-            */
-
-            if (listener != null) {
-                listener.onGoodCanceled(singleGood);
-            }
-            dialog.dismiss(); // بستن پنجره
-        });
-
-
-        dialog.show();
-
-
-    }
-
-
-
-    @SuppressLint("ClickableViewAccessibility")
     public void StackEnum_good(Ocr_Good singleGood, String StackEnumerationCode, String LocationCode) {
 
         LocationStackCode="0";
@@ -1286,6 +924,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         ImageView iv_good = dialog.findViewById(R.id.ocr_stackenum_good_b_img);
 
         TextView tv_good_1 = dialog.findViewById(R.id.ocr_stackenum_good_b_tv1);
+        TextView tv_good_2 = dialog.findViewById(R.id.ocr_stackenum_good_b_tv2);
         TextView lb_good_1 = dialog.findViewById(R.id.ocr_stackenum_good_b_lb1);
 
         LinearLayoutCompat ll_good_1= dialog.findViewById(R.id.ocr_stackenum_good_b_ll_lb1);
@@ -1293,6 +932,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
         tv_good_1.setText(singleGood.getGoodName());
+        tv_good_2.setText(singleGood.getMaxSellPrice());
 
 
 
@@ -1316,11 +956,13 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         //iv_good.setOnTouchListener(new ZoomHelper());
 
         Call<RetrofitResponse> call2;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2=apiInterface.GetImage("getImage", singleGood.getGoodRef(), 0, 300);
-        }else{
-            call2=secendApiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 300);
-        }
+        call2=apiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 300);
+
+//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//            call2=apiInterface.GetImage("getImage", singleGood.getGoodRef(), 0, 300);
+//        }else{
+//            call2=secendApiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 300);
+//        }
 
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -1635,6 +1277,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     LocationCode,
                     LocationStackCode,
                     singleGood.getGoodCode(),
+                    callMethod.ReadString("JobPersonRef"),
                     NumberFunctions.EnglishNumber(ed_auxn11.getText().toString()),
                     NumberFunctions.EnglishNumber(ed_auxn12.getText().toString()),
                     NumberFunctions.EnglishNumber(ed_auxn13.getText().toString())
@@ -1688,11 +1331,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 //        }else{
 //            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
 //        }
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
-//        }else{
-//            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
-//        }
+
 //
 //        callMethod.Log(singleGood.getGoodCode());
 //        call.enqueue(new Callback<RetrofitResponse>() {
@@ -1879,11 +1518,12 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         ImageView iv_good = dialog.findViewById(R.id.ocr_stackenum_good_b_img);
 
         TextView tv_good_1 = dialog.findViewById(R.id.ocr_stackenum_good_b_tv1);
-
+        TextView tv_good_2 = dialog.findViewById(R.id.ocr_stackenum_good_b_tv2);
 
 
 
         tv_good_1.setText(singleGood.getGoodName());
+        tv_good_2.setText(singleGood.getGoodCode());
 
 
 
@@ -1896,7 +1536,6 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         ed_auxn12.setVisibility(View.GONE);
         ed_auxn13.setVisibility(View.GONE);
         tv_Firstenum.setVisibility(View.GONE);
-callMethod.Log("amount="+singleGood.getAmount());
 
 
         MaterialButton btn_confirm = dialog.findViewById(R.id.ocr_stackenum_good_b_btn_confirm);
@@ -1907,12 +1546,14 @@ callMethod.Log("amount="+singleGood.getAmount());
         iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
         //iv_good.setOnTouchListener(new ZoomHelper());
 
+        callMethod.Log("");
         Call<RetrofitResponse> call2;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2=apiInterface.GetImage("getImage", singleGood.getGoodRef(), 0, 300);
-        }else{
-            call2=secendApiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 300);
-        }
+        call2=apiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 300);
+//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//
+//        }else{
+//            call2=secendApiInterface.GetImage("getImage", singleGood.getGoodCode(), 0, 300);
+//        }
 
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -2056,17 +1697,6 @@ callMethod.Log("amount="+singleGood.getAmount());
 
 
         btn_confirm.setOnClickListener(v -> {
-            callMethod.Log(
-                    "EditText Amount = [" +
-                            ed_auxn11.getText().toString() +
-                            "]"
-            );
-
-            callMethod.Log(
-                    "Good Amount = [" +
-                            singleGood.getAmount() +
-                            "]"
-            );
 
             double edtAmount =
                     Double.parseDouble(
@@ -2090,6 +1720,7 @@ callMethod.Log("amount="+singleGood.getAmount());
                         LocationCode,
                         LocationStackCode,
                         singleGood.getGoodCode(),
+                        callMethod.ReadString("JobPersonRef"),
                         NumberFunctions.EnglishNumber(ed_auxn11.getText().toString()),
                         "0",
                         "0"
@@ -2137,7 +1768,7 @@ callMethod.Log("amount="+singleGood.getAmount());
                     public void onClick(View v) {
 
                         if (moghayerat.getText().toString().length()>0){
-                            if (moghayerat.getText().toString().equals(ed_auxn11.getText().toString())){
+
 
                                 Call<RetrofitResponse> call3;
                                 call3=apiInterface.GetEnum_SetRow(
@@ -2146,6 +1777,7 @@ callMethod.Log("amount="+singleGood.getAmount());
                                         LocationCode,
                                         LocationStackCode,
                                         singleGood.getGoodCode(),
+                                        callMethod.ReadString("JobPersonRef"),
                                         NumberFunctions.EnglishNumber(ed_auxn11.getText().toString()),
                                         "0",
                                         "0"
@@ -2173,9 +1805,7 @@ callMethod.Log("amount="+singleGood.getAmount());
                                         callMethod.showToast("انجام نشد عدم برقراری ارتباط");
                                     }
                                 });
-                            }else{
-                                callMethod.showToast("با شمارش اول یکی نمی باشد");
-                            }
+
 
                         }else{
                             callMethod.showToast("شمارش را وارد کنید");
@@ -2211,11 +1841,7 @@ callMethod.Log("amount="+singleGood.getAmount());
 //        }else{
 //            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
 //        }
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
-//        }else{
-//            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
-//        }
+
 //
 //        callMethod.Log(singleGood.getGoodCode());
 //        call.enqueue(new Callback<RetrofitResponse>() {
@@ -2424,15 +2050,11 @@ callMethod.Log("amount="+singleGood.getAmount());
 
 
         Call<RetrofitResponse> call;
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
-//        }else{
-//            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
-//        }
+
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
+            call=apiInterface.GetGoodDetail("GetOcrGoodDetail", singleGood.getGoodCode());
         }else{
-            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail_new", singleGood.getGoodCode());
+            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail", singleGood.getGoodCode());
         }
 
         callMethod.Log(singleGood.getGoodCode());
@@ -2820,12 +2442,8 @@ callMethod.Log("amount="+singleGood.getAmount());
 //        }else{
 //            call=secendApiInterface.GetOcrGoodDetail("GetOcrGoodDetail", GoodCode);
 //        }
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetGoodDetail("GetOcrGoodDetail_new", StackEnumeration.getGoodCode());
-//        }else{
-//            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail_new", StackEnumeration.getGoodCode());
-//        }
-        call=apiInterface.GetGoodDetail("GetOcrGoodDetail_new", StackEnumeration.getGoodCode());
+
+        call=apiInterface.GetGoodDetail("GetOcrGoodDetail", StackEnumeration.getGoodCode());
 
         callMethod.Log(StackEnumeration.getGoodCode());
         call.enqueue(new Callback<RetrofitResponse>() {
@@ -3251,9 +2869,9 @@ callMethod.Log("amount="+singleGood.getAmount());
 
                                         Call<RetrofitResponse> call;
                                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                            call=apiInterface.CheckState("OcrControlled_new", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
                                         }else{
-                                            call=secendApiInterface.CheckState("OcrControlled_new", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
                                         }
 
                                         call.enqueue(new Callback<RetrofitResponse>() {
@@ -3297,9 +2915,9 @@ callMethod.Log("amount="+singleGood.getAmount());
 
                                         Call<RetrofitResponse> call;
                                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                            call=apiInterface.CheckState("OcrControlled_new", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
                                         }else{
-                                            call=secendApiInterface.CheckState("OcrControlled_new", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
                                         }
                                         call.enqueue(new Callback<RetrofitResponse>() {
                                             @Override
@@ -3625,10 +3243,12 @@ callMethod.Log("amount="+singleGood.getAmount());
 
         Button explain_btn = dialog.findViewById(R.id.ocr_stacklocation_explain_btn);
         final TextView goodname_tv = dialog.findViewById(R.id.ocr_stacklocation_goodname_tv);
+        final TextView goodcode_tv = dialog.findViewById(R.id.ocr_stacklocation_goodcode_tv);
         final EditText stacklocation_et = dialog.findViewById(R.id.ocr_stacklocation_explain_et);
 
 
         goodname_tv.setText(ocr_good.getGoodName());
+        goodcode_tv.setText(ocr_good.getGoodCode());
         stacklocation_et.setText(ocr_good.getStackLocation());
         stacklocation_et.selectAll();
 
@@ -3657,7 +3277,7 @@ callMethod.Log("amount="+singleGood.getAmount());
             dialogProg();
             tv_rep.setText("در حال ارسال اطلاعات");
             Call<RetrofitResponse> call = apiInterface.SetStackLocation(
-                    "SetStackLocation_new",
+                    "SetStackLocation",
                     ocr_good.getGoodCode(),
                     NumberFunctions.EnglishNumber(safeInput)
             );
@@ -3727,4 +3347,830 @@ callMethod.Log("amount="+singleGood.getAmount());
 
         ed_pack_h_date.setText(NumberFunctions.PerisanNumber(date));
     }
+
+
+
+
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void good_detail(
+            Ocr_Good singleGood,
+            String BarcodeScan,
+            OnGoodConfirmListener listener
+    ) {
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        View rawContent = LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.ocr_gooddetail_box, null, false);
+
+        ScrollView scrollView = new ScrollView(mContext);
+        scrollView.setFillViewport(true);
+        scrollView.setVerticalScrollBarEnabled(false);
+        scrollView.addView(
+                rawContent,
+                new ScrollView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+        );
+
+        dialog.setContentView(scrollView);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+
+        Objects.requireNonNull(dialog.getWindow())
+                .setBackgroundDrawableResource(android.R.color.transparent);
+
+        ImageView iv_good = rawContent.findViewById(
+                R.id.ocr_gooddetail_b_img
+        );
+
+        TextView tv_good_1 = rawContent.findViewById(R.id.ocr_gooddetail_b_tv1);
+        TextView tv_good_2 = rawContent.findViewById(R.id.ocr_gooddetail_b_tv2);
+        TextView tv_good_3 = rawContent.findViewById(R.id.ocr_gooddetail_b_tv3);
+        TextView tv_good_4 = rawContent.findViewById(R.id.ocr_gooddetail_b_tv4);
+        TextView tv_good_5 = rawContent.findViewById(R.id.ocr_gooddetail_b_tv5);
+        TextView tv_good_6 = rawContent.findViewById(R.id.ocr_gooddetail_b_tv6);
+        TextView tv_good_7 = rawContent.findViewById(R.id.ocr_gooddetail_b_tv7);
+
+        TextView lb_good_1 = rawContent.findViewById(R.id.ocr_gooddetail_b_lb1);
+        TextView lb_good_2 = rawContent.findViewById(R.id.ocr_gooddetail_b_lb2);
+        TextView lb_good_3 = rawContent.findViewById(R.id.ocr_gooddetail_b_lb3);
+        TextView lb_good_4 = rawContent.findViewById(R.id.ocr_gooddetail_b_lb4);
+        TextView lb_good_5 = rawContent.findViewById(R.id.ocr_gooddetail_b_lb5);
+        TextView lb_good_6 = rawContent.findViewById(R.id.ocr_gooddetail_b_lb6);
+        TextView lb_good_7 = rawContent.findViewById(R.id.ocr_gooddetail_b_lb7);
+
+        LinearLayoutCompat ll_good_1 = rawContent.findViewById(R.id.ocr_gooddetail_ll_lb1);
+        LinearLayoutCompat ll_good_2 = rawContent.findViewById(R.id.ocr_gooddetail_ll_lb2);
+        LinearLayoutCompat ll_good_3 = rawContent.findViewById(R.id.ocr_gooddetail_ll_lb3);
+        LinearLayoutCompat ll_good_4 = rawContent.findViewById(R.id.ocr_gooddetail_ll_lb4);
+        LinearLayoutCompat ll_good_5 = rawContent.findViewById(R.id.ocr_gooddetail_ll_lb5);
+        LinearLayoutCompat ll_good_6 = rawContent.findViewById(R.id.ocr_gooddetail_ll_lb6);
+        LinearLayoutCompat ll_good_7 = rawContent.findViewById(R.id.ocr_gooddetail_ll_lb7);
+
+        LinearLayoutCompat ll_amount = rawContent.findViewById(
+                R.id.ocr_gooddetail_ll_lb1
+        );
+
+        MaterialButton btn_confirm = rawContent.findViewById(
+                R.id.ocr_gooddetail_b_btn_confirm
+        );
+
+        MaterialButton btn_cancel = rawContent.findViewById(
+                R.id.ocr_gooddetail_b_btn_cancel
+        );
+
+        TextView[] labels = {
+                lb_good_1,
+                lb_good_2,
+                lb_good_3,
+                lb_good_4,
+                lb_good_5,
+                lb_good_6,
+                lb_good_7
+        };
+
+        TextView[] values = {
+                tv_good_1,
+                tv_good_2,
+                tv_good_3,
+                tv_good_4,
+                tv_good_5,
+                tv_good_6,
+                tv_good_7
+        };
+
+        LinearLayoutCompat[] rows = {
+                ll_good_1,
+                ll_good_2,
+                ll_good_3,
+                ll_good_4,
+                ll_good_5,
+                ll_good_6,
+                ll_good_7
+        };
+
+        configureCompactDetailViews(
+                iv_good,
+                labels,
+                values,
+                rows,
+                btn_confirm,
+                btn_cancel
+        );
+
+        setDefaultGoodImage(iv_good);
+
+        Call<RetrofitResponse> call;
+
+        if (callMethod.ReadString("FactorDbName")
+                .equals(callMethod.ReadString("DbName"))) {
+
+            call = apiInterface.GetGoodDetail(
+                    "GetOcrGoodDetail",
+                    singleGood.getGoodCode()
+            );
+
+        } else {
+
+            call = secendApiInterface.GetGoodDetail(
+                    "GetOcrGoodDetail",
+                    singleGood.getGoodCode()
+            );
+        }
+
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<RetrofitResponse> call,
+                    @NonNull Response<RetrofitResponse> response
+            ) {
+
+                if (!response.isSuccessful()
+                        || response.body() == null
+                        || response.body().getOcr_Goods() == null
+                        || response.body().getOcr_Goods().isEmpty()) {
+
+                    callMethod.showToast(
+                            "جزئیات کالا دریافت نشد"
+                    );
+                    return;
+                }
+
+                Ocr_Good detail = response.body()
+                        .getOcr_Goods()
+                        .get(0);
+
+                if (!callMethod.ReadBoolan("ShowDetailAmount")) {
+                    ll_amount.setVisibility(View.GONE);
+                }
+
+                bindGoodDetailValues(
+                        singleGood,
+                        detail,
+                        labels,
+                        values,
+                        rows
+                );
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<RetrofitResponse> call,
+                    @NonNull Throwable throwable
+            ) {
+                showNetworkFailure(
+                        "مشکل در دریافت جزئیات کالا",
+                        throwable
+                );
+            }
+        });
+
+        Call<RetrofitResponse> imageCall;
+
+        if (callMethod.ReadString("FactorDbName")
+                .equals(callMethod.ReadString("DbName"))) {
+
+            imageCall = apiInterface.GetImage(
+                    "getImage",
+                    singleGood.getGoodCode(),
+                    0,
+                    400
+            );
+
+        } else {
+
+            imageCall = secendApiInterface.GetImage(
+                    "getImage",
+                    singleGood.getGoodCode(),
+                    0,
+                    400
+            );
+        }
+
+        imageCall.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<RetrofitResponse> call,
+                    @NonNull Response<RetrofitResponse> response
+            ) {
+
+                if (!response.isSuccessful()
+                        || response.body() == null
+                        || response.body().getText() == null) {
+                    return;
+                }
+
+                try {
+                    byte[] imageBytes = Base64.decode(
+                            response.body().getText(),
+                            Base64.DEFAULT
+                    );
+
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(
+                            imageBytes,
+                            0,
+                            imageBytes.length
+                    );
+
+                    if (bitmap != null) {
+                        iv_good.setImageBitmap(bitmap);
+                    }
+
+                } catch (Exception exception) {
+                    callMethod.Log(
+                            "Image decode error: "
+                                    + exception.getMessage()
+                    );
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<RetrofitResponse> call,
+                    @NonNull Throwable throwable
+            ) {
+                callMethod.Log(
+                        "Image request error: "
+                                + throwable.getMessage()
+                );
+            }
+        });
+
+        btn_confirm.setOnClickListener(v -> {
+
+            if (callMethod.ReadBoolan("ListOrSingle")) {
+
+                if (callMethod.ReadBoolan("CheckListFromGoodDialog")) {
+
+                    if (listener != null) {
+                        listener.onGoodConfirmed(singleGood);
+                    }
+
+                    dialog.dismiss();
+                }
+
+                return;
+            }
+
+            if (callMethod.ReadBoolan("CheckListFromGoodDialog")) {
+
+                if (listener != null) {
+                    listener.onGoodConfirmed(singleGood);
+                }
+
+                dialog.dismiss();
+                return;
+            }
+
+            Call<RetrofitResponse> controlCall;
+
+            if (callMethod.ReadString("FactorDbName")
+                    .equals(callMethod.ReadString("DbName"))) {
+
+                controlCall = apiInterface.OcrControlled(
+                        "OcrControlled",
+                        singleGood.getAppOCRFactorRowCode(),
+                        "0",
+                        callMethod.ReadString("JobPersonRef")
+                );
+
+            } else {
+
+                controlCall = secendApiInterface.OcrControlled(
+                        "OcrControlled",
+                        singleGood.getAppOCRFactorRowCode(),
+                        "0",
+                        callMethod.ReadString("JobPersonRef")
+                );
+            }
+
+            btn_confirm.setEnabled(false);
+
+            controlCall.enqueue(new Callback<RetrofitResponse>() {
+                @Override
+                public void onResponse(
+                        @NonNull Call<RetrofitResponse> call,
+                        @NonNull Response<RetrofitResponse> response
+                ) {
+
+                    btn_confirm.setEnabled(true);
+
+                    if (!response.isSuccessful()) {
+                        callMethod.showToast(
+                                "ثبت کنترل کالا انجام نشد"
+                        );
+                        return;
+                    }
+
+                    dialog.dismiss();
+
+                    Intent intent = new Intent(
+                            mContext,
+                            Ocr_Collect_Confirm_Activity.class
+                    );
+
+                    intent.putExtra("ScanResponse", BarcodeScan);
+                    intent.putExtra("State", "0");
+                    intent.putExtra("FactorImage", "");
+                    intent.putExtra(
+                            "ShowGoodDetail",
+                            callMethod.ReadBoolan(
+                                    "ShowNextGoodDetailAfterControl"
+                            ) ? "1" : "0"
+                    );
+
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mContext.startActivity(intent);
+
+                    if (mContext instanceof Activity) {
+                        ((Activity) mContext).finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(
+                        @NonNull Call<RetrofitResponse> call,
+                        @NonNull Throwable throwable
+                ) {
+                    btn_confirm.setEnabled(true);
+                    showNetworkFailure(
+                            "خطا در ثبت کنترل کالا",
+                            throwable
+                    );
+                }
+            });
+        });
+
+        btn_cancel.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onGoodCanceled(singleGood);
+            }
+            dialog.dismiss();
+        });
+
+        dialog.setOnShowListener(ignored ->
+                applyManagedDialogSize(
+                        dialog,
+                        0.94f,
+                        0.90f,
+                        680
+                )
+        );
+
+        dialog.show();
+    }
+
+
+    public void goodamount_detail(
+            String amount,
+            String shortage
+    ) {
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        View rawContent = LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.ocr_amount_zoom, null, false);
+
+        dialog.setContentView(rawContent);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+
+        Objects.requireNonNull(dialog.getWindow())
+                .setBackgroundDrawableResource(android.R.color.transparent);
+
+        TextView tv_good_1 = rawContent.findViewById(
+                R.id.ocr_amountzoome_tv1
+        );
+
+        TextView tv_good_2 = rawContent.findViewById(
+                R.id.ocr_amountzoome_tv2
+        );
+
+        TextView tv_good_3 = rawContent.findViewById(
+                R.id.ocr_amountzoome_tv3
+        );
+
+        BigDecimal facAmount = parseDecimal(amount);
+        BigDecimal shortageAmount = parseDecimal(shortage);
+        BigDecimal remaining = facAmount.subtract(shortageAmount);
+
+        if (remaining.compareTo(BigDecimal.ZERO) < 0) {
+            remaining = BigDecimal.ZERO;
+        }
+
+        tv_good_1.setText(
+                NumberFunctions.PerisanNumber(
+                        formatDecimal(facAmount)
+                )
+        );
+
+        tv_good_2.setText(
+                NumberFunctions.PerisanNumber(
+                        formatDecimal(remaining)
+                )
+        );
+
+        tv_good_3.setText(
+                NumberFunctions.PerisanNumber(
+                        formatDecimal(shortageAmount)
+                )
+        );
+
+        styleAmountValue(
+                tv_good_1,
+                ContextCompat.getColor(
+                        mContext,
+                        R.color.colorPrimaryDark
+                )
+        );
+
+        styleAmountValue(
+                tv_good_2,
+                ContextCompat.getColor(
+                        mContext,
+                        R.color.colorPrimaryDark
+                )
+        );
+
+        styleAmountValue(
+                tv_good_3,
+                ContextCompat.getColor(
+                        mContext,
+                        R.color.red_800
+                )
+        );
+
+        dialog.setOnShowListener(ignored ->
+                applyManagedDialogSize(
+                        dialog,
+                        0.88f,
+                        0.60f,
+                        520
+                )
+        );
+
+        dialog.show();
+    }
+
+
+    private void configureCompactDetailViews(
+            ImageView imageView,
+            TextView[] labels,
+            TextView[] values,
+            LinearLayoutCompat[] rows,
+            MaterialButton confirmButton,
+            MaterialButton cancelButton
+    ) {
+
+        DisplayMetrics metrics = mContext
+                .getResources()
+                .getDisplayMetrics();
+
+        int imageHeight = Math.min(
+                dpToPx(190),
+                Math.round(metrics.heightPixels * 0.25f)
+        );
+
+        ViewGroup.LayoutParams imageParams = imageView.getLayoutParams();
+        imageParams.height = imageHeight;
+        imageView.setLayoutParams(imageParams);
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        for (TextView label : labels) {
+            if (label == null) {
+                continue;
+            }
+
+            label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+            label.setMaxLines(1);
+            label.setEllipsize(TextUtils.TruncateAt.END);
+        }
+
+        for (TextView value : values) {
+            if (value == null) {
+                continue;
+            }
+
+            value.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+            value.setMaxLines(2);
+            value.setEllipsize(TextUtils.TruncateAt.END);
+            value.setPadding(
+                    dpToPx(4),
+                    dpToPx(3),
+                    dpToPx(4),
+                    dpToPx(3)
+            );
+        }
+
+        for (LinearLayoutCompat row : rows) {
+            if (row == null) {
+                continue;
+            }
+
+            row.setMinimumHeight(dpToPx(38));
+            row.setPadding(
+                    dpToPx(6),
+                    dpToPx(2),
+                    dpToPx(6),
+                    dpToPx(2)
+            );
+        }
+
+        confirmButton.setMinHeight(dpToPx(42));
+        cancelButton.setMinHeight(dpToPx(42));
+        confirmButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        cancelButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+    }
+
+
+    private void bindGoodDetailValues(
+            Ocr_Good source,
+            Ocr_Good detail,
+            TextView[] labels,
+            TextView[] values,
+            LinearLayoutCompat[] rows
+    ) {
+
+        String company = callMethod.ReadString(
+                "EnglishCompanyNameUse"
+        );
+
+        if (company.equals("OcrQoqnoos")
+                || company.equals("OcrQoqnoosOnline")) {
+
+            setDetailRow(labels, values, rows, 0, "موجودی کل", detail.getTotalAvailable());
+            setDetailRow(labels, values, rows, 1, "قطع", detail.getSize());
+            setDetailRow(labels, values, rows, 2, "نوع جلد", detail.getCoverType());
+            setDetailRow(labels, values, rows, 3, "پشت جلد", detail.getPageNo());
+            setDetailRow(labels, values, rows, 4, "شماره قفسه", detail.getGoodExplain2());
+            hideDetailRow(rows, 5);
+            hideDetailRow(rows, 6);
+
+        } else if (company.equals("OcrGostaresh")) {
+
+            setDetailRow(labels, values, rows, 0, "نام", source.getGoodName());
+            setDetailRow(labels, values, rows, 1, "شماره قفسه", detail.getFormNo());
+            setDetailRow(labels, values, rows, 2, "تعداد فاکتور", source.getFacAmount());
+            setDetailRow(labels, values, rows, 3, "قیمت", source.getGoodMaxSellPrice());
+            setDetailRow(labels, values, rows, 4, "موجودی کل", detail.getTotalAvailable());
+            setDetailRow(
+                    labels,
+                    values,
+                    rows,
+                    5,
+                    "قطع - جلد",
+                    safeText(detail.getCoverType())
+                            + " - "
+                            + safeText(detail.getSize())
+            );
+            setDetailRow(labels, values, rows, 6, "کد کالا", source.getGoodCode());
+
+            values[2].setTextColor(
+                    ContextCompat.getColor(
+                            mContext,
+                            R.color.red_800
+                    )
+            );
+            values[2].setTypeface(null, Typeface.BOLD);
+
+        } else if (company.equals("OcrMahris")) {
+
+            setDetailRow(labels, values, rows, 0, "موجودی کل", detail.getTotalAvailable());
+            setDetailRow(labels, values, rows, 1, "قطع", detail.getSize());
+            setDetailRow(labels, values, rows, 2, "نوع جلد", detail.getCoverType());
+            setDetailRow(labels, values, rows, 3, "پشت جلد", detail.getGoodMaxSellPrice());
+            setDetailRow(labels, values, rows, 4, "شماره قفسه", source.getGoodExplain3());
+            setDetailRow(labels, values, rows, 5, "نیاز فاکتور", source.getFacAmount());
+            setDetailRow(labels, values, rows, 6, "کد کالا", source.getGoodCode());
+
+        } else if (company.equals("OcrCheshme")) {
+
+            setDetailRow(labels, values, rows, 0, "موجودی کل", detail.getTotalAvailable());
+            setDetailRow(labels, values, rows, 1, "قطع", detail.getSize());
+            setDetailRow(labels, values, rows, 2, "نوع جلد", detail.getCoverType());
+            setDetailRow(labels, values, rows, 3, "قیمت", detail.getMaxSellPrice());
+            setDetailRow(labels, values, rows, 4, "ناشر", detail.getGoodExplain2());
+            setDetailRow(labels, values, rows, 5, "نیاز فاکتور", source.getFacAmount());
+            setDetailRow(labels, values, rows, 6, "موقعیت", source.getLocationTitle());
+
+        } else {
+
+            setDetailRow(labels, values, rows, 0, "موجودی کل", detail.getTotalAvailable());
+            setDetailRow(labels, values, rows, 1, "قطع", detail.getSize());
+            setDetailRow(labels, values, rows, 2, "نوع جلد", detail.getCoverType());
+            hideDetailRow(rows, 3);
+            hideDetailRow(rows, 4);
+            hideDetailRow(rows, 5);
+            hideDetailRow(rows, 6);
+        }
+    }
+
+
+    private void setDetailRow(
+            TextView[] labels,
+            TextView[] values,
+            LinearLayoutCompat[] rows,
+            int index,
+            String label,
+            Object value
+    ) {
+
+        rows[index].setVisibility(View.VISIBLE);
+        labels[index].setVisibility(View.VISIBLE);
+        values[index].setVisibility(View.VISIBLE);
+
+        labels[index].setText(label);
+        values[index].setText(
+                NumberFunctions.PerisanNumber(
+                        normalizeNumber(value)
+                )
+        );
+    }
+
+
+    private void hideDetailRow(
+            LinearLayoutCompat[] rows,
+            int index
+    ) {
+        rows[index].setVisibility(View.GONE);
+    }
+
+
+    private void setDefaultGoodImage(ImageView imageView) {
+
+        try {
+            byte[] imageBytes = Base64.decode(
+                    mContext.getString(R.string.no_photo),
+                    Base64.DEFAULT
+            );
+
+            Bitmap bitmap = BitmapFactory.decodeByteArray(
+                    imageBytes,
+                    0,
+                    imageBytes.length
+            );
+
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            }
+
+        } catch (Exception exception) {
+            callMethod.Log(
+                    "Default image error: "
+                            + exception.getMessage()
+            );
+        }
+    }
+
+
+    private void applyManagedDialogSize(
+            Dialog dialog,
+            float widthRatio,
+            float heightRatio,
+            int maxWidthDp
+    ) {
+
+        Window window = dialog.getWindow();
+
+        if (window == null) {
+            return;
+        }
+
+        DisplayMetrics metrics = mContext
+                .getResources()
+                .getDisplayMetrics();
+
+        int width = Math.min(
+                Math.round(metrics.widthPixels * widthRatio),
+                dpToPx(maxWidthDp)
+        );
+
+        int height = Math.round(
+                metrics.heightPixels * heightRatio
+        );
+
+        window.setLayout(width, height);
+        window.setGravity(Gravity.CENTER);
+        window.setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        );
+    }
+
+
+    private void styleAmountValue(
+            TextView textView,
+            int color
+    ) {
+
+        textView.setTextColor(color);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setGravity(Gravity.CENTER);
+        textView.setMaxLines(1);
+        textView.setPadding(
+                dpToPx(6),
+                dpToPx(5),
+                dpToPx(6),
+                dpToPx(5)
+        );
+    }
+
+
+    private BigDecimal parseDecimal(Object value) {
+
+        String text = safeText(value);
+
+        if (text.isEmpty()
+                || text.equalsIgnoreCase("null")) {
+            return BigDecimal.ZERO;
+        }
+
+        try {
+            return new BigDecimal(text);
+        } catch (NumberFormatException exception) {
+            callMethod.Log(
+                    "Invalid decimal value: " + text
+            );
+            return BigDecimal.ZERO;
+        }
+    }
+
+
+    private String formatDecimal(BigDecimal value) {
+        return value.stripTrailingZeros().toPlainString();
+    }
+
+
+    private String normalizeNumber(Object value) {
+
+        String text = safeText(value);
+
+        if (text.isEmpty()) {
+            return "-";
+        }
+
+        try {
+            return new BigDecimal(text)
+                    .stripTrailingZeros()
+                    .toPlainString();
+        } catch (NumberFormatException exception) {
+            return text;
+        }
+    }
+
+
+    private String safeText(Object value) {
+        return value == null
+                ? ""
+                : String.valueOf(value).trim();
+    }
+
+
+    private int dpToPx(int dp) {
+        return Math.round(
+                dp * mContext
+                        .getResources()
+                        .getDisplayMetrics()
+                        .density
+        );
+    }
+
+
+    private void showNetworkFailure(
+            String fallbackMessage,
+            Throwable throwable
+    ) {
+
+        callMethod.Log(
+                fallbackMessage
+                        + ": "
+                        + (throwable == null
+                        ? ""
+                        : throwable.getMessage())
+        );
+
+        try {
+            if (!NetworkUtils.isNetworkAvailable(mContext)) {
+                callMethod.showToast("اتصال اینترنت قطع است!");
+            } else if (NetworkUtils.isVPNActive()) {
+                callMethod.showToast(
+                        "VPN فعال است، ممکن است ارتباط مختل شود"
+                );
+            } else {
+                callMethod.showToast(fallbackMessage);
+            }
+        } catch (Exception exception) {
+            callMethod.showToast(fallbackMessage);
+        }
+    }
+
 }

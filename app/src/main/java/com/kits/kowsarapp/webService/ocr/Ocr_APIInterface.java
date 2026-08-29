@@ -82,6 +82,7 @@ public interface Ocr_APIInterface {
             , @Field("IsEdited") String IsEdited
             , @Field("Row") String Row
             , @Field("PageNo") String PageNo
+            , @Field("CountFlag") String CountFlag
             , @Field("SourceFlag") String SourceFlag
     );
 
@@ -297,6 +298,7 @@ public interface Ocr_APIInterface {
             , @Field("LocationCode") String LocationCode
             , @Field("LocationStackCode") String LocationStackCode
             , @Field("GoodRef") String GoodRef
+            , @Field("JobPersonRef") String JobPersonRef
             , @Field("Auxn1") String Auxn1
             , @Field("Auxn2") String Auxn2
             , @Field("Auxn3") String Auxn3

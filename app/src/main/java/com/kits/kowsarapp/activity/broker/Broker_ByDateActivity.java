@@ -460,7 +460,7 @@ public class Broker_ByDateActivity extends AppCompatActivity {
         } else {
             binding.bBydateALlSumFactor.setVisibility(View.VISIBLE);
             binding.bBydateACustomer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.bBydateASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            binding.bBydateASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
     }
 

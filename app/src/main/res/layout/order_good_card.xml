@@ -1,51 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_gooditem_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
     android:layout_margin="3dp"
     android:checkable="true"
-    android:layoutDirection="rtl"
-    android:orientation="vertical"
->
-
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_card"
-        android:layout_margin="2dp"
-        android:orientation="vertical">
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-        <ImageView
-            android:id="@+id/ord_gooditem_c_img"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:padding="5dp"
-            android:scaleType="centerInside"
-            tools:ignore="ContentDescription" />
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp">
+
+            <ImageView
+                android:id="@+id/ord_gooditem_c_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="تصویر کالا"
+                android:padding="5dp"
+                android:scaleType="centerInside"
+                tools:src="@drawable/img_base_no_photo" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/ord_gooditem_c_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="18sp"
-            android:textColor="?attr/colorOnBackground"/>
-
-        <TextView
-            android:id="@+id/ord_gooditem_c_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="18sp"
+            android:layout_height="46dp"
+            android:ellipsize="end"
+            android:gravity="start|center_vertical"
+            android:maxLines="2"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:textColor="?attr/colorOnBackground"
-            android:layout_margin="3dp"/>
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="نام کامل کالای انتخاب‌شده" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.12"
+            android:background="?attr/colorOnBackground" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="44dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="4dp"
+                android:text="قیمت"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="8sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ord_gooditem_c_price"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="۱,۲۵۰,۰۰۰ ریال" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="2dp"
+            android:background="?attr/colorPrimary" />
 
     </LinearLayout>
 

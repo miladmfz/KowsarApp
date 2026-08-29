@@ -279,7 +279,11 @@
     <string name="good_buy_delete">حذف از سبد</string>
     <string name="Customer_new"> مشتری جدید</string>
     <string name="UnitRadio">درصد تخفیف</string>
-
+    <string name="ocr_inventory_title">انتخاب فاکتور</string>
+    <string name="ocr_inventory_search_hint">جستجو در فاکتورها</string>
+    <string name="ocr_inventory_refresh">به‌روزرسانی فهرست</string>
+    <string name="ocr_inventory_path">انتخاب مسیر</string>
+    <string name="ocr_inventory_count_sample">۱۲ فاکتور</string>
     <string-array name="themes_array">
         <item>Default</item>
         <item>RoyalGoldTheme</item>

@@ -49,15 +49,14 @@ public class Broker_PFOpenViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(PreFactor preFactor, Context mContext, CallMethod callMethod) {
 
-        fac_date.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("PreFactorDate"))));
-        fac_time.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("PreFactorTime"))));
-        fac_code.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("PreFactorCode"))));
-        fac_detail.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("PreFactorExplain"))));
-        fac_customer.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("Customer"))));
-        fac_row.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("RowCount"))));
-        fac_count.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("SumAmount"))));
-        fac_price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(String.valueOf(preFactor.getPreFactorFieldValue("SumPrice"))))));
-
+        fac_date.setText(NumberFunctions.PerisanNumber(preFactor.getPreFactorFieldValue("PreFactorDate")));
+        fac_time.setText(NumberFunctions.PerisanNumber(preFactor.getPreFactorFieldValue("PreFactorTime")));
+        fac_code.setText(NumberFunctions.PerisanNumber(preFactor.getPreFactorFieldValue("PreFactorCode")));
+        fac_detail.setText(NumberFunctions.PerisanNumber(preFactor.getPreFactorFieldValue("PreFactorExplain")));
+        fac_customer.setText(NumberFunctions.PerisanNumber(preFactor.getPreFactorFieldValue("Customer")));
+        fac_row.setText(NumberFunctions.PerisanNumber(preFactor.getPreFactorFieldValue("RowCount")));
+        fac_count.setText(NumberFunctions.PerisanNumber(preFactor.getPreFactorFieldValue("SumAmount")));
+        fac_price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(preFactor.getPreFactorFieldValue("SumPrice")))));
 
         fac_rltv.setOnClickListener(v -> {
 

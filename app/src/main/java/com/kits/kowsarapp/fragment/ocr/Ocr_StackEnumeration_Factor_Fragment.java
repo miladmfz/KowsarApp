@@ -501,10 +501,10 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 
                         Call<RetrofitResponse> call;
                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                            call=apiInterface.CheckState("OcrControlled_new",factor.getAppOCRFactorCode(),"1","");
+                            call=apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
 
                         }else{
-                            call=secendApiInterface.CheckState("OcrControlled_new",factor.getAppOCRFactorCode(),"1","");
+                            call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
                         }
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
@@ -598,10 +598,10 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                    call=apiInterface.CheckState("OcrControlled_new",factor.getAppOCRFactorCode(),"1","");
+                    call=apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
 
                 }else{
-                    call=secendApiInterface.CheckState("OcrControlled_new",factor.getAppOCRFactorCode(),"1","");
+                    call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
                 }
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
@@ -718,14 +718,14 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                                 Call<RetrofitResponse> call;
                                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                                     call=apiInterface.OcrControlled(
-                                            "OcrControlled_new",
+                                            "OcrControlled",
                                             single_GoodCode_check,
                                             "0",
                                             callMethod.ReadString("JobPersonRef")
                                     );
                                 }else{
                                     call=secendApiInterface.OcrControlled(
-                                            "OcrControlled_new",
+                                            "OcrControlled",
                                             single_GoodCode_check,
                                             "0",
                                             callMethod.ReadString("JobPersonRef")
@@ -805,14 +805,14 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                         Call<RetrofitResponse> call;
                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                             call=apiInterface.OcrControlled(
-                                    "OcrControlled_new",
+                                    "OcrControlled",
                                     single_GoodCode_check,
                                     "0",
                                     callMethod.ReadString("JobPersonRef")
                             );
                         }else{
                             call=secendApiInterface.OcrControlled(
-                                    "OcrControlled_new",
+                                    "OcrControlled",
                                     single_GoodCode_check,
                                     "0",
                                     callMethod.ReadString("JobPersonRef")
@@ -1109,7 +1109,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
             } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrGostaresh")){
                 tv_good_part3.setText(NumberFunctions.PerisanNumber(good_detial.getFormNo()));
             } else if (callMethod.ReadString("EnglishCompanyNameUse").equals("OcrMahris")){
-                tv_good_part3.setText(NumberFunctions.PerisanNumber(good_detial.getGoodExplain3()));
+                tv_good_part3.setText(NumberFunctions.PerisanNumber(good_detial.getLocationTitle()));
             }else{
                 tv_good_part3.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
             }
@@ -1386,9 +1386,9 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))) {
-                    call = apiInterface.CheckState("OcrControlled_new", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                    call = apiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
                 } else {
-                    call = secendApiInterface.CheckState("OcrControlled_new", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                    call = secendApiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
                 }
 
 

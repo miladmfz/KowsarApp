@@ -512,16 +512,42 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
 
 
-//        Call<RetrofitResponse> call =apiInterface.GetStackCategory("GetStackCategory");
-        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory_new");
+        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 stacks.add("همه");
                 if(response.isSuccessful()) {
                     assert response.body() != null;
-                    for (Ocr_Good good : response.body().getOcr_Goods()) {
-                        stacks.add(good.getGoodExplain4());
+                    ArrayList<Ocr_Good> goods = response.body().getOcr_Goods();
+
+                    if (goods == null) {
+                        goods = new ArrayList<>();
+                    }
+
+                    for (Ocr_Good good : goods) {
+
+                        if (good == null) {
+                            continue;
+                        }
+
+                        String stackName = good.getGoodExplain4();
+
+                        if (stackName == null) {
+                            continue;
+                        }
+
+                        stackName = stackName.trim();
+
+                        if (stackName.isEmpty()) {
+                            continue;
+                        }
+
+
+                        // جلوگیری از تکراری شدن
+                        if (!stacks.contains(stackName)) {
+                            stacks.add(stackName);
+                        }
                     }
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(Ocr_ConfigActivity.this,
                             android.R.layout.simple_spinner_item, stacks);
@@ -715,7 +741,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
         spinnerjobperson.setAdapter(null);
 
 //        Call<RetrofitResponse> call =apiInterface.GetJob("GetJob",where);
-        Call<RetrofitResponse> call =apiInterface.GetJob("TestJob",where);
+        Call<RetrofitResponse> call =apiInterface.GetJob("GetJob",where);
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -754,6 +780,9 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
     public void GetDataIsPersian() {
 
         //Call<RetrofitResponse> call =apiInterface.DbSetupvalue("DbSetupvalue","DataIsPersian");
+
+
+        //TODO
         Call<RetrofitResponse> call =apiInterface.GetDataDbsetup("kowsar_info","DataIsPersian");
 
         call.enqueue(new Callback<RetrofitResponse>() {
@@ -786,7 +815,7 @@ public class Ocr_ConfigActivity extends AppCompatActivity  {
 
 
     public void GetJobPerson(String where) {
-        Call<RetrofitResponse> call =apiInterface.GetJobPerson("TestJobPerson",where);
+        Call<RetrofitResponse> call =apiInterface.GetJobPerson("GetJobPerson",where);
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

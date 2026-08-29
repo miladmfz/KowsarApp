@@ -1,31 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:id="@+id/broker_imageslider_card"
-    android:layoutDirection="rtl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/bg_card"
+    android:layoutDirection="rtl"
     android:layout_margin="2dp"
-    >
+    android:background="@drawable/bg_card"
+    android:clipToOutline="true"
+    android:padding="3dp">
 
-
-    <ImageView
-        android:id="@+id/b_imageslider_c_slider"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="ContentDescription"
-        android:layout_margin="4dp"/>
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardCornerRadius="9dp"
+        app:cardElevation="0dp"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="1dp">
 
-    <ImageView
-        android:id="@+id/b_imageslider_c_container"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="5dp"
-        />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/b_imageslider_c_slider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:contentDescription="تصویر کالا"
+                android:padding="3dp"
+                android:scaleType="fitCenter"
+                tools:src="@drawable/ic_search_product" />
+
+            <ImageView
+                android:id="@+id/b_imageslider_c_container"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="7dp"
+                android:background="@drawable/bg_round"
+                android:contentDescription="وضعیت تصویر"
+                android:padding="5dp"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                app:tint="?attr/colorPrimary"
+                tools:src="@drawable/ic_category"
+                tools:visibility="visible" />
+
+        </FrameLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </FrameLayout>

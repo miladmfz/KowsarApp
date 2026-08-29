@@ -1,190 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
-    android:orientation="vertical"
+    android:background="?attr/colorSurface"
     tools:context=".activity.broker.Broker_BasketHistoryActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/b_baskethistory_a_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:elevation="3dp">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:contentInsetEndWithActions="@dimen/gapMedium"
+            app:contentInsetStartWithNavigation="@dimen/gapMedium"
+            app:title="گزارش فاکتور"
+            app:titleTextColor="?attr/colorOnPrimary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activity.BasketActivity">
+        android:paddingStart="@dimen/gapSmall"
+        android:paddingTop="@dimen/gapSmall"
+        android:paddingEnd="@dimen/gapSmall"
+        android:paddingBottom="@dimen/gapSmall"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/b_baskethistory_a_appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            >
-
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:titleTextColor="?attr/colorOnPrimary"
-                app:title="گزارش فاکتور"
-                >
-
-            </androidx.appcompat.widget.Toolbar>
-
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/b_baskethistory_a_summary_card"
+            android:layout_width="0dp"
+            android:layout_height="62dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-
-
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="3dp"
+                android:paddingEnd="3dp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_margin="4dp"
-                    android:background="@drawable/bg_round"
-                    android:orientation="horizontal">
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.35"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="3dp">
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.3"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buyhistory_totalprice"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
 
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.5"
-                            android:gravity="center"
-                            android:text="@string/buyhistory_totalprice"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-
-                            android:textStyle="bold"
-                            tools:ignore="HardcodedText" />
-
-
-                        <TextView
-                            android:id="@+id/b_baskethistory_a_total_price_buy"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.5"
-                            android:gravity="center"
-                            android:text="@string/buyhistory_totalprice"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textStyle="bold" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <TextView
+                        android:id="@+id/b_baskethistory_a_total_price_buy"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.3"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buyhistory_totalprice"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.3"
-                            android:gravity="center"
-
-                            android:text="@string/buyhistory_totalamount"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-
-                        <TextView
-                            android:id="@+id/b_baskethistory_a_total_amount_buy"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.3"
-                            android:gravity="center"
-                            android:text="@string/buyhistory_totalamount"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textStyle="bold" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.3"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.3"
-                            android:gravity="center"
-                            android:text="@string/buyhistory_totalrow"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/b_baskethistory_a_total_row_buy"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.3"
-                            android:gravity="center"
-                            android:text="@string/buyhistory_totalrow"
-                            android:textColor="?attr/colorOnBackground"
-                            android:textStyle="bold" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="36dp"
+                    android:alpha="0.15"
+                    android:background="?attr/colorOnBackground" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buyhistory_totalamount"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/b_baskethistory_a_total_amount_buy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buyhistory_totalamount"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="36dp"
+                    android:alpha="0.15"
+                    android:background="?attr/colorOnBackground" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="3dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buyhistory_totalrow"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/b_baskethistory_a_total_row_buy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/buyhistory_totalrow"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/b_baskethistory_a_search_card"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="@dimen/gapSmall"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/b_baskethistory_a_summary_card"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp">
 
             <EditText
                 android:id="@+id/b_baskethistory_a_edtsearch"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="2dp"
-                android:layout_weight="0.3"
-                android:background="@drawable/bg_editbox"
-                android:hint="@string/search_et"
-                android:inputType="text"
-                android:paddingStart="10dp"
-                android:paddingEnd="20dp"
-                android:selectAllOnFocus="true"
-                android:textColor="?attr/colorOnBackground"
-                android:singleLine="true" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/b_baskethistory_a_R1"
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="70dp"
+                android:background="@android:color/transparent"
+                android:gravity="start|center_vertical"
+                android:hint="@string/search_et"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:textColor="?attr/colorOnBackground"
+                android:textColorHint="?attr/colorOnBackground"
+                android:textSize="13sp" />
 
-                />
+        </com.google.android.material.card.MaterialCardView>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/b_baskethistory_a_R1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/gapSmall"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingStart="2dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="2dp"
+            android:paddingBottom="@dimen/gapMedium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/b_baskethistory_a_search_card"
+            tools:listitem="@android:layout/simple_list_item_2" />
 
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:orientation="vertical"
-        >
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

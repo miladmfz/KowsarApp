@@ -1,366 +1,344 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ocr_factorlocal_card"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    app:cardCornerRadius="8dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorOnBackground"
-    app:cardElevation="4dp"
+    android:layoutDirection="rtl"
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    android:checkable="true"
-    android:layoutDirection="rtl">
-
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
         android:id="@+id/ocr_factorlocal_c_ll_main"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:padding="6dp">
 
-
-        <LinearLayout
+        <!-- Customer -->
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1">
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="200dp"
+                android:layout_width="64dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="center"
-                android:text="نام مشتری :"
-                android:textSize="12sp"
-                android:textStyle="bold"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="نام مشتری"
                 android:textColor="?attr/colorOnBackground"
-                />
-
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ocr_factorlocal_c_customer"
-                android:layout_width="match_parent"
-                android:layout_height="34dp"
-                android:layout_gravity="center"
-                android:layout_weight="0.7"
-                android:textSize="16sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="2"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnBackground"/>
+                tools:text="فروشگاه نمونه مشتری" />
 
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.12"
+            android:background="?attr/colorOnBackground" />
 
-
-        </LinearLayout>
-
+        <!-- Customer code and status -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="5dp"
-            android:weightSum="1"
-            >
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="کد مشتری"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="0.5"
-                android:weightSum="0.5"
-                >
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="31dp"
-                    android:gravity="center"
-                    android:text="کد مشتری:"
-                    android:textSize="12sp"
-                    android:layout_weight="0.25"
-                    android:textColor="?attr/colorOnBackground"
-                    />
-
-                <TextView
-                    android:id="@+id/ocr_factorlocal_c_customercode"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:background="@drawable/bg_editbox"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_weight="0.25"
-                    android:textColor="?attr/colorOnBackground"
-                    />
-
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/ocr_factorlocal_c_customercode"
+                android:layout_width="84dp"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="۱۲۵۴۸" />
 
             <TextView
                 android:id="@+id/ocr_factorlocal_c_status"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:textColor="@color/red_500"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_weight="0.5"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
                 android:gravity="center"
-                android:layout_marginRight="20sp"
-                />
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="@color/red_500"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="در انتظار ارسال" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <!-- Factor code and signature -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            >
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="کد فاکتور"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/ocr_factorlocal_c_code"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="۱۴۰۵۲۵۸" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
+            <TextView
+                android:layout_width="62dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="تأیید مشتری"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="31dp"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text="کد فاکتور:"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/ocr_factorlocal_c_code"
-                    android:background="@drawable/bg_editbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="31dp"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text="تایید مشتری:"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnBackground"/>
-
-                <TextView
-                    android:id="@+id/ocr_factorlocal_c_signature"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:background="@drawable/bg_editbox"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/ocr_factorlocal_c_signature"
+                android:layout_width="70dp"
+                android:layout_height="34dp"
+                android:background="@drawable/bg_editbox"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="دارد" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.1"
+            android:background="?attr/colorOnBackground" />
 
+        <!-- Order and delivery dates -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_margin="5dp"
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            android:layout_weight="1">
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="5dp"
+                android:text="تاریخ سفارش"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
+            <TextView
+                android:id="@+id/ocr_factorlocal_c_kowsardate"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="۱۴۰۵/۰۵/۱۲" />
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="31dp"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text=" تاریخ سفارش:"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnBackground"/>
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="تاریخ تحویل"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/ocr_factorlocal_c_kowsardate"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:background="@drawable/bg_editbox"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="31dp"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text="تاریخ تحویل : "
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-                <TextView
-                    android:id="@+id/ocr_factorlocal_c_scandate"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:background="@drawable/bg_editbox"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnBackground"/>
-
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/ocr_factorlocal_c_scandate"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_editbox"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:text="۱۴۰۵/۰۵/۱۳" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
+        <!-- View actions -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/ocr_factorlocal_c_factor"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.25"
-                android:gravity="center"
-                android:text="نمایش فاکتور"
-                android:layout_margin="3dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
                 android:backgroundTint="?attr/colorPrimary"
-                android:textColor="?attr/colorOnPrimary" />
+                android:gravity="center"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="نمایش فاکتور"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="10sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/ocr_factorlocal_c_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.25"
-                android:gravity="center"
-                android:text="چک کردن رسید"
-                android:layout_margin="3dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="2dp"
+                android:layout_weight="1"
                 android:backgroundTint="?attr/colorPrimary"
-                android:textColor="?attr/colorOnPrimary"/>
-
-
-
+                android:gravity="center"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="بررسی رسید"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="10sp"
+                android:textStyle="bold" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
+        <!-- Send and delete -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/ocr_factorlocal_c_send"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.25"
-                android:gravity="center"
-                android:text="ارسال رسید فاکتور"
-                android:layout_margin="3dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
                 android:backgroundTint="?attr/colorSecondary"
-                android:textColor="?attr/colorOnSecondary"/>
+                android:gravity="center"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="ارسال رسید فاکتور"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/ocr_factorlocal_c_dlt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.25"
-                android:gravity="center"
-                android:text="حذف رسید"
-
-                android:textColor="@color/red_700"
-                android:layout_margin="3dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 style="@style/Widget.MaterialComponents.Button"
-                android:backgroundTint="?attr/colorSecondary"
-               />
-
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="2dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/red_800"
+                android:gravity="center"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="حذف رسید"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-        <androidx.viewpager.widget.ViewPager
+        <View
             android:layout_width="match_parent"
-            android:layout_height="4dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="3dp"
             android:background="@color/red_900" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 
 </com.google.android.material.card.MaterialCardView>

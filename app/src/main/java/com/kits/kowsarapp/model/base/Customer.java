@@ -25,7 +25,7 @@ public class Customer {
     @SerializedName("CityCode")
     private String CityCode;
     @SerializedName("Bestankar")
-    private Integer Bestankar;
+    private Double Bestankar;
     @SerializedName("Active")
     private Integer Active;
     @SerializedName("CentralPrivateCode")
@@ -208,7 +208,7 @@ public class Customer {
         CityCode = cityCode;
     }
 
-    public void setBestankar(Integer bestankar) {
+    public void setBestankar(Double bestankar) {
         Bestankar = bestankar;
     }
 

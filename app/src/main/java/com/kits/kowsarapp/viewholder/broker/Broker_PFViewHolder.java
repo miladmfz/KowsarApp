@@ -92,7 +92,7 @@ public class Broker_PFViewHolder extends RecyclerView.ViewHolder {
         fac_customer.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("Customer"))));
         fac_row.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("RowCount"))));
         fac_count.setText(NumberFunctions.PerisanNumber(String.valueOf(preFactor.getPreFactorFieldValue("SumAmount"))));
-        fac_price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(String.valueOf(preFactor.getPreFactorFieldValue("SumPrice"))))));
+        fac_price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(String.valueOf(preFactor.getPreFactorFieldValue("SumPrice"))))));
 
 
         if (Integer.parseInt(preFactor.getPreFactorFieldValue("PreFactorKowsarCode")) > 0) {

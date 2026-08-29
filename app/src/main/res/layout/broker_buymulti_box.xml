@@ -1,117 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:id="@+id/b_buymulti_box"
-    android:background="@drawable/bg_card"
-    android:layout_margin="2dp"
-    android:padding="16dp"
-    android:layoutDirection="rtl">
 
-    <!-- Header Text -->
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/b_buymulti_box"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layoutDirection="rtl"
+    android:background="@drawable/bg_card"
+    android:orientation="vertical"
+    android:padding="6dp">
+
     <TextView
         android:id="@+id/b_buymulti_factor"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:ellipsize="end"
+        android:focusable="true"
         android:gravity="center"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:text="@string/customerfactorheader"
-        android:textSize="20sp"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="15sp"
         android:textStyle="bold"
-        android:textColor="?attr/colorOnBackground"
-        android:focusable="true" />
+        tools:text="فاکتور شماره ۱۲۵۴۸" />
 
-    <!-- Input Fields Container -->
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.15"
+        android:background="?attr/colorOnBackground" />
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="5dp"
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardCornerRadius="9dp"
+        app:cardElevation="0dp"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="1dp">
 
-        <!-- Amount Input -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:weightSum="1">
+            android:orientation="vertical"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="0.6"
-                android:gravity="center"
-                android:text="@string/amount"
-                android:textSize="16sp"
-                android:textColor="?attr/colorOnBackground" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/b_buymulti_amount"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="0.4"
-                android:background="@drawable/bg_editbox"
-                android:gravity="center"
-                android:textColor="?attr/colorOnBackground"
-                android:hint="@string/amount"
-                android:maxLength="4"
-                android:inputType="number"
-                android:focusable="true"
-                android:padding="8dp"
-                android:textSize="16sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="6dp"
+                    android:text="@string/amount"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/b_buymulti_amount"
+                    android:layout_width="105dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_editbox"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:hint="@string/amount"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:maxLines="1"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:selectAllOnFocus="true"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textColorHint="?attr/colorOnBackground"
+                    android:textSize="13sp"
+                    tools:text="2" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.12"
+                android:background="?attr/colorOnBackground" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="6dp"
+                    android:text="@string/UnitRadio"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/b_buymulti_unitratio"
+                    android:layout_width="105dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_editbox"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:hint="@string/UnitRadio"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:maxLines="1"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:selectAllOnFocus="true"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textColorHint="?attr/colorOnBackground"
+                    android:textSize="13sp"
+                    tools:text="1" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <!-- Unit Ratio Input -->
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:weightSum="1">
+    </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="0.6"
-                android:gravity="center"
-                android:text="@string/UnitRadio"
-                android:textSize="16sp"
-                android:textColor="?attr/colorOnBackground" />
-
-            <EditText
-                android:id="@+id/b_buymulti_unitratio"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="0.4"
-                android:background="@drawable/bg_editbox"
-                android:textColor="?attr/colorOnBackground"
-                android:gravity="center"
-                android:hint="@string/UnitRadio"
-                android:maxLength="4"
-                android:inputType="number"
-                android:focusable="true"
-                android:padding="8dp"
-                android:textSize="16sp" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <!-- Submit Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/b_buymulti_btn"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:text="@string/detail_buy"
-        android:layout_margin="3dp"
-        android:textSize="16sp"
-        android:textStyle="bold"
         style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="5dp"
         android:backgroundTint="?attr/colorPrimary"
+        android:gravity="center"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="@string/detail_buy"
         android:textColor="?attr/colorOnPrimary"
-        />
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:cornerRadius="9dp" />
+
 </androidx.appcompat.widget.LinearLayoutCompat>

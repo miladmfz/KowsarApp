@@ -1,223 +1,256 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
 
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ocr_stackenumeration_good_listapi_card"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layoutDirection="rtl"
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    android:checkable="true"
-
-    android:layoutDirection="rtl">
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ocr_stackenumeration_good_listapi_c_ll_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
         android:orientation="vertical"
-        android:background="@drawable/bg_card"
-        >
+        android:padding="6dp">
 
+        <!-- Product name -->
+        <TextView
+            android:id="@+id/ocr_stackenumeration_good_listapi_c_goodname"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ellipsize="end"
+            android:gravity="start|center_vertical"
+            android:maxLines="2"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:text="نام کامل کالای مورد شمارش انبار" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.12"
+            android:background="?attr/colorOnBackground" />
+
+        <!-- Maximum price -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/ocr_stackenumeration_good_listapi_c_ll_main"
-            android:layout_margin="3dp"
-            android:layout_weight="1">
+            android:layout_height="38dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1">
-
-
-                <TextView
-                    android:id="@+id/ocr_stackenumeration_good_listapi_c_goodname"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.6"
-                    android:gravity="center"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-
-                android:layout_weight="1">
-
-
-                <TextView
-                    android:id="@+id/ocr_stackenumeration_good_listapi_c_maxsellprice"
-                    android:layout_width="match_parent"
-                    android:layout_height="30sp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-
-            </LinearLayout>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="84dp"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_margin="5dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="6dp"
+                android:text="حداکثر قیمت"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="9sp"
+                android:textStyle="bold" />
 
-                android:weightSum="3">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ocr_stackenumeration_good_listapi_c_ll_firstnum"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp"
-                    android:layout_weight="1">
-
-
-                    <TextView
-                        android:layout_width="150dp"
-                        android:layout_height="31dp"
-                        android:layout_weight="0.8"
-                        android:gravity="center"
-                        android:text="1 :"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_stackenumeration_good_listapi_c_firstnum"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center"
-                        android:background="@drawable/bg_editbox"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ocr_stackenumeration_good_listapi_c_ll_secondnum"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="150dp"
-                        android:layout_height="31dp"
-                        android:layout_weight="0.8"
-                        android:gravity="center"
-                        android:text="2 :"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_stackenumeration_good_listapi_c_secondnum"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center"
-                        android:background="@drawable/bg_editbox"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ocr_stackenumeration_good_listapi_c_ll_thirdnum"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="2dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="150dp"
-                        android:layout_height="31dp"
-                        android:layout_weight="0.8"
-                        android:gravity="center"
-                        android:text="3 :"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/ocr_stackenumeration_good_listapi_c_thirdnum"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center"
-                        android:background="@drawable/bg_editbox"
-                        android:textColor="?attr/colorOnBackground"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="1">
-
-                <Button
-                    android:id="@+id/ocr_stackenumeration_good_listapi_c_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.25"
-                    android:gravity="center"
-                    android:text="انتخاب"
-                    android:layout_margin="3dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:backgroundTint="?attr/colorPrimary"
-                    android:textColor="?attr/colorOnPrimary" />
-
-
-
-
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-            <androidx.viewpager.widget.ViewPager
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorPrimary" />
+            <TextView
+                android:id="@+id/ocr_stackenumeration_good_listapi_c_maxsellprice"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                tools:text="۱,۲۵۰,۰۰۰ ریال" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.1"
+            android:background="?attr/colorOnBackground" />
+
+        <!-- Count title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:gravity="start|center_vertical"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:text="نتیجه شمارش‌ها"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="9sp"
+            android:textStyle="bold" />
+
+        <!-- Counts -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- First count -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ocr_stackenumeration_good_listapi_c_ll_firstnum"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="شمارش اول"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ocr_stackenumeration_good_listapi_c_firstnum"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_editbox"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="3dp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="۱۲۵" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Second count -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ocr_stackenumeration_good_listapi_c_ll_secondnum"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="شمارش دوم"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ocr_stackenumeration_good_listapi_c_secondnum"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_editbox"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="3dp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="۱۲۴" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Third count -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ocr_stackenumeration_good_listapi_c_ll_thirdnum"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_round"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="3dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:gravity="center"
+                    android:text="شمارش سوم"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ocr_stackenumeration_good_listapi_c_thirdnum"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_editbox"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="3dp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="۱۲۵" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <Button
+            android:id="@+id/ocr_stackenumeration_good_listapi_c_btn"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="?attr/colorPrimary"
+            android:gravity="center"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="انتخاب کالا"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="3dp"
+            android:background="?attr/colorPrimary" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </com.google.android.material.card.MaterialCardView>

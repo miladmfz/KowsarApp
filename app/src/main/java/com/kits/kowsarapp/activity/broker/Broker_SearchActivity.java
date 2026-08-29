@@ -315,7 +315,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
                 String AmountMulti = amount_mlti.getText().toString();
                 if (!AmountMulti.equals("")) {
 
-                    if (Integer.parseInt(AmountMulti) != 0) {
+                    if (Double.parseDouble(AmountMulti) != 0) {
 
                         for (Good good : Multi_Good) {
                             Good gooddata = broker_dbh.getGooddata(good.getGoodFieldValue("GoodCode"));
@@ -327,12 +327,12 @@ public class Broker_SearchActivity extends AppCompatActivity {
                             }
 
                             if (unitratio_mlti.getText().toString().equals("")) {
-                                temppercent = String.valueOf(100 - Integer.parseInt(temppercent.substring(0, temppercent.length() - 2)));
+                                temppercent = String.valueOf(100 - Double.parseDouble(temppercent.substring(0, temppercent.length() - 2)));
                             } else {
                                 temppercent = NumberFunctions.EnglishNumber(unitratio_mlti.getText().toString());
                             }
-                            if (Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) > 0) {
-                                long Pricetemp = (long) Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) - ((long) Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) * Integer.parseInt(temppercent) / 100);
+                            if (Double.parseDouble(good.getGoodFieldValue("MaxSellPrice")) > 0) {
+                                long Pricetemp = (long) Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) - ((long) Double.parseDouble(good.getGoodFieldValue("MaxSellPrice")) * Integer.parseInt(temppercent) / 100);
                                 broker_dbh.InsertPreFactorwithPercent(callMethod.ReadString("PreFactorCode"),
                                         good.getGoodFieldValue("GoodCode"),
                                         AmountMulti,
@@ -626,7 +626,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
         } else {
             binding.bSearchALlSumFactor.setVisibility(View.VISIBLE);
             binding.bSearchACustomer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.bSearchASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            binding.bSearchASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
         }
 
         if (callMethod.ReadBoolan("ActiveStack")) {

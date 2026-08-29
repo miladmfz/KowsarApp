@@ -1,186 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/broker_customer_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="6dp"
-    app:strokeWidth="1dp"
     android:layoutDirection="rtl"
->
+    android:layout_marginStart="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginBottom="2dp"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="1dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:background="@drawable/bg_card"
-        android:layout_margin="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="5dp">
 
-        <!-- کد مشتری -->
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="کد مشتری:"
-                android:textSize="14sp"
+                android:layout_width="68dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="4dp"
+                android:text="نام مشتری"
                 android:textColor="?attr/colorOnBackground"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/b_customer_c_code"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="12345"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnBackground"
-                android:gravity="end" />
-        </LinearLayout>
-
-        <!-- نام مشتری -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="نام مشتری:"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnBackground"
-                android:textStyle="bold" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/b_customer_c_name"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="مشتری نمونه"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="2"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp"
-                android:textColor="?attr/colorOnBackground"
-                android:gravity="end" />
-        </LinearLayout>
+                android:textStyle="bold"
+                tools:text="فروشگاه نمونه تهران" />
 
-        <!-- مدیر مشتری -->
-        <LinearLayout
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
+            android:layout_height="1dp"
+            android:alpha="0.14"
+            android:background="?attr/colorOnBackground" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="مدیر مشتری:"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnBackground"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/b_customer_c_manage"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="مدیر نمونه"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnBackground"
-                android:gravity="end" />
-        </LinearLayout>
-
-        <!-- شماره تلفن -->
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
+            android:layout_height="42dp"
+            android:orientation="horizontal">
 
-            <TextView
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="شماره تلفن:"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnBackground"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/b_customer_c_phone"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="کد مشتری"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:id="@+id/b_customer_c_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="۱۲۳۴۵" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:alpha="0.14"
+                android:background="?attr/colorOnBackground" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="09121234567"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnBackground"
-                android:gravity="end" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center"
+                android:orientation="vertical">
 
-        <!-- آدرس -->
-        <LinearLayout
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="مدیر مشتری"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:id="@+id/b_customer_c_manage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="آقای محمدی" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:alpha="0.14"
+                android:background="?attr/colorOnBackground" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.15"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="شماره تلفن"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:id="@+id/b_customer_c_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="?attr/colorPrimary"
+                    android:textDirection="ltr"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    tools:text="09121234567" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="1dp"
+            android:alpha="0.14"
+            android:background="?attr/colorOnBackground" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="آدرس:"
-                android:textSize="14sp"
+                android:layout_width="52dp"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:paddingStart="4dp"
+                android:text="آدرس"
                 android:textColor="?attr/colorOnBackground"
+                android:textSize="10sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/b_customer_c_address"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="خیابان نمونه، پلاک 123"
-                android:textSize="14sp"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="2"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
                 android:textColor="?attr/colorOnBackground"
-                android:gravity="end" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/b_customer_c_credit_ll"
+                android:textSize="11sp"
+                tools:text="تهران، خیابان نمونه، کوچه دوم، پلاک ۱۲۳" />
 
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="8dp">
+            android:layout_height="40dp"
+            android:layout_marginTop="3dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="بستانکاری:"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnBackground"
-                android:textStyle="bold"
-                android:gravity="start" />
+            <LinearLayout
+                android:id="@+id/b_customer_c_credit_ll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
 
-            <TextView
-                android:id="@+id/b_customer_c_bes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:text="100,000 ریال"
-                android:textColor="@color/green_700"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:text="مانده حساب"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/b_customer_c_bes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:gravity="end|center_vertical"
+                    android:maxLines="1"
+                    android:minWidth="110dp"
+                    android:textColor="@color/green_700"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    tools:text="۱۰۰,۰۰۰ ریال" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
 </com.google.android.material.card.MaterialCardView>

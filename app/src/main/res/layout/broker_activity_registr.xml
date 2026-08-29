@@ -5,1004 +5,1185 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.broker.Broker_RegistrationActivity"
+    android:layoutDirection="rtl"
+    android:background="?attr/colorSurface"
     android:orientation="vertical"
-    android:layoutDirection="rtl">
-
+    tools:context=".activity.broker.Broker_RegistrationActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/b_register_a_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        >
+        android:background="?attr/colorPrimary"
+        app:elevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
-            app:title="تفییر اطلاعات"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary">
-
-        </androidx.appcompat.widget.Toolbar>
-
+            app:contentInsetEndWithActions="8dp"
+            app:contentInsetStartWithNavigation="8dp"
+            app:title="تغییر اطلاعات"
+            app:titleTextColor="?attr/colorOnPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="7dp">
+            android:paddingStart="4dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="8dp">
 
-            <androidx.core.widget.NestedScrollView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="46dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="6dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:text="اسم مجموعه"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/b_register_a_dbname"
+                        android:layout_width="0dp"
+                        android:layout_height="34dp"
+                        android:layout_weight="1.45"
+                        android:background="@drawable/bg_editbox"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:text="نام مجموعه" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="3dp"
+                android:text="عملیات اطلاعات"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
+
+                    <Button
+                        android:id="@+id/b_register_a_replicationcolumn"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/cyan_500"
+                        android:gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="3dp"
+                        android:paddingEnd="3dp"
+                        android:text="تنظیمات پیش‌فرض"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="8dp" />
+
+                    <Button
+                        android:id="@+id/b_register_a_basedelete"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/amber_900"
+                        android:gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="3dp"
+                        android:paddingEnd="3dp"
+                        android:text="بارگیری مجدد"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="8dp" />
+
+                    <Button
+                        android:id="@+id/b_register_a_totaldelete"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/red_700"
+                        android:gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="3dp"
+                        android:paddingEnd="3dp"
+                        android:text="حذف کل اطلاعات"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="8dp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="3dp"
+                android:text="اطلاعات بازاریاب"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:titleTextColor="?attr/colorSurface">
-
-
-                    <Button
-                        android:id="@+id/b_register_a_btn"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:text="@string/registeractivity_save"
-                        style="@style/Widget.MaterialComponents.Button"
-                        android:backgroundTint="?attr/colorPrimary"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:layout_margin="3dp"
-                        android:textSize="20sp"
-                        android:layout_weight="1" />
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="8dp"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="اسم مجموعه:"
-                            android:textSize="16sp"
-                            android:layout_margin="3dp"
-                            android:textColor="?attr/colorOnBackground"
-                            />
-
-                        <TextView
-                            android:id="@+id/b_register_a_dbname"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_margin="5dp"
-                            android:gravity="center"
-                            android:background="@drawable/bg_editbox"
-                            android:textColor="?attr/colorOnBackground"
-                            android:padding="8dp"
-                            />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="3">
-
-                        <Button
-                            android:id="@+id/b_register_a_replicationcolumn"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="تنظیمات پیشفرض"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="@color/cyan_500"
-                            android:layout_marginEnd="4dp"
-                            />
-                        <Button
-                            android:id="@+id/b_register_a_basedelete"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="بارگیری مجدد"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="@color/amber_900"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginEnd="4dp"
-                            />
-
-                        <Button
-                            android:id="@+id/b_register_a_totaldelete"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="حذف کلی اطلاعات"
-                            android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            app:cornerRadius="12dp"
-                            app:backgroundTint="@color/red_700"
-                            android:layout_marginStart="4dp"
-                            />
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
-
-                        <!-- Row 1: Config Broker -->
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="8dp">
-
-                            <!-- Label -->
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical|start"
-                                android:text="@string/config_broker"
-                                android:textSize="16sp"
-                                android:layout_margin="3dp"
-
-                                android:textColor="?attr/colorOnBackground"/>
-
-                            <!-- EditText -->
-                            <EditText
-                                android:id="@+id/b_register_a_broker"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:background="@drawable/bg_editbox"
-                                android:padding="8dp"
-                                android:gravity="center_vertical"
-                                android:inputType="numberDecimal"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                tools:ignore="LabelFor" />
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <!-- Row 2: Name Selector -->
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <!-- Label -->
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical|start"
-                                android:text="نام بازاریاب"
-                                android:textSize="16sp"
-                                android:layout_margin="3dp"
-
-                                android:textColor="?attr/colorOnBackground"/>
-
-                            <!-- Spinner -->
-                            <Spinner
-                                android:id="@+id/b_register_a_spinnerbroker"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:background="@drawable/bg_editbox"
-                                android:padding="8dp"
-                                android:gravity="center"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp" />
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
-
-                        <!-- Row 1: Config Delay and Config Item -->
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="8dp">
-
-                            <!-- Label: Config Delay -->
-
-                            <!-- Label: Config Item -->
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical|start"
-                                android:text="@string/config_item"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:layout_weight="2"
-
-                                android:paddingStart="8dp" />
-
-                            <!-- Input: Config Grid -->
-                            <EditText
-
-                                android:id="@+id/b_register_a_grid"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_editbox"
-                                android:padding="8dp"
-                                android:inputType="numberDecimal"
-                                android:maxLength="1"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:layout_weight="1"
-
-                                android:gravity="center" />
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="8dp">
-
-                            <!-- Label: Config Delay -->
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical|start"
-                                android:text="@string/config_delay"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:paddingStart="8dp"
-                                android:layout_weight="2"
-                                />
-
-                            <!-- Input: Config Delay -->
-                            <EditText
-                                android:id="@+id/b_register_a_delay"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_editbox"
-                                android:padding="8dp"
-                                android:inputType="numberDecimal"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:gravity="center"
-                                android:layout_weight="1"
-                                />
-
-                            <!-- Label: Config Item -->
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <!-- Row 2: Title Size and Body Size -->
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="8dp"
-                            >
-
-                            <!-- Label: Title Size -->
-
-                            <!-- Label: Body Size -->
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:gravity="center_vertical|start"
-                                android:text="سایز اطلاعات"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:paddingStart="8dp" />
-
-                            <!-- Input: Body Size -->
-                            <EditText
-                                android:id="@+id/b_register_a_bodysize"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_editbox"
-                                android:padding="8dp"
-                                android:inputType="numberDecimal"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:gravity="center" />
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="8dp"
-                            >
-
-                            <!-- Label: Title Size -->
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:gravity="center_vertical|start"
-                                android:text="سایز عنوان ها"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:paddingStart="8dp" />
-
-                            <!-- Input: Title Size -->
-                            <EditText
-                                android:id="@+id/b_register_a_titlesize"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_editbox"
-                                android:padding="8dp"
-                                android:inputType="numberDecimal"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:gravity="center" />
-
-                            <!-- Label: Body Size -->
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="8dp"
-                            >
-
-                            <!-- Label: Title Size -->
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:gravity="center_vertical|start"
-                                android:maxLines="2"
-                                android:text="زمان گذشته از بروزرسانی برای هشدار (دقیقه)"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"
-                                android:paddingStart="8dp"/>
-
-                            <!-- Input: Title Size -->
-                            <EditText
-                                android:id="@+id/b_register_a_updatealarmtime"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_editbox"
-                                android:gravity="center"
-                                android:inputType="number"
-                                android:maxLength="5"
-                                android:padding="8dp"
-                                android:textColor="?attr/colorOnBackground"
-                                android:textSize="16sp"/>
-
-                            <!-- Label: Body Size -->
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-
-
-
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
-
-                        <!-- Label Text -->
-                        <TextView
-                            android:text="نمایش اعتبار مشتری"
-
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical|start"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/config_broker"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
+                        <EditText
+                            android:id="@+id/b_register_a_broker"
+                            android:layout_width="0dp"
+                            android:layout_height="34dp"
+                            android:layout_weight="1.5"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp"
+                            android:singleLine="true"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp"
+                            tools:ignore="LabelFor" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="نام بازاریاب"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                        <Spinner
+                            android:id="@+id/b_register_a_spinnerbroker"
+                            android:layout_width="0dp"
+                            android:layout_height="34dp"
+                            android:layout_weight="1.5"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:paddingStart="7dp"
+                            android:paddingEnd="7dp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="3dp"
+                android:text="تنظیمات نمایش و بروزرسانی"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/config_item"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                        <EditText
+                            android:id="@+id/b_register_a_grid"
+                            android:layout_width="82dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:inputType="numberDecimal"
+                            android:maxLength="1"
+                            android:maxLines="1"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp"
+                            android:singleLine="true"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/config_delay"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                        <EditText
+                            android:id="@+id/b_register_a_delay"
+                            android:layout_width="82dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp"
+                            android:singleLine="true"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="سایز اطلاعات"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                        <EditText
+                            android:id="@+id/b_register_a_bodysize"
+                            android:layout_width="82dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp"
+                            android:singleLine="true"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="سایز عنوان‌ها"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                        <EditText
+                            android:id="@+id/b_register_a_titlesize"
+                            android:layout_width="82dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp"
+                            android:singleLine="true"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="2"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="زمان هشدار اطلاعات قدیمی (دقیقه)"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="12sp" />
+
+                        <EditText
+                            android:id="@+id/b_register_a_updatealarmtime"
+                            android:layout_width="82dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp"
+                            android:singleLine="true"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="3dp"
+                android:text="گزینه‌های برنامه"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="نمایش مانده حساب مشتری"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="13sp" />
+
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_customercredit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-
-                            />
-
+                            android:minHeight="0dp" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
+
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:text="سرویس کوثر"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_kowsarservice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="بروز رسانی خودکار"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="بروزرسانی خودکار"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_autorep"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:text="نمایش خطی کالا"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_lineview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:text="@string/config_off"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_selloff"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:text="بسته شدن کیبورد"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_keyboardrunnable"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
                             android:text="نمایش خصوصیات"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_showdetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="52dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="نمایش نوار مشتری و گروه و جستجوی پیشرفته"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="2"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="نمایش نوار مشتری، گروه و جستجوی پیشرفته"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="12sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_showsearchbandactive"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="نمایش عکس کالا "
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="نمایش عکس کالا"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_showgoodimage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="نمایش دکمه خرید "
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="نمایش دکمه خرید"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_showgoodbuybtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="امکان سفارش غیرفعال ها"
+                            android:gravity="start|center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="امکان سفارش کالاهای غیرفعال"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="13sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_canuseinactive"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
+                            android:minHeight="0dp" />
+
                     </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha="0.12"
+                        android:background="?attr/colorOnBackground" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:background="@drawable/bg_card"
-                        android:elevation="4dp">
+                        android:layout_height="52dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <!-- Label Text -->
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="هشدار اطلاعات قدیمی در صورت بروز رسانی نشدن"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="2"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="هشدار قدیمی بودن اطلاعات"
                             android:textColor="?attr/colorOnBackground"
-                            android:textSize="16sp"
-                            android:paddingStart="8dp" />
+                            android:textSize="12sp" />
 
-                        <!-- Switch -->
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/b_register_a_updatealarm"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:enabled="true"
-                            android:layout_gravity="center"
-                            />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:padding="5dp"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:layout_weight="0.5"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="شماره تلفن همراه"
-                            android:textColor="?attr/colorOnBackground"/>
-
-                        <EditText
-                            android:layout_weight="0.5"
-                            android:id="@+id/registr_phonenumber"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/bg_editbox"
-
-                            android:inputType="text"
-                            tools:ignore="LabelFor"
-                            android:gravity="center" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:padding="5dp"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:layout_weight="0.5"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="شماره تلفن همراه"
-                            android:textColor="?attr/colorOnBackground"/>
-
-                        <EditText
-                            android:layout_weight="0.5"
-                            android:id="@+id/b_register_a_phonenumber"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/bg_editbox"
-
-                            android:inputType="text"
-                            tools:ignore="LabelFor"
-                            android:gravity="center" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            app:cardBackgroundColor="?attr/colorSurface"
-                            app:strokeColor="?attr/colorPrimary"
-                            app:strokeWidth="2dp"
-                            >
-                            <LinearLayout
-                                xmlns:android="http://schemas.android.com/apk/res/android"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:padding="5dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Select Theme:"
-                                    android:layout_marginBottom="5dp"
-                                    android:textSize="18sp" />
-
-                                <Spinner
-                                    android:id="@+id/broker_themeSpinner"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:entries="@array/themes_array"
-                                    android:layout_marginBottom="5dp" />
-
-                                <Button
-                                    android:id="@+id/broker_applyButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Apply Theme"
-                                    android:layout_gravity="center_horizontal" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            app:cardBackgroundColor="?attr/colorSurface"
-                            app:strokeColor="?attr/colorPrimary"
-                            app:strokeWidth="2dp"
-                            >
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_margin="10sp"
-                                android:gravity="center_horizontal"
-                                android:padding="16dp"
-                                android:background="@drawable/bg_card"
-                                >
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:gravity="center_horizontal"
-                                    android:weightSum="2">
-
-                                    <!-- دکمه اصلی -->
-                                    <Button
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:text=" Button"
-                                        style="@style/Widget.MaterialComponents.Button"
-                                        android:backgroundTint="?attr/colorPrimary"
-                                        android:textColor="?attr/colorOnPrimary"
-                                        android:layout_margin="3dp"
-                                        android:layout_weight="1"/>
-
-                                    <!-- دکمه ثانویه -->
-                                    <Button
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:text=" Button"
-                                        style="@style/Widget.MaterialComponents.Button"
-                                        android:backgroundTint="?attr/colorSecondary"
-                                        android:textColor="?attr/colorOnSecondary"
-                                        android:layout_margin="3dp"
-
-                                        android:layout_weight="1"/>
-
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:gravity="center_horizontal"
-                                    android:weightSum="2">
-
-
-                                    <!-- متن -->
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="center"
-                                        android:layout_margin="3dp"
-                                        android:text="Text"
-                                        android:textColor="?attr/colorOnBackground"
-
-                                        android:layout_weight="1"/>
-                                    <EditText
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginBottom="5dp"
-                                        android:hint="Enter text"
-                                        android:gravity="center"
-
-                                        android:background="@drawable/bg_editbox"
-                                        android:textColor="?attr/colorOnBackground"
-                                        android:padding="8dp"
-                                        android:autofillHints=""
-                                        tools:ignore="TextFields"
-                                        android:layout_weight="1"/>
-                                </LinearLayout>
-                                <!-- فیلد متن -->
-
-                            </LinearLayout>
-
-                        </com.google.android.material.card.MaterialCardView>
+                            android:minHeight="0dp" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </androidx.core.widget.NestedScrollView>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:text="شماره تلفن همراه"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/registr_phonenumber"
+                    android:layout_width="150dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/bg_editbox"
+                    android:gravity="center"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:singleLine="true"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="13sp"
+                    tools:ignore="LabelFor" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start|center_vertical"
+                    android:text="شماره تلفن همراه"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="13sp" />
+
+                <EditText
+                    android:id="@+id/b_register_a_phonenumber"
+                    android:layout_width="150dp"
+                    android:layout_height="34dp"
+                    android:background="@drawable/bg_editbox"
+                    android:gravity="center"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:singleLine="true"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="13sp"
+                    tools:ignore="LabelFor" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="3dp"
+                android:text="انتخاب پوسته"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="3dp">
+
+                    <TextView
+                        android:layout_width="72dp"
+                        android:layout_height="match_parent"
+                        android:gravity="start|center_vertical"
+                        android:paddingStart="4dp"
+                        android:text="پوسته"
+                        android:textColor="?attr/colorOnBackground"
+                        android:textSize="13sp" />
+
+                    <Spinner
+                        android:id="@+id/broker_themeSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_editbox"
+                        android:entries="@array/themes_array"
+                        android:gravity="center"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp" />
+
+                    <Button
+                        android:id="@+id/broker_applyButton"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="76dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="3dp"
+                        android:backgroundTint="?attr/colorSecondary"
+                        android:gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
+                        android:text="اعمال"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="8dp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="78dp"
+                android:layout_marginTop="4dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            style="@style/Widget.MaterialComponents.Button"
+                            android:layout_width="0dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="2dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="?attr/colorPrimary"
+                            android:gravity="center"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:text="دکمه اصلی"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:textSize="10sp"
+                            app:cornerRadius="7dp" />
+
+                        <Button
+                            style="@style/Widget.MaterialComponents.Button"
+                            android:layout_width="0dp"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="2dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="?attr/colorSecondary"
+                            android:gravity="center"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:text="دکمه ثانویه"
+                            android:textColor="?attr/colorOnSecondary"
+                            android:textSize="10sp"
+                            app:cornerRadius="7dp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="2dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="نمونه متن"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="11sp" />
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_height="32dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_editbox"
+                            android:gravity="center"
+                            android:hint="نمونه ورودی"
+                            android:maxLines="1"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:singleLine="true"
+                            android:textColor="?attr/colorOnBackground"
+                            android:textSize="11sp"
+                            tools:ignore="TextFields" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+    </androidx.core.widget.NestedScrollView>
 
+    <Button
+        android:id="@+id/b_register_a_btn"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:gravity="center"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="@string/registeractivity_save"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:cornerRadius="10dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

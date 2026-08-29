@@ -69,30 +69,39 @@ public class Ocr_StackEnumeration_Good_ListApi_Adapter extends RecyclerView.Adap
 
         holder.stackenum_good_tv_goodname.setText(NumberFunctions.PerisanNumber(goods.get(position).getGoodName()));
         holder.stackenum_good_tv_maxsellprice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(goods.get(position).getMaxSellPrice()))+""));
-
         holder.stackenum_good_tv_firstnum.setText(NumberFunctions.PerisanNumber(goods.get(position).getFirstNumeration()));
 
         holder.stackenum_good_ll_firstnum.setVisibility(View.GONE);
-
         holder.stackenum_good_ll_secondnum.setVisibility(View.GONE);
         holder.stackenum_good_ll_thirdnum.setVisibility(View.GONE);
 
 
+        try {
+            String value = goods.get(position).getFirstNumeration();
+
+            double firstNumeration = value == null ? 0 : Double.parseDouble(value);
+
+            holder.stackenum_rltv_ll.setBackgroundColor(
+                    firstNumeration > 0
+                            ? mContext.getResources().getColor(R.color.red_100)
+                            : mContext.getResources().getColor(R.color.white)
+            );
+
+        } catch (NumberFormatException e) {
+            holder.stackenum_rltv_ll.setBackgroundColor(
+                    mContext.getResources().getColor(R.color.white)
+            );
+        }
         holder.stackenum_location_btn.setOnClickListener(v -> {
-
-
-
             if (!callMethod.ReadBoolan("HintMoghayerat")){
                 ocr_action.StackEnum_good(goods.get(position),StackEnumerationCode,LocationCode);
 
             }else{
                 ocr_action.StackEnum_good_hint_moghayerat(goods.get(position),StackEnumerationCode,LocationCode);
             }
-
-
-
-
         });
+
+
 
     }
 
