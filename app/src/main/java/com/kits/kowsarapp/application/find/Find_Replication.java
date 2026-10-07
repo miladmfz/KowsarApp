@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -50,13 +50,14 @@ public class Find_Replication {
             dialog();
             tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی تنظیم جدول"));
             Call<RetrofitResponse> call1 = find_apiInterface.GetGoodType("GetGoodType");
-            callMethod.Log("kowsar = "+call1.request() );
-            callMethod.Log("kowsar = "+call1.request().toString() );
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
+                    if (!hasColumns(response)) {
+                        handleInvalidResponse("Find GetGoodType");
+                        return;
+                    }
+                    try {
                         ArrayList<Column> columns = response.body().getColumns();
                         for (Column column : columns) {
                             find_dbh.ReplicateGoodtype(column);
@@ -65,41 +66,46 @@ public class Find_Replication {
                         call2.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                if (response.isSuccessful()) {
-                                    assert response.body() != null;
+                                if (!hasColumns(response)) {
+                                    handleInvalidResponse("Find GetColumnList");
+                                    return;
+                                }
+                                try {
                                     ArrayList<Column> columns = response.body().getColumns();
                                     for (Column column : columns) {
                                         find_dbh.ReplicateColumn(column, 1);
                                     }
                                     Closedialog();
+                                } catch (RuntimeException exception) {
+                                    handleProcessingFailure("Find GetColumnList", exception);
                                 }
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                try {
-                                    // 🟢 بررسی وضعیت اتصال
-                                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                    } else if (NetworkUtils.isVPNActive()) {
-                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                    } else {
-                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                        } else {
-                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    callMethod.Log("Network check error: " + e.getMessage());
-                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                }
+                                Closedialog();
+                                Base_NetworkFailure.show(
+                                        mContext,
+                                        callMethod,
+                                        "Find GetColumnList",
+                                        call,
+                                        t
+                                );
                             }
                         });
+                    } catch (RuntimeException exception) {
+                        handleProcessingFailure("Find GetGoodType", exception);
                     }
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    Closedialog();
+                    Base_NetworkFailure.show(
+                            mContext,
+                            callMethod,
+                            "Find GetGoodType",
+                            call,
+                            t
+                    );
                 }
             });
         }
@@ -119,9 +125,33 @@ public class Find_Replication {
 
     public void Closedialog() {
 
-        dialog.dismiss();
+        try {
+            if (dialog.isShowing()) dialog.dismiss();
+        } catch (RuntimeException exception) {
+            callMethod.Log("Find replication dialog close failed: "
+                    + exception.getClass().getSimpleName());
+        }
 
 
+    }
+
+    private boolean hasColumns(Response<RetrofitResponse> response) {
+        return response.isSuccessful()
+                && response.body() != null
+                && response.body().getColumns() != null;
+    }
+
+    private void handleInvalidResponse(String operation) {
+        Closedialog();
+        callMethod.Log(operation + " response is empty or invalid");
+        callMethod.showToast("پاسخ بروزرسانی تنظیم جدول معتبر نیست");
+    }
+
+    private void handleProcessingFailure(String operation, RuntimeException exception) {
+        Closedialog();
+        callMethod.Log(operation + " processing failed: "
+                + exception.getClass().getSimpleName());
+        callMethod.showToast("بروزرسانی تنظیم جدول کامل نشد");
     }
 
 

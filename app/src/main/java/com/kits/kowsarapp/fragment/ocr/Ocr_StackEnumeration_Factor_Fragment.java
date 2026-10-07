@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,9 +31,11 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_StackEnumeration_Factor_Check_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.ocr.OcrFragmentResponsePolicy;
 import com.kits.kowsarapp.application.ocr.Ocr_Print;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -61,6 +62,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
     Intent intent;
     View view;
     Dialog dialogProg;
+    private boolean viewActive;
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
@@ -114,6 +116,53 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 
     Integer Sum_Confirm_Amount=0;
 
+    private boolean canHandleUiCallback() {
+        return viewActive
+                && isAdded()
+                && getView() != null
+                && getActivity() != null
+                && !getActivity().isFinishing()
+                && !getActivity().isDestroyed();
+    }
+
+    private void dismissProgressSafely() {
+        if (dialogProg == null || !dialogProg.isShowing()) return;
+        try {
+            dialogProg.dismiss();
+        } catch (RuntimeException exception) {
+            if (callMethod != null) {
+                callMethod.Log("OCR progress dismiss failed: "
+                        + exception.getClass().getSimpleName());
+            }
+        }
+    }
+
+    private void reportNetworkFailure(
+            String operation,
+            Call<?> call,
+            Throwable throwable,
+            boolean dismissProgress
+    ) {
+        if (dismissProgress) dismissProgressSafely();
+        Base_NetworkFailure.show(getActivity(), callMethod, operation, call, throwable);
+    }
+
+    private OcrFragmentResponsePolicy.DoubleCheckAction doubleCheckAction(
+            Response<RetrofitResponse> response,
+            String operation
+    ) {
+        RetrofitResponse body = response.body();
+        if (body == null) {
+            callMethod.Log(operation + " returned empty response body");
+            return OcrFragmentResponsePolicy.DoubleCheckAction.NONE;
+        }
+        return OcrFragmentResponsePolicy.doubleCheckAction(body.getText());
+    }
+
+    private int configuredTextSize(String key, int defaultValue) {
+        return Math.max(1, SafeValueParser.intOrDefault(callMethod.ReadString(key), defaultValue));
+    }
+
     public String getState() {
         return state;
     }
@@ -159,6 +208,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewActive = true;
 
         try {
             callMethod = new CallMethod(requireActivity());
@@ -166,7 +216,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
             ocr_action = new Ocr_Action(requireActivity());
             apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
             secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
-            handler=new Handler();
+            handler=new Handler(Looper.getMainLooper());
             ocr_print = new Ocr_Print(requireActivity());
             for (final String[] ignored : arraygood_shortage) {
                 arraygood_shortage.add(new String[]{"goodcode", "amount "});
@@ -182,6 +232,19 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
             callMethod.Log(e.getMessage());
 
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        viewActive = false;
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+        dismissProgressSafely();
+        view = null;
+        ll_main = null;
+        scrollView_main = null;
+        super.onDestroyView();
     }
 
 
@@ -258,7 +321,9 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 
                 } else if (ocr_good_single.getFormNo() != null) {
 
-                    int FormNo = Integer.parseInt(ocr_good_single.getFormNo());  // Ensure this value is of type double
+                    int FormNo = SafeValueParser.intOrDefault(
+                            ocr_good_single.getFormNo(), Integer.MIN_VALUE
+                    );
 
 //                    if (callMethod.ReadString("StackCategory").equals("انبار1ب1") && FormNo >= 106000 && FormNo <= 114999) {
 //                        ocr_goods_visible.add(ocr_good_single);
@@ -365,7 +430,8 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 
 
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+        handler.postDelayed(() -> {
+            if (!canHandleUiCallback()) return;
 
             for (int i = 0; i < ll_good_body_detail.getChildCount(); i++) {
                 View child = ll_good_body_detail.getChildAt(i);
@@ -405,7 +471,8 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 //                                                        //edBarcode1.requestFocus();
 //                                                        edBarcode1.selectAll();
 //                                                    }, 300);  // یه تاخیر کوتاه برای برگشت فوکوس
-                                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                                    handler.postDelayed(() -> {
+                                                        if (!canHandleUiCallback()) return;
                                                         EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_inventorycheck_a_barcode);
 
 
@@ -451,6 +518,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if (!canHandleUiCallback()) return;
                     if(response.isSuccessful()) {
                         dialogProg.dismiss();
                         intent = new Intent(requireActivity(), Ocr_StackEnumeration_Factor_Check_Activity.class);
@@ -466,12 +534,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
+                    reportNetworkFailure("SetOcrFactorExplain", call, t, false);
                 }
             });
         });
@@ -509,6 +572,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                if (!canHandleUiCallback()) return;
                                 if(response.isSuccessful()) {
                                     dialogProg.dismiss();
 
@@ -524,12 +588,15 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                                     call1.enqueue(new Callback<RetrofitResponse>() {
                                         @Override
                                         public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                                            if (!canHandleUiCallback()) return;
                                             if(response.isSuccessful()) {
                                                 ocr_action.checkSumAmount(factor);
-                                                if (response.body().getText().equals("HasNotDoubleCheck")){
+                                                OcrFragmentResponsePolicy.DoubleCheckAction action =
+                                                        doubleCheckAction(response, "OcrDoubleCheck");
+                                                if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PACK_DETAIL){
                                                     ocr_action.Pack_detail(factor,"0");
 
-                                                }else if (response.body().getText().equals("HasDoubleCheck")){
+                                                }else if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PRINT){
                                                     ocr_print.Printing(factor,ocr_goods_visible,"0","0");
                                                 }
 
@@ -537,24 +604,8 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                                         }
                                         @Override
                                         public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                            try {
-                                                // 🟢 بررسی وضعیت اتصال
-                                                if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                                    callMethod.showToast("اتصال اینترنت قطع است!");
-                                                } else if (NetworkUtils.isVPNActive()) {
-                                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                                } else {
-                                                    String serverUrl = callMethod.ReadString("ServerURLUse");
-                                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                                    } else {
-                                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                                    }
-                                                }
-                                            } catch (Exception e) {
-                                                callMethod.Log("Network check error: " + e.getMessage());
-                                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                            }                                        }
+                                            reportNetworkFailure("OcrDoubleCheck", call1, t, false);
+                                        }
                                     });
 
 
@@ -563,24 +614,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                try {
-                                    // 🟢 بررسی وضعیت اتصال
-                                    if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                    } else if (NetworkUtils.isVPNActive()) {
-                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                    } else {
-                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                        } else {
-                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    callMethod.Log("Network check error: " + e.getMessage());
-                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                }
+                                reportNetworkFailure("CheckState", call, t, false);
                             }
                         });
 
@@ -606,6 +640,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                        if (!canHandleUiCallback()) return;
                         if(response.isSuccessful()) {
                             dialogProg.dismiss();
 
@@ -621,12 +656,15 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                             call1.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                                    if (!canHandleUiCallback()) return;
                                     if(response.isSuccessful()) {
                                         ocr_action.checkSumAmount(factor);
-                                        if (response.body().getText().equals("HasNotDoubleCheck")){
+                                        OcrFragmentResponsePolicy.DoubleCheckAction action =
+                                                doubleCheckAction(response, "OcrDoubleCheck");
+                                        if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PACK_DETAIL){
                                             ocr_action.Pack_detail(factor,"0");
 
-                                        }else if (response.body().getText().equals("HasDoubleCheck")){
+                                        }else if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PRINT){
                                             ocr_print.Printing(factor,ocr_goods_visible,"0","0");
                                         }
 
@@ -634,24 +672,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                                 }
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                    try {
-                                        // 🟢 بررسی وضعیت اتصال
-                                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                            callMethod.showToast("اتصال اینترنت قطع است!");
-                                        } else if (NetworkUtils.isVPNActive()) {
-                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                        } else {
-                                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                            } else {
-                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        callMethod.Log("Network check error: " + e.getMessage());
-                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                    }
+                                    reportNetworkFailure("OcrDoubleCheck", call1, t, false);
                                 }
                             });
 
@@ -661,24 +682,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                     }
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }
+                        reportNetworkFailure("CheckState", call, t, false);
                     }
                 });
             }
@@ -736,10 +740,10 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                                 call.enqueue(new Callback<RetrofitResponse>() {
                                     @Override
                                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                        if (!canHandleUiCallback()) return;
                                         if(response.isSuccessful()) {
                                             conter_confirm = conter_confirm +1;
                                             if(conter_confirm==Array_GoodCodesCheck_count){
-                                                assert response.body() != null;
                                                 intent = new Intent(requireActivity(), Ocr_StackEnumeration_Factor_Check_Activity.class);
                                                 intent.putExtra("ScanResponse", BarcodeScan);
                                                 intent.putExtra("State", "0");
@@ -753,27 +757,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                                     }
                                     @Override
                                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                        try {
-                                            // 🟢 بررسی وضعیت اتصال
-                                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                                callMethod.showToast("اتصال اینترنت قطع است!");
-                                            } else if (NetworkUtils.isVPNActive()) {
-                                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                            } else {
-                                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                                } else {
-                                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            callMethod.Log("Network check error: " + e.getMessage());
-                                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                        }
-                                        dialogProg.dismiss();
-                                        callMethod.Log(t.getMessage());
-
+                                        reportNetworkFailure("ConfirmOcrGood", call, t, true);
                                     }
                                 });
 
@@ -823,10 +807,10 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                if (!canHandleUiCallback()) return;
                                 if(response.isSuccessful()) {
                                     conter_confirm = conter_confirm +1;
                                     if(conter_confirm==Array_GoodCodesCheck_count){
-                                        assert response.body() != null;
                                         intent = new Intent(requireActivity(), Ocr_StackEnumeration_Factor_Check_Activity.class);
                                         intent.putExtra("ScanResponse", BarcodeScan);
                                         intent.putExtra("State", "0");
@@ -840,27 +824,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                try {
-                                    // 🟢 بررسی وضعیت اتصال
-                                    if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                    } else if (NetworkUtils.isVPNActive()) {
-                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                    } else {
-                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                        } else {
-                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    callMethod.Log("Network check error: " + e.getMessage());
-                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                }
-                                dialogProg.dismiss();
-                                callMethod.Log(t.getMessage());
-
+                                reportNetworkFailure("ConfirmOcrGood", call, t, true);
                             }
                         });
 
@@ -963,16 +927,16 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
         btn_print.setGravity(Gravity.CENTER);
     }
     public void setTextSize(){
+        int titleSize = configuredTextSize("TitleSize", 14);
         tv_company.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_appocrfactorexplain.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factorcode.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factordate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         tv_factorexplain.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        btn_confirm.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        btn_send.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        btn_set_stack.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        btn_print.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        btn_print.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        btn_confirm.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
+        btn_send.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
+        btn_set_stack.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
+        btn_print.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
 
     }
     public void setBackgroundResource(){
@@ -1069,12 +1033,13 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
         tv_good_part3.setGravity(Gravity.CENTER);
 
 
-        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))-10);
-        tv_good_part1.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        tv_good_part2.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))+3);
+        int titleSize = configuredTextSize("TitleSize", 14);
+        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.max(1, titleSize - 10));
+        tv_good_part1.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
+        tv_good_part2.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize + 3);
         tv_good_part2.setTypeface(null, Typeface.BOLD);
 
-        tv_good_part3.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        tv_good_part3.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
 
 
         int checkBoxId = View.generateViewId();
@@ -1127,7 +1092,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
             if(good_detial.getShortageAmount()==null){
                 callMethod.Log("ShortageAmount is null");
             }else {
-                if(Integer.parseInt(good_detial.getShortageAmount())>0) {
+                if(SafeValueParser.intOrDefault(good_detial.getShortageAmount(), 0)>0) {
                     tv_good_part2.setText(NumberFunctions.PerisanNumber(good_detial.getShortageAmount() + ""));
                     tv_good_part2.setTextColor(requireActivity().getColor(R.color.red_800));
                 }
@@ -1289,7 +1254,9 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
         if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
             int amount = 0;
             try {
-                amount = Integer.parseInt(ocr_goods_visible.get(correct_row).getFacAmount());
+                amount = SafeValueParser.intOrDefault(
+                        ocr_goods_visible.get(correct_row).getFacAmount(), 0
+                );
             } catch (Exception e) {
                 amount = 0;
             }
@@ -1336,7 +1303,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
             }
 
             // ✅ نمایش جمع جدید (در TextView یا Log)
-            Log.e("SUM_DEBUG", "Sum_Confirm_Amount: " + Sum_Confirm_Amount);
+            callMethod.Log("Confirmed stack amount recalculated");
             // یا اگر TextView داری:
             // txtSumConfirmAmount.setText(String.valueOf(Sum_Confirm_Amount));
 
@@ -1395,6 +1362,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                        if (!canHandleUiCallback()) return;
                         if (response.isSuccessful()) {
                             callMethod.showToast("تاییده ارسال شد.");
                             dialogProg.dismiss();
@@ -1411,15 +1379,16 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
                             call1.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                                    if (!canHandleUiCallback()) return;
                                     if (response.isSuccessful()) {
-                                        dialogProg.dismiss();
-
-                                        assert response.body() != null;
-                                        if (response.body().getText().equals("HasNotDoubleCheck")) {
+                                        dismissProgressSafely();
+                                        OcrFragmentResponsePolicy.DoubleCheckAction action =
+                                                doubleCheckAction(response, "OcrDoubleCheck");
+                                        if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PACK_DETAIL) {
                                             ocr_action.checkSumAmount(factor);
 
 
-                                        } else if (response.body().getText().equals("HasDoubleCheck")) {
+                                        } else if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PRINT) {
                                             ocr_print.Printing(factor, ocr_goods_visible, "0", "0");
                                         }
 
@@ -1428,24 +1397,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                    try {
-                                        // 🟢 بررسی وضعیت اتصال
-                                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                            callMethod.showToast("اتصال اینترنت قطع است!");
-                                        } else if (NetworkUtils.isVPNActive()) {
-                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                        } else {
-                                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                            } else {
-                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        callMethod.Log("Network check error: " + e.getMessage());
-                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                    }
+                                    reportNetworkFailure("OcrDoubleCheck", call1, t, false);
                                 }
                             });
 
@@ -1456,26 +1408,7 @@ public class Ocr_StackEnumeration_Factor_Fragment extends Fragment implements On
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }
-                        dialogProg.dismiss();
-                        callMethod.Log(t.getMessage());
+                        reportNetworkFailure("CheckState", call, t, true);
                     }
                 });
 

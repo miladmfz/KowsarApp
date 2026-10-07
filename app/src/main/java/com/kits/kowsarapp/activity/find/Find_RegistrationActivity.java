@@ -15,8 +15,9 @@ import com.kits.kowsarapp.R;
 
 import com.kits.kowsarapp.adapter.base.Base_ThemeSpinnerAdapter;
 import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.find.FindRegistrationPolicy;
 import com.kits.kowsarapp.application.find.Find_Replication;
 
 import com.kits.kowsarapp.databinding.FindActivityRegistrationBinding;
@@ -53,6 +54,7 @@ public class Find_RegistrationActivity extends AppCompatActivity {
     Find_APIInterface find_apiInterface;
     ArrayList<String> SellBroker_Names = new ArrayList<>();
     ArrayList<SellBroker> SellBrokers = new ArrayList<>();
+    private Call<RetrofitResponse> sellBrokerCall;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,73 +77,68 @@ public class Find_RegistrationActivity extends AppCompatActivity {
         find_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
         base_dbh = new Base_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
 
-        Call<RetrofitResponse> call1 = find_apiInterface.GetSellBroker("GetSellBroker");
-        call1.enqueue(new Callback<RetrofitResponse>() {
+        sellBrokerCall = find_apiInterface.GetSellBroker("GetSellBroker");
+        sellBrokerCall.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    SellBrokers.clear();
-                    SellBrokers = response.body().getSellBrokers();
-                    SellBroker sellBroker= new SellBroker();
-                    sellBroker.setBrokerCode("0");
-                    sellBroker.setBrokerNameWithoutType("بازاریاب تعریف نشده");
-                    SellBrokers.add(sellBroker);
-                    for (SellBroker sb : SellBrokers) {
-                        SellBroker_Names.add(sb.getBrokerNameWithoutType());
-                    }
-                    brokerViewConfig();
+                if (!canUpdateUi()) return;
+
+                RetrofitResponse body = response.body();
+                if (!response.isSuccessful() || body == null) {
+                    callMethod.Log("Find GetSellBroker response invalid: HTTP "
+                            + response.code());
+                    showBrokerOptions(null);
+                    return;
                 }
+                showBrokerOptions(body.getSellBrokers());
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Find_RegistrationActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
-                SellBroker sellBroker= new SellBroker();
-                sellBroker.setBrokerCode("0");
-                sellBroker.setBrokerNameWithoutType("بازاریاب تعریف نشده");
-                SellBrokers.add(sellBroker);
-                brokerViewConfig();
-
+                Base_NetworkFailure.show(
+                        Find_RegistrationActivity.this,
+                        callMethod,
+                        "Find GetSellBroker",
+                        call,
+                        t
+                );
+                if (!canUpdateUi()) return;
+                showBrokerOptions(null);
             }
         });
 
     }
 
+    private void showBrokerOptions(ArrayList<SellBroker> responseBrokers) {
+        if (!canUpdateUi()) return;
+        SellBrokers = FindRegistrationPolicy.normalizedBrokers(
+                responseBrokers,
+                "بازاریاب تعریف نشده"
+        );
+        SellBroker_Names = FindRegistrationPolicy.brokerNames(SellBrokers);
+        brokerViewConfig();
+    }
+
     public void brokerViewConfig() {
+        if (!canUpdateUi()) return;
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, SellBroker_Names);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.findRegisterASpinnerbroker.setAdapter(spinner_adapter);
-        int possellbroker=0;
-        for (SellBroker sellBroker:SellBrokers){
-            if (sellBroker.getBrokerCode().equals(find_dbh.ReadConfig("BrokerCode"))){
-                possellbroker=SellBrokers.indexOf(sellBroker);
-            }
-        }
+        int possellbroker = FindRegistrationPolicy.selectedIndex(
+                SellBrokers,
+                find_dbh.ReadConfig("BrokerCode")
+        );
 
         binding.findRegisterASpinnerbroker.setSelection(possellbroker);
         binding.findRegisterASpinnerbroker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                find_dbh.SaveConfig("BrokerCode",SellBrokers.get(position).getBrokerCode());
+                if (!canUpdateUi()) return;
+                String brokerCode = FindRegistrationPolicy.brokerCodeAt(
+                        SellBrokers,
+                        position
+                );
+                find_dbh.SaveConfig("BrokerCode", brokerCode);
                 binding.findRegisterABroker.setText(NumberFunctions.PerisanNumber(find_dbh.ReadConfig("BrokerCode")));
 
             }
@@ -345,7 +342,16 @@ public class Find_RegistrationActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (sellBrokerCall != null) sellBrokerCall.cancel();
+        if (find_replication != null) find_replication.Closedialog();
+        if (find_dbh != null) find_dbh.close();
+        if (base_dbh != null) base_dbh.close();
+        binding = null;
         super.onDestroy();
+    }
+
+    private boolean canUpdateUi() {
+        return binding != null && !isFinishing() && !isDestroyed();
     }
 
 

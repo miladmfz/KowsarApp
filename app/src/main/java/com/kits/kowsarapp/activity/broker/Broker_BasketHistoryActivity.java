@@ -264,4 +264,12 @@ public class Broker_BasketHistoryActivity extends AppCompatActivity {
                 }
         );
     }
+
+    @Override
+    protected void onDestroy() {
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+        }
+        super.onDestroy();
+    }
 }

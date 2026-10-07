@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.webService.base.APIClient;
@@ -138,24 +138,9 @@ public class Broker_SliderAdapter extends SliderViewAdapter<Broker_SliderAdapter
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(mcontext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }                }
+                    Base_NetworkFailure.show(
+                            mcontext, callMethod, "Broker slider image", call2, t);
+                }
             });
 
         }

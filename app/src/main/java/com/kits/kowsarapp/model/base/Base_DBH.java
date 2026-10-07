@@ -6,13 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.location.LocationResult;
-import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ThirdPartyResult;
 
@@ -20,218 +14,218 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class Base_DBH extends SQLiteOpenHelper {
-    CallMethod callMethod;
-    Cursor cursor;
-    String query = "";
 
-    public Base_DBH(Context context, String DATABASE_NAME) {
-        super(context, DATABASE_NAME, null, 1);
-        this.callMethod = new CallMethod(context);
+    public static final int DATABASE_VERSION = 1;
+    private final CallMethod callMethod;
+
+    public Base_DBH(Context context, String databaseName) {
+        super(context, databaseName, null, DATABASE_VERSION);
+        callMethod = new CallMethod(context);
     }
-
 
     public void CreateActivationDb() {
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS Activation (" +
-                "AppBrokerCustomerCode TEXT," +
-                "ActivationCode TEXT," +
-                "PersianCompanyName TEXT," +
-                "EnglishCompanyName TEXT," +
-                "ServerURL TEXT," +
-                "SQLiteURL TEXT," +
-                "MaxDevice TEXT," +
-                "UsedDevice TEXT," +
-                "SecendServerURL TEXT," +
-                "DbName TEXT," +
-                "AppType TEXT," +
-                "ServerPort TEXT," +
-                "ServerPathApi TEXT," +
-                "ServerIp TEXT)");
-        getWritableDatabase().close();
+        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS Activation ("
+                + "AppBrokerCustomerCode TEXT,"
+                + "ActivationCode TEXT,"
+                + "PersianCompanyName TEXT,"
+                + "EnglishCompanyName TEXT,"
+                + "ServerURL TEXT,"
+                + "SQLiteURL TEXT,"
+                + "MaxDevice TEXT,"
+                + "UsedDevice TEXT,"
+                + "SecendServerURL TEXT,"
+                + "DbName TEXT,"
+                + "AppType TEXT,"
+                + "ServerPort TEXT,"
+                + "ServerPathApi TEXT,"
+                + "ServerIp TEXT)");
     }
-
-
 
     public void CreatePaymentLog() {
-        getWritableDatabase().execSQL(
-                "CREATE TABLE IF NOT EXISTS PaymentLog (" +
-                        "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-
-                        "PreFac TEXT," +
-                        "SessionId TEXT," +
-
-                        "ResultCode TEXT," +
-                        "ResultDescription TEXT," +
-
-                        "TransactionAmount TEXT," +
-                        "ReferenceID TEXT," +
-                        "RetrievalReferencedNumber TEXT," +
-                        "MaskedCardNumber TEXT," +
-
-                        "TerminalID TEXT," +
-                        "DateOfTransaction TEXT," +
-                        "TimeOfTransaction TEXT," +
-
-                        "EchoData TEXT," +
-
-                        "RawJson TEXT," +        // کل JSON برگشتی از پوز
-                        "CreateDate TEXT" +      // زمان ثبت در برنامه
-                        ")"
-        );
-
-        getWritableDatabase().close();
+        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PaymentLog ("
+                + "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "PreFac TEXT,"
+                + "SessionId TEXT,"
+                + "ResultCode TEXT,"
+                + "ResultDescription TEXT,"
+                + "TransactionAmount TEXT,"
+                + "ReferenceID TEXT,"
+                + "RetrievalReferencedNumber TEXT,"
+                + "MaskedCardNumber TEXT,"
+                + "TerminalID TEXT,"
+                + "DateOfTransaction TEXT,"
+                + "TimeOfTransaction TEXT,"
+                + "EchoData TEXT,"
+                + "RawJson TEXT,"
+                + "CreateDate TEXT)");
     }
-
 
     public long InsertPaymentLog(
             String preFac,
-            ThirdPartyResult res,
+            ThirdPartyResult result,
             String rawJson
     ) {
-        callMethod.Log("preFac =" + preFac);
-
-
-        SQLiteDatabase db = getWritableDatabase();
-
-        ContentValues cv = new ContentValues();
-
-        cv.put("PreFac", preFac);
-        cv.put("SessionId", res.sessionId);
-
-        cv.put("ResultCode", res.resultCode);
-        cv.put("ResultDescription", res.resultDescription);
-
-        cv.put("TransactionAmount", res.transactionAmount);
-        cv.put("ReferenceID", res.referenceID);
-
-        cv.put(
-                "RetrievalReferencedNumber",
-                res.retrievalReferencedNumber == null
+        ContentValues values = new ContentValues();
+        values.put("PreFac", preFac);
+        values.put("SessionId", result.sessionId);
+        values.put("ResultCode", result.resultCode);
+        values.put("ResultDescription", result.resultDescription);
+        values.put("TransactionAmount", result.transactionAmount);
+        values.put("ReferenceID", result.referenceID);
+        values.put("RetrievalReferencedNumber",
+                result.retrievalReferencedNumber == null
                         ? null
-                        : String.valueOf(res.retrievalReferencedNumber)
-        );
-
-        cv.put("MaskedCardNumber", res.maskedCardNumber);
-
-        cv.put("TerminalID", res.terminalID);
-        cv.put("DateOfTransaction", res.dateOfTransaction);
-        cv.put("TimeOfTransaction", res.timeOfTransaction);
-
-        cv.put("EchoData", res.echoData);
-
-        cv.put("RawJson", rawJson);
-
-        cv.put(
-                "CreateDate",
-                new java.text.SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss",
-                        java.util.Locale.US
-                ).format(new java.util.Date())
-        );
-
-        long rowId = db.insert("PaymentLog", null, cv);
-        db.close();
-
-        return rowId;
+                        : String.valueOf(result.retrievalReferencedNumber));
+        values.put("MaskedCardNumber", result.maskedCardNumber);
+        values.put("TerminalID", result.terminalID);
+        values.put("DateOfTransaction", result.dateOfTransaction);
+        values.put("TimeOfTransaction", result.timeOfTransaction);
+        values.put("EchoData", result.echoData);
+        values.put("RawJson", rawJson);
+        values.put("CreateDate",
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+                        .format(new Date()));
+        return getWritableDatabase().insert("PaymentLog", null, values);
     }
-
-
-
 
     public void UpdateActivation(Activation activation) {
-
-        getWritableDatabase().execSQL("Update Activation set " +
-
-                "PersianCompanyName = '" + activation.getPersianCompanyName() + "' ," +
-                "EnglishCompanyName = '" + activation.getEnglishCompanyName() + "' ," +
-                "ServerURL = '" + activation.getServerURL() + "' ," +
-                "SQLiteURL = '" + activation.getSQLiteURL() + "' ," +
-                "MaxDevice = '" + activation.getMaxDevice() + "' ," +
-                "UsedDevice = '" + activation.getUsedDevice() + "' ," +
-                "ServerIp = '" + activation.getServerIp() + "' ," +
-                "ServerPort = '" + activation.getServerPort() + "' ," +
-                "ServerPathApi = '" + activation.getServerPathApi() + "' ," +
-                "SecendServerURL = '" + activation.getSecendServerURL() + "' ," +
-                "DbName = '" + activation.getDbName() + "' ," +
-                "AppType = '" + activation.getAppType() + "' " +
-                "Where ActivationCode= '" + activation.getActivationCode() + "'");
+        getWritableDatabase().update(
+                "Activation",
+                activationValues(activation, false),
+                "ActivationCode=?",
+                new String[]{legacyText(activation.getActivationCode())}
+        );
     }
-    public void UpdateUrl(String ActivationCode,String ServerURL) {
 
-        getWritableDatabase().execSQL("Update Activation set " +
-                "ServerURL = '" + ServerURL + "' " +
-                "Where ActivationCode= '" + ActivationCode + "'");
-
-
-
+    public void UpdateUrl(String activationCode, String serverUrl) {
+        ContentValues values = new ContentValues();
+        values.put("ServerURL", legacyText(serverUrl));
+        getWritableDatabase().update(
+                "Activation",
+                values,
+                "ActivationCode=?",
+                new String[]{legacyText(activationCode)}
+        );
     }
 
     @SuppressLint("Range")
     public ArrayList<Activation> getActivation() {
-        query = "Select * From Activation ORDER BY 1 DESC";
-        cursor = getWritableDatabase().rawQuery(query, null);
         ArrayList<Activation> activations = new ArrayList<>();
-
-        if (cursor != null) {
+        try (Cursor cursor = getReadableDatabase().rawQuery(
+                "SELECT * FROM Activation ORDER BY 1 DESC", null)) {
             while (cursor.moveToNext()) {
                 Activation activation = new Activation();
                 try {
-                    activation.setAppBrokerCustomerCode(cursor.getString(cursor.getColumnIndex("AppBrokerCustomerCode")));
-                    activation.setActivationCode(cursor.getString(cursor.getColumnIndex("ActivationCode")));
-                    activation.setPersianCompanyName(cursor.getString(cursor.getColumnIndex("PersianCompanyName")));
-                    activation.setEnglishCompanyName(cursor.getString(cursor.getColumnIndex("EnglishCompanyName")));
-                    activation.setServerURL(cursor.getString(cursor.getColumnIndex("ServerURL")));
-                    activation.setSQLiteURL(cursor.getString(cursor.getColumnIndex("SQLiteURL")));
-                    activation.setMaxDevice(cursor.getString(cursor.getColumnIndex("MaxDevice")));
-                    activation.setUsedDevice(cursor.getString(cursor.getColumnIndex("UsedDevice")));
-                    activation.setSecendServerURL(cursor.getString(cursor.getColumnIndex("SecendServerURL")));
+                    activation.setAppBrokerCustomerCode(cursor.getString(
+                            cursor.getColumnIndex("AppBrokerCustomerCode")));
+                    activation.setActivationCode(cursor.getString(
+                            cursor.getColumnIndex("ActivationCode")));
+                    activation.setPersianCompanyName(cursor.getString(
+                            cursor.getColumnIndex("PersianCompanyName")));
+                    activation.setEnglishCompanyName(cursor.getString(
+                            cursor.getColumnIndex("EnglishCompanyName")));
+                    activation.setServerURL(cursor.getString(
+                            cursor.getColumnIndex("ServerURL")));
+                    activation.setSQLiteURL(cursor.getString(
+                            cursor.getColumnIndex("SQLiteURL")));
+                    activation.setMaxDevice(cursor.getString(
+                            cursor.getColumnIndex("MaxDevice")));
+                    activation.setUsedDevice(cursor.getString(
+                            cursor.getColumnIndex("UsedDevice")));
+                    activation.setSecendServerURL(cursor.getString(
+                            cursor.getColumnIndex("SecendServerURL")));
                     activation.setDbName(cursor.getString(cursor.getColumnIndex("DbName")));
                     activation.setAppType(cursor.getString(cursor.getColumnIndex("AppType")));
                     activation.setServerIp(cursor.getString(cursor.getColumnIndex("ServerIp")));
-                    activation.setServerPort(cursor.getString(cursor.getColumnIndex("ServerPort")));
-                    activation.setServerPathApi(cursor.getString(cursor.getColumnIndex("ServerPathApi")));
-                } catch (Exception ignored) {
-                    callMethod.Log("db="+ignored.getMessage());
+                    activation.setServerPort(cursor.getString(
+                            cursor.getColumnIndex("ServerPort")));
+                    activation.setServerPathApi(cursor.getString(
+                            cursor.getColumnIndex("ServerPathApi")));
+                } catch (RuntimeException exception) {
+                    callMethod.Log("Activation row is incomplete");
                 }
                 activations.add(activation);
             }
         }
-        assert cursor != null;
-        cursor.close();
         return activations;
     }
 
-
     public void DeleteActivation(@NotNull Activation activation) {
-        getWritableDatabase().execSQL("Delete from Activation Where ActivationCode= '" + activation.getActivationCode() + "'");
-
+        getWritableDatabase().delete(
+                "Activation",
+                "ActivationCode=?",
+                new String[]{legacyText(activation.getActivationCode())}
+        );
     }
 
     public void InsertActivation(@NotNull Activation activation) {
+        SQLiteDatabase database = getWritableDatabase();
+        database.beginTransaction();
+        try {
+            boolean exists;
+            try (Cursor cursor = database.rawQuery(
+                    "SELECT 1 FROM Activation WHERE ActivationCode=? LIMIT 1",
+                    new String[]{legacyText(activation.getActivationCode())})) {
+                exists = cursor.moveToFirst();
+            }
 
-        query = "select * from Activation Where ActivationCode= '" + activation.getActivationCode() + "'";
-        cursor = getWritableDatabase().rawQuery(query, null);
-        if (cursor.getCount() > 0) {
-            UpdateActivation( activation);
-        } else {
-            getWritableDatabase().execSQL(" Insert Into Activation(AppBrokerCustomerCode,ActivationCode,PersianCompanyName, EnglishCompanyName,ServerURL,SQLiteURL,MaxDevice,UsedDevice,SecendServerURL,DbName,AppType,ServerIp,ServerPort,ServerPathApi)" +
-                     " Select '" + activation.getAppBrokerCustomerCode() + "','" + activation.getActivationCode() + "','" +
-                    activation.getPersianCompanyName() + "','" + activation.getEnglishCompanyName() + "','" +
-                    activation.getServerURL() + "','" + activation.getSQLiteURL() + "','" + activation.getMaxDevice() + "','" +
-                    activation.getUsedDevice() + "','" + activation.getSecendServerURL() + "','" + activation.getDbName() + "','" +
-                    activation.getAppType() + "','" + activation.getServerIp() + "','" + activation.getServerPort() + "','" +
-                    activation.getServerPathApi() + "'");
-
+            if (exists) {
+                database.update(
+                        "Activation",
+                        activationValues(activation, false),
+                        "ActivationCode=?",
+                        new String[]{legacyText(activation.getActivationCode())}
+                );
+            } else {
+                database.insertOrThrow(
+                        "Activation",
+                        null,
+                        activationValues(activation, true)
+                );
+            }
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
-
-
     }
 
+    private ContentValues activationValues(Activation activation, boolean includeCode) {
+        ContentValues values = new ContentValues();
+        values.put("AppBrokerCustomerCode",
+                legacyText(activation.getAppBrokerCustomerCode()));
+        if (includeCode) {
+            values.put("ActivationCode", legacyText(activation.getActivationCode()));
+        }
+        values.put("PersianCompanyName", legacyText(activation.getPersianCompanyName()));
+        values.put("EnglishCompanyName", legacyText(activation.getEnglishCompanyName()));
+        values.put("ServerURL", legacyText(activation.getServerURL()));
+        values.put("SQLiteURL", legacyText(activation.getSQLiteURL()));
+        values.put("MaxDevice", legacyText(activation.getMaxDevice()));
+        values.put("UsedDevice", legacyText(activation.getUsedDevice()));
+        values.put("ServerIp", legacyText(activation.getServerIp()));
+        values.put("ServerPort", legacyText(activation.getServerPort()));
+        values.put("ServerPathApi", legacyText(activation.getServerPathApi()));
+        values.put("SecendServerURL", legacyText(activation.getSecendServerURL()));
+        values.put("DbName", legacyText(activation.getDbName()));
+        values.put("AppType", legacyText(activation.getAppType()));
+        return values;
+    }
+
+    private static String legacyText(String value) {
+        return String.valueOf(value);
+    }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {}
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        // The activation database is initialized explicitly by CreateActivationDb().
+    }
+
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {}
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        // Version remains 1 until a real installed database can be migration-tested.
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -24,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.adapter.ocr.Ocr_FactorListLocal_Adapter;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.ocr.OcrFactorSelectionPolicy;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.kits.kowsarapp.R;
@@ -40,7 +42,9 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_header_recycler;
     private EditText edtsearch;
-    Handler handler;
+    final Handler handler = new Handler(Looper.getMainLooper());
+    final Handler lifecycleHandler = new Handler(Looper.getMainLooper());
+    Dialog dialog1;
     ArrayList<Factor> factors = new ArrayList<>();
     public ArrayList<String[]> Multi_sign = new ArrayList<>();
     public ArrayList<String> Multi_barcode = new ArrayList<>();
@@ -65,7 +69,7 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
         setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_factorlist_local);
 
-        Dialog dialog1 = new Dialog(this);
+        dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog1.setContentView(R.layout.ocr_spinner_box);
@@ -75,9 +79,10 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
         intent();
         Config();
         try {
-            Handler handler = new Handler();
-            handler.postDelayed(this::init, 100);
-            handler.postDelayed(dialog1::dismiss, 1000);
+            lifecycleHandler.postDelayed(() -> {
+                if (!isFinishing()) init();
+            }, 100);
+            lifecycleHandler.postDelayed(this::dismissLoadingDialog, 1000);
         } catch (Exception e) {
             callMethod.Log(e.getMessage());
         }
@@ -87,9 +92,8 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
 
     public void intent() {
         Bundle bundle = getIntent().getExtras();
-        assert bundle != null;
-        IsSent = bundle.getString("IsSent");
-        signature = bundle.getString("signature");
+        IsSent = bundle == null ? "" : safeString(bundle.getString("IsSent"), "");
+        signature = bundle == null ? "1" : safeString(bundle.getString("signature"), "1");
 
     }
 
@@ -108,7 +112,6 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
         mySwitch_activestack = findViewById(R.id.ocr_localfactor_a_switch);
 
         setSupportActionBar(toolbar);
-        handler = new Handler();
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         width = metrics.widthPixels;
@@ -124,9 +127,11 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
         edtsearch.setText(callMethod.ReadString("Last_search"));
 
         fab.setOnClickListener(v -> {
+            Multi_barcode.clear();
             for (String[] s : Multi_sign) {
-                Multi_barcode.add(s[0]);
+                if (s != null && s.length > 0) Multi_barcode.add(s[0]);
             }
+            if (Multi_barcode.isEmpty()) return;
             intent = new Intent(this, Ocr_PaintActivity.class);
             intent.putExtra("ScanResponse", "Multi_sign");
             intent.putExtra("FactorImage", "hasimage");
@@ -245,25 +250,40 @@ public class Ocr_FactorListLocalActivity extends AppCompatActivity {
 
     public void factor_select_function(String Factor_barcode, String Customer_code, int flag) {
         if (flag == 1) {
-            fab.setVisibility(View.VISIBLE);
-            Multi_sign.add(new String[]{Factor_barcode, Customer_code, ""});
-            item_multi.findItem(R.id.ocr_menu_multi).setVisible(true);
+            OcrFactorSelectionPolicy.addIfAbsent(Multi_sign, Factor_barcode, Customer_code);
 
         } else {
-            int b = 0, c = 0;
-            for (String[] s : Multi_sign) {
-
-                if (s[0].equals(Customer_code)) b = c;
-                c++;
-
-            }
-            Multi_sign.remove(b);
-            if (Multi_sign.size() < 1) {
-                fab.setVisibility(View.GONE);
-                ocr_factorListLocal_adapter.multi_select = false;
-                item_multi.findItem(R.id.ocr_menu_multi).setVisible(false);
-            }
+            OcrFactorSelectionPolicy.removeByBarcode(Multi_sign, Factor_barcode);
         }
+
+        boolean hasSelection = !Multi_sign.isEmpty();
+        fab.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
+        if (!hasSelection && ocr_factorListLocal_adapter != null) {
+            ocr_factorListLocal_adapter.multi_select = false;
+        }
+        if (item_multi != null && item_multi.findItem(R.id.ocr_menu_multi) != null) {
+            item_multi.findItem(R.id.ocr_menu_multi).setVisible(hasSelection);
+        }
+    }
+
+    private static String safeString(String value, String fallback) {
+        return value == null ? fallback : value;
+    }
+
+    private void dismissLoadingDialog() {
+        if (dialog1 != null && dialog1.isShowing() && !isFinishing()) {
+            dialog1.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacksAndMessages(null);
+        lifecycleHandler.removeCallbacksAndMessages(null);
+        if (dialog1 != null && dialog1.isShowing()) {
+            dialog1.dismiss();
+        }
+        super.onDestroy();
     }
 
     @Override

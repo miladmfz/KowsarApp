@@ -36,4 +36,10 @@ public class WManager extends Worker {
 //        return null;
     }
 
+    @Override
+    public void onStopped() {
+        replication.release();
+        super.onStopped();
+    }
+
 }

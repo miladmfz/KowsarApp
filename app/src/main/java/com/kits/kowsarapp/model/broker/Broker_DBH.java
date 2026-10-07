@@ -1,17 +1,18 @@
 package com.kits.kowsarapp.model.broker;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.StaleDataException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.text.TextUtils;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.NonNull;
@@ -20,6 +21,8 @@ import com.google.android.gms.location.LocationResult;
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ReleaseLog;
+import com.kits.kowsarapp.application.base.SafeListAccess;
 import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.Customer;
@@ -38,6 +41,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class Broker_DBH extends SQLiteOpenHelper {
     CallMethod callMethod;
@@ -62,8 +69,95 @@ public class Broker_DBH extends SQLiteOpenHelper {
     String BrokerStackString;
     String joinDetail;
     String joinbasket;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(4);
-    private static final String FTS_CONTENT_VERSION = "3";
+    private static final ThreadPoolExecutor ASYNC_EXECUTOR = createAsyncExecutor();
+    private static final String FTS_CONTENT_VERSION = "5";
+    private static final boolean GOOD_SEARCH_DEBUG = false;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final BrokerAsyncDispatcher asyncDispatcher =
+            new BrokerAsyncDispatcher(ASYNC_EXECUTOR, mainHandler::post);
+    private final ThreadLocal<Long> workerGeneration = new ThreadLocal<>();
+    private final BrokerDatabaseFailureGate databaseFailureGate =
+            new BrokerDatabaseFailureGate();
+
+    private static ThreadPoolExecutor createAsyncExecutor() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                4,
+                4,
+                30L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>()
+        );
+        executor.allowCoreThreadTimeOut(true);
+        return executor;
+    }
+
+    private long captureAsyncGeneration() {
+        return asyncDispatcher.captureGeneration();
+    }
+
+    private long currentAsyncGeneration() {
+        Long generation = workerGeneration.get();
+        return generation == null ? captureAsyncGeneration() : generation;
+    }
+
+    private void executeAsync(long generation, String operation, Runnable task) {
+        boolean accepted = asyncDispatcher.execute(generation, () -> {
+            workerGeneration.set(generation);
+            try {
+                task.run();
+            } finally {
+                workerGeneration.remove();
+            }
+        });
+        if (!accepted && asyncDispatcher.isCurrent(generation)) {
+            reportDbFailure(
+                    operation,
+                    new RejectedExecutionException("Broker async submission rejected")
+            );
+        }
+    }
+
+    private void postAsync(long generation, Runnable callback) {
+        asyncDispatcher.post(generation, callback);
+    }
+
+    private interface DbOperation<T> {
+        T run();
+    }
+
+    private <T> void executeDbAsync(
+            String operationName,
+            DbOperation<T> operation,
+            DbCallback<T> callback
+    ) {
+        long generation = captureAsyncGeneration();
+        executeAsync(generation, operationName, () -> {
+            try {
+                T result = operation.run();
+                if (callback != null) {
+                    postAsync(generation, () -> callback.onResult(result));
+                }
+            } catch (Exception exception) {
+                if (callback != null) {
+                    postAsync(generation, () -> callback.onError(exception));
+                }
+            }
+        });
+    }
+
+    private void reportDbFailure(String operation, Exception exception) {
+        if (databaseFailureGate.shouldReport(operation)) {
+            ReleaseLog.error("BrokerDB." + operation, exception);
+        }
+    }
+
+    private void reportDbFailure(Exception exception) {
+        String operation = BrokerDatabaseFailureGate.callerOperation(
+                new Throwable().getStackTrace(),
+                Broker_DBH.class.getName()
+        );
+        reportDbFailure(operation, exception);
+    }
 
     private static final String[] GOOD_FTS_SEARCH_COLUMNS = {
             "GoodCode",
@@ -107,8 +201,54 @@ public class Broker_DBH extends SQLiteOpenHelper {
             "Text5"
     };
 
-    private final Handler mainHandler =
-            new Handler(Looper.getMainLooper());
+    // Ranking is field-aware, while candidate search still uses ALL FTS fields above.
+    // This prevents long HTML/Text fields from outranking a direct title/code/barcode match.
+    private static final String[] GOOD_FTS_HIGH_PRIORITY_COLUMNS = {
+            "GoodCode",
+            "GoodMainCode",
+            "GoodName",
+            "GoodType",
+            "FirstBarCode"
+    };
+
+    private static final String[] GOOD_FTS_NORMAL_PRIORITY_COLUMNS = {
+            "GoodExplain1",
+            "GoodExplain2",
+            "GoodExplain3",
+            "GoodExplain4",
+            "GoodExplain5",
+            "GoodExplain6",
+
+            "Nvarchar1",
+            "Nvarchar2",
+            "Nvarchar3",
+            "Nvarchar4",
+            "Nvarchar5",
+            "Nvarchar6",
+            "Nvarchar7",
+            "Nvarchar8",
+            "Nvarchar9",
+            "Nvarchar10",
+            "Nvarchar11",
+            "Nvarchar12",
+            "Nvarchar13",
+            "Nvarchar14",
+            "Nvarchar15",
+            "Nvarchar16",
+            "Nvarchar17",
+            "Nvarchar18",
+            "Nvarchar19",
+            "Nvarchar20"
+    };
+
+    private static final String[] GOOD_FTS_LOW_PRIORITY_COLUMNS = {
+            "Text1",
+            "Text2",
+            "Text3",
+            "Text4",
+            "Text5"
+    };
+
     public Broker_DBH(Context context, String DATABASE_NAME) {
         super(context, DATABASE_NAME, null, 1);
         this.callMethod = new CallMethod(context);
@@ -119,9 +259,13 @@ public class Broker_DBH extends SQLiteOpenHelper {
         return getWritableDatabase();
     }
 
-    private void closeCursor(Cursor cursor) {
-        if (cursor != null && !cursor.isClosed()) {
-            cursor.close();
+    void closeCursor(Cursor cursor) {
+        try {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        } catch (IllegalStateException | StaleDataException | SQLiteException exception) {
+            reportDbFailure("closeCursor", exception);
         }
     }
     public interface DbCallback<T> {
@@ -178,6 +322,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         try {
 
+
+            // FTS table should exist even before the asynchronous index sync starts.
+            // Search will still fall back to the legacy LIKE path until FTSReady=1.
+            CreateGoodSearchFTSTables(database);
 
             database.execSQL("CREATE TABLE IF NOT EXISTS GoodSearchCache (GoodRef INTEGER, SearchToken TEXT)"   );
 
@@ -248,8 +396,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
             try {
                 database.execSQL("CREATE INDEX IF NOT EXISTS IX_CacheBarCode_GoodRef ON CacheBarCode (GoodRef)");
-            } catch (Exception e) {
-                callMethod.Log("CacheBarCode index error = " + e.getMessage());
+            } catch (SQLiteException e) {
+                reportDbFailure(e);
             }
 
             database.execSQL("CREATE INDEX IF NOT EXISTS IX_KsrImage_ObjectRef ON KsrImage (ObjectRef)");
@@ -299,20 +447,27 @@ public class Broker_DBH extends SQLiteOpenHelper {
                 database.execSQL("CREATE INDEX IF NOT EXISTS IX_JobPerson_CentralRef ON JobPerson (CentralRef)");
                 database.execSQL("CREATE INDEX IF NOT EXISTS IX_JobPerson_Good_JobPersonRef ON JobPerson_Good (JobPersonRef)");
                 database.execSQL("CREATE INDEX IF NOT EXISTS IX_JobPerson_Good_GoodRef ON JobPerson_Good (GoodRef)");
-            } catch (Exception ignored) {
+            } catch (SQLiteException exception) {
+                reportDbFailure("DatabaseCreate.optionalIndexes", exception);
             }
 
-        } catch (Exception e) {
+        } catch (SQLiteException e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void closedb() {
+        cancelPendingAsync();
         try {
             close();
-        } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+        } catch (IllegalStateException | SQLiteException e) {
+            reportDbFailure(e);
         }
+    }
+
+    public void cancelPendingAsync() {
+        asyncDispatcher.invalidate();
+        mainHandler.removeCallbacksAndMessages(null);
     }
 
 
@@ -375,7 +530,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                                 localCursor.getInt(localCursor.getColumnIndex("LastRepLogCodeDelete"))
                         );
 
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("GetReplicationTable.rowMapping", exception);
                     }
 
                     replicationModels.add(replicationModel);
@@ -384,7 +540,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -431,7 +587,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
                         tableDetail.setText(null);
 
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("GetTableDetail.rowMapping", exception);
                     }
 
                     tableDetails.add(tableDetail);
@@ -440,7 +597,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -489,10 +646,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
 
             int goodTypeCountInt =
-                    Integer.parseInt(goodtypecount);
+                    BrokerDbInputPolicy.nonNegativeCode(goodtypecount);
 
             int columnsCountInt =
-                    Integer.parseInt(columnscount);
+                    BrokerDbInputPolicy.nonNegativeCode(columnscount);
 
             if (goodTypeCountInt > 0) {
                 limitcolumn = columnsCountInt / goodTypeCountInt;
@@ -506,7 +663,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     "تنظیم جدول از سمت دیتابیس مشکل دارد"
             );
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
             limitcolumn = 0;
 
@@ -531,15 +688,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
         this.SH_goodamount = callMethod.ReadBoolan("GoodAmount");
         this.SH_ArabicText = callMethod.ReadBoolan("ArabicText");
 
-        try {
-            LimitAmount =
-                    String.valueOf(
-                            Integer.parseInt(SH_grid) * 11
-                    );
-        } catch (Exception e) {
-            LimitAmount = "11";
-            callMethod.Log(e.getMessage());
-        }
+        LimitAmount = String.valueOf(BrokerDbInputPolicy.gridLimit(SH_grid));
 
         BrokerStackString =
                 "Where StackRef in (" + SH_brokerstack + ")";
@@ -584,12 +733,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(
-                    "GetGoodTypeFromGood ERROR => code=" +
-                            code +
-                            " | " +
-                            e.getMessage()
-            );
+            reportDbFailure(e);
 
         } finally {
 
@@ -718,7 +862,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         );
 
                     } catch (Exception e) {
-                        callMethod.Log("GetColumns row ERROR => " + e.getMessage());
+                        reportDbFailure(e);
                     }
 
                     resultColumns.add(column);
@@ -727,7 +871,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log("GetColumns ERROR => " + e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -761,7 +905,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -801,7 +945,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     try {
                         itemColumn.setGoodType(localCursor.getString(localCursor.getColumnIndex("GoodType")));
                         itemColumn.setIsDefault(localCursor.getString(localCursor.getColumnIndex("IsDefault")));
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("GetAllGoodType.rowMapping", exception);
                     }
 
                     resultColumns.add(itemColumn);
@@ -809,7 +954,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
 
         } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(localCursor);
         }
@@ -831,21 +976,12 @@ public class Broker_DBH extends SQLiteOpenHelper {
         String search = GetRegionText(search_target);
         search = search.replaceAll("'", " ").trim();
 
-        try {
-            Integer.parseInt(aGroupCode);
-        } catch (Exception e) {
-            aGroupCode = "0";
-        }
-
-        int offsetValue = 0;
-
-        try {
-            offsetValue =
-                    Integer.parseInt(LimitAmount) *
-                            Integer.parseInt(MoreCallData);
-        } catch (Exception e) {
-            offsetValue = 0;
-        }
+        int groupCode = BrokerDbInputPolicy.nonNegativeCode(aGroupCode);
+        aGroupCode = String.valueOf(groupCode);
+        int offsetValue = BrokerDbInputPolicy.paginationOffset(
+                LimitAmount,
+                MoreCallData
+        );
 
         String selectQuery = "";
         String whereQuery;
@@ -984,7 +1120,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         BrokerStackString
                 );
 
-        if (Integer.parseInt(aGroupCode) > 0) {
+        if (groupCode > 0) {
 
             whereQuery =
                     whereQuery +
@@ -1010,7 +1146,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     orderQuery = orderQuery + " , ";
                 }
 
-                if (Integer.parseInt(column.getOrderIndex()) > 0) {
+                if (BrokerDbInputPolicy.orderIndex(column.getOrderIndex()) > 0) {
 
                     if (column.getColumnName().equals("Date")) {
 
@@ -1082,81 +1218,20 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
             if (localCursor != null) {
 
+                int debugResultIndex = 0;
+
                 while (localCursor.moveToNext()) {
+
+                    debugResultIndex++;
 
                     Good itemGood = new Good();
 
                     for (Column column : localColumns) {
-
-                        try {
-
-                            switch (column.getColumnType()) {
-
-                                case "0":
-
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            localCursor.getString(
-                                                    localCursor.getColumnIndex(
-                                                            column.getColumnName()
-                                                    )
-                                            )
-                                    );
-
-                                    break;
-
-                                case "1":
-
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(
-                                                    localCursor.getInt(
-                                                            localCursor.getColumnIndex(
-                                                                    column.getColumnName()
-                                                            )
-                                                    )
-                                            )
-                                    );
-
-                                    break;
-
-                                case "2":
-
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(
-                                                    localCursor.getFloat(
-                                                            localCursor.getColumnIndex(
-                                                                    column.getColumnName()
-                                                            )
-                                                    )
-                                            )
-                                    );
-
-                                    break;
-                            }
-
-                        } catch (Exception ignored) {
-                        }
+                        ApplyConfiguredGoodColumn(localCursor, itemGood, column);
                     }
 
                     itemGood.setCheck(false);
-
-                    try {
-
-                        itemGood.setGoodFieldValue(
-                                "ActiveStack",
-                                String.valueOf(
-                                        localCursor.getInt(
-                                                localCursor.getColumnIndex(
-                                                        "ActiveStack"
-                                                )
-                                        )
-                                )
-                        );
-
-                    } catch (Exception ignored) {
-                    }
+                    ApplyActiveStackIfPresent(localCursor, itemGood);
 
                     resultGoods.add(itemGood);
                 }
@@ -1164,7 +1239,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -1226,9 +1301,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
             for (Column column : localColumns) {
 
                 if (!(!column.getColumnType().equals("0") && !digitsOnly)) {
-
-                    if (Integer.parseInt(column.getColumnFieldValue("SortOrder")) > 0 &&
-                            Integer.parseInt(column.getColumnFieldValue("SortOrder")) < 10) {
+                    int sortOrder = BrokerDbInputPolicy.orderIndex(
+                            column.getColumnFieldValue("SortOrder")
+                    );
+                    if (sortOrder > 0 && sortOrder < 10) {
 
                         if (selectCount == 0) {
                             sql = sql + " Where (";
@@ -1277,13 +1353,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
         sql = sql.replaceAll("stackCondition", BrokerStackString);
         sql = sql.replaceAll("SearchCondition", Search_Condition);
 
-        try {
-            Integer.parseInt(aGroupCode);
-        } catch (Exception e) {
-            aGroupCode = "0";
-        }
+        int groupCode = BrokerDbInputPolicy.nonNegativeCode(aGroupCode);
+        aGroupCode = String.valueOf(groupCode);
 
-        if (Integer.parseInt(aGroupCode) > 0) {
+        if (groupCode > 0) {
             sql = sql + " And GoodCode in(Select GoodRef From GoodGroup p "
                     + "Join GoodsGrp s on p.GoodGroupRef = s.GroupCode "
                     + "Where s.GroupCode = " + aGroupCode + " or s.L1 = " + aGroupCode
@@ -1303,7 +1376,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     sql = sql + " , ";
                 }
 
-                if (Integer.parseInt(column.getOrderIndex()) > 0) {
+                if (BrokerDbInputPolicy.orderIndex(column.getOrderIndex()) > 0) {
                     if (column.getColumnName().equals("Date")) {
                         String newSt = column.getColumnDefinition().substring(
                                 column.getColumnDefinition().indexOf("Then") + 5,
@@ -1330,7 +1403,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
         }
 
         sql = sql + " LIMIT  " + LimitAmount;
-        sql = sql + " OFFSET " + (Integer.parseInt(LimitAmount) * Integer.parseInt(MoreCallData));
+        sql = sql + " OFFSET " + BrokerDbInputPolicy.paginationOffset(
+                LimitAmount,
+                MoreCallData
+        );
 
         callMethod.Log(sql);
 
@@ -1344,49 +1420,18 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     Good itemGood = new Good();
 
                     for (Column column : localColumns) {
-                        try {
-                            switch (column.getColumnType()) {
-                                case "0":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            localCursor.getString(localCursor.getColumnIndex(column.getColumnName()))
-                                    );
-                                    break;
-
-                                case "1":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(localCursor.getInt(localCursor.getColumnIndex(column.getColumnName())))
-                                    );
-                                    break;
-
-                                case "2":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(localCursor.getFloat(localCursor.getColumnIndex(column.getColumnName())))
-                                    );
-                                    break;
-                            }
-                        } catch (Exception ignored) {
-                        }
+                        ApplyConfiguredGoodColumn(localCursor, itemGood, column);
                     }
 
                     itemGood.setCheck(false);
-
-                    try {
-                        itemGood.setGoodFieldValue(
-                                "ActiveStack",
-                                String.valueOf(localCursor.getInt(localCursor.getColumnIndex("ActiveStack")))
-                        );
-                    } catch (Exception ignored) {
-                    }
+                    ApplyActiveStackIfPresent(localCursor, itemGood);
 
                     resultGoods.add(itemGood);
                 }
             }
 
         } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(localCursor);
         }
@@ -1449,13 +1494,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
         sql = sql.replaceAll("stackCondition", BrokerStackString);
         sql = sql.replaceAll("SearchCondition", Search_Condition);
 
-        try {
-            Integer.parseInt(aGroupCode);
-        } catch (Exception e) {
-            aGroupCode = "0";
-        }
+        int groupCode = BrokerDbInputPolicy.nonNegativeCode(aGroupCode);
+        aGroupCode = String.valueOf(groupCode);
 
-        if (Integer.parseInt(aGroupCode) > 0) {
+        if (groupCode > 0) {
             sql = sql + " And GoodCode in(Select GoodRef From GoodGroup p "
                     + "Join GoodsGrp s on p.GoodGroupRef = s.GroupCode "
                     + "Where s.GroupCode = " + aGroupCode + " or s.L1 = " + aGroupCode
@@ -1475,7 +1517,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     sql = sql + " , ";
                 }
 
-                if (Integer.parseInt(column.getOrderIndex()) > 0) {
+                if (BrokerDbInputPolicy.orderIndex(column.getOrderIndex()) > 0) {
                     if (column.getColumnName().equals("Date")) {
                         String newSt = column.getColumnDefinition().substring(
                                 column.getColumnDefinition().indexOf("Then") + 5,
@@ -1502,7 +1544,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
         }
 
         sql = sql + " LIMIT  " + LimitAmount;
-        sql = sql + " OFFSET " + (Integer.parseInt(LimitAmount) * Integer.parseInt(MoreCallData));
+        sql = sql + " OFFSET " + BrokerDbInputPolicy.paginationOffset(
+                LimitAmount,
+                MoreCallData
+        );
 
         callMethod.Log(sql);
 
@@ -1516,49 +1561,19 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     Good itemGood = new Good();
 
                     for (Column column : localColumns) {
-                        try {
-                            switch (column.getColumnType()) {
-                                case "0":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            localCursor.getString(localCursor.getColumnIndex(column.getColumnName()))
-                                    );
-                                    break;
-
-                                case "1":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(localCursor.getInt(localCursor.getColumnIndex(column.getColumnName())))
-                                    );
-                                    break;
-
-                                case "2":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(localCursor.getFloat(localCursor.getColumnIndex(column.getColumnName())))
-                                    );
-                                    break;
-                            }
-                        } catch (Exception ignored) {
-                        }
+                        ApplyConfiguredGoodColumn(localCursor, itemGood, column);
                     }
 
                     itemGood.setCheck(false);
 
-                    try {
-                        itemGood.setGoodFieldValue(
-                                "ActiveStack",
-                                localCursor.getString(localCursor.getColumnIndex("ActiveStack"))
-                        );
-                    } catch (Exception ignored) {
-                    }
+                    ApplyActiveStackIfPresent(localCursor, itemGood);
 
                     resultGoods.add(itemGood);
                 }
             }
 
         } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(localCursor);
         }
@@ -1636,7 +1651,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     sql = sql + " , ";
                 }
 
-                if (Integer.parseInt(column.getOrderIndex()) > 0) {
+                if (BrokerDbInputPolicy.orderIndex(column.getOrderIndex()) > 0) {
                     if (column.getColumnName().equals("Date")) {
                         newSt = column.getColumnDefinition().substring(
                                 column.getColumnDefinition().indexOf("Else") + 4,
@@ -1663,7 +1678,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
         }
 
         sql = sql + " LIMIT  " + LimitAmount;
-        sql = sql + " OFFSET " + (Integer.parseInt(LimitAmount) * Integer.parseInt(MoreCallData));
+        sql = sql + " OFFSET " + BrokerDbInputPolicy.paginationOffset(
+                LimitAmount,
+                MoreCallData
+        );
 
         callMethod.Log(sql);
 
@@ -1678,49 +1696,19 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     Good itemGood = new Good();
 
                     for (Column column : localColumns) {
-                        try {
-                            switch (column.getColumnType()) {
-                                case "0":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            localCursor.getString(localCursor.getColumnIndex(column.getColumnName()))
-                                    );
-                                    break;
-
-                                case "1":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(localCursor.getInt(localCursor.getColumnIndex(column.getColumnName())))
-                                    );
-                                    break;
-
-                                case "2":
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(localCursor.getFloat(localCursor.getColumnIndex(column.getColumnName())))
-                                    );
-                                    break;
-                            }
-                        } catch (Exception ignored) {
-                        }
+                        ApplyConfiguredGoodColumn(localCursor, itemGood, column);
                     }
 
                     itemGood.setCheck(false);
 
-                    try {
-                        itemGood.setGoodFieldValue(
-                                "ActiveStack",
-                                localCursor.getString(localCursor.getColumnIndex("ActiveStack"))
-                        );
-                    } catch (Exception ignored) {
-                    }
+                    ApplyActiveStackIfPresent(localCursor, itemGood);
 
                     resultGoods.add(itemGood);
                 }
             }
 
         } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(localCursor);
         }
@@ -1793,77 +1781,16 @@ public class Broker_DBH extends SQLiteOpenHelper {
             if (localCursor != null && localCursor.moveToFirst()) {
 
                 for (Column column : localColumns) {
-
-                    try {
-
-                        switch (column.getColumnType()) {
-
-                            case "0":
-
-                                resultGood.setGoodFieldValue(
-                                        column.getColumnName(),
-                                        localCursor.getString(
-                                                localCursor.getColumnIndex(
-                                                        column.getColumnName()
-                                                )
-                                        )
-                                );
-
-                                break;
-
-                            case "1":
-
-                                resultGood.setGoodFieldValue(
-                                        column.getColumnName(),
-                                        String.valueOf(
-                                                localCursor.getInt(
-                                                        localCursor.getColumnIndex(
-                                                                column.getColumnName()
-                                                        )
-                                                )
-                                        )
-                                );
-
-                                break;
-
-                            case "2":
-
-                                resultGood.setGoodFieldValue(
-                                        column.getColumnName(),
-                                        String.valueOf(
-                                                localCursor.getFloat(
-                                                        localCursor.getColumnIndex(
-                                                                column.getColumnName()
-                                                        )
-                                                )
-                                        )
-                                );
-
-                                break;
-                        }
-
-                    } catch (Exception ignored) {
-                    }
+                    ApplyConfiguredGoodColumn(localCursor, resultGood, column);
                 }
 
                 resultGood.setCheck(false);
-
-                try {
-
-                    resultGood.setGoodFieldValue(
-                            "ActiveStack",
-                            localCursor.getString(
-                                    localCursor.getColumnIndex("ActiveStack")
-                            )
-                    );
-
-                } catch (Exception ignored) {
-                }
+                ApplyActiveStackIfPresent(localCursor, resultGood);
             }
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -1978,11 +1905,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                                 )
                         );
 
-                    } catch (Exception ignored) {
-
-                        callMethod.Log(
-                                "db=" + ignored.getMessage()
-                        );
+                    } catch (Exception exception) {
+                        reportDbFailure("getActivation.rowMapping", exception);
                     }
 
                     activations.add(activation);
@@ -1991,7 +1915,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2131,9 +2055,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(
-                    "getGoodBuyBox ERROR => " + e.getMessage()
-            );
+            reportDbFailure(e);
 
         } finally {
 
@@ -2187,7 +2109,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2273,7 +2195,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2291,12 +2213,20 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         Cursor localCursor = null;
         String sql;
+        Integer safeBasketFlag = BrokerDbInputPolicy.basketFlagOrNull(BasketFlag);
+        Double safePrice = BrokerDbInputPolicy.priceOrNull(price);
+        if (safeBasketFlag == null || safePrice == null) {
+            callMethod.Log("InsertPreFactor skipped: invalid basket or price");
+            return;
+        }
+        BasketFlag = String.valueOf(safeBasketFlag);
+        price = String.valueOf(safePrice);
 
         try {
 
-            if (Integer.parseInt(BasketFlag) > 0) {
+            if (safeBasketFlag > 0) {
 
-                if (Float.parseFloat(price) >= 0) {
+                if (safePrice >= 0) {
 
                     sql =
                             "Update PreFactorRow set FactorAmount = " +
@@ -2325,7 +2255,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                                 " And GoodRef =" +
                                 goodcode;
 
-                if (Float.parseFloat(price) >= 0) {
+                if (safePrice >= 0) {
                     sql = sql + " And Price =" + price;
                 }
 
@@ -2369,7 +2299,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2387,12 +2317,20 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         Cursor localCursor = null;
         String sql;
+        Integer safeBasketFlag = BrokerDbInputPolicy.basketFlagOrNull(BasketFlag);
+        Double safePrice = BrokerDbInputPolicy.priceOrNull(price);
+        if (safeBasketFlag == null || safePrice == null) {
+            callMethod.Log("InsertPreFactorwithPercent skipped: invalid basket or price");
+            return;
+        }
+        BasketFlag = String.valueOf(safeBasketFlag);
+        price = String.valueOf(safePrice);
 
         try {
 
-            if (Integer.parseInt(BasketFlag) > 0) {
+            if (safeBasketFlag > 0) {
 
-                if (Float.parseFloat(price) >= 0) {
+                if (safePrice >= 0) {
 
                     sql =
                             "Update PreFactorRow set FactorAmount = " +
@@ -2421,7 +2359,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                                 " And GoodRef =" +
                                 goodcode;
 
-                if (Float.parseFloat(price) >= 0) {
+                if (safePrice >= 0) {
                     sql = sql + " And Price =" + price;
                 }
 
@@ -2458,7 +2396,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2506,7 +2444,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         prefactor.setSumPrice(localCursor.getInt(localCursor.getColumnIndex("SumPrice")));
                         prefactor.setRowCount(localCursor.getInt(localCursor.getColumnIndex("RowCount")));
 
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("getAllPrefactorHeader.rowMapping", exception);
                     }
 
                     prefactor_header.add(prefactor);
@@ -2515,7 +2454,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2562,7 +2501,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         prefactor.setSumPrice(localCursor.getDouble(localCursor.getColumnIndex("SumPrice")));
                         prefactor.setRowCount(localCursor.getInt(localCursor.getColumnIndex("RowCount")));
 
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("getAllPrefactorHeaderopen.rowMapping", exception);
                     }
 
                     prefactor_header.add(prefactor);
@@ -2571,7 +2511,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2698,7 +2638,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                                     break;
                             }
 
-                        } catch (Exception ignored) {
+                        } catch (Exception exception) {
+                            reportDbFailure("getAllPreFactorRows.dynamicColumn", exception);
                         }
                     }
 
@@ -2708,7 +2649,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2776,7 +2717,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2811,7 +2752,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2837,7 +2778,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void DeletePreFactorRow(String pfcode, String rowcode) {
@@ -2852,7 +2793,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void DeletePreFactor(String pfcode) {
@@ -2867,7 +2808,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void DeleteEmptyPreFactor() {
@@ -2881,7 +2822,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void UpdatePreFactor(
@@ -2905,7 +2846,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     @SuppressLint("Range")
@@ -2938,7 +2879,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -2978,7 +2919,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3014,7 +2955,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3055,7 +2996,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3092,7 +3033,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3149,7 +3090,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         customerdetail.setAddress(localCursor.getString(localCursor.getColumnIndex("Address")));
                         customerdetail.setPhone(localCursor.getString(localCursor.getColumnIndex("Phone")));
                         customerdetail.setBestankar(localCursor.getDouble(localCursor.getColumnIndex("Bestankar")));
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("AllCustomer.rowMapping", exception);
                     }
 
                     Customers.add(customerdetail);
@@ -3158,7 +3100,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3192,7 +3134,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3223,7 +3165,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     try {
                         customerdetail.setCityName(localCursor.getString(localCursor.getColumnIndex("CityName")));
                         customerdetail.setCityCode(localCursor.getString(localCursor.getColumnIndex("CityCode")));
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("city.rowMapping", exception);
                     }
 
                     city.add(customerdetail);
@@ -3232,7 +3175,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3277,12 +3220,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(
-                    "GetksrImage ERROR => code=" +
-                            code +
-                            " | " +
-                            e.getMessage()
-            );
+            reportDbFailure(e);
 
         } finally {
 
@@ -3332,12 +3270,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(
-                    "GetksrImageCodes ERROR => code=" +
-                            code +
-                            " | " +
-                            e.getMessage()
-            );
+            reportDbFailure(e);
 
         } finally {
 
@@ -3380,12 +3313,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(
-                    "GetLastksrImageCode ERROR => code=" +
-                            code +
-                            " | " +
-                            e.getMessage()
-            );
+            reportDbFailure(e);
 
         } finally {
             closeCursor(localCursor);
@@ -3411,13 +3339,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
                 "Else 0 End  ChildNo " +
                 " FROM GoodsGrp g WHERE 1=1 ";
 
-        try {
-            Integer.parseInt(GL);
-        } catch (Exception e) {
-            GL = "0";
-        }
+        int groupLevel = BrokerDbInputPolicy.nonNegativeCode(GL);
+        GL = String.valueOf(groupLevel);
 
-        if (Integer.parseInt(GL) > 0) {
+        if (groupLevel > 0) {
             sql = sql + " And ((L1=" + GL + " And L2=0) or (L2=" + GL + " And L3=0) or (L3=" + GL + " And L4=0) or (L4=" + GL + " And L5=0) or (L5=" + GL + "))";
         } else {
             sql = sql + " order by 1 desc";
@@ -3446,7 +3371,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         grp.setL4(localCursor.getInt(localCursor.getColumnIndex("L4")));
                         grp.setL5(localCursor.getInt(localCursor.getColumnIndex("L5")));
                         grp.setChildNo(localCursor.getInt(localCursor.getColumnIndex("ChildNo")));
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("getAllGroups.rowMapping", exception);
                     }
 
                     groups.add(grp);
@@ -3455,7 +3381,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3487,7 +3413,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
             closeCursor(localCursor);
 
@@ -3500,7 +3426,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
             } catch (Exception ex) {
 
-                callMethod.Log(ex.getMessage());
+                reportDbFailure(ex);
             }
         }
 
@@ -3520,7 +3446,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         grp.setL3(localCursor.getInt(localCursor.getColumnIndex("L3")));
                         grp.setL4(localCursor.getInt(localCursor.getColumnIndex("L4")));
                         grp.setL5(localCursor.getInt(localCursor.getColumnIndex("L5")));
-                    } catch (Exception ignored) {
+                    } catch (Exception exception) {
+                        reportDbFailure("getmenuGroups.rowMapping", exception);
                     }
 
                     groups.add(grp);
@@ -3529,7 +3456,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3607,7 +3534,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3640,54 +3567,62 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void SaveConfig(String key, String Value) {
-
+        SQLiteDatabase database = db();
+        database.beginTransaction();
         try {
+            database.execSQL(
+                    "INSERT INTO Config(KeyValue, DataValue) "
+                            + "SELECT ?, ? WHERE NOT EXISTS("
+                            + "SELECT 1 FROM Config WHERE KeyValue = ?)",
+                    new Object[]{String.valueOf(key), String.valueOf(Value),
+                            String.valueOf(key)}
+            );
 
-            String sql =
-                    " Insert Into Config(KeyValue, DataValue) " +
-                            "Select '" +
-                            key +
-                            "', '" +
-                            Value +
-                            "' Where Not Exists(Select * From Config Where KeyValue = '" +
-                            key +
-                            "');";
-
-            db().execSQL(sql);
-
-            sql =
-                    " Update Config set DataValue = '" +
-                            Value +
-                            "' Where KeyValue = '" +
-                            key +
-                            "' ;";
-
-            db().execSQL(sql);
-
-        } catch (Exception e) {
-
-            callMethod.Log(e.getMessage());
+            ContentValues updateValues = new ContentValues();
+            updateValues.put("DataValue", String.valueOf(Value));
+            database.update(
+                    "Config",
+                    updateValues,
+                    "KeyValue = ?",
+                    new String[]{String.valueOf(key)}
+            );
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
+    }
+
+    public boolean UpdateReplicationCheckpoint(String serverTable, String lastRepLogCode) {
+        if (BrokerDbInputPolicy.replicationCheckpointOrNull(lastRepLogCode) == null) {
+            return false;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put("LastRepLogCode", lastRepLogCode);
+        return db().update(
+                "ReplicationTable",
+                values,
+                "ServerTable = ?",
+                new String[]{String.valueOf(serverTable)}
+        ) == 1;
     }
     @SuppressLint("Range")
     public String ReadConfig(String key) {
 
         String resultValue = "";
 
-        String sql =
-                "SELECT DataValue FROM Config Where KeyValue= '" +
-                        key +
-                        "' ;";
-
         Cursor localCursor = null;
 
         try {
 
-            localCursor = db().rawQuery(sql, null);
+            localCursor = db().rawQuery(
+                    "SELECT DataValue FROM Config WHERE KeyValue = ?",
+                    new String[]{String.valueOf(key)}
+            );
 
             if (localCursor != null && localCursor.moveToFirst()) {
 
@@ -3699,7 +3634,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3747,7 +3682,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -3768,7 +3703,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void UpdateLocationService_New(
@@ -3828,10 +3763,9 @@ public class Broker_DBH extends SQLiteOpenHelper {
                                 1
                         );
 
-                if (addresses != null && !addresses.isEmpty()) {
+                Address address = SafeListAccess.firstOrNull(addresses);
 
-                    Address address =
-                            addresses.get(0);
+                if (address != null) {
 
                     StringBuilder sb =
                             new StringBuilder();
@@ -3866,7 +3800,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                 locationDescription =
                         distance;
 
-                callMethod.Log(e.getMessage());
+                reportDbFailure(e);
             }
 
             String sql =
@@ -3900,7 +3834,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
 
@@ -3939,7 +3873,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void ClearSearchColumn() {
@@ -3952,7 +3886,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void ReplicateColumn(
@@ -3989,7 +3923,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     public void deleteColumn() {
@@ -4002,7 +3936,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         }
     }
     @SuppressLint("Range")
@@ -4037,7 +3971,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -4073,7 +4007,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -4091,43 +4025,11 @@ public class Broker_DBH extends SQLiteOpenHelper {
             String MoreCallData,
             DbCallback<ArrayList<Good>> callback
     ) {
-
-        executorService.execute(new Runnable() {
-
-            @Override
-            public void run() {
-
-                try {
-
-                    final ArrayList<Good> result =
-                            getAllGood(
-                                    search_target,
-                                    aGroupCode,
-                                    MoreCallData
-                            );
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onResult(result);
-                        }
-                    });
-
-                } catch (final Exception e) {
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        });
+        executeDbAsync(
+                "getAllGoodAsync",
+                () -> getAllGood(search_target, aGroupCode, MoreCallData),
+                callback
+        );
     }
 
 
@@ -4141,43 +4043,11 @@ public class Broker_DBH extends SQLiteOpenHelper {
             String MoreCallData,
             DbCallback<ArrayList<Good>> callback
     ) {
-
-        executorService.execute(new Runnable() {
-
-            @Override
-            public void run() {
-
-                try {
-
-                    final ArrayList<Good> result =
-                            getAllGood_Extended(
-                                    searchbox_result,
-                                    aGroupCode,
-                                    MoreCallData
-                            );
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onResult(result);
-                        }
-                    });
-
-                } catch (final Exception e) {
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        });
+        executeDbAsync(
+                "getAllGood_ExtendedAsync",
+                () -> getAllGood_Extended(searchbox_result, aGroupCode, MoreCallData),
+                callback
+        );
     }
 
 
@@ -4190,42 +4060,11 @@ public class Broker_DBH extends SQLiteOpenHelper {
             String MoreCallData,
             DbCallback<ArrayList<Good>> callback
     ) {
-
-        executorService.execute(new Runnable() {
-
-            @Override
-            public void run() {
-
-                try {
-
-                    final ArrayList<Good> result =
-                            getAllGood_ByDate(
-                                    xDayAgo,
-                                    MoreCallData
-                            );
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onResult(result);
-                        }
-                    });
-
-                } catch (final Exception e) {
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        });
+        executeDbAsync(
+                "getAllGood_ByDateAsync",
+                () -> getAllGood_ByDate(xDayAgo, MoreCallData),
+                callback
+        );
     }
 
 
@@ -4237,39 +4076,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
             String code,
             DbCallback<Good> callback
     ) {
-
-        executorService.execute(new Runnable() {
-
-            @Override
-            public void run() {
-
-                try {
-
-                    final Good result =
-                            getGoodByCode(code);
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onResult(result);
-                        }
-                    });
-
-                } catch (final Exception e) {
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        });
+        executeDbAsync("getGoodByCodeAsync", () -> getGoodByCode(code), callback);
     }
 
 
@@ -4282,42 +4089,11 @@ public class Broker_DBH extends SQLiteOpenHelper {
             boolean aOnlyActive,
             DbCallback<ArrayList<Customer>> callback
     ) {
-
-        executorService.execute(new Runnable() {
-
-            @Override
-            public void run() {
-
-                try {
-
-                    final ArrayList<Customer> result =
-                            AllCustomer(
-                                    search_target,
-                                    aOnlyActive
-                            );
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onResult(result);
-                        }
-                    });
-
-                } catch (final Exception e) {
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        });
+        executeDbAsync(
+                "AllCustomerAsync",
+                () -> AllCustomer(search_target, aOnlyActive),
+                callback
+        );
     }
 
 
@@ -4329,39 +4105,11 @@ public class Broker_DBH extends SQLiteOpenHelper {
             String Search_target,
             DbCallback<ArrayList<PreFactor>> callback
     ) {
-
-        executorService.execute(new Runnable() {
-
-            @Override
-            public void run() {
-
-                try {
-
-                    final ArrayList<PreFactor> result =
-                            getAllPrefactorHeader(Search_target);
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onResult(result);
-                        }
-                    });
-
-                } catch (final Exception e) {
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        });
+        executeDbAsync(
+                "getAllPrefactorHeaderAsync",
+                () -> getAllPrefactorHeader(Search_target),
+                callback
+        );
     }
 
 
@@ -4374,42 +4122,11 @@ public class Broker_DBH extends SQLiteOpenHelper {
             String aPreFactorCode,
             DbCallback<ArrayList<Good>> callback
     ) {
-
-        executorService.execute(new Runnable() {
-
-            @Override
-            public void run() {
-
-                try {
-
-                    final ArrayList<Good> result =
-                            getAllPreFactorRows(
-                                    Search_target,
-                                    aPreFactorCode
-                            );
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onResult(result);
-                        }
-                    });
-
-                } catch (final Exception e) {
-
-                    mainHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            callback.onError(e);
-                        }
-                    });
-                }
-            }
-        });
+        executeDbAsync(
+                "getAllPreFactorRowsAsync",
+                () -> getAllPreFactorRows(Search_target, aPreFactorCode),
+                callback
+        );
     }
 
 
@@ -4492,6 +4209,77 @@ public class Broker_DBH extends SQLiteOpenHelper {
     }
 
 
+    private void ApplyConfiguredGoodColumn(
+            Cursor cursor,
+            Good good,
+            Column column
+    ) {
+
+        if (cursor == null || good == null || column == null) {
+            return;
+        }
+
+        String columnName = column.getColumnName();
+
+        if (columnName == null || columnName.trim().isEmpty()) {
+            return;
+        }
+
+        int columnIndex = cursor.getColumnIndex(columnName);
+
+        if (columnIndex < 0 || cursor.isNull(columnIndex)) {
+            return;
+        }
+
+        String columnValue;
+
+        switch (column.getColumnType()) {
+            case "0":
+                columnValue = cursor.getString(columnIndex);
+                break;
+
+            case "1":
+                columnValue = String.valueOf(cursor.getInt(columnIndex));
+                break;
+
+            case "2":
+                columnValue = String.valueOf(cursor.getFloat(columnIndex));
+                break;
+
+            default:
+                return;
+        }
+
+        try {
+            good.setGoodFieldValue(columnName, columnValue);
+        } catch (RuntimeException exception) {
+            callMethod.Log(
+                    "Broker cursor field skipped => " + columnName +
+                            " (" + exception.getClass().getSimpleName() + ")"
+            );
+        }
+    }
+
+
+    private void ApplyActiveStackIfPresent(Cursor cursor, Good good) {
+
+        if (cursor == null || good == null) {
+            return;
+        }
+
+        int columnIndex = cursor.getColumnIndex("ActiveStack");
+
+        if (columnIndex < 0 || cursor.isNull(columnIndex)) {
+            return;
+        }
+
+        good.setGoodFieldValue(
+                "ActiveStack",
+                cursor.getString(columnIndex)
+        );
+    }
+
+
     private String NormalizeGoodFTSText(String text) {
 
         if (text == null) {
@@ -4499,9 +4287,29 @@ public class Broker_DBH extends SQLiteOpenHelper {
         }
 
         return text
-                // همان نرمال‌سازی GetRegionText بدون Query جدا برای هر کالا
+                // Persian/Arabic normalization
                 .replace('\u06CC', '\u064A')   // ی -> ي
                 .replace('\u06A9', '\u0643')   // ک -> ك
+
+                // Invisible spacing / bidi characters must never break an FTS token.
+                .replace('\u200C', ' ')          // ZWNJ
+                .replace('\u200D', ' ')          // ZWJ
+                .replace('\u200E', ' ')          // LRM
+                .replace('\u200F', ' ')          // RLM
+                .replace('\u00A0', ' ')          // NBSP
+                .replaceAll("[\u202A-\u202E\u2066-\u2069]", " ")
+
+                // Some HTML fields contain the entity text instead of the real character.
+                .replace("&zwnj;", " ")
+                .replace("&zwj;", " ")
+                .replace("&lrm;", " ")
+                .replace("&rlm;", " ")
+                .replace("&nbsp;", " ")
+                .replace("&#8204;", " ")
+                .replace("&#8205;", " ")
+                .replace("&#8206;", " ")
+                .replace("&#8207;", " ")
+                .replaceAll("(?i)&#x200[c-f];", " ")
                 .replaceAll("\\s+", " ")
                 .trim();
     }
@@ -4563,7 +4371,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
 
         } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(cursor);
         }
@@ -4588,7 +4396,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
 
         } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(cursor);
         }
@@ -4608,7 +4416,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
         final int finalDone = done;
         final int finalTotal = total;
 
-        mainHandler.post(new Runnable() {
+        postAsync(currentAsyncGeneration(), new Runnable() {
             @Override
             public void run() {
                 if (callback != null) {
@@ -4656,7 +4464,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
 
         } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(cursor);
         }
@@ -4700,7 +4508,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
 
         } catch (Exception e) {
-            callMethod.Log("ReadFTSContentVersion Error = " + e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(cursor);
         }
@@ -4912,7 +4720,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
         } catch (Exception e) {
 
             SaveFTSReady(database, "0");
-            callMethod.Log("FTS Insert Missing Error = " + e.getMessage());
+            reportDbFailure(e);
             throw new RuntimeException(e);
 
         } finally {
@@ -5101,7 +4909,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log("FTS Update Error = " + e.getMessage());
+            reportDbFailure(e);
             throw e;
 
         } finally {
@@ -5124,7 +4932,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
             if (transactionOpen) {
                 try {
                     database.endTransaction();
-                } catch (Exception ignored) {
+                } catch (Exception exception) {
+                    reportDbFailure("SyncGoodSearchFTSUpdateMode.endTransaction", exception);
                 }
             }
         }
@@ -5133,8 +4942,9 @@ public class Broker_DBH extends SQLiteOpenHelper {
     public void SyncGoodsSearchFTSBatchAsync(ArrayList<String> goodCodes, OneGoodFTSCallback callback) {
 
         final int total = goodCodes == null ? 0 : goodCodes.size();
+        final long generation = captureAsyncGeneration();
 
-        mainHandler.post(() -> {
+        postAsync(generation, () -> {
             if (callback != null) {
                 callback.onStart(
                         "در حال بروزرسانی جستجوی کالا... 0 از " + total
@@ -5142,11 +4952,11 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
         });
 
-        executorService.execute(() -> {
+        executeAsync(generation, "SyncGoodsSearchFTSBatchAsync", () -> {
             try {
 
                 if (goodCodes == null || goodCodes.isEmpty()) {
-                    mainHandler.post(() -> {
+                    postAsync(generation, () -> {
                         if (callback != null) {
                             callback.onDone("کالایی برای بروزرسانی وجود ندارد");
                         }
@@ -5182,7 +4992,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                             final int finalDone = done;
                             final long finalRemainingSeconds = remainingSeconds;
 
-                            mainHandler.post(() -> {
+                            postAsync(generation, () -> {
                                 if (callback != null) {
                                     callback.onProgress(
                                             finalPercent,
@@ -5201,7 +5011,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     database.endTransaction();
                 }
 
-                mainHandler.post(() -> {
+                postAsync(generation, () -> {
                     if (callback != null) {
                         callback.onDone(
                                 "جستجوی " + total + " کالا بروزرسانی شد"
@@ -5210,7 +5020,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                 });
 
             } catch (Exception e) {
-                mainHandler.post(() -> {
+                postAsync(generation, () -> {
                     if (callback != null) {
                         callback.onError(e);
                     }
@@ -5221,7 +5031,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
     public void SyncGoodSearchFTSAsync(ProgressCallback callback) {
 
-        executorService.execute(new Runnable() {
+        final long generation = captureAsyncGeneration();
+        executeAsync(generation, "SyncGoodSearchFTSAsync", new Runnable() {
             @Override
             public void run() {
 
@@ -5229,7 +5040,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
                     SyncGoodSearchFTS(callback);
 
-                    mainHandler.post(new Runnable() {
+                    postAsync(generation, new Runnable() {
                         @Override
                         public void run() {
                             if (callback != null) {
@@ -5240,7 +5051,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
                 } catch (final Exception e) {
 
-                    mainHandler.post(new Runnable() {
+                    postAsync(generation, new Runnable() {
                         @Override
                         public void run() {
                             if (callback != null) {
@@ -5272,22 +5083,87 @@ public class Broker_DBH extends SQLiteOpenHelper {
         );
     }
 
-    private String BuildGoodFTSMatchQuery(String search) {
+    private String NormalizeGoodFTSSearchInput(String search) {
 
-        search = GetRegionText(search);
+        search = NormalizeGoodFTSText(search);
         search = search.replaceAll("'", " ");
-        search = search.replaceAll("\"", " ");
+        search = search.replaceAll("\\\"", " ");
         search = search.replaceAll(":", " ");
         search = search.replaceAll("-", " ");
         search = search.replaceAll("\\*", " ");
         search = search.replaceAll("\\s+", " ").trim();
+
+        return search;
+    }
+
+
+    /**
+     * Makes sure the FTS tables exist before a search touches them.
+     *
+     * Important: existence is not enough. Until the FTS build/update has completed
+     * (FTSReady=1 and the content version matches), getAllGood() must not use the
+     * FTS tables because they may be empty or in the middle of a rebuild.
+     */
+    private boolean IsGoodSearchFTSUsableForSearch() {
+
+        SQLiteDatabase database = db();
+
+        try {
+            // Handles fresh databases, manual drop(), and the small window around rebuilds.
+            CreateGoodSearchFTSTables(database);
+
+            if (!FTS_CONTENT_VERSION.equals(ReadFTSContentVersion(database))) {
+                return false;
+            }
+
+            if (!"1".equals(ReadFTSReady(database))) {
+                return false;
+            }
+
+            // Cheap final existence/readability probe. Do not COUNT(*) on every keystroke.
+            Cursor cursor = null;
+            try {
+                cursor = database.rawQuery(
+                        "SELECT GoodCode FROM GoodSearchFTS LIMIT 1",
+                        null
+                );
+
+                // An empty FTS table is only valid when Good itself is empty.
+                if (cursor != null && cursor.moveToFirst()) {
+                    return true;
+                }
+
+                Cursor goodCursor = null;
+                try {
+                    goodCursor = database.rawQuery(
+                            "SELECT GoodCode FROM Good LIMIT 1",
+                            null
+                    );
+                    return goodCursor == null || !goodCursor.moveToFirst();
+                } finally {
+                    closeCursor(goodCursor);
+                }
+
+            } finally {
+                closeCursor(cursor);
+            }
+
+        } catch (Exception e) {
+            // Search must remain usable even if FTS is missing/rebuilding/corrupt.
+            return false;
+        }
+    }
+
+
+    private String BuildGoodFTSMatchQuery(String search) {
+
+        search = NormalizeGoodFTSSearchInput(search);
 
         if (search.equals("")) {
             return "";
         }
 
         String[] words = search.split(" ");
-
         StringBuilder matchQuery = new StringBuilder();
 
         for (String word : words) {
@@ -5300,12 +5176,478 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     matchQuery.append(" ");
                 }
 
+                // Broad search: رفتار قبلی حفظ می‌شود و Prefixها هم Candidate می‌مانند.
                 matchQuery.append(word).append("*");
             }
         }
 
         return matchQuery.toString();
     }
+
+
+    private String BuildGoodFTSStrictMatchQuery(String search) {
+
+        search = NormalizeGoodFTSSearchInput(search);
+
+        if (search.equals("")) {
+            return "";
+        }
+
+        String[] words = search.split(" ");
+        StringBuilder matchQuery = new StringBuilder();
+
+        for (String word : words) {
+
+            word = word.trim();
+
+            if (!word.equals("")) {
+
+                if (matchQuery.length() > 0) {
+                    matchQuery.append(" ");
+                }
+
+                // عدد باید Token دقیق باشد؛ مثال 13 دیگر با 1310 هم‌رتبه نمی‌شود.
+                // متن همچنان Prefix است تا "كلا" بتواند "كلاس" را پیدا کند.
+                if (TextUtils.isDigitsOnly(word)) {
+                    matchQuery.append(word);
+                } else {
+                    matchQuery.append(word).append("*");
+                }
+            }
+        }
+
+        return matchQuery.toString();
+    }
+
+
+    private String BuildExactFTSSearchPattern(String search) {
+
+        search = NormalizeGoodFTSSearchInput(search);
+        search = search.replace("%", " ");
+        search = search.replace("_", " ");
+        search = search.replaceAll("\\s+", " ").trim();
+
+        if (search.equals("")) {
+            return "";
+        }
+
+        return "%" + search + "%";
+    }
+
+
+    private String BuildOrderedFTSSearchPattern(String search) {
+
+        String exactPattern = BuildExactFTSSearchPattern(search);
+
+        if (exactPattern.equals("")) {
+            return "";
+        }
+
+        String normalizedSearch = exactPattern.substring(1, exactPattern.length() - 1);
+
+        return "%" + normalizedSearch.replace(" ", "%") + "%";
+    }
+    private String BuildSqlNormalizedSearchExpression(String sqlExpression) {
+
+        String result = "IfNull(" + sqlExpression + ",'')";
+
+        // Same important character normalization used by NormalizeGoodFTSText().
+        result = "Replace(" + result + ", char(1740), char(1610))"; // ی -> ي
+        result = "Replace(" + result + ", char(1705), char(1603))"; // ک -> ك
+
+        int[] spaceCharacters = {
+                8204,  // ZWNJ
+                8205,  // ZWJ
+                8206,  // LRM
+                8207,  // RLM
+                160,   // NBSP
+                8234, 8235, 8236, 8237, 8238, // bidi embedding/override
+                8294, 8295, 8296, 8297        // bidi isolates
+        };
+
+        for (int codePoint : spaceCharacters) {
+            result = "Replace(" + result + ", char(" + codePoint + "), ' ')";
+        }
+
+        // Collapse the common double/triple spaces created after removing invisible marks.
+        result = "Replace(Replace(Replace(" + result + ", '  ', ' '), '  ', ' '), '  ', ' ')";
+
+        return result;
+    }
+
+
+    private String BuildFieldLikeCondition(
+            String[] columns,
+            String pattern,
+            ArrayList<String> argsList,
+            boolean includeCachedBarCode
+    ) {
+
+        StringBuilder condition = new StringBuilder("(");
+        boolean hasCondition = false;
+
+        for (String columnName : columns) {
+
+            if (hasCondition) {
+                condition.append(" OR ");
+            }
+
+            condition
+                    .append(BuildSqlNormalizedSearchExpression("g." + columnName))
+                    .append(" LIKE ?");
+
+            argsList.add(pattern);
+            hasCondition = true;
+        }
+
+        if (includeCachedBarCode) {
+
+            if (hasCondition) {
+                condition.append(" OR ");
+            }
+
+            condition
+                    .append("Exists(Select 1 From CacheBarCode cbRank ")
+                    .append("Where cbRank.GoodRef = g.GoodCode And ")
+                    .append(BuildSqlNormalizedSearchExpression("cbRank.CachedBarCode"))
+                    .append(" LIKE ?)");
+
+            argsList.add(pattern);
+            hasCondition = true;
+        }
+
+        if (!hasCondition) {
+            condition.append("0=1");
+        }
+
+        condition.append(')');
+        return condition.toString();
+    }
+
+
+    private String BuildFieldAwareSearchRankExpression(
+            String matchAlias,
+            String exactSearchPattern,
+            String orderedSearchPattern,
+            ArrayList<String> argsList
+    ) {
+
+        String highExact = BuildFieldLikeCondition(
+                GOOD_FTS_HIGH_PRIORITY_COLUMNS,
+                exactSearchPattern,
+                argsList,
+                true
+        );
+
+        String highOrdered = BuildFieldLikeCondition(
+                GOOD_FTS_HIGH_PRIORITY_COLUMNS,
+                orderedSearchPattern,
+                argsList,
+                true
+        );
+
+        String normalExact = BuildFieldLikeCondition(
+                GOOD_FTS_NORMAL_PRIORITY_COLUMNS,
+                exactSearchPattern,
+                argsList,
+                false
+        );
+
+        String normalOrdered = BuildFieldLikeCondition(
+                GOOD_FTS_NORMAL_PRIORITY_COLUMNS,
+                orderedSearchPattern,
+                argsList,
+                false
+        );
+
+        String lowExact = BuildFieldLikeCondition(
+                GOOD_FTS_LOW_PRIORITY_COLUMNS,
+                exactSearchPattern,
+                argsList,
+                false
+        );
+
+        String lowOrdered = BuildFieldLikeCondition(
+                GOOD_FTS_LOW_PRIORITY_COLUMNS,
+                orderedSearchPattern,
+                argsList,
+                false
+        );
+
+        String strictExpression = matchAlias + ".IsStrict = 1";
+
+        return
+                "Case " +
+                        // Direct title/code/barcode/type matches are always strongest.
+                        " When " + strictExpression + " And " + highExact + " Then 0 " +
+                        " When " + strictExpression + " And " + highOrdered + " Then 1 " +
+
+                        // Explain/Nvarchar remain fully searchable, but do not outrank identity fields.
+                        " When " + strictExpression + " And " + normalExact + " Then 2 " +
+                        " When " + strictExpression + " And " + normalOrdered + " Then 3 " +
+
+                        // Long Text/HTML fields remain searchable as requested, with lower ranking weight.
+                        " When " + strictExpression + " And " + lowExact + " Then 4 " +
+                        " When " + strictExpression + " And " + lowOrdered + " Then 5 " +
+
+                        // All strict tokens may still be split across different FTS fields.
+                        " When " + strictExpression + " Then 6 " +
+                        // Broad prefix-only candidates are last.
+                        " Else 7 " +
+                        "End";
+    }
+
+
+    private String DebugVisibleText(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value
+                .replace("\u200C", "<ZWNJ>")
+                .replace("\u200D", "<ZWJ>")
+                .replace("\u200E", "<LRM>")
+                .replace("\u200F", "<RLM>")
+                .replace("\u00A0", "<NBSP>")
+                .replace("\t", "<TAB>")
+                .replace("\r", "<CR>")
+                .replace("\n", "<NL>");
+    }
+
+
+    private String DebugShortText(String value, int maxLength) {
+
+        String result = DebugVisibleText(value);
+
+        if (result.length() <= maxLength) {
+            return result;
+        }
+
+        return result.substring(0, maxLength) + "...";
+    }
+
+
+    private String DebugCodePoints(String value) {
+
+        if (value == null || value.equals("")) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < value.length(); ) {
+
+            int codePoint = value.codePointAt(i);
+
+            if (result.length() > 0) {
+                result.append(" | ");
+            }
+
+            result
+                    .append(new String(Character.toChars(codePoint)))
+                    .append("=U+")
+                    .append(String.format(Locale.US, "%04X", codePoint));
+
+            i += Character.charCount(codePoint);
+        }
+
+        return result.toString();
+    }
+
+
+    @SuppressLint("Range")
+    private void LogGoodFTSSearchDebug(
+            String originalSearch,
+            String normalizedSearch,
+            String matchQuery,
+            String strictMatchQuery,
+            String exactSearchPattern,
+            String orderedSearchPattern
+    ) {
+
+        if (!GOOD_SEARCH_DEBUG) {
+            return;
+        }
+
+        Cursor cursor = null;
+        Cursor likeCursor = null;
+
+        try {
+
+            callMethod.Log("========== GOOD SEARCH DEBUG START ==========");
+            callMethod.Log("SEARCH ORIGINAL   = [" + DebugVisibleText(originalSearch) + "]");
+            callMethod.Log("SEARCH NORMALIZED = [" + DebugVisibleText(normalizedSearch) + "]");
+            callMethod.Log("SEARCH CODEPOINTS = " + DebugCodePoints(originalSearch));
+            callMethod.Log("FTS MATCH QUERY   = [" + DebugVisibleText(matchQuery) + "]");
+            callMethod.Log("FTS STRICT QUERY  = [" + DebugVisibleText(strictMatchQuery) + "]");
+            callMethod.Log("EXACT PATTERN     = [" + DebugVisibleText(exactSearchPattern) + "]");
+            callMethod.Log("ORDERED PATTERN   = [" + DebugVisibleText(orderedSearchPattern) + "]");
+
+            if (matchQuery == null || matchQuery.equals("")) {
+                callMethod.Log("FTS DEBUG SKIP => MATCH query is empty");
+                callMethod.Log("========== GOOD SEARCH DEBUG END ==========");
+                return;
+            }
+
+            String normalizedForWords = normalizedSearch == null
+                    ? ""
+                    : normalizedSearch.replaceAll("\\s+", " ").trim();
+
+            if (!normalizedForWords.equals("")) {
+
+                String[] words = normalizedForWords.split(" ");
+
+                for (String word : words) {
+
+                    word = word.trim();
+
+                    if (word.equals("")) {
+                        continue;
+                    }
+
+                    Cursor tokenCursor = null;
+
+                    try {
+                        String tokenQuery = TextUtils.isDigitsOnly(word)
+                                ? word
+                                : word + "*";
+
+                        tokenCursor = db().rawQuery(
+                                "SELECT Count(*) AS Cnt " +
+                                        "FROM GoodSearchFTS " +
+                                        "WHERE GoodSearchFTS MATCH ?",
+                                new String[]{tokenQuery}
+                        );
+
+                        int count = 0;
+
+                        if (tokenCursor != null && tokenCursor.moveToFirst()) {
+                            count = tokenCursor.getInt(tokenCursor.getColumnIndex("Cnt"));
+                        }
+
+                        callMethod.Log(
+                                "FTS STRICT TOKEN => [" + DebugVisibleText(tokenQuery) + "] Count=" + count +
+                                        " | CodePoints=" + DebugCodePoints(word)
+                        );
+
+                    } finally {
+                        closeCursor(tokenCursor);
+                    }
+                }
+            }
+
+            ArrayList<String> debugArgsList = new ArrayList<>();
+            debugArgsList.add(matchQuery);
+            debugArgsList.add(strictMatchQuery);
+
+            String debugRankExpression = BuildFieldAwareSearchRankExpression(
+                    "md",
+                    exactSearchPattern,
+                    orderedSearchPattern,
+                    debugArgsList
+            );
+
+            cursor = db().rawQuery(
+                    "WITH BroadMatches AS ( " +
+                            " SELECT Cast(GoodCode AS INTEGER) AS GoodCode, SearchText " +
+                            " FROM GoodSearchFTS WHERE GoodSearchFTS MATCH ? " +
+                            "), StrictMatches AS ( " +
+                            " SELECT Cast(GoodCode AS INTEGER) AS GoodCode " +
+                            " FROM GoodSearchFTS WHERE GoodSearchFTS MATCH ? " +
+                            "), MatchedDebug AS ( " +
+                            " SELECT bm.GoodCode, bm.SearchText, " +
+                            " Case When sm.GoodCode Is Not Null Then 1 Else 0 End AS IsStrict " +
+                            " FROM BroadMatches bm " +
+                            " LEFT JOIN StrictMatches sm ON sm.GoodCode = bm.GoodCode " +
+                            ") " +
+                            "SELECT " +
+                            "md.GoodCode AS GoodCode, " +
+                            "IfNull(g.GoodName,'') AS GoodName, " +
+                            "IfNull(md.SearchText,'') AS SearchText, " +
+                            debugRankExpression + " AS SearchRank " +
+                            "FROM MatchedDebug md " +
+                            "LEFT JOIN Good g ON g.GoodCode = md.GoodCode " +
+                            "ORDER BY SearchRank, g.GoodCode DESC " +
+                            "LIMIT 50",
+                    debugArgsList.toArray(new String[0])
+            );
+
+            int matchCount = 0;
+
+            if (cursor != null) {
+
+                while (cursor.moveToNext()) {
+
+                    matchCount++;
+
+                    String goodCode = cursor.getString(cursor.getColumnIndex("GoodCode"));
+                    String goodName = cursor.getString(cursor.getColumnIndex("GoodName"));
+                    String searchText = cursor.getString(cursor.getColumnIndex("SearchText"));
+                    int rank = cursor.getInt(cursor.getColumnIndex("SearchRank"));
+
+                    callMethod.Log(
+                            "FTS CANDIDATE #" + matchCount +
+                                    " | GoodCode=" + goodCode +
+                                    " | Rank=" + rank +
+                                    " | GoodName=[" + DebugVisibleText(goodName) + "]" +
+                                    " | SearchText=[" + DebugShortText(searchText, 700) + "]"
+                    );
+                }
+            }
+
+            callMethod.Log("FTS MATCH CANDIDATE COUNT (logged max 50) = " + matchCount);
+
+            // این Query مستقل از MATCH است. اگر اینجا کالا پیدا شود ولی MATCH پیدا نکند،
+            // مشکل از tokenizer / کاراکترهای مخفی FTS است، نه نبودن متن در SearchText.
+            if (orderedSearchPattern != null && !orderedSearchPattern.equals("")) {
+
+                likeCursor = db().rawQuery(
+                        "SELECT " +
+                                "GoodSearchFTS.GoodCode AS GoodCode, " +
+                                "IfNull(g.GoodName,'') AS GoodName, " +
+                                "IfNull(GoodSearchFTS.SearchText,'') AS SearchText " +
+                                "FROM GoodSearchFTS " +
+                                "LEFT JOIN Good g " +
+                                "ON g.GoodCode = Cast(GoodSearchFTS.GoodCode AS INTEGER) " +
+                                "WHERE GoodSearchFTS.SearchText Like ? " +
+                                "LIMIT 20",
+                        new String[]{orderedSearchPattern}
+                );
+
+                int likeCount = 0;
+
+                if (likeCursor != null) {
+                    while (likeCursor.moveToNext()) {
+
+                        likeCount++;
+
+                        String goodCode = likeCursor.getString(likeCursor.getColumnIndex("GoodCode"));
+                        String goodName = likeCursor.getString(likeCursor.getColumnIndex("GoodName"));
+                        String searchText = likeCursor.getString(likeCursor.getColumnIndex("SearchText"));
+
+                        callMethod.Log(
+                                "FTS LIKE-ONLY #" + likeCount +
+                                        " | GoodCode=" + goodCode +
+                                        " | GoodName=[" + DebugVisibleText(goodName) + "]" +
+                                        " | SearchText=[" + DebugShortText(searchText, 700) + "]"
+                        );
+                    }
+                }
+
+                callMethod.Log("FTS ORDERED-LIKE COUNT (logged max 20) = " + likeCount);
+            }
+
+        } catch (Exception e) {
+            reportDbFailure(e);
+        } finally {
+            closeCursor(cursor);
+            closeCursor(likeCursor);
+            callMethod.Log("========== GOOD SEARCH DEBUG END ==========");
+        }
+    }
+
+
     @SuppressLint({"Recycle", "Range"})
     public synchronized ArrayList<Good> getAllGood(String search_target, String aGroupCode, String MoreCallData) {
 
@@ -5318,21 +5660,27 @@ public class Broker_DBH extends SQLiteOpenHelper {
         String search = GetRegionText(search_target);
         search = search.replaceAll("'", " ").trim();
 
-        try {
-            Integer.parseInt(aGroupCode);
-        } catch (Exception e) {
-            aGroupCode = "0";
+        // Never run an FTS query while the table is missing or its rebuild is unfinished.
+        // Keep the app searchable using the previous LIKE implementation until FTS is ready.
+        if (!search.equals("") && !IsGoodSearchFTSUsableForSearch()) {
+            return getAllGood1(search_target, aGroupCode, MoreCallData);
         }
 
-        int offsetValue = 0;
-
-        try {
-            offsetValue =                    Integer.parseInt(LimitAmount) *                            Integer.parseInt(MoreCallData);        } catch (Exception e) {            offsetValue = 0;
-        }
+        int groupCode = BrokerDbInputPolicy.nonNegativeCode(aGroupCode);
+        aGroupCode = String.valueOf(groupCode);
+        int offsetValue = BrokerDbInputPolicy.paginationOffset(
+                LimitAmount,
+                MoreCallData
+        );
 
         String selectQuery = "";
-        String whereQuery;
-        String orderQuery;
+        String whereQuery = " Where 1=1 ";
+        String baseOrderQuery = "";
+
+        String matchedGoodsCte = "";
+        String matchedGoodsJoin = "";
+        String searchRankSelect = ", 0 AS SearchRank ";
+        boolean hasSearchRanking = false;
 
         ArrayList<String> argsList = new ArrayList<>();
 
@@ -5416,24 +5764,59 @@ public class Broker_DBH extends SQLiteOpenHelper {
         if (!search.equals("")) {
 
             String matchQuery = BuildGoodFTSMatchQuery(search);
+            String strictMatchQuery = BuildGoodFTSStrictMatchQuery(search);
+            String exactSearchPattern = BuildExactFTSSearchPattern(search);
+            String orderedSearchPattern = BuildOrderedFTSSearchPattern(search);
 
             if (!matchQuery.equals("")) {
 
-                whereQuery =
-                        " Where g.GoodCode in (" +
-                                " Select Cast(GoodCode as INTEGER) " +
+                hasSearchRanking = true;
+
+                matchedGoodsCte =
+                        " BroadMatchedGoods As ( " +
+                                " Select Cast(GoodCode as INTEGER) AS GoodCode " +
                                 " From GoodSearchFTS " +
                                 " Where GoodSearchFTS Match ? " +
-                                " ) ";
+                                " ), " +
+                                " StrictMatchedGoods As ( " +
+                                " Select Cast(GoodCode as INTEGER) AS GoodCode " +
+                                " From GoodSearchFTS " +
+                                " Where GoodSearchFTS Match ? " +
+                                " ), " +
+                                " MatchedGoods As ( " +
+                                " Select bm.GoodCode, " +
+                                " Case When sm.GoodCode Is Not Null Then 1 Else 0 End AS IsStrict " +
+                                " From BroadMatchedGoods bm " +
+                                " Left Join StrictMatchedGoods sm " +
+                                " on sm.GoodCode = bm.GoodCode " +
+                                " ), ";
 
+                matchedGoodsJoin =
+                        " Join MatchedGoods mg " +
+                                " on mg.GoodCode = g.GoodCode ";
+
+                // Placeholder order: first FTS MATCH args, then field-aware ranking args.
                 argsList.add(matchQuery);
+                argsList.add(strictMatchQuery);
 
-            } else {
-                whereQuery = " Where 1=1 ";
+                String searchRankExpression = BuildFieldAwareSearchRankExpression(
+                        "mg",
+                        exactSearchPattern,
+                        orderedSearchPattern,
+                        argsList
+                );
+
+                searchRankSelect = ", " + searchRankExpression + " AS SearchRank ";
+
+                LogGoodFTSSearchDebug(
+                        search_target,
+                        search,
+                        matchQuery,
+                        strictMatchQuery,
+                        exactSearchPattern,
+                        orderedSearchPattern
+                );
             }
-
-        } else {
-            whereQuery = " Where 1=1 ";
         }
 
         whereQuery =
@@ -5483,7 +5866,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         BrokerStackString
                 );
 
-        if (Integer.parseInt(aGroupCode) > 0) {
+        if (groupCode > 0) {
 
             whereQuery =
                     whereQuery +
@@ -5497,8 +5880,6 @@ public class Broker_DBH extends SQLiteOpenHelper {
                             " or s.L5 = " + aGroupCode + ")";
         }
 
-        orderQuery = " order by ";
-
         int orderCount = 0;
 
         for (Column column : localColumns) {
@@ -5506,7 +5887,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
             if (!column.getOrderIndex().equals("0")) {
 
                 if (orderCount != 0) {
-                    orderQuery = orderQuery + " , ";
+                    baseOrderQuery = baseOrderQuery + " , ";
                 }
 
                 String orderColumn;
@@ -5532,10 +5913,10 @@ public class Broker_DBH extends SQLiteOpenHelper {
                     }
                 }
 
-                if (Integer.parseInt(column.getOrderIndex()) > 0) {
-                    orderQuery = orderQuery + orderColumn;
+                if (BrokerDbInputPolicy.orderIndex(column.getOrderIndex()) > 0) {
+                    baseOrderQuery = baseOrderQuery + orderColumn;
                 } else {
-                    orderQuery = orderQuery + orderColumn + " DESC ";
+                    baseOrderQuery = baseOrderQuery + orderColumn + " DESC ";
                 }
 
                 orderCount++;
@@ -5543,30 +5924,49 @@ public class Broker_DBH extends SQLiteOpenHelper {
         }
 
         if (orderCount == 0) {
-            orderQuery = " order by g.GoodCode DESC ";
+            baseOrderQuery = "g.GoodCode DESC";
+        }
+
+        String innerOrderQuery;
+        String outerOrderQuery;
+
+        if (hasSearchRanking) {
+            innerOrderQuery = " order by SearchRank, " + baseOrderQuery;
+            outerOrderQuery = " order by gl.SearchRank, " + baseOrderQuery;
+        } else {
+            innerOrderQuery = " order by " + baseOrderQuery;
+            outerOrderQuery = " order by " + baseOrderQuery;
         }
 
         String sql =
                 " With FilterTable As (Select 0 as SecondField), " +
+                        matchedGoodsCte +
                         " GoodsLimited As ( " +
                         " Select g.GoodCode " +
-                        " From Good g , FilterTable " +
+                        searchRankSelect +
+                        " From Good g " +
+                        matchedGoodsJoin +
+                        " , FilterTable " +
                         whereQuery +
-                        orderQuery +
+                        innerOrderQuery +
                         " LIMIT " +
                         LimitAmount +
                         " OFFSET " +
                         offsetValue +
                         " ) " +
                         " SELECT " +
+                        (hasSearchRanking ? "gl.SearchRank AS __SearchRank, " : "0 AS __SearchRank, ") +
                         selectQuery +
                         " FROM GoodsLimited gl " +
                         " Join Good g on g.GoodCode = gl.GoodCode " +
                         " , FilterTable " +
-                        orderQuery;
+                        outerOrderQuery;
 
         callMethod.Log(sql);
-        callMethod.Log("FTS Args = " + argsList.toString());
+        if (GOOD_SEARCH_DEBUG) {
+            callMethod.Log("FTS Args = " + argsList.toString());
+        }
+
         Cursor localCursor = null;
 
         try {
@@ -5577,7 +5977,11 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
             if (localCursor != null) {
 
+                int debugResultIndex = 0;
+
                 while (localCursor.moveToNext()) {
+
+                    debugResultIndex++;
 
                     Good itemGood = new Good();
 
@@ -5590,77 +5994,40 @@ public class Broker_DBH extends SQLiteOpenHelper {
                         );
                     }
 
+                    if (GOOD_SEARCH_DEBUG && !search.equals("")) {
+
+                        int debugRankIndex = localCursor.getColumnIndex("__SearchRank");
+                        int debugNameIndex = localCursor.getColumnIndex("GoodName");
+
+                        String debugGoodCode =
+                                goodCodeIndex >= 0 && !localCursor.isNull(goodCodeIndex)
+                                        ? localCursor.getString(goodCodeIndex)
+                                        : "";
+
+                        String debugGoodName =
+                                debugNameIndex >= 0 && !localCursor.isNull(debugNameIndex)
+                                        ? localCursor.getString(debugNameIndex)
+                                        : "";
+
+                        int debugRank =
+                                debugRankIndex >= 0 && !localCursor.isNull(debugRankIndex)
+                                        ? localCursor.getInt(debugRankIndex)
+                                        : -1;
+
+                        callMethod.Log(
+                                "FTS FINAL RESULT #" + debugResultIndex +
+                                        " | GoodCode=" + debugGoodCode +
+                                        " | Rank=" + debugRank +
+                                        " | GoodName=[" + DebugVisibleText(debugGoodName) + "]"
+                        );
+                    }
+
                     for (Column column : localColumns) {
-
-                        try {
-
-                            switch (column.getColumnType()) {
-
-                                case "0":
-
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            localCursor.getString(
-                                                    localCursor.getColumnIndex(
-                                                            column.getColumnName()
-                                                    )
-                                            )
-                                    );
-
-                                    break;
-
-                                case "1":
-
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(
-                                                    localCursor.getInt(
-                                                            localCursor.getColumnIndex(
-                                                                    column.getColumnName()
-                                                            )
-                                                    )
-                                            )
-                                    );
-
-                                    break;
-
-                                case "2":
-
-                                    itemGood.setGoodFieldValue(
-                                            column.getColumnName(),
-                                            String.valueOf(
-                                                    localCursor.getFloat(
-                                                            localCursor.getColumnIndex(
-                                                                    column.getColumnName()
-                                                            )
-                                                    )
-                                            )
-                                    );
-
-                                    break;
-                            }
-
-                        } catch (Exception ignored) {
-                        }
+                        ApplyConfiguredGoodColumn(localCursor, itemGood, column);
                     }
 
                     itemGood.setCheck(false);
-
-                    try {
-
-                        itemGood.setGoodFieldValue(
-                                "ActiveStack",
-                                String.valueOf(
-                                        localCursor.getInt(
-                                                localCursor.getColumnIndex(
-                                                        "ActiveStack"
-                                                )
-                                        )
-                                )
-                        );
-
-                    } catch (Exception ignored) {
-                    }
+                    ApplyActiveStackIfPresent(localCursor, itemGood);
 
                     resultGoods.add(itemGood);
                 }
@@ -5668,7 +6035,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log(e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -5737,7 +6104,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log("SyncOneGoodSearchFTS Error = " + e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -5777,7 +6144,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
         } catch (Exception e) {
 
-            callMethod.Log("DeleteOneGoodSearchFTS Error = " + e.getMessage());
+            reportDbFailure(e);
 
         } finally {
 
@@ -5794,7 +6161,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
     public void SyncOneGoodSearchFTSAsync(String goodCode, OneGoodFTSCallback callback) {
 
-        mainHandler.post(new Runnable() {
+        final long generation = captureAsyncGeneration();
+        postAsync(generation, new Runnable() {
             @Override
             public void run() {
                 if (callback != null) {
@@ -5803,14 +6171,14 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
         });
 
-        executorService.execute(new Runnable() {
+        executeAsync(generation, "SyncOneGoodSearchFTSAsync", new Runnable() {
             @Override
             public void run() {
                 try {
 
                     SyncOneGoodSearchFTS(goodCode);
 
-                    mainHandler.post(new Runnable() {
+                    postAsync(generation, new Runnable() {
                         @Override
                         public void run() {
                             if (callback != null) {
@@ -5821,7 +6189,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
                 } catch (final Exception e) {
 
-                    mainHandler.post(new Runnable() {
+                    postAsync(generation, new Runnable() {
                         @Override
                         public void run() {
                             if (callback != null) {
@@ -5836,7 +6204,8 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
     public void DeleteOneGoodSearchFTSAsync(String goodCode, OneGoodFTSCallback callback) {
 
-        mainHandler.post(new Runnable() {
+        final long generation = captureAsyncGeneration();
+        postAsync(generation, new Runnable() {
             @Override
             public void run() {
                 if (callback != null) {
@@ -5845,14 +6214,14 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
         });
 
-        executorService.execute(new Runnable() {
+        executeAsync(generation, "DeleteOneGoodSearchFTSAsync", new Runnable() {
             @Override
             public void run() {
                 try {
 
                     DeleteOneGoodSearchFTS(goodCode);
 
-                    mainHandler.post(new Runnable() {
+                    postAsync(generation, new Runnable() {
                         @Override
                         public void run() {
                             if (callback != null) {
@@ -5863,7 +6232,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
 
                 } catch (final Exception e) {
 
-                    mainHandler.post(new Runnable() {
+                    postAsync(generation, new Runnable() {
                         @Override
                         public void run() {
                             if (callback != null) {
@@ -5894,7 +6263,7 @@ public class Broker_DBH extends SQLiteOpenHelper {
             }
 
         } catch (Exception e) {
-            callMethod.Log("GetGoodSearchFTSCount Error = " + e.getMessage());
+            reportDbFailure(e);
         } finally {
             closeCursor(cursor);
         }

@@ -224,5 +224,12 @@ public class Broker_PFActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+        }
+        super.onDestroy();
+    }
 
 }

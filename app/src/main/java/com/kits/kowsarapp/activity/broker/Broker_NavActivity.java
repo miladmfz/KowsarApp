@@ -49,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.application.base.WManager;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.GoodGroup;
@@ -288,9 +289,10 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
 
         try {
             if (callMethod.ReadBoolan("LastUpdateAlarm")){
-                if (broker_action.IsLastUpdateOlderThanMinutes(Integer.parseInt(callMethod.ReadString("LastUpdateAlarmTime")))) {
+                int alarmMinutes = readIntPreference("LastUpdateAlarmTime", 60);
+                if (broker_action.IsLastUpdateOlderThanMinutes(alarmMinutes)) {
 
-                    tv_lastupdate.setText("بیشتر از "+NumberFunctions.PerisanNumber(callMethod.ReadString("LastUpdateAlarmTime"))+" دقیقه از بروزرسانی گذشته");
+                    tv_lastupdate.setText("بیشتر از "+NumberFunctions.PerisanNumber(String.valueOf(alarmMinutes))+" دقیقه از بروزرسانی گذشته");
                 }else{
 
                     tv_lastupdate.setText(NumberFunctions.PerisanNumber(broker_dbh.ReadConfig("LastUpdate")));
@@ -301,7 +303,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             }
         }catch (Exception e){
 
-            callMethod.Log(""+e.getMessage());
+            callMethod.Log("Broker last-update state failed: " + e.getClass().getSimpleName());
         }
 
 
@@ -434,7 +436,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
             }
 
         } else if (id == R.id.b_nav_buy) {
-            if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) > 0) {
+            if (readIntPreference("PreFactorCode", 0) > 0) {
                 intent = new Intent(this, Broker_BasketActivity.class);
                 intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                 intent.putExtra("showflag", "2");
@@ -468,7 +470,7 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.b_bag_shop) {
-            if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
+            if (readIntPreference("PreFactorCode", 0) != 0) {
                 intent = new Intent(this, Broker_BasketActivity.class);
                 intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                 intent.putExtra("showflag", "2");
@@ -493,14 +495,31 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
     }
 
     public void factorState() {
-        if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) == 0) {
+        String preFactorCode = callMethod.ReadString("PreFactorCode");
+        if (SafeValueParser.intOrDefault(preFactorCode, 0) == 0) {
             tv_customer.setText("فاکتوری انتخاب نشده");
             llsumfactor.setVisibility(View.GONE);
         } else {
             llsumfactor.setVisibility(View.VISIBLE);
-            tv_customer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            tv_sumfac.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            tv_customer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(preFactorCode)));
+            String factorSum = broker_dbh.getFactorSum(preFactorCode);
+            Double parsedFactorSum = SafeValueParser.doubleOrNull(factorSum);
+            if (parsedFactorSum == null) {
+                callMethod.Log("Broker factor sum is invalid");
+                parsedFactorSum = 0.0;
+            }
+            tv_sumfac.setText(NumberFunctions.PerisanNumber(decimalFormat.format(parsedFactorSum)));
         }
+    }
+
+    private int readIntPreference(String key, int defaultValue) {
+        String value = callMethod.ReadString(key);
+        Integer parsed = SafeValueParser.intOrNull(value);
+        if (parsed == null) {
+            callMethod.Log("Broker preference is invalid: " + key);
+            return defaultValue;
+        }
+        return parsed;
     }
 
     @Override
@@ -515,5 +534,15 @@ public class Broker_NavActivity extends AppCompatActivity implements NavigationV
         super.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        if (broker_replication != null) {
+            broker_replication.release();
+        }
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+        }
+        super.onDestroy();
+    }
 
 }

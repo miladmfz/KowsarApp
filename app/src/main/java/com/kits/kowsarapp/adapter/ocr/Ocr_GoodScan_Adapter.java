@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
+import com.kits.kowsarapp.application.ocr.OcrImagePipeline;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_Good;
 import com.kits.kowsarapp.webService.base.APIClient;
@@ -29,6 +28,7 @@ import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.kits.kowsarapp.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,44 +74,44 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
         holder.goodscan_factoramount.setText(ocr_goods.get(position).getFacAmount());
         holder.goodscan_goodsellprice.setText(ocr_goods.get(position).getGoodMaxSellPrice());
         holder.goodscan_goodcode.setText(ocr_goods.get(position).getGoodCode());
+        holder.recycleImageRequest();
+        holder.boundGoodCode = ocr_goods.get(position).getGoodCode();
+        holder.goodscan_image.setImageResource(R.drawable.img_base_no_photo);
 
         Call<RetrofitResponse> call2;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+        if (Objects.equals(callMethod.ReadString("FactorDbName"), callMethod.ReadString("DbName"))){
             call2=apiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode()+"",0,250);
         }else{
             call2=secendApiInterface.GetImage("getImage", ocr_goods.get(position).getGoodCode()+"",0,250);
         }
+        holder.imageCall = call2;
+        final String requestedGoodCode = holder.boundGoodCode;
 
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    byte[] imageByteArray1;
-                    imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
-                    holder.goodscan_image.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
+                if (call2 != holder.imageCall
+                        || !Objects.equals(requestedGoodCode, holder.boundGoodCode)
+                        || !response.isSuccessful()
+                        || response.body() == null) {
+                    return;
+                }
+                Bitmap bitmap = OcrImagePipeline.decodeBase64(response.body().getText());
+                if (bitmap != null) {
+                    holder.goodscan_image.setImageBitmap(bitmap);
+                } else {
+                    callMethod.Log("OCR good image payload was empty or invalid");
                 }
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }            }
+                if (call2.isCanceled() || call2 != holder.imageCall
+                        || !Objects.equals(requestedGoodCode, holder.boundGoodCode)) {
+                    return;
+                }
+                Base_NetworkFailure.show(
+                        mContext, callMethod, "OCR scan image", call2, t);
+            }
         });
 
 
@@ -142,24 +142,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
                     }
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }                    }
+                        Base_NetworkFailure.show(
+                                mContext, callMethod, "OCR scan confirmation", call, t);
+                    }
                 });
 
             }else if (state.equals("1")) {
@@ -186,24 +171,9 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }                    }
+                        Base_NetworkFailure.show(
+                                mContext, callMethod, "OCR scan confirmation", call, t);
+                    }
                 });
 
             }
@@ -221,6 +191,17 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
         return ocr_goods.size();
     }
 
+    @Override
+    public void onViewRecycled(@NonNull facViewHolder holder) {
+        holder.recycleImageRequest();
+        super.onViewRecycled(holder);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull facViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+    }
+
     static class facViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView goodscan_goodname;
@@ -229,6 +210,8 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
         private final TextView goodscan_goodcode;
         private final ImageView goodscan_image;
         private final Button goodscan_btn;
+        private Call<RetrofitResponse> imageCall;
+        private String boundGoodCode;
 
         facViewHolder(View itemView) {
             super(itemView);
@@ -240,6 +223,15 @@ public class Ocr_GoodScan_Adapter extends RecyclerView.Adapter<Ocr_GoodScan_Adap
             goodscan_image = itemView.findViewById(R.id.ocr_goodscan_c_image);
             goodscan_btn = itemView.findViewById(R.id.ocr_goodscan_c_btn);
 
+        }
+
+        void recycleImageRequest() {
+            if (imageCall != null) {
+                imageCall.cancel();
+                imageCall = null;
+            }
+            boundGoodCode = null;
+            goodscan_image.setImageDrawable(null);
         }
     }
 

@@ -32,6 +32,7 @@ import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.activity.broker.Broker_RegistrationActivity;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
@@ -118,10 +119,10 @@ public void Config() {
         });
 
 
-        try {
-            state_category=Integer.parseInt(callMethod.ReadString("Category"));
-        }catch (Exception e){
-            state_category=0;
+        String categoryValue = callMethod.ReadString("Category");
+        state_category = SafeValueParser.intOrDefault(categoryValue, 0);
+        if (SafeValueParser.intOrNull(categoryValue) == null) {
+            callMethod.Log("OCR Category preference is invalid");
         }
 
         if(state_category==0){

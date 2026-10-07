@@ -199,4 +199,12 @@ public class Broker_BasketActivity extends AppCompatActivity {
         assert data != null;
         PreFac = data.getString("PreFac");
     }
+
+    @Override
+    protected void onDestroy() {
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+        }
+        super.onDestroy();
+    }
 }

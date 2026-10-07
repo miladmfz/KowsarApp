@@ -23,8 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.base.Base_ThemeSpinnerAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.order.Order_Action;
+import com.kits.kowsarapp.application.order.Order_NetworkFailure;
 import com.kits.kowsarapp.databinding.OrderActivityRegistrationBinding;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.PosDriver;
@@ -159,7 +159,8 @@ public class Order_RegistrationActivity extends AppCompatActivity {
         try {
             init();
         } catch (Exception e) {
-            e.printStackTrace();
+            callMethod.Log("Order registration initialization failed: "
+                    + e.getClass().getSimpleName());
         }
 
 
@@ -184,10 +185,10 @@ public class Order_RegistrationActivity extends AppCompatActivity {
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
+                if (response.isSuccessful() && response.body() != null && canUpdateUi()) {
                     SellBrokers.clear();
                     SellBrokers = response.body().getSellBrokers();
+                    if (SellBrokers == null) SellBrokers = new ArrayList<>();
                     SellBroker sellBroker= new SellBroker();
                     sellBroker.setBrokerCode("0");
                     sellBroker.setBrokerNameWithoutType("بازاریاب تعریف نشده");
@@ -201,24 +202,9 @@ public class Order_RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Order_RegistrationActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
+                Order_NetworkFailure.show(Order_RegistrationActivity.this, callMethod,
+                        "GetSellBroker", call, t);
+                if (!canUpdateUi()) return;
                 SellBroker sellBroker= new SellBroker();
                 sellBroker.setBrokerCode("0");
                 sellBroker.setBrokerNameWithoutType("ویتری تعریف نشده");
@@ -388,9 +374,9 @@ public class Order_RegistrationActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 pos_list.add("بدون پوز");
 
-                if(response.isSuccessful()) {
-                    assert response.body() != null;
+                if(response.isSuccessful() && response.body() != null && canUpdateUi()) {
                     posDrivers=response.body().getPosDrivers();
+                    if (posDrivers == null) posDrivers = new ArrayList<>();
                     for ( PosDriver posDriver: posDrivers) {
                         pos_list.add(posDriver.getPosName());
                     }
@@ -410,24 +396,9 @@ public class Order_RegistrationActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Order_RegistrationActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }            }
+                Order_NetworkFailure.show(Order_RegistrationActivity.this, callMethod,
+                        "OrderGetPosDriver", call, t);
+            }
         });
 
         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lang_array);
@@ -485,9 +456,8 @@ public class Order_RegistrationActivity extends AppCompatActivity {
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-
+                    if (response.isSuccessful() && response.body() != null
+                            && response.body().getText() != null && canUpdateUi()) {
                         if (!response.body().getText().equals(order_dbh.ReadConfig("GroupCodeDefult"))) {
                             order_dbh.SaveConfig("GroupCodeDefult", response.body().getText());
                             binding.ordRegistrAGroupcode.setText(callMethod.NumberRegion(order_dbh.ReadConfig("GroupCodeDefult")));
@@ -496,9 +466,8 @@ public class Order_RegistrationActivity extends AppCompatActivity {
                             call2.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                                    if (response.isSuccessful()) {
-                                        assert response.body() != null;
-
+                                    if (response.isSuccessful() && response.body() != null
+                                            && response.body().getText() != null && canUpdateUi()) {
                                         callMethod.EditBoolan("CanFreeTable", !response.body().getText().equals("0"));
                                         binding.ordRegistrACanfreetable.setChecked(callMethod.ReadBoolan("CanFreeTable"));
 
@@ -506,8 +475,8 @@ public class Order_RegistrationActivity extends AppCompatActivity {
                                         call2.enqueue(new Callback<RetrofitResponse>() {
                                             @Override
                                             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                                                if (response.isSuccessful()) {
-                                                    assert response.body() != null;
+                                                if (response.isSuccessful() && response.body() != null
+                                                        && response.body().getText() != null && canUpdateUi()) {
                                                     callMethod.EditString("MaxSellOff", response.body().getText());
                                                     binding.ordRegistrAMaxselloff.setText(callMethod.ReadString("MaxSellOff"));
                                                     callMethod.showToast(getString(R.string.textvalue_resived));
@@ -516,24 +485,9 @@ public class Order_RegistrationActivity extends AppCompatActivity {
                                             }
                                             @Override
                                             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                                                try {
-                                                    // 🟢 بررسی وضعیت اتصال
-                                                    if (!NetworkUtils.isNetworkAvailable(Order_RegistrationActivity.this)) {
-                                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                                    } else if (NetworkUtils.isVPNActive()) {
-                                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                                    } else {
-                                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                                        } else {
-                                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                                        }
-                                                    }
-                                                } catch (Exception e) {
-                                                    callMethod.Log("Network check error: " + e.getMessage());
-                                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                                }
+                                                Order_NetworkFailure.show(Order_RegistrationActivity.this,
+                                                        callMethod, "MaxShopCashDiscount", call, t);
+                                                if (canUpdateUi() && dialogProg.isShowing()) dialogProg.dismiss();
                                             }
                                         });
 
@@ -542,24 +496,9 @@ public class Order_RegistrationActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                                    try {
-                                        // 🟢 بررسی وضعیت اتصال
-                                        if (!NetworkUtils.isNetworkAvailable(Order_RegistrationActivity.this)) {
-                                            callMethod.showToast("اتصال اینترنت قطع است!");
-                                        } else if (NetworkUtils.isVPNActive()) {
-                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                        } else {
-                                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                            } else {
-                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        callMethod.Log("Network check error: " + e.getMessage());
-                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                    }
+                                    Order_NetworkFailure.show(Order_RegistrationActivity.this,
+                                            callMethod, "AppOrder_CanFree_FromTablet", call, t);
+                                    if (canUpdateUi() && dialogProg.isShowing()) dialogProg.dismiss();
                                 }
                             });                        }
                         dialogProg.dismiss();
@@ -568,24 +507,9 @@ public class Order_RegistrationActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(Order_RegistrationActivity.this)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
+                    Order_NetworkFailure.show(Order_RegistrationActivity.this, callMethod,
+                            "AppOrder_DefaultGroupCode", call, t);
+                    if (canUpdateUi() && dialogProg.isShowing()) dialogProg.dismiss();
                 }
             });
         });
@@ -680,6 +604,16 @@ public class Order_RegistrationActivity extends AppCompatActivity {
 
     public String getAppLanguage() {
         return Locale.getDefault().getLanguage();
+    }
+
+    private boolean canUpdateUi() {
+        return !isFinishing() && !isDestroyed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (order_action != null) order_action.cancelPending();
+        super.onDestroy();
     }
 
 }

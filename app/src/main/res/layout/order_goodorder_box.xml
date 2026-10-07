@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_goodorder_box"
     android:layout_width="340dp"
-    android:layout_height="540dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layoutDirection="rtl"
     android:orientation="vertical"
@@ -162,7 +162,14 @@
                     android:textSize="10sp"
                     tools:ignore="LabelFor" />
 
-                <!-- Added items title -->
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/ord_goodorder_b_inbasket"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="34dp"
@@ -181,17 +188,14 @@
                         android:textSize="10sp"
                         android:textStyle="bold" />
 
-                    <View
-                        android:layout_width="48dp"
-                        android:layout_height="2dp"
-                        android:background="?attr/colorPrimary" />
+
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <!-- Added items -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:cardBackgroundColor="?attr/colorSurface"
                     app:cardCornerRadius="8dp"
@@ -201,12 +205,12 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/ord_goodorder_b_rc"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:clipToPadding="false"
                             android:overScrollMode="never"
                             android:padding="3dp"
@@ -228,6 +232,7 @@
                     </FrameLayout>
 
                 </com.google.android.material.card.MaterialCardView>
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

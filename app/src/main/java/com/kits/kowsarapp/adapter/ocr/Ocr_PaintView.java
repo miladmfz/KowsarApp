@@ -12,6 +12,8 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.kits.kowsarapp.application.base.ReleaseLog;
+
 import com.kits.kowsarapp.model.ocr.Ocr_FingerPath;
 
 import java.io.File;
@@ -136,7 +138,7 @@ public class Ocr_PaintView extends View {
             out.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            ReleaseLog.error("OcrPaint", e);
         }
 
 

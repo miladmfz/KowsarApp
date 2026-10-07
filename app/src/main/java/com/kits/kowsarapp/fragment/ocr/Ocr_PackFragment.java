@@ -32,7 +32,7 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.ocr.Ocr_Print;
@@ -351,24 +351,8 @@ public class Ocr_PackFragment extends Fragment implements OnGoodConfirmListener{
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }
+                        Base_NetworkFailure.show(
+                                getContext(), callMethod, "OCR pack submit", call, t);
                     }
                 });
 
@@ -874,25 +858,8 @@ public class Ocr_PackFragment extends Fragment implements OnGoodConfirmListener{
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }
+                        Base_NetworkFailure.show(
+                                getContext(), callMethod, "OCR pack submit", call, t);
                     }
                 });
             }

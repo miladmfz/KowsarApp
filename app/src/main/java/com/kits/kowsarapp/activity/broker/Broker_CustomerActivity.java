@@ -292,5 +292,15 @@ public class Broker_CustomerActivity extends AppCompatActivity {
         );
     }
 
+    @Override
+    protected void onDestroy() {
+        if (broker_replication != null) {
+            broker_replication.release();
+        }
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+        }
+        super.onDestroy();
+    }
 
 }

@@ -496,18 +496,6 @@ public class Broker_GoodItemViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                callMethod.Log("Request Failed: " + t.getMessage());
-
-                if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                    callMethod.showToast("اتصال اینترنت قطع است!");
-                } else if (NetworkUtils.isVPNActive()) {
-                    callMethod.showToast("VPN فعال است، ممکن است اتصال با سرور مختل شود!");
-                } else if (!NetworkUtils.canReachServer(callMethod.ReadString("ServerURLUse"))) {
-                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                } else {
-                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                }
-
                 showErrorState(img);
             }
 

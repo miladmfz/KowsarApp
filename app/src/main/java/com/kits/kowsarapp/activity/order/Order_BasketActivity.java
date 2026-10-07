@@ -30,11 +30,12 @@ import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.order.Order_GoodBasketAdapter;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.base.ThirdPartyResult;
 import com.kits.kowsarapp.application.order.Order_Action;
+import com.kits.kowsarapp.application.order.Order_NetworkFailure;
 import com.kits.kowsarapp.application.order.Order_Payment;
 import com.kits.kowsarapp.application.order.Order_Print;
+import com.kits.kowsarapp.application.order.Order_ValueParser;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
@@ -43,7 +44,6 @@ import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -74,6 +74,12 @@ public class Order_BasketActivity extends AppCompatActivity {
     TextView tv_lottiestatus;
     String State = "0";
     Order_Print order_print;
+    private Call<RetrofitResponse> orderCall;
+    private Call<RetrofitResponse> summaryCall;
+    private Call<RetrofitResponse> deleteCall;
+    private boolean orderLoading;
+    private boolean summaryLoading;
+    private boolean deleteInProgress;
 
 
     @SuppressLint("ObsoleteSdkInt")
@@ -126,7 +132,8 @@ public class Order_BasketActivity extends AppCompatActivity {
             try {
                 init();
             } catch (Exception e) {
-                e.printStackTrace();
+                callMethod.Log("Order basket initialization failed: "
+                        + e.getClass().getSimpleName());
             }
         } else {
             intent = new Intent(this, Base_SplashActivity.class);
@@ -173,6 +180,7 @@ public class Order_BasketActivity extends AppCompatActivity {
         tv_notresive = findViewById(R.id.ord_basket_a_total_notresive);
         tv_resive = findViewById(R.id.ord_basket_a_total_resive);
         btn_peyment  = findViewById(R.id.ord_basket_a_payment);
+        btn_peyment.setEnabled(false);
 
 
 
@@ -204,8 +212,9 @@ public class Order_BasketActivity extends AppCompatActivity {
 
 
         btn_peyment.setOnClickListener(view -> {
-
-            order_payment.BasketInfopayment(order_basketInfo);
+            if (order_basketInfo != null) {
+                order_payment.BasketInfopayment(order_basketInfo);
+            }
         });
 
 
@@ -216,43 +225,48 @@ public class Order_BasketActivity extends AppCompatActivity {
 
             builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
 
-                Call<RetrofitResponse> call1 = order_apiInterface.OrderDeleteAll("OrderDeleteAll", callMethod.ReadString("AppBasketInfoCode")
+                if (deleteInProgress) return;
+                deleteInProgress = true;
+                total_delete.setEnabled(false);
+
+                try {
+                    deleteCall = order_apiInterface.OrderDeleteAll("OrderDeleteAll", callMethod.ReadString("AppBasketInfoCode")
 
                 );
-                call1.enqueue(new Callback<RetrofitResponse>() {
+                    deleteCall.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<RetrofitResponse> call1, @NotNull Response<RetrofitResponse> response) {
-                        if (response.isSuccessful()) {
-                            assert response.body() != null;
-                            if (response.body().getText().equals("Done")) {
-                                callMethod.showToast(getString(R.string.textvalue_deleteorderbasket));
-                                finish();
-                            }
+                        deleteInProgress = false;
+                        deleteCall = null;
+                        if (!canUpdateUi()) return;
+                        total_delete.setEnabled(true);
+                        if (response.isSuccessful() && response.body() != null
+                                && "Done".equals(response.body().getText())) {
+                            callMethod.showToast(getString(R.string.textvalue_deleteorderbasket));
+                            finish();
+                        } else {
+                            callMethod.showToast("حذف سفارش توسط سرور تأیید نشد.");
                         }
                     }
 
                     @Override
                     public void onFailure(@NotNull Call<RetrofitResponse> call1, @NotNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(Order_BasketActivity.this)) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }
+                        deleteInProgress = false;
+                        deleteCall = null;
+                        if (!canUpdateUi() || call1.isCanceled()) return;
+                        total_delete.setEnabled(true);
+                        Order_NetworkFailure.show(Order_BasketActivity.this, callMethod,
+                                "OrderDeleteAll", call1, t);
                     }
-                });
+                    });
+                } catch (RuntimeException exception) {
+                    deleteInProgress = false;
+                    deleteCall = null;
+                    total_delete.setEnabled(true);
+                    callMethod.Log("OrderDeleteAll failed before enqueue: "
+                            + (exception.getMessage() == null ? "" : exception.getMessage()));
+                    callMethod.showToast("شروع حذف سفارش ناموفق بود.");
+                }
             });
 
             builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
@@ -266,39 +280,64 @@ public class Order_BasketActivity extends AppCompatActivity {
     }
 
     private void GetOrder() {
-        Call<RetrofitResponse> call = order_apiInterface.OrderGet("OrderGet", callMethod.ReadString("AppBasketInfoCode"), "3");
-        call.enqueue(new Callback<RetrofitResponse>() {
+        if (orderLoading) return;
+        orderLoading = true;
+        try {
+            orderCall = order_apiInterface.OrderGet(
+                    "OrderGet", callMethod.ReadString("AppBasketInfoCode"), "3");
+            orderCall.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    goods = response.body().getGoods();
-                    callrecycler();
-                    prog.setVisibility(View.GONE);
-
+                orderLoading = false;
+                orderCall = null;
+                if (!canUpdateUi()) return;
+                prog.setVisibility(View.GONE);
+                if (!response.isSuccessful() || response.body() == null
+                        || response.body().getGoods() == null) {
+                    callMethod.showToast("پاسخ اقلام سفارش نامعتبر است.");
+                    return;
                 }
+                goods = new ArrayList<>(response.body().getGoods());
+                callrecycler();
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
-                prog.setVisibility(View.GONE);
-                goods.clear();
-                callrecycler();
+                orderLoading = false;
+                orderCall = null;
+                if (!call.isCanceled() && canUpdateUi()) {
+                    prog.setVisibility(View.GONE);
+                    callMethod.Log("OrderGet failed: "
+                            + (t.getMessage() == null ? "" : t.getMessage()));
+                }
             }
-        });
+            });
+        } catch (RuntimeException exception) {
+            orderLoading = false;
+            orderCall = null;
+            if (canUpdateUi()) prog.setVisibility(View.GONE);
+            callMethod.Log("OrderGet failed before enqueue: "
+                    + (exception.getMessage() == null ? "" : exception.getMessage()));
+        }
     }
     public void setupbasketview(){
-        State = order_basketInfo.getInfoState();
+        if (order_basketInfo == null) return;
+        State = order_basketInfo.getInfoState() == null
+                ? "0"
+                : order_basketInfo.getInfoState();
         Buy_row.setText(callMethod.NumberRegion(order_basketInfo.getCountGood()));
         Buy_amount.setText(callMethod.NumberRegion(order_basketInfo.getSumFacAmount()));
 
-        tv_totalprice.setText(callMethod.NumberRegion(String.valueOf(Integer.parseInt(order_basketInfo.getSumPrice())+Integer.parseInt(order_basketInfo.getSumTaxAndMayor()))));
+        long totalPrice = Order_ValueParser.addOrDefault(
+                Order_ValueParser.longOrDefault(order_basketInfo.getSumPrice(), 0),
+                Order_ValueParser.longOrDefault(order_basketInfo.getSumTaxAndMayor(), 0),
+                0);
+        tv_totalprice.setText(callMethod.NumberRegion(String.valueOf(totalPrice)));
         tv_notresive.setText(callMethod.NumberRegion(order_basketInfo.getNotReceived()));
         tv_resive.setText(callMethod.NumberRegion(order_basketInfo.getReceived()));
 
-        if (Integer.parseInt(order_basketInfo.getFactorCode())>0){
-            if (Integer.parseInt(order_basketInfo.getNotReceived())>0){
+        if (Order_ValueParser.longOrDefault(order_basketInfo.getFactorCode(), 0) > 0){
+            if (Order_ValueParser.longOrDefault(order_basketInfo.getNotReceived(), 0) > 0){
                 if (callMethod.ReadBoolan("PaymentWithDevice")) {
                     btn_peyment.setVisibility(View.VISIBLE);
                 }else{
@@ -315,24 +354,44 @@ public class Order_BasketActivity extends AppCompatActivity {
         if (State.equals("4")) {
             btn_ordertofactor.setText(R.string.textvalue_setreserveorder);
         }
+        btn_peyment.setEnabled(true);
     }
 
 
     private void callrecycler() {
 
+        if (goods == null) {
+            goods = new ArrayList<>();
+        }
+
         order_goodBasketAdapter = new Order_GoodBasketAdapter(goods, this);
 
         if (order_goodBasketAdapter.getItemCount() == 0) {
+            btn_ordertofactor.setVisibility(View.GONE);
+            total_delete.setVisibility(View.GONE);
             tv_lottiestatus.setText(R.string.textvalue_notfound);
             img_lottiestatus.setVisibility(View.VISIBLE);
             tv_lottiestatus.setVisibility(View.VISIBLE);
         } else {
+            boolean hasPendingRow = false;
+            boolean hasPrintedRow = false;
             for (Good good : goods) {
-                if (good.getFactorCode().equals("0")) {
-                    btn_ordertofactor.setVisibility(View.VISIBLE);
-                    total_delete.setVisibility(View.VISIBLE);
+                if ("0".equals(good.getFactorCode())) {
+                    hasPendingRow = true;
+                } else {
+                    hasPrintedRow = true;
                 }
             }
+
+            btn_ordertofactor.setVisibility(hasPendingRow ? View.VISIBLE : View.GONE);
+
+            // Never use the legacy OrderDeleteAll when the basket contains rows
+            // that have already been printed/factored. Printed history must only
+            // be changed through an audited adjustment.
+            total_delete.setVisibility(hasPendingRow && !hasPrintedRow
+                    ? View.VISIBLE
+                    : View.GONE);
+
             img_lottiestatus.setVisibility(View.GONE);
             tv_lottiestatus.setVisibility(View.GONE);
         }
@@ -344,34 +403,45 @@ public class Order_BasketActivity extends AppCompatActivity {
 
     public void RefreshState() {
         GetOrder();
+        if (summaryLoading) return;
+        summaryLoading = true;
         //Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
-        Call<RetrofitResponse> call2 = order_apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
+        try {
+            summaryCall = order_apiInterface.OrderGetSummmary(
+                    "OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
 
-        call2.enqueue(new Callback<RetrofitResponse>() {
+            summaryCall.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-
-
-
-                if (response.body() == null ||
+                summaryLoading = false;
+                summaryCall = null;
+                if (!canUpdateUi()) return;
+                if (!response.isSuccessful() || response.body() == null ||
                         response.body().getBasketInfos() == null ||
                         response.body().getBasketInfos().isEmpty()) {
+                    callMethod.showToast("خلاصه سفارش دریافت نشد.");
                     return;
                 }
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    order_basketInfo = response.body().getBasketInfos().get(0);
-                    setupbasketview();
-                }
+                order_basketInfo = response.body().getBasketInfos().get(0);
+                setupbasketview();
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
-                goods.clear();
-                callrecycler();
+                summaryLoading = false;
+                summaryCall = null;
+                if (!call.isCanceled() && canUpdateUi()) {
+                    callMethod.Log("OrderGetSummmary failed: "
+                            + (t.getMessage() == null ? "" : t.getMessage()));
+                }
             }
-        });
+            });
+        } catch (RuntimeException exception) {
+            summaryLoading = false;
+            summaryCall = null;
+            callMethod.Log("OrderGetSummmary failed before enqueue: "
+                    + (exception.getMessage() == null ? "" : exception.getMessage()));
+        }
 
     }
     ThirdPartyResult BehPardakht_pos_result = new ThirdPartyResult();
@@ -385,37 +455,16 @@ public class Order_BasketActivity extends AppCompatActivity {
 
         if (requestCode != REQUEST_POS) return;
 
-        // یک لاگ خام که همیشه ذخیره می‌کنیم (حتی اگر JSON نیاد)
-        StringBuilder rawLog = new StringBuilder();
-        rawLog.append("activityResultCode=").append(resultCode).append("\n");
-
-        if (data != null && data.getExtras() != null) {
-            rawLog.append("---- extras ----\n");
-            for (String key : data.getExtras().keySet()) {
-                Object v = data.getExtras().get(key);
-                rawLog.append(key).append("=").append(String.valueOf(v)).append("\n");
-            }
-        } else {
-            rawLog.append("extras=null\n");
-        }
-
-        // JSON نتیجه
         String resultJson = (data == null) ? null : data.getStringExtra("paymentResult");
-        if (resultJson == null || resultJson.trim().isEmpty()) {
-            rawLog.append("paymentResult=NULL_OR_EMPTY\n");
-        } else {
-            rawLog.append("---- paymentResult ----\n");
-            rawLog.append(resultJson);
-        }
-
-        // تلاش برای parse (اگر شد)
         BehPardakht_pos_result = null;
         try {
             if (resultJson != null && !resultJson.trim().isEmpty()) {
-                BehPardakht_pos_result = gson.fromJson(resultJson, (Type) ThirdPartyResult.class);
+                BehPardakht_pos_result = gson.fromJson(resultJson, ThirdPartyResult.class);
             }
-        } catch (Exception ignored) {
-            // لاگش رو در DB/File می‌فرستیم، لازم نیست اینجا کاری کنیم
+        } catch (Exception exception) {
+            // Never log the raw POS payload or extras; they may contain payment data.
+            callMethod.Log("POS result parse failed: "
+                    + exception.getClass().getSimpleName());
         }
 
 
@@ -424,7 +473,7 @@ public class Order_BasketActivity extends AppCompatActivity {
             order_payment.BasketInfopayment_request(BehPardakht_pos_result,resultJson);
 
         }else{
-            order_payment.dissmiss_all();
+            order_payment.rejectPosResult(BehPardakht_pos_result == null);
         }
 
 
@@ -434,9 +483,26 @@ public class Order_BasketActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-
-        RefreshState();
         super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && order_apiInterface != null) {
+            RefreshState();
+        }
+    }
+
+    private boolean canUpdateUi() {
+        return !isFinishing()
+                && (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1
+                || !isDestroyed());
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (orderCall != null) orderCall.cancel();
+        if (summaryCall != null) summaryCall.cancel();
+        if (deleteCall != null) deleteCall.cancel();
+        if (order_action != null) order_action.cancelPending();
+        if (order_payment != null) order_payment.cancelPending();
+        super.onDestroy();
     }
 
     @Override

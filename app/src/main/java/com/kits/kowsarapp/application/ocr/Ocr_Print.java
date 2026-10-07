@@ -513,7 +513,6 @@ public class Ocr_Print {
 //                Bitmap barcodeBitmap = barcodeEncoder.encodeBitmap("12547516876", BarcodeFormat.CODE_128, width, 100); // 12547516876 ro be barcode tabdil mikone
 //                barcodeImageView.setImageBitmap(barcodeBitmap);
 //            } catch (WriterException e) {
-//                e.printStackTrace();
 //            }
 //
 //

@@ -7,8 +7,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +27,9 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorDetailActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.ocr.OcrImagePipeline;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -156,9 +155,17 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
             callMethod.EditString("FactorDbName", factors.get(position).getDbname());
             if (!factors.get(position).getSignatureImage().equals("")) {
                 ImageView imageView=dialog.findViewById(R.id.ocr_signature_fromfactor);
-                byte[] imageByteArray1;
-                imageByteArray1 = Base64.decode(ocr_dbh.getimagefromfactor(factors.get(position).getFactorBarcode(),"SignatureImage"), Base64.DEFAULT);
-                imageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth()/2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight()/3, false));
+                Bitmap bitmap = OcrImagePipeline.decodeBase64(
+                        ocr_dbh.getimagefromfactor(
+                                factors.get(position).getFactorBarcode(),
+                                "SignatureImage"
+                        )
+                );
+                if (bitmap == null) {
+                    callMethod.showToast("تصویر امضا قابل نمایش نیست");
+                    return;
+                }
+                imageView.setImageBitmap(bitmap);
 
                 imageView.setOnClickListener(v1 -> dialog.dismiss());
 
@@ -248,24 +255,9 @@ public class Ocr_FactorListLocal_Adapter extends RecyclerView.Adapter<Ocr_Factor
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                try {
-                                    // 🟢 بررسی وضعیت اتصال
-                                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                    } else if (NetworkUtils.isVPNActive()) {
-                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                    } else {
-                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                        } else {
-                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    callMethod.Log("Network check error: " + e.getMessage());
-                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                }                            }
+                                Base_NetworkFailure.show(
+                                        mContext, callMethod, "OCR factor approval", call, t);
+                            }
                         });
                     }else {
                         callMethod.showToast("تاییده ارسال شده است");

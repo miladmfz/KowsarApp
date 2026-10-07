@@ -16,10 +16,11 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.base.Base_ThemeSpinnerAdapter;
 import com.kits.kowsarapp.application.base.Base_Action;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.application.broker.Broker_Replication;
+import com.kits.kowsarapp.application.broker.BrokerSelectionFallback;
 import com.kits.kowsarapp.databinding.BrokerActivityRegistrBinding;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +46,7 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
     private static final String THEME_KEY = "selectedTheme";
     private int selectedTheme;
+    private final AtomicBoolean isRegistrationRunning = new AtomicBoolean(false);
 
     Broker_DBH broker_dbh;
     CallMethod callMethod;
@@ -108,31 +111,13 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                SellBrokers.clear();
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Broker_RegistrationActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
-
-                callMethod.Log("kowsarapp ="+t.getMessage());
-                SellBroker sellBroker= new SellBroker();
-                sellBroker.setBrokerCode("0");
-                sellBroker.setBrokerNameWithoutType("بازاریاب تعریف نشده");
-                SellBrokers.add(sellBroker);
+                Base_NetworkFailure.show(
+                        Broker_RegistrationActivity.this,
+                        callMethod,
+                        "Broker list",
+                        call,
+                        t);
+                BrokerSelectionFallback.applyUnavailable(SellBrokers, SellBroker_Names);
                 brokerViewConfig();
 
             }
@@ -481,6 +466,12 @@ public class Broker_RegistrationActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (broker_replication != null) {
+            broker_replication.release();
+        }
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+        }
         super.onDestroy();
     }
 

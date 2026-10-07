@@ -7,14 +7,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -38,6 +36,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,10 +50,12 @@ import com.kits.kowsarapp.activity.ocr.Ocr_FactorListLocalActivity;
 import com.kits.kowsarapp.activity.ocr.Ocr_StackEnumeration_Factor_Check_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_StackEnumeration_Janamaie_Check_Activity;
 import com.kits.kowsarapp.adapter.ocr.Ocr_GoodScan_Adapter;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.SafeListAccess;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 
 import com.kits.kowsarapp.R;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.fragment.ocr.OnGoodConfirmListener;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.Job;
@@ -82,7 +84,8 @@ import retrofit2.Response;
 import retrofit2.http.Field;
 
 
-public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetListener {
+public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetListener,
+        DefaultLifecycleObserver {
     DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     Ocr_APIInterface apiInterface;
@@ -107,6 +110,8 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
     Ocr_Print print;
     Handler handler = new Handler();
     ArrayList<Ocr_Good> Empty_goods = new ArrayList<>();
+    private Call<String> activeSubmissionCall;
+    private String activeSubmissionFactor;
 
     public Ocr_Action(Context mcontxt) {
         this.mContext = mcontxt;
@@ -120,6 +125,9 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         dialog = new Dialog(mContext);
         dialogProg = new Dialog(mContext);
         print = new Ocr_Print(mContext);
+        if (mContext instanceof LifecycleOwner) {
+            ((LifecycleOwner) mContext).getLifecycle().addObserver(this);
+        }
 
 
     }
@@ -130,7 +138,7 @@ public class Ocr_Action extends Activity implements DatePickerDialog.OnDateSetLi
         dialogProg.show();
     }
     public void dialogProg_dismiss() {
-        dialogProg.dismiss();
+        dismissProgressSafely();
     }
     public void factor_detail(Factor factor) {
 
@@ -252,31 +260,16 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if (!isSuccessfulCallback(response, "OCR factor state save")) {
+                        return;
+                    }
                     dialog.dismiss();
                     dialogProg.dismiss();
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
-
+                    Base_NetworkFailure.show(mContext, callMethod, "OCR factor state save", call, t);
                 }
             });
 
@@ -331,6 +324,9 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if (!isSuccessfulCallback(response, "OCR factor delivery save")) {
+                        return;
+                    }
                     dialogProg.dismiss();
 
                     if (!callMethod.ReadString("Category").equals("5")) {
@@ -340,24 +336,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
+                    Base_NetworkFailure.show(mContext, callMethod, "OCR factor delivery save", call, t);
                 }
             });
 
@@ -405,9 +384,9 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        jobs = response.body().getJobs();
+                    RetrofitResponse responseBody = usableResponseBody(response, "OCR jobs");
+                    if (responseBody != null) {
+                        jobs = SafeListAccess.mutableNonNullCopyOrEmpty(responseBody.getJobs());
 
                         for (Job job : jobs) {
 
@@ -441,9 +420,15 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                             call1.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                    if (response.isSuccessful()) {
-                                        assert response.body() != null;
-                                        ArrayList<JobPerson> jobPersons = response.body().getJobPersons();
+                                    RetrofitResponse responseBody = usableResponseBody(
+                                            response,
+                                            "OCR job persons"
+                                    );
+                                    if (responseBody != null) {
+                                        ArrayList<JobPerson> jobPersons =
+                                                SafeListAccess.mutableNonNullCopyOrEmpty(
+                                                        responseBody.getJobPersons()
+                                                );
                                         ArrayList<String> jobpersonsstr_new = new ArrayList<>();
 
                                         jobpersonsstr_new.add("برای انتخاب کلیک کنید");
@@ -460,12 +445,16 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                         spinner_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
                                         spinner_new.setAdapter(spinner_adapter);
 
-                                        try {
-                                            spinner_new.setSelection(Integer.parseInt(callMethod.ReadString(job.getTitle())));
-                                        } catch (Exception e) {
-                                            spinner_new.setSelection(0);
-
-                                        }
+                                        int savedSelection = SafeValueParser.intOrDefault(
+                                                callMethod.ReadString(job.getTitle()),
+                                                0
+                                        );
+                                        spinner_new.setSelection(
+                                                savedSelection >= 0
+                                                        && savedSelection < jobpersonsstr_new.size()
+                                                        ? savedSelection
+                                                        : 0
+                                        );
 
                                         spinner_new.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                             @Override
@@ -485,24 +474,13 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                    try {
-                                        // 🟢 بررسی وضعیت اتصال
-                                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                            callMethod.showToast("اتصال اینترنت قطع است!");
-                                        } else if (NetworkUtils.isVPNActive()) {
-                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                        } else {
-                                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                            } else {
-                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        callMethod.Log("Network check error: " + e.getMessage());
-                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                    }
+                                    Base_NetworkFailure.show(
+                                            mContext,
+                                            callMethod,
+                                            "OCR job persons",
+                                            call,
+                                            t
+                                    );
                                 }
                             });
                             ll_pack_h_main.addView(ll_new);
@@ -514,25 +492,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
-
+                    Base_NetworkFailure.show(mContext, callMethod, "OCR jobs", call, t);
                 }
             });
 
@@ -663,6 +623,9 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     call2.enqueue(new Callback<RetrofitResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                            if (!isSuccessfulCallback(response, "OCR pack detail save")) {
+                                return;
+                            }
                             dialog.dismiss();
                             callMethod.Log("جزئیات فاکتور ثبت گردید");
                             if (!callMethod.ReadString("Category").equals("5")) {
@@ -673,24 +636,13 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                         @Override
                         public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                            try {
-                                // 🟢 بررسی وضعیت اتصال
-                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                    callMethod.showToast("اتصال اینترنت قطع است!");
-                                } else if (NetworkUtils.isVPNActive()) {
-                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                } else {
-                                    String serverUrl = callMethod.ReadString("ServerURLUse");
-                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                    } else {
-                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                    }
-                                }
-                            } catch (Exception e) {
-                                callMethod.Log("Network check error: " + e.getMessage());
-                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                            }
+                            Base_NetworkFailure.show(
+                                    mContext,
+                                    callMethod,
+                                    "OCR pack detail save",
+                                    call,
+                                    t
+                            );
                             callMethod.Log("جزئیات فاکتور ثبت نگردید");
 
                         }
@@ -728,6 +680,9 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     call3.enqueue(new Callback<RetrofitResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                            if (!isSuccessfulCallback(response, "OCR pack submit")) {
+                                return;
+                            }
 
 //                        Call<RetrofitResponse> call2;
 //
@@ -783,6 +738,10 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                             call2.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                    if (!isSuccessfulCallback(response, "OCR pack close save")) {
+                                        dismissProgressSafely();
+                                        return;
+                                    }
                                     dialog.dismiss();
 //                                if (!callMethod.ReadString("Category").equals("5")) {
 //                                    OcrPrintPacker(factor);
@@ -796,24 +755,13 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                    try {
-                                        // 🟢 بررسی وضعیت اتصال
-                                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                            callMethod.showToast("اتصال اینترنت قطع است!");
-                                        } else if (NetworkUtils.isVPNActive()) {
-                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                        } else {
-                                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                            } else {
-                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        callMethod.Log("Network check error: " + e.getMessage());
-                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                    }
+                                    Base_NetworkFailure.show(
+                                            mContext,
+                                            callMethod,
+                                            "OCR pack close save",
+                                            call,
+                                            t
+                                    );
                                     dialogProg_dismiss();
 
                                 }
@@ -822,24 +770,13 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                         @Override
                         public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                            try {
-                                // 🟢 بررسی وضعیت اتصال
-                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                    callMethod.showToast("اتصال اینترنت قطع است!");
-                                } else if (NetworkUtils.isVPNActive()) {
-                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                } else {
-                                    String serverUrl = callMethod.ReadString("ServerURLUse");
-                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                    } else {
-                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                    }
-                                }
-                            } catch (Exception e) {
-                                callMethod.Log("Network check error: " + e.getMessage());
-                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                            }
+                            Base_NetworkFailure.show(
+                                    mContext,
+                                    callMethod,
+                                    "OCR pack submit",
+                                    call,
+                                    t
+                            );
                             dialogProg_dismiss();
                         }
                     });
@@ -950,9 +887,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         MaterialButton btn_confirm = dialog.findViewById(R.id.ocr_stackenum_good_b_btn_confirm);
         MaterialButton btn_cansel = dialog.findViewById(R.id.ocr_stackenum_good_b_btn_cancel);
 
-        byte[] BaseImageByte;
-        BaseImageByte = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
-        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
+        setDefaultGoodImage(iv_good);
         //iv_good.setOnTouchListener(new ZoomHelper());
 
         Call<RetrofitResponse> call2;
@@ -967,27 +902,18 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        assert response.body() != null;
-                        byte[] imageByteArray1;
-                        imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
-                        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
-
-                    } catch (Exception ignored) {
-                    }
-                }
+                applyServerImage(iv_good, response, "OCR stack-enumeration image");
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-
-                try {
-
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "OCR stack-enumeration image",
+                        call2,
+                        t
+                );
             }
         });
 
@@ -1006,21 +932,26 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                if(response.isSuccessful()) {
+                RetrofitResponse responseBody = usableResponseBody(
+                        response,
+                        "OCR enumeration row"
+                );
+                if(responseBody != null) {
+                    Ocr_Good existingGood = SafeListAccess.firstOrNull(
+                            responseBody.getOcr_Goods()
+                    );
 
-                    assert response.body() != null;
-
-                    if (response.body().getOcr_Goods().size() > 0){
-                        LocationStackCode=response.body().getOcr_Goods().get(0).getLocationStackCode();
-                        tv_Firstenum.setText(NumberFunctions.PerisanNumber(response.body().getOcr_Goods().get(0).getNum1()));
-                        ed_auxn11.setText(NumberFunctions.PerisanNumber(response.body().getOcr_Goods().get(0).getAuxn11()));
-                        ed_auxn12.setText(NumberFunctions.PerisanNumber(response.body().getOcr_Goods().get(0).getAuxn12()));
-                        ed_auxn13.setText(NumberFunctions.PerisanNumber(response.body().getOcr_Goods().get(0).getAuxn13()));
+                    if (existingGood != null){
+                        LocationStackCode=existingGood.getLocationStackCode();
+                        tv_Firstenum.setText(NumberFunctions.PerisanNumber(existingGood.getNum1()));
+                        ed_auxn11.setText(NumberFunctions.PerisanNumber(existingGood.getAuxn11()));
+                        ed_auxn12.setText(NumberFunctions.PerisanNumber(existingGood.getAuxn12()));
+                        ed_auxn13.setText(NumberFunctions.PerisanNumber(existingGood.getAuxn13()));
 
 
-                        if(Integer.parseInt(response.body().getOcr_Goods().get(0).getAuxn11())>0){
-                            if(Integer.parseInt(response.body().getOcr_Goods().get(0).getAuxn12())>0){
-                                if(Integer.parseInt(response.body().getOcr_Goods().get(0).getAuxn13())>0) {
+                        if(OcrEnumerationInputPolicy.nonNegativeCountOrZero(existingGood.getAuxn11())>0){
+                            if(OcrEnumerationInputPolicy.nonNegativeCountOrZero(existingGood.getAuxn12())>0){
+                                if(OcrEnumerationInputPolicy.nonNegativeCountOrZero(existingGood.getAuxn13())>0) {
                                     ed_auxn13.requestFocus();
 
                                 }else {
@@ -1137,38 +1068,12 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     public void afterTextChanged( Editable editable) {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
-                            try {
-                             if (Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn11.getText().toString())) < 0) {
-                                 ed_auxn11.setText(NumberFunctions.PerisanNumber("0"));
-                             }else{
-
-                                 int int_auxn11;
-                                 int int_auxn12;
-                                 int int_auxn13;
-
-                                 try{
-                                     int_auxn11=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn11.getText().toString()));
-                                 }catch (Exception e){
-                                     int_auxn11=0;
-                                 }
-                                 try{
-                                     int_auxn12=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn12.getText().toString()));
-                                 }catch (Exception e){
-                                     int_auxn12=0;
-                                 }
-                                 try{
-                                     int_auxn13=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn13.getText().toString()));
-                                 }catch (Exception e){
-                                     int_auxn13=0;
-                                 }
-
-                                 tv_Firstenum.setText(NumberFunctions.PerisanNumber((int_auxn11+int_auxn12+int_auxn13)+""));
-                             }
-
-
-                        } catch (Exception e) {
-                                ed_auxn11.setText(NumberFunctions.PerisanNumber("0"));
-                        }
+                            updateEnumerationTotal(
+                                    tv_Firstenum,
+                                    ed_auxn11,
+                                    ed_auxn12,
+                                    ed_auxn13
+                            );
                         }, 1000);
 
                     }
@@ -1184,37 +1089,12 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     public void afterTextChanged( Editable editable) {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
-
-                                try {
-                                    if (Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn12.getText().toString())) < 0) {
-                                        ed_auxn12.setText(NumberFunctions.PerisanNumber("0"));
-                                    }else{
-                                        int int_auxn11;
-                                        int int_auxn12;
-                                        int int_auxn13;
-
-                                        try{
-                                            int_auxn11=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn11.getText().toString()));
-                                        }catch (Exception e){
-                                            int_auxn11=0;
-                                        }
-                                        try{
-                                            int_auxn12=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn12.getText().toString()));
-                                        }catch (Exception e){
-                                            int_auxn12=0;
-                                        }
-                                        try{
-                                            int_auxn13=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn13.getText().toString()));
-                                        }catch (Exception e){
-                                            int_auxn13=0;
-                                        }
-
-                                        tv_Firstenum.setText(NumberFunctions.PerisanNumber((int_auxn11+int_auxn12+int_auxn13)+""));
-                                    }
-
-                                } catch (Exception e) {
-                                    ed_auxn12.setText(NumberFunctions.PerisanNumber("0"));
-                                }
+                            updateEnumerationTotal(
+                                    tv_Firstenum,
+                                    ed_auxn11,
+                                    ed_auxn12,
+                                    ed_auxn13
+                            );
                         }, 1000);
 
                     }
@@ -1230,37 +1110,12 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     public void afterTextChanged( Editable editable) {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
-
-                                try {
-                                    if (Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn13.getText().toString())) < 0) {
-                                        ed_auxn13.setText(NumberFunctions.PerisanNumber("0"));
-                                    }else{
-                                        int int_auxn11;
-                                        int int_auxn12;
-                                        int int_auxn13;
-
-                                        try{
-                                            int_auxn11=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn11.getText().toString()));
-                                        }catch (Exception e){
-                                            int_auxn11=0;
-                                        }
-                                        try{
-                                            int_auxn12=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn12.getText().toString()));
-                                        }catch (Exception e){
-                                            int_auxn12=0;
-                                        }
-                                        try{
-                                            int_auxn13=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn13.getText().toString()));
-                                        }catch (Exception e){
-                                            int_auxn13=0;
-                                        }
-
-                                        tv_Firstenum.setText(NumberFunctions.PerisanNumber((int_auxn11+int_auxn12+int_auxn13)+""));
-                                    }
-
-                                } catch (Exception e) {
-                                    ed_auxn13.setText(NumberFunctions.PerisanNumber("0"));
-                                }
+                            updateEnumerationTotal(
+                                    tv_Firstenum,
+                                    ed_auxn11,
+                                    ed_auxn12,
+                                    ed_auxn13
+                            );
                         }, 1000);
 
                     }
@@ -1290,9 +1145,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                    if(response.isSuccessful()) {
-
-                        assert response.body() != null;
+                    if(isSuccessfulCallback(response, "OCR enumeration save")) {
                         dialog.dismiss();
 
                     }
@@ -1541,9 +1394,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         MaterialButton btn_confirm = dialog.findViewById(R.id.ocr_stackenum_good_b_btn_confirm);
         MaterialButton btn_cansel = dialog.findViewById(R.id.ocr_stackenum_good_b_btn_cancel);
 
-        byte[] BaseImageByte;
-        BaseImageByte = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
-        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
+        setDefaultGoodImage(iv_good);
         //iv_good.setOnTouchListener(new ZoomHelper());
 
         callMethod.Log("");
@@ -1558,27 +1409,18 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        assert response.body() != null;
-                        byte[] imageByteArray1;
-                        imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
-                        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
-
-                    } catch (Exception ignored) {
-                    }
-                }
+                applyServerImage(iv_good, response, "OCR stack-enumeration single image");
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-
-                try {
-
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "OCR stack-enumeration single image",
+                        call2,
+                        t
+                );
             }
         });
 
@@ -1597,14 +1439,19 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                if(response.isSuccessful()) {
+                RetrofitResponse responseBody = usableResponseBody(
+                        response,
+                        "OCR mismatch enumeration row"
+                );
+                if(responseBody != null) {
+                    Ocr_Good existingGood = SafeListAccess.firstOrNull(
+                            responseBody.getOcr_Goods()
+                    );
 
-                    assert response.body() != null;
-
-                    if (response.body().getOcr_Goods().size() > 0){
-                        LocationStackCode=response.body().getOcr_Goods().get(0).getLocationStackCode();
-                        tv_Firstenum.setText(NumberFunctions.PerisanNumber(response.body().getOcr_Goods().get(0).getNum1()));
-                        ed_auxn11.setText(NumberFunctions.PerisanNumber(response.body().getOcr_Goods().get(0).getAuxn11()));
+                    if (existingGood != null){
+                        LocationStackCode=existingGood.getLocationStackCode();
+                        tv_Firstenum.setText(NumberFunctions.PerisanNumber(existingGood.getNum1()));
+                        ed_auxn11.setText(NumberFunctions.PerisanNumber(existingGood.getAuxn11()));
 
                         ed_auxn11.post(() -> {
                             ed_auxn11.setFocusable(true);
@@ -1668,27 +1515,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     public void afterTextChanged( Editable editable) {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
-                            try {
-                             if (Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn11.getText().toString())) < 0) {
-                                 ed_auxn11.setText(NumberFunctions.PerisanNumber("0"));
-                             }else{
-
-                                 int int_auxn11;
-
-                                 try{
-                                     int_auxn11=Integer.parseInt(NumberFunctions.EnglishNumber(ed_auxn11.getText().toString()));
-                                 }catch (Exception e){
-                                     int_auxn11=0;
-                                 }
-
-
-                                 tv_Firstenum.setText(NumberFunctions.PerisanNumber((int_auxn11)+""));
-                             }
-
-
-                        } catch (Exception e) {
-                                ed_auxn11.setText(NumberFunctions.PerisanNumber("0"));
-                        }
+                            updateEnumerationTotal(tv_Firstenum, ed_auxn11);
                         }, 1000);
 
                     }
@@ -1698,19 +1525,16 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
         btn_confirm.setOnClickListener(v -> {
 
-            double edtAmount =
-                    Double.parseDouble(
-                            NumberFunctions.EnglishNumber(
-                                    ed_auxn11.getText().toString()
-                            )
-                    );
+            Double edtAmount = SafeValueParser.doubleOrNull(
+                    NumberFunctions.EnglishNumber(ed_auxn11.getText().toString())
+            );
+            Double goodAmount = SafeValueParser.doubleOrNull(singleGood.getAmount());
+            if (edtAmount == null || goodAmount == null) {
+                callMethod.showToast("مقدار شمارش معتبر نیست");
+                return;
+            }
 
-            double goodAmount =
-                    Double.parseDouble(
-                            singleGood.getAmount()
-                    );
-
-            if (edtAmount == goodAmount) {
+            if (Double.compare(edtAmount, goodAmount) == 0) {
 
 
                 Call<RetrofitResponse> call3;
@@ -1733,9 +1557,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                        if(response.isSuccessful()) {
-
-                            assert response.body() != null;
+                        if(isSuccessfulCallback(response, "OCR mismatch enumeration save")) {
                             dialog.dismiss();
 
                         }
@@ -1790,9 +1612,10 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                     @Override
                                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                                        if(response.isSuccessful()) {
-
-                                            assert response.body() != null;
+                                        if(isSuccessfulCallback(
+                                                response,
+                                                "OCR mismatch confirmation save"
+                                        )) {
                                             dialog1.dismiss();
                                             dialog.dismiss();
                                         }
@@ -2062,9 +1885,14 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    ArrayList<Ocr_Good> ocr_goods = response.body().getOcr_Goods();
+                RetrofitResponse responseBody = usableResponseBody(
+                        response,
+                        "OCR factor enumeration good detail"
+                );
+                Ocr_Good detail = responseBody == null
+                        ? null
+                        : SafeListAccess.firstOrNull(responseBody.getOcr_Goods());
+                if (detail != null) {
 
                     if (!callMethod.ReadBoolan("HintAmountInCount")){
                         ll_good_3.setVisibility(View.GONE);
@@ -2096,10 +1924,10 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
 
-                        tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
-                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
-                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFacAmount()));
-                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getPageNo()));
+                        tv_good_1.setText(NumberFunctions.PerisanNumber(detail.getTotalAvailable()));
+                        tv_good_2.setText(NumberFunctions.PerisanNumber(detail.getSize()));
+                        tv_good_3.setText(NumberFunctions.PerisanNumber(detail.getFacAmount()));
+                        tv_good_4.setText(NumberFunctions.PerisanNumber(detail.getPageNo()));
 
 
 
@@ -2114,10 +1942,12 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         lb_good_1.setVisibility(View.GONE);
 
                         tv_good_1.setText(NumberFunctions.PerisanNumber(singleGood.getGoodName()));
-                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFormNo()));
-                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFacAmount()));
+                        tv_good_2.setText(NumberFunctions.PerisanNumber(detail.getFormNo()));
+                        tv_good_3.setText(NumberFunctions.PerisanNumber(detail.getFacAmount()));
 
-                        tv_good_4.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(singleGood.getGoodMaxSellPrice()))));
+                        tv_good_4.setText(NumberFunctions.PerisanNumber(decimalFormat.format(
+                                SafeValueParser.intOrDefault(singleGood.getGoodMaxSellPrice(), 0)
+                        )));
 
 
 
@@ -2129,11 +1959,11 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                         lb_good_4.setText("پشت جلد");
 
-                        tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getTotalAvailable()));
-                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
-                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFacAmount()));
+                        tv_good_1.setText(NumberFunctions.PerisanNumber(detail.getTotalAvailable()));
+                        tv_good_2.setText(NumberFunctions.PerisanNumber(detail.getSize()));
+                        tv_good_3.setText(NumberFunctions.PerisanNumber(detail.getFacAmount()));
 
-                        tv_good_4.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodMaxSellPrice()));
+                        tv_good_4.setText(NumberFunctions.PerisanNumber(detail.getGoodMaxSellPrice()));
 
                     }else{
 
@@ -2142,10 +1972,10 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         lb_good_3.setText("موجودی");
 
                         lb_good_4.setText("پشت جلد");
-                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getFacAmount()));
+                        tv_good_3.setText(NumberFunctions.PerisanNumber(detail.getFacAmount()));
 
-                        tv_good_1.setText(ocr_goods.get(0).getTotalAvailable());
-                        tv_good_2.setText(ocr_goods.get(0).getSize());
+                        tv_good_1.setText(detail.getTotalAvailable());
+                        tv_good_2.setText(detail.getSize());
                     }
 
                 }
@@ -2161,9 +1991,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                 }
             }
         });
-        byte[] BaseImageByte;
-        BaseImageByte = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
-        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
+        setDefaultGoodImage(iv_good);
         //iv_good.setOnTouchListener(new ZoomHelper());
 
         Call<RetrofitResponse> call2;
@@ -2176,28 +2004,18 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        assert response.body() != null;
-                        byte[] imageByteArray1;
-                        imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
-                        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
-
-                    } catch (Exception ignored) {
-                    }
-                }
+                applyServerImage(iv_good, response, "OCR good image");
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-
-                try {
-
-
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "OCR good image",
+                        call2,
+                        t
+                );
             }
         });
 
@@ -2227,7 +2045,8 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
 
-        if (Integer.parseInt(Conter) == Integer.parseInt(CountStep)) {
+        if (SafeValueParser.intOrDefault(Conter, -1)
+                == SafeValueParser.intOrDefault(CountStep, -2)) {
             inventory_isFinished = "1"; // اتمام شمارش
         } else {
             inventory_isFinished = "0"; // هنوز ادامه دارد
@@ -2275,10 +2094,8 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     call1.enqueue(new Callback<RetrofitResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
-                            if (response.isSuccessful()) {
+                            if (isSuccessfulCallback(response, "OCR inventory count save")) {
                                 callMethod.Log("step 2");
-
-                                assert response.body() != null;
                                 Intent intent = new Intent(mContext, Ocr_StackEnumeration_Factor_Check_Activity.class);
                                 intent.putExtra("ScanResponse", BarcodeScan);
                                 intent.putExtra("State", "0");
@@ -2340,10 +2157,8 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         call1.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
-                                if (response.isSuccessful()) {
+                                if (isSuccessfulCallback(response, "OCR inventory mismatch save")) {
                                     callMethod.Log("step 2");
-
-                                    assert response.body() != null;
                                     Intent intent = new Intent(mContext, Ocr_StackEnumeration_Factor_Check_Activity.class);
                                     intent.putExtra("ScanResponse", BarcodeScan);
 
@@ -2450,9 +2265,14 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    ArrayList<Ocr_Good> ocr_goods = response.body().getOcr_Goods();
+                RetrofitResponse responseBody = usableResponseBody(
+                        response,
+                        "OCR placement enumeration good detail"
+                );
+                Ocr_Good detail = responseBody == null
+                        ? null
+                        : SafeListAccess.firstOrNull(responseBody.getOcr_Goods());
+                if (detail != null) {
 
 
 
@@ -2482,9 +2302,9 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
 
-                        tv_good_2.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getGoodName()));
-                        tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
-                        tv_good_3.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getMaxSellPrice()));
+                        tv_good_2.setText(NumberFunctions.PerisanNumber(detail.getGoodName()));
+                        tv_good_1.setText(NumberFunctions.PerisanNumber(detail.getSize()));
+                        tv_good_3.setText(NumberFunctions.PerisanNumber(detail.getMaxSellPrice()));
 
                         ll_good_4.setVisibility(View.GONE);
                         lb_good_2.setVisibility(View.GONE);
@@ -2529,7 +2349,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         lb_good_3.setText("پشت جلد");
 
                         tv_good_2.setText(NumberFunctions.PerisanNumber(StackEnumeration.getGoodName()));
-                        tv_good_1.setText(NumberFunctions.PerisanNumber(ocr_goods.get(0).getSize()));
+                        tv_good_1.setText(NumberFunctions.PerisanNumber(detail.getSize()));
                         tv_good_3.setText(NumberFunctions.PerisanNumber(StackEnumeration.getMaxSellPrice()));
 
                         ll_good_4.setVisibility(View.GONE);
@@ -2549,9 +2369,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
             }
         });
 
-        byte[] BaseImageByte;
-        BaseImageByte = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
-        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
+        setDefaultGoodImage(iv_good);
         //iv_good.setOnTouchListener(new ZoomHelper());
 
         Call<RetrofitResponse> call2;
@@ -2564,28 +2382,18 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        assert response.body() != null;
-                        byte[] imageByteArray1;
-                        imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
-                        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
-
-                    } catch (Exception ignored) {
-                    }
-                }
+                applyServerImage(iv_good, response, "OCR enumeration image");
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-
-                try {
-
-
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "OCR enumeration image",
+                        call2,
+                        t
+                );
             }
         });
 
@@ -2645,10 +2453,8 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                 call1.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
-                        if (response.isSuccessful()) {
+                        if (isSuccessfulCallback(response, "OCR placement enumeration save")) {
                             callMethod.Log("onResponse 2");
-
-                            assert response.body() != null;
                             Intent intent = new Intent(mContext, Ocr_StackEnumeration_Janamaie_Check_Activity.class);
                             intent.putExtra("StackEnumerationCode", StackEnumeration.getStackEnumerationRef());
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
@@ -2788,6 +2594,13 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
     public void GoodScanDetail(ArrayList<Ocr_Good> goodspass, String state, String barcodescan) {
 
+        if (!isActivityUsable()) {
+            return;
+        }
+        final ArrayList<Ocr_Good> safeGoods =
+                SafeListAccess.mutableNonNullCopyOrEmpty(goodspass);
+        final String safeState = state == null ? "" : state;
+
         ArrayList<Ocr_Good> Currctgoods = new ArrayList<>();
         ArrayList<Ocr_Good> CurrctgoodsForBarcode = new ArrayList<>();
 
@@ -2801,23 +2614,28 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         EditText ed_goodscan = dialog.findViewById(R.id.ocr_goodscan_b_ed);
 
 
-        if (goodspass.size() > 0) {
-            for (Ocr_Good good : goodspass) {
-                if (state.equals("0")){
+        if (safeGoods.size() > 0) {
+            for (Ocr_Good good : safeGoods) {
+                if (safeState.equals("0")){
                     //if (good.getAppRowIsControled().equals("False")) {
-                    if (good.getAppRowIsControled().equals("0")) {
+                    if ("0".equals(good.getAppRowIsControled())) {
                         Currctgoods.add(good);
                     }
                 }
-                if (state.equals("1")) {
+                if (safeState.equals("1")) {
                     //if (good.getAppRowIsPacked().equals("False")) {
-                    if (good.getAppRowIsPacked().equals("0")) {
+                    if ("0".equals(good.getAppRowIsPacked())) {
                         Currctgoods.add(good);
                     }
                 }
             }
             if (Currctgoods.size() > 0) {
-                Ocr_GoodScan_Adapter goodscanadapter = new Ocr_GoodScan_Adapter(Currctgoods, mContext, state, barcodescan);
+                Ocr_GoodScan_Adapter goodscanadapter = new Ocr_GoodScan_Adapter(
+                        Currctgoods,
+                        mContext,
+                        safeState,
+                        barcodescan
+                );
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 1);//grid
                 goodscan_recycler.setLayoutManager(gridLayoutManager);
                 goodscan_recycler.setAdapter(goodscanadapter);
@@ -2849,35 +2667,42 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         dialogProg();
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
-
-
+                            if (!isActivityUsable()) {
+                                return;
+                            }
                             CurrctgoodsForBarcode.clear();
-                            if (goodspass.size() > 0) {
-                                for (Ocr_Good good : goodspass) {
-                                    if (state.equals("0"))
-                                        if (good.getAppRowIsControled().equals("0")) {
+                            if (safeGoods.size() > 0) {
+                                for (Ocr_Good good : safeGoods) {
+                                    if (safeState.equals("0"))
+                                        if ("0".equals(good.getAppRowIsControled())) {
                                             CurrctgoodsForBarcode.add(good);
                                         }
-                                    if (state.equals("1"))
-                                        if (good.getAppRowIsPacked().equals("0")) {
+                                    if (safeState.equals("1"))
+                                        if ("0".equals(good.getAppRowIsPacked())) {
                                             CurrctgoodsForBarcode.add(good);
                                         }
                                 }
                                 if (CurrctgoodsForBarcode.size() == 1) {
+                                    Ocr_Good currentGood = SafeListAccess.firstOrNull(
+                                            CurrctgoodsForBarcode
+                                    );
+                                    if (currentGood == null) {
+                                        return;
+                                    }
 
-                                    if (state.equals("0")){
+                                    if (safeState.equals("0")){
 
                                         Call<RetrofitResponse> call;
                                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                            call=apiInterface.CheckState("OcrControlled", currentGood.getAppOCRFactorRowCode(), "0", "");
                                         }else{
-                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                            call=secendApiInterface.CheckState("OcrControlled", currentGood.getAppOCRFactorRowCode(), "0", "");
                                         }
 
                                         call.enqueue(new Callback<RetrofitResponse>() {
                                             @Override
                                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                                if (response.isSuccessful()) {
+                                                if (isSuccessfulCallback(response, "OCR control state save")) {
 
                                                     Intent intent = new Intent(mContext, Ocr_Collect_Confirm_Activity.class);
                                                     intent.putExtra("ScanResponse", barcodescan);
@@ -2890,39 +2715,30 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                                             }
                                             @Override
                                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                                try {
-                                                    // 🟢 بررسی وضعیت اتصال
-                                                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                                    } else if (NetworkUtils.isVPNActive()) {
-                                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                                    } else {
-                                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                                        } else {
-                                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                                        }
-                                                    }
-                                                } catch (Exception e) {
-                                                    callMethod.Log("Network check error: " + e.getMessage());
-                                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                                }                                            }
+                                                dismissProgressSafely();
+                                                Base_NetworkFailure.show(
+                                                        mContext,
+                                                        callMethod,
+                                                        "OCR control state save",
+                                                        call,
+                                                        t
+                                                );
+                                            }
                                         });
 
-                                    }else if (state.equals("1"))
+                                    }else if (safeState.equals("1"))
                                     {
 
                                         Call<RetrofitResponse> call;
                                         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                            call=apiInterface.CheckState("OcrControlled", currentGood.getAppOCRFactorRowCode(), "2", "");
                                         }else{
-                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                            call=secendApiInterface.CheckState("OcrControlled", currentGood.getAppOCRFactorRowCode(), "2", "");
                                         }
                                         call.enqueue(new Callback<RetrofitResponse>() {
                                             @Override
                                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                                if (response.isSuccessful()) {
+                                                if (isSuccessfulCallback(response, "OCR packed state save")) {
 
                                                     Intent intent = new Intent(mContext, Ocr_Check_Confirm_Activity.class);
                                                     intent.putExtra("ScanResponse", barcodescan);
@@ -2935,31 +2751,28 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                                             @Override
                                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                                try {
-                                                    // 🟢 بررسی وضعیت اتصال
-                                                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                                    } else if (NetworkUtils.isVPNActive()) {
-                                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                                    } else {
-                                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                                        } else {
-                                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                                        }
-                                                    }
-                                                } catch (Exception e) {
-                                                    callMethod.Log("Network check error: " + e.getMessage());
-                                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                                }                                            }
+                                                dismissProgressSafely();
+                                                Base_NetworkFailure.show(
+                                                        mContext,
+                                                        callMethod,
+                                                        "OCR packed state save",
+                                                        call,
+                                                        t
+                                                );
+                                            }
                                         });
 
                                     }
+                                } else {
+                                    dismissProgressSafely();
                                 }
+                            } else {
+                                dismissProgressSafely();
                             }
 
-                        },  Integer.parseInt(callMethod.ReadString("Delay")));
+                        }, OcrEnumerationInputPolicy.delayMillis(
+                                callMethod.ReadString("Delay")
+                        ));
 
 
                     }
@@ -3036,34 +2849,22 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if(response.isSuccessful()) {
-                    assert response.body() != null;
-
-                    Factor Factor_detail=response.body().getFactors().get(0);
-
-                    factor_detail(Factor_detail);
+                RetrofitResponse responseBody = usableResponseBody(
+                        response,
+                        "OCR factor detail"
+                );
+                Factor factorDetail = responseBody == null
+                        ? null
+                        : SafeListAccess.firstOrNull(responseBody.getFactors());
+                if(factorDetail != null) {
+                    factor_detail(factorDetail);
+                } else if (isActivityUsable()) {
+                    callMethod.showToast("جزئیات فاکتور دریافت نشد");
                 }
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
+                Base_NetworkFailure.show(mContext, callMethod, "OCR factor detail", call, t);
             }
         });
 
@@ -3072,22 +2873,49 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
     public void sendfactor(final String factor_code, String signatureimage) {
-
-        app_info();
-        dialogProg();
-
-        Call<String> call;
-
-
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call =apiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
-        }else {
-            call =secendApiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
+        if (factor_code == null || factor_code.trim().isEmpty()
+                || !OcrImagePolicy.isEncodedPayloadAllowed(signatureimage)) {
+            callMethod.showToast("اطلاعات تصویر برای ارسال معتبر نیست");
+            return;
         }
+        if (!OcrSubmissionGuard.tryAcquire(factor_code)) {
+            callMethod.showToast("ارسال تصویر دیگری در حال انجام است");
+            return;
+        }
+        activeSubmissionFactor = factor_code;
+        Call<String> call;
+        try {
+            app_info();
+            dialogProg();
+            if (Objects.equals(callMethod.ReadString("FactorDbName"), callMethod.ReadString("DbName"))){
+                call =apiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
+            }else {
+                call =secendApiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
+            }
+        } catch (RuntimeException exception) {
+            finishSubmission(factor_code);
+            callMethod.Log("SaveOcrImage setup failed: "
+                    + exception.getClass().getSimpleName());
+            callMethod.showToast("امکان شروع ارسال تصویر وجود ندارد");
+            return;
+        }
+        activeSubmissionCall = call;
 
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                if (call != activeSubmissionCall) {
+                    return;
+                }
+                finishSubmission(factor_code);
+                if (!isActivityUsable()) {
+                    return;
+                }
+                if (!response.isSuccessful()) {
+                    callMethod.Log("SaveOcrImage HTTP " + response.code());
+                    callMethod.showToast("ارسال تصویر توسط سرور تأیید نشد");
+                    return;
+                }
                 callMethod.showToast("فاکتور ارسال گردید");
 
                 ocr_dbh.Insert_IsSent(factor_code);
@@ -3095,7 +2923,6 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                 Intent bag = new Intent(mContext, Ocr_FactorListLocalActivity.class);
                 bag.putExtra("IsSent", "0");
                 bag.putExtra("signature", "0");
-                dialogProg.dismiss();
                 ((Activity) mContext).finish();
                 ((Activity) mContext).overridePendingTransition(0, 0);
                 mContext.startActivity(bag);
@@ -3104,24 +2931,14 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
             @Override
             public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                if (call != activeSubmissionCall) {
+                    return;
                 }
+                finishSubmission(factor_code);
+                if (call.isCanceled() || !isActivityUsable()) {
+                    return;
+                }
+                Base_NetworkFailure.show(mContext, callMethod, "SaveOcrImage", call, t);
             }
         });
 
@@ -3286,10 +3103,12 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                 @Override
                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
 
-                    if (response.isSuccessful()) {
-
-                        assert response.body() != null;
-                        if (response.body().getText().equals("Done")){
+                    RetrofitResponse responseBody = usableResponseBody(
+                            response,
+                            "OCR stack location save"
+                    );
+                    if (responseBody != null) {
+                        if ("Done".equals(responseBody.getText())){
                             dialog.dismiss();
                             dialogProg.dismiss();
                             callMethod.showToast("ثبت گردید");
@@ -3301,24 +3120,13 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
                 @Override
                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
+                    Base_NetworkFailure.show(
+                            mContext,
+                            callMethod,
+                            "OCR stack location save",
+                            call,
+                            t
+                    );
                     dialog.dismiss();
                     dialogProg.dismiss();
                     callMethod.showToast("اطلاعات ثبت نگردید");
@@ -3491,20 +3299,20 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     @NonNull Response<RetrofitResponse> response
             ) {
 
-                if (!response.isSuccessful()
-                        || response.body() == null
-                        || response.body().getOcr_Goods() == null
-                        || response.body().getOcr_Goods().isEmpty()) {
+                RetrofitResponse responseBody = usableResponseBody(
+                        response,
+                        "OCR good detail"
+                );
+                Ocr_Good detail = responseBody == null
+                        ? null
+                        : SafeListAccess.firstOrNull(responseBody.getOcr_Goods());
+                if (detail == null) {
 
-                    callMethod.showToast(
-                            "جزئیات کالا دریافت نشد"
-                    );
+                    if (isActivityUsable()) {
+                        callMethod.showToast("جزئیات کالا دریافت نشد");
+                    }
                     return;
                 }
-
-                Ocr_Good detail = response.body()
-                        .getOcr_Goods()
-                        .get(0);
 
                 if (!callMethod.ReadBoolan("ShowDetailAmount")) {
                     ll_amount.setVisibility(View.GONE);
@@ -3560,34 +3368,7 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                     @NonNull Response<RetrofitResponse> response
             ) {
 
-                if (!response.isSuccessful()
-                        || response.body() == null
-                        || response.body().getText() == null) {
-                    return;
-                }
-
-                try {
-                    byte[] imageBytes = Base64.decode(
-                            response.body().getText(),
-                            Base64.DEFAULT
-                    );
-
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(
-                            imageBytes,
-                            0,
-                            imageBytes.length
-                    );
-
-                    if (bitmap != null) {
-                        iv_good.setImageBitmap(bitmap);
-                    }
-
-                } catch (Exception exception) {
-                    callMethod.Log(
-                            "Image decode error: "
-                                    + exception.getMessage()
-                    );
-                }
+                applyServerImage(iv_good, response, "OCR detail image");
             }
 
             @Override
@@ -3658,15 +3439,16 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         @NonNull Call<RetrofitResponse> call,
                         @NonNull Response<RetrofitResponse> response
                 ) {
-
-                    btn_confirm.setEnabled(true);
-
-                    if (!response.isSuccessful()) {
-                        callMethod.showToast(
-                                "ثبت کنترل کالا انجام نشد"
-                        );
+                    if (!isSuccessfulCallback(response, "OCR good control save")) {
+                        if (isActivityUsable()) {
+                            btn_confirm.setEnabled(true);
+                        }
+                        if (isActivityUsable()) {
+                            callMethod.showToast("ثبت کنترل کالا انجام نشد");
+                        }
                         return;
                     }
+                    btn_confirm.setEnabled(true);
 
                     dialog.dismiss();
 
@@ -3698,6 +3480,15 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
                         @NonNull Call<RetrofitResponse> call,
                         @NonNull Throwable throwable
                 ) {
+                    if (!isActivityUsable()) {
+                        Base_NetworkFailure.logOnly(
+                                callMethod,
+                                "OCR good control save",
+                                call,
+                                throwable
+                        );
+                        return;
+                    }
                     btn_confirm.setEnabled(true);
                     showNetworkFailure(
                             "خطا در ثبت کنترل کالا",
@@ -4006,28 +3797,11 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
 
 
     private void setDefaultGoodImage(ImageView imageView) {
-
-        try {
-            byte[] imageBytes = Base64.decode(
-                    mContext.getString(R.string.no_photo),
-                    Base64.DEFAULT
-            );
-
-            Bitmap bitmap = BitmapFactory.decodeByteArray(
-                    imageBytes,
-                    0,
-                    imageBytes.length
-            );
-
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-
-        } catch (Exception exception) {
-            callMethod.Log(
-                    "Default image error: "
-                            + exception.getMessage()
-            );
+        Bitmap bitmap = OcrImagePipeline.decodeBase64(mContext.getString(R.string.no_photo));
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+        } else {
+            callMethod.Log("Default image decode failed");
         }
     }
 
@@ -4144,33 +3918,148 @@ callMethod.Log("=="+factor.getFactorPrivateCode());
         );
     }
 
+    public void cancelActiveSubmission() {
+        Call<String> call = activeSubmissionCall;
+        String factor = activeSubmissionFactor;
+        activeSubmissionCall = null;
+        activeSubmissionFactor = null;
+        if (call != null && !call.isCanceled()) {
+            call.cancel();
+        }
+        OcrSubmissionGuard.release(factor);
+        dismissProgressSafely();
+    }
+
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
+        handler.removeCallbacksAndMessages(null);
+        cancelActiveSubmission();
+        owner.getLifecycle().removeObserver(this);
+    }
+
+    private void finishSubmission(String factorCode) {
+        activeSubmissionCall = null;
+        activeSubmissionFactor = null;
+        OcrSubmissionGuard.release(factorCode);
+        dismissProgressSafely();
+    }
+
+    private void dismissProgressSafely() {
+        if (dialogProg != null && dialogProg.isShowing()) {
+            try {
+                dialogProg.dismiss();
+            } catch (RuntimeException exception) {
+                callMethod.Log("OCR progress dismiss failed: "
+                        + exception.getClass().getSimpleName());
+            }
+        }
+    }
+
+    private boolean isActivityUsable() {
+        if (!(mContext instanceof Activity)) {
+            return false;
+        }
+        Activity activity = (Activity) mContext;
+        return !activity.isFinishing() && !activity.isDestroyed();
+    }
+
+    private RetrofitResponse usableResponseBody(
+            Response<RetrofitResponse> response,
+            String operation
+    ) {
+        if (!isSuccessfulCallback(response, operation)) {
+            return null;
+        }
+        RetrofitResponse responseBody = response.body();
+        if (responseBody == null) {
+            callMethod.Log(operation + " response body is empty");
+            return null;
+        }
+        return responseBody;
+    }
+
+    private boolean isSuccessfulCallback(
+            Response<RetrofitResponse> response,
+            String operation
+    ) {
+        if (!isActivityUsable()) {
+            callMethod.Log(operation + " callback ignored after Activity teardown");
+            return false;
+        }
+        if (response == null || !response.isSuccessful()) {
+            callMethod.Log(
+                    operation
+                            + " HTTP response failed"
+                            + (response == null ? "" : ": " + response.code())
+            );
+            return false;
+        }
+        return true;
+    }
+
+    private void updateEnumerationTotal(TextView target, EditText... amountFields) {
+        if (!isActivityUsable()) {
+            return;
+        }
+
+        String[] rawValues = new String[amountFields.length];
+        for (int index = 0; index < amountFields.length; index++) {
+            EditText amountField = amountFields[index];
+            String rawValue = NumberFunctions.EnglishNumber(
+                    amountField.getText().toString()
+            );
+            rawValues[index] = rawValue;
+            Integer value = SafeValueParser.intOrNull(rawValue);
+            if (value == null || value < 0) {
+                String zero = NumberFunctions.PerisanNumber("0");
+                if (!zero.contentEquals(amountField.getText())) {
+                    amountField.setText(zero);
+                }
+                rawValues[index] = "0";
+            }
+        }
+        long total = OcrEnumerationInputPolicy.total(rawValues);
+        target.setText(NumberFunctions.PerisanNumber(String.valueOf(total)));
+    }
+
+    private void applyServerImage(
+            ImageView imageView,
+            Response<RetrofitResponse> response,
+            String operation
+    ) {
+        if (!isActivityUsable()) {
+            callMethod.Log(operation + " callback ignored after Activity teardown");
+            return;
+        }
+        if (response == null
+                || !response.isSuccessful()
+                || response.body() == null
+                || response.body().getText() == null
+                || response.body().getText().trim().isEmpty()) {
+            callMethod.Log(operation + " response is empty or invalid");
+            return;
+        }
+
+        Bitmap bitmap = OcrImagePipeline.decodeBase64(response.body().getText());
+        if (bitmap == null) {
+            callMethod.Log(operation + " decode returned no bitmap");
+            return;
+        }
+        imageView.setImageBitmap(bitmap);
+    }
+
 
     private void showNetworkFailure(
             String fallbackMessage,
             Throwable throwable
     ) {
-
-        callMethod.Log(
-                fallbackMessage
-                        + ": "
-                        + (throwable == null
-                        ? ""
-                        : throwable.getMessage())
+        Base_NetworkFailure.show(
+                mContext,
+                callMethod,
+                fallbackMessage,
+                null,
+                throwable
         );
-
-        try {
-            if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                callMethod.showToast("اتصال اینترنت قطع است!");
-            } else if (NetworkUtils.isVPNActive()) {
-                callMethod.showToast(
-                        "VPN فعال است، ممکن است ارتباط مختل شود"
-                );
-            } else {
-                callMethod.showToast(fallbackMessage);
-            }
-        } catch (Exception exception) {
-            callMethod.showToast(fallbackMessage);
-        }
     }
 
 }

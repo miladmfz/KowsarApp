@@ -32,7 +32,7 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ord_table_a_miztype_ll"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layoutDirection="rtl"
         android:orientation="horizontal"

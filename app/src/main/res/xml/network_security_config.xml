@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
+    <!--
+      Legacy tenant URLs are selected dynamically from the activation contract and may
+      be private/on-prem HTTP endpoints. Android's XML format cannot express private
+      CIDR ranges or a runtime host allowlist, so cleartext remains enabled here for
+      compatibility. EndpointSecurityPolicy rejects malformed/credential-bearing URLs
+      and restricts fixed public infrastructure to the documented activation host.
+      New deployments should provide HTTPS URLs; removing this compatibility switch
+      requires a verified inventory of every deployed tenant endpoint.
+    -->
     <base-config cleartextTrafficPermitted="true">
         <trust-anchors>
             <certificates src="system" />

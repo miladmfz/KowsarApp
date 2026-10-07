@@ -4,11 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -30,10 +27,11 @@ import androidx.core.graphics.ColorUtils;
 
 import com.google.android.material.color.MaterialColors;
 
-import java.io.ByteArrayOutputStream;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
+import com.kits.kowsarapp.application.base.SafeListAccess;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
+import com.kits.kowsarapp.application.ocr.OcrImagePipeline;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.ocr.Ocr_DBH;
@@ -44,7 +42,6 @@ import com.kits.kowsarapp.webService.ocr.Ocr_APIInterface;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 
-import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -74,12 +71,19 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
     int width=1;
     CallMethod callMethod;
     Ocr_Action ocr_action;
+    Call<RetrofitResponse> factorCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
         setContentView(R.layout.ocr_activity_factordetail);
+        Config();
+        if (!readIntent()) {
+            callMethod.showToast("اطلاعات فاکتور معتبر نیست");
+            finish();
+            return;
+        }
         Dialog dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
@@ -87,8 +91,6 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
         TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
-        intent();
-        Config();
         try {
             Handler handler = new Handler();
             handler.postDelayed(this::init, 100);
@@ -101,11 +103,14 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
     }
     ///**********************************************************
 
-    public  void intent(){
+    public boolean readIntent(){
         Bundle bundle =getIntent().getExtras();
-        assert bundle != null;
-        BarcodeScan=bundle.getString("ScanResponse");
-        bitmap_factor_base64=bundle.getString("FactorImage");
+        if (bundle == null) {
+            return false;
+        }
+        BarcodeScan=bundle.getString("ScanResponse", "");
+        bitmap_factor_base64=bundle.getString("FactorImage", "");
+        return !BarcodeScan.trim().isEmpty();
     }
 
     public void Config() {
@@ -148,31 +153,30 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 //                call = secendApiInterface.GetOcrFactor(callMethod.RetrofitBody(Body_str));
 //            }
 
-            Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call =apiInterface.GetFactor("GetOcrFactor",BarcodeScan,"GoodName");
+                factorCall =apiInterface.GetFactor("GetOcrFactor",BarcodeScan,"GoodName");
             }else {
-                call =secendApiInterface.GetFactor("GetOcrFactor",BarcodeScan,"GoodName");
+                factorCall =secendApiInterface.GetFactor("GetOcrFactor",BarcodeScan,"GoodName");
             }
 
-
-            call.enqueue(new Callback<RetrofitResponse>() {
+            factorCall.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if(response.isSuccessful()){
-
-                        assert response.body() !=null;
+                    if(response.isSuccessful() && response.body() != null
+                            && !isFinishing() && !isDestroyed()){
 //                        factor=response.body().getFactors().get(0);
                         factor=response.body().getFactor();
 
-                        if(factor.getFactorCode().equals("0"))
+                        if(factor == null || "0".equals(factor.getFactorCode()))
                         {
 
                             callMethod.showToast("لطفا مجددا اسکن کنید");
                             finish();
                         }else {
 
-                            ocr_goods=response.body().getOcr_Goods();
+                            ocr_goods= SafeListAccess.mutableNonNullCopyOrEmpty(
+                                    response.body().getOcr_Goods()
+                            );
                             ocr_dbh.InsertScan(factor.getAppOCRFactorCode(),BarcodeScan,factor.getFactorPrivateCode(),factor.getFactorDate(),factor.getCustName(),factor.getCustomerRef());
                             CreateView();
                         }
@@ -183,24 +187,12 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(Ocr_FactorDetailActivity.this)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
+                    Base_NetworkFailure.show(
+                            Ocr_FactorDetailActivity.this,
+                            callMethod,
+                            "OCR factor image",
+                            call,
+                            t);
                 }
             });
 
@@ -210,9 +202,12 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
             ImageView imageView=new ImageView(getApplicationContext());
             imageView.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
 
-            byte[] imageByteArray1;
-            imageByteArray1 = Base64.decode(bitmap_factor_base64, Base64.DEFAULT);
-            imageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth(), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight(), false));
+            Bitmap factorBitmap = OcrImagePipeline.decodeBase64(bitmap_factor_base64);
+            if (factorBitmap == null) {
+                callMethod.showToast("تصویر فاکتور قابل نمایش نیست");
+                return;
+            }
+            imageView.setImageBitmap(factorBitmap);
             main_layout.addView(imageView);
 
             Button button=  new Button(getApplicationContext());
@@ -958,21 +953,15 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
          * Create image before adding the action button
          */
         bitmap_factor = loadBitmapFromView(main_layout);
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        bitmap_factor.compress(
-                Bitmap.CompressFormat.JPEG,
-                80,
-                outputStream
-        );
-
-        byte[] imageBytes = outputStream.toByteArray();
-
-        bitmap_factor_base64 = Base64.encodeToString(
-                imageBytes,
-                Base64.NO_WRAP
-        );
+        bitmap_factor_base64 = OcrImagePipeline.encodeJpeg(bitmap_factor, 80);
+        if (bitmap_factor != null) {
+            bitmap_factor.recycle();
+            bitmap_factor = null;
+        }
+        if (bitmap_factor_base64 == null) {
+            callMethod.showToast("امکان ساخت تصویر فاکتور وجود ندارد");
+            return;
+        }
 
         ocr_dbh.Insert_factorImage(
                 BarcodeScan,
@@ -1034,13 +1023,7 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
     }
 
     public Bitmap loadBitmapFromView(View v) {
-        v.measure(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        Bitmap b = Bitmap.createBitmap(width, v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-
-        Canvas c = new Canvas(b);
-        v.layout(0, 0, width, v.getMeasuredHeight());
-        v.draw(c);
-        return b;
+        return OcrImagePipeline.renderView(v);
     }
 
     @Override
@@ -1051,6 +1034,17 @@ public class Ocr_FactorDetailActivity extends AppCompatActivity {
         intent.putExtra("FactorImage", bitmap_factor_base64);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (factorCall != null) {
+            factorCall.cancel();
+        }
+        if (ocr_action != null) {
+            ocr_action.cancelActiveSubmission();
+        }
+        super.onDestroy();
     }
 
 

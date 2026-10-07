@@ -285,6 +285,29 @@ public interface Order_APIInterface {
     @FormUrlEncoded
     Call<RetrofitResponse> OrderRowInsert(@Field("tag") String tag, @Field("GoodRef") String GoodRef, @Field("FacAmount") String FacAmount, @Field("Price") String Price, @Field("bUnitRef") String bUnitRef, @Field("bRatio") String bRatio, @Field("Explain") String Explain, @Field("InfoRef") String InfoRef, @Field("RowCode") String RowCode);
 
+    /**
+     * Audited correction for a row that has already been converted/printed.
+     * The server should append an adjustment record and must not overwrite the
+     * original printed row. QtyDelta may be negative; ActionType is REMOVE,
+     * EXPLAIN or ADJUST. Legacy servers that do not implement this tag will
+     * simply return an error and the Android client keeps the original row.
+     */
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> OrderAdjustmentInsert(
+            @Field("tag") String tag,
+            @Field("AppBasketInfoRef") String AppBasketInfoRef,
+            @Field("OriginalRowRef") String OriginalRowRef,
+            @Field("GoodRef") String GoodRef,
+            @Field("QtyDelta") String QtyDelta,
+            @Field("NewAmount") String NewAmount,
+            @Field("Price") String Price,
+            @Field("bUnitRef") String bUnitRef,
+            @Field("bRatio") String bRatio,
+            @Field("Explain") String Explain,
+            @Field("ActionType") String ActionType
+    );
+
 
 
     @POST("index.php")

@@ -51,12 +51,14 @@ public class Order_ObjectTypeAdapter extends RecyclerView.Adapter<Order_MizTypeV
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBindViewHolder(@NonNull Order_MizTypeViewHolder holder, int position) {
+        if (position < 0 || position >= objectTypes.size()) return;
+        ObjectType objectType = objectTypes.get(position);
+        String type = objectType.getaType() == null ? "" : objectType.getaType();
 
-
-        if(objectTypes.get(position).getaType().equals("")){
+        if(type.equals("")){
             holder.tv_name.setText(R.string.textvalue_tagall);
         }else {
-            holder.tv_name.setText(callMethod.NumberRegion(objectTypes.get(position).getaType()));
+            holder.tv_name.setText(callMethod.NumberRegion(type));
         }
 
 
@@ -71,7 +73,7 @@ public class Order_ObjectTypeAdapter extends RecyclerView.Adapter<Order_MizTypeV
         context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedValue, true);
         int colorOnPrimary = typedValue.data;
 
-        if (callMethod.ReadString("ObjectType").equals(objectTypes.get(position).getaType())) {
+        if (callMethod.ReadString("ObjectType").equals(type)) {
             holder.rltv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_primary));
             holder.tv_name.setTextColor(colorOnPrimary);
         } else {
@@ -84,8 +86,12 @@ public class Order_ObjectTypeAdapter extends RecyclerView.Adapter<Order_MizTypeV
 
 
         holder.rltv.setOnClickListener(v -> {
+            if (!(mContext instanceof Order_TableActivity)) {
+                callMethod.Log("Object type click has non-table Context");
+                return;
+            }
             Order_TableActivity activity = (Order_TableActivity) mContext;
-            callMethod.EditString("ObjectType", objectTypes.get(position).getaType());
+            callMethod.EditString("ObjectType", type);
 
 
             notifyDataSetChanged();

@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
@@ -27,9 +26,11 @@ import com.kits.kowsarapp.activity.broker.Broker_CustomerActivity;
 import com.kits.kowsarapp.activity.broker.Broker_PFActivity;
 import com.kits.kowsarapp.activity.broker.Broker_SearchActivity;
 import com.kits.kowsarapp.application.base.Base_Action;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
-
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.SafeListAccess;
+import com.kits.kowsarapp.application.base.SafeValueParser;
+import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
 import com.kits.kowsarapp.model.base.Good;
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -162,16 +164,23 @@ public class Broker_Action extends Base_Action {
         final String[] boxAmount = {""};
 
         Good good = broker_dbh.getGoodBuyBox(goodcode);
-        DefaultUnitValue = Integer.parseInt(good.getGoodFieldValue("DefaultUnitValue"));
+        if (good == null) {
+            callMethod.Log("Broker buy dialog good was missing");
+            if (isContextActive()) callMethod.showToast("اطلاعات کالا کامل نیست");
+            return;
+        }
+        DefaultUnitValue = Math.max(1, SafeValueParser.intOrDefault(
+                good.getGoodFieldValue("DefaultUnitValue"),
+                1
+        ));
 
         NewPrice[0] = good.getGoodFieldValue("SellPrice");
 
-        Gson gson = new Gson();
-        callMethod.Log("GOOD OBJECT => " + gson.toJson(good));
-
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
         if (callMethod.ReadBoolan("SellPriceTypeDeactive")) {
 
 
@@ -200,7 +209,9 @@ public class Broker_Action extends Base_Action {
 
                 factorname.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
 
-                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("SellPrice")))));
+                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(
+                        SafeValueParser.intOrDefault(good.getGoodFieldValue("SellPrice"), 0)
+                )));
 
                 amount.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -262,8 +273,9 @@ public class Broker_Action extends Base_Action {
 
                         if (NewPrice[0].equals("")) NewPrice[0] = "-1";
                         if (!boxAmount[0].equals("")) {
-                            if (Integer.parseInt(boxAmount[0]) != 0) {
-                                if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
+                            if (SafeValueParser.intOrDefault(boxAmount[0], 0) != 0) {
+                                if (SafeValueParser.intOrDefault(
+                                        callMethod.ReadString("PreFactorCode"), 0) != 0) {
                                     broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
 
                                     callMethod.showToast("به سبد کالا اضافه شد");
@@ -336,12 +348,20 @@ public class Broker_Action extends Base_Action {
                     price.setEnabled(true);
                 }
 
-                long percent_param = (long) (100 - (100 * Float.parseFloat(good.getGoodFieldValue("SellPrice")) / Integer.parseInt(good.getGoodFieldValue("MaxSellPrice"))));
+                int initialMaxSellPrice = Math.max(0, SafeValueParser.intOrDefault(
+                        good.getGoodFieldValue("MaxSellPrice"), 0));
+                double initialSellPrice = SafeValueParser.doubleOrDefault(
+                        good.getGoodFieldValue("SellPrice"), 0);
+                long percent_param = initialMaxSellPrice == 0
+                        ? 0
+                        : (long) (100 - (100 * initialSellPrice / initialMaxSellPrice));
                 percent.setText(NumberFunctions.PerisanNumber(percent_param + ""));
 
                 factorname.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
-                maxPrice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")))));
-                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("SellPrice")))));
+                maxPrice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(initialMaxSellPrice)));
+                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(
+                        SafeValueParser.intOrDefault(good.getGoodFieldValue("SellPrice"), 0)
+                )));
 
 
                 amount.addTextChangedListener(new TextWatcher() {
@@ -396,7 +416,10 @@ public class Broker_Action extends Base_Action {
                                 }
 
                             } catch (Exception e) {
-                                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")))));
+                                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(
+                                        SafeValueParser.intOrDefault(
+                                                good.getGoodFieldValue("MaxSellPrice"), 0)
+                                )));
                                 NewPrice[0] = good.getGoodFieldValue("MaxSellPrice");
 
                             }
@@ -456,8 +479,9 @@ public class Broker_Action extends Base_Action {
 
                     if (NewPrice[0].equals("")) NewPrice[0] = "-1";
                     if (!boxAmount[0].equals("")) {
-                        if (Integer.parseInt(boxAmount[0]) != 0) {
-                            if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
+                        if (SafeValueParser.intOrDefault(boxAmount[0], 0) != 0) {
+                            if (SafeValueParser.intOrDefault(
+                                    callMethod.ReadString("PreFactorCode"), 0) != 0) {
                                 broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
 
                                 callMethod.showToast("به سبد کالا اضافه شد");
@@ -530,7 +554,9 @@ public class Broker_Action extends Base_Action {
 
                 factorname.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
 
-                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("SellPrice")))));
+                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(
+                        SafeValueParser.intOrDefault(good.getGoodFieldValue("SellPrice"), 0)
+                )));
 
                 amount.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -592,8 +618,9 @@ public class Broker_Action extends Base_Action {
 
                         if (NewPrice[0].equals("")) NewPrice[0] = "-1";
                         if (!boxAmount[0].equals("")) {
-                            if (Integer.parseInt(boxAmount[0]) != 0) {
-                                if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
+                            if (SafeValueParser.intOrDefault(boxAmount[0], 0) != 0) {
+                                if (SafeValueParser.intOrDefault(
+                                        callMethod.ReadString("PreFactorCode"), 0) != 0) {
                                     broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
 
                                     callMethod.showToast("به سبد کالا اضافه شد");
@@ -666,12 +693,20 @@ public class Broker_Action extends Base_Action {
                     price.setEnabled(true);
                 }
 
-                long percent_param = (long) (100 - (100 * Float.parseFloat(good.getGoodFieldValue("SellPrice")) / Integer.parseInt(good.getGoodFieldValue("MaxSellPrice"))));
+                int initialMaxSellPrice = Math.max(0, SafeValueParser.intOrDefault(
+                        good.getGoodFieldValue("MaxSellPrice"), 0));
+                double initialSellPrice = SafeValueParser.doubleOrDefault(
+                        good.getGoodFieldValue("SellPrice"), 0);
+                long percent_param = initialMaxSellPrice == 0
+                        ? 0
+                        : (long) (100 - (100 * initialSellPrice / initialMaxSellPrice));
                 percent.setText(NumberFunctions.PerisanNumber(percent_param + ""));
 
                 factorname.setText(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode")));
-                maxPrice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")))));
-                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("SellPrice")))));
+                maxPrice.setText(NumberFunctions.PerisanNumber(decimalFormat.format(initialMaxSellPrice)));
+                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(
+                        SafeValueParser.intOrDefault(good.getGoodFieldValue("SellPrice"), 0)
+                )));
 
 
                 amount.addTextChangedListener(new TextWatcher() {
@@ -726,7 +761,10 @@ public class Broker_Action extends Base_Action {
                                 }
 
                             } catch (Exception e) {
-                                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")))));
+                                price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(
+                                        SafeValueParser.intOrDefault(
+                                                good.getGoodFieldValue("MaxSellPrice"), 0)
+                                )));
                                 NewPrice[0] = good.getGoodFieldValue("MaxSellPrice");
 
                             }
@@ -786,8 +824,9 @@ public class Broker_Action extends Base_Action {
 
                     if (NewPrice[0].equals("")) NewPrice[0] = "-1";
                     if (!boxAmount[0].equals("")) {
-                        if (Integer.parseInt(boxAmount[0]) != 0) {
-                            if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
+                        if (SafeValueParser.intOrDefault(boxAmount[0], 0) != 0) {
+                            if (SafeValueParser.intOrDefault(
+                                    callMethod.ReadString("PreFactorCode"), 0) != 0) {
                                 broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"), goodcode, boxAmount[0], NewPrice[0], Basketflag);
 
                                 callMethod.showToast("به سبد کالا اضافه شد");
@@ -840,9 +879,6 @@ public class Broker_Action extends Base_Action {
 
     public void sendfactor11(String factor_code) {
 
-        callMethod.Log(factor_code);
-
-
         SQLiteDatabase dtb = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
 
         cursor = dtb.rawQuery("Select PreFactorCode, PreFactorDate, PreFactorExplain, CustomerRef, BrokerRef, " +
@@ -883,61 +919,47 @@ public class Broker_Action extends Base_Action {
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call,@NonNull  Response<RetrofitResponse> response) {
-
-                try {
-                    assert response.body() != null;
-                    if (Integer.parseInt(response.body().getFactors().get(0).getGoodCode()) == 0) {
-                        if (Integer.parseInt(response.body().getFactors().get(0).getPreFactorCode()) > 0) {
-                            broker_dbh.UpdatePreFactor(factor_code, response.body().getFactors().get(0).getPreFactorCode(), response.body().getFactors().get(0).getPreFactorDate());
-                            callMethod.EditString("PreFactorCode", "0");
-                            lottieok();
-                        } else {
-                            callMethod.Log("4");
-                            callMethod.showToast("خطا در ارتباط با سرور");
-                        }
-
-                    } else {
-                        SQLiteDatabase dtb = mContext.openOrCreateDatabase(callMethod.ReadString("DatabaseName"), Context.MODE_PRIVATE, null);
-                        for (int i = 0; i < response.body().getFactors().size(); i++) {
-                            dtb.execSQL("Update PreFactorRow set Shortage = " + response.body().getFactors().get(i).getFlag() + " Where IfNull(PreFactorRef,0)=" + factor_code + " And GoodRef = " + response.body().getFactors().get(i).getGoodCode());
-                            dtb.close();
-                        }
-                        callMethod.showToast("کالاهای مورد نظر کسر موجودی دارند!");
-                        intent = new Intent(mContext, Broker_BasketActivity.class);
-                        intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
-                        ((Activity) mContext).finish();
-                        ((Activity) mContext).overridePendingTransition(0, 0);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        mContext.startActivity(intent);
-                        ((Activity) mContext).overridePendingTransition(0, 0);
-                    }
-                }catch (Exception e){
-                    callMethod.Log(e.getMessage());
+                if (!isContextActive()) return;
+                if (!response.isSuccessful() || response.body() == null) {
+                    showFactorSubmissionError("Broker factor response was empty or HTTP failed");
+                    return;
                 }
 
+                List<Factor> responseFactors = response.body().getFactors();
+                Broker_FactorSubmissionResult.Decision decision =
+                        Broker_FactorSubmissionResult.evaluate(responseFactors);
+
+                if (decision == Broker_FactorSubmissionResult.Decision.ACCEPTED) {
+                    Factor first = SafeListAccess.firstOrNull(responseFactors);
+                    broker_dbh.UpdatePreFactor(
+                            factor_code,
+                            first.getPreFactorCode(),
+                            first.getPreFactorDate()
+                    );
+                    callMethod.EditString("PreFactorCode", "0");
+                    lottieok();
+                    return;
+                }
+
+                if (decision == Broker_FactorSubmissionResult.Decision.SHORTAGE) {
+                    applyShortageResponse(factor_code, responseFactors);
+                    return;
+                }
+
+                showFactorSubmissionError("Broker factor response had an invalid shape");
 
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }            }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "Broker factor submission",
+                        call,
+                        t
+                );
+            }
         });
 
 
@@ -957,6 +979,80 @@ public class Broker_Action extends Base_Action {
 
 
 
+    }
+
+    private void applyShortageResponse(String factorCode, List<Factor> responseFactors) {
+        Integer parsedFactorCode = SafeValueParser.intOrNull(factorCode);
+        if (parsedFactorCode == null) {
+            showFactorSubmissionError("Broker factor code was invalid during shortage update");
+            return;
+        }
+
+        SQLiteDatabase database = null;
+        int updatedRows = 0;
+        try {
+            database = mContext.openOrCreateDatabase(
+                    callMethod.ReadString("DatabaseName"),
+                    Context.MODE_PRIVATE,
+                    null
+            );
+            database.beginTransaction();
+            for (Factor factor : responseFactors) {
+                if (factor == null) continue;
+                Integer goodCode = SafeValueParser.intOrNull(factor.getGoodCode());
+                Integer shortage = SafeValueParser.intOrNull(factor.getFlag());
+                if (goodCode == null || shortage == null) continue;
+
+                database.execSQL(
+                        "Update PreFactorRow set Shortage = ? "
+                                + "Where IfNull(PreFactorRef,0) = ? And GoodRef = ?",
+                        new Object[]{shortage, parsedFactorCode, goodCode}
+                );
+                updatedRows++;
+            }
+
+            if (updatedRows == 0) {
+                showFactorSubmissionError("Broker shortage response had no valid rows");
+                return;
+            }
+            database.setTransactionSuccessful();
+        } catch (RuntimeException exception) {
+            callMethod.Log("Broker shortage update failed: "
+                    + exception.getClass().getSimpleName());
+            if (isContextActive()) {
+                callMethod.showToast("خطا در ثبت کسری کالاها");
+            }
+            return;
+        } finally {
+            if (database != null) {
+                if (database.inTransaction()) database.endTransaction();
+                database.close();
+            }
+        }
+
+        if (!isContextActive() || !(mContext instanceof Activity)) return;
+        callMethod.showToast("کالاهای مورد نظر کسر موجودی دارند!");
+        Activity activity = (Activity) mContext;
+        intent = new Intent(mContext, Broker_BasketActivity.class);
+        intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
+        activity.finish();
+        activity.overridePendingTransition(0, 0);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mContext.startActivity(intent);
+        activity.overridePendingTransition(0, 0);
+    }
+
+    private void showFactorSubmissionError(String diagnostic) {
+        callMethod.Log(diagnostic);
+        if (isContextActive()) {
+            callMethod.showToast("پاسخ ثبت فاکتور نامعتبر است؛ دوباره بررسی کنید");
+        }
+    }
+
+    private boolean isContextActive() {
+        if (!(mContext instanceof Activity)) return true;
+        Activity activity = (Activity) mContext;
+        return !activity.isFinishing() && !activity.isDestroyed();
     }
 
 
@@ -1171,7 +1267,8 @@ public class Broker_Action extends Base_Action {
                     // اضافه کردن هر ستون به JSON
                     jsonObject.put(columnName, cursor.getString(i));
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    callMethod.Log("Broker cursor serialization failed: "
+                            + e.getClass().getSimpleName());
                 }
             }
             jsonArray.put(jsonObject);

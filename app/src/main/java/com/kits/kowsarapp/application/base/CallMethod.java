@@ -2,11 +2,12 @@ package com.kits.kowsarapp.application.base;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.Settings;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.kits.kowsarapp.BuildConfig;
@@ -61,21 +62,7 @@ public class CallMethod extends Application {
     }
 
     public boolean IsDebugBuild(Context context) {
-
-        if (!BuildConfig.BUILD_TYPE.equals("release")) {
-            return true;
-        }
-
-        if (context == null) {
-            return false;
-        }
-
-        String androidId = Settings.Secure.getString(
-                context.getContentResolver(),
-                Settings.Secure.ANDROID_ID
-        );
-
-        return "debug".equals(androidId);
+        return BuildConfig.DEBUG;
     }
 
 
@@ -97,14 +84,31 @@ public class CallMethod extends Application {
 
 
     public void showToast(String message) {
-        if (toast!=null){
-            toast.cancel();
+        if (context == null || message == null) return;
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (activity.isFinishing() || activity.isDestroyed()) return;
         }
-        toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
-        toast.show();
+
+        Runnable show = () -> {
+            try {
+                if (toast != null) toast.cancel();
+                Context toastContext = context.getApplicationContext();
+                if (toastContext == null) toastContext = context;
+                toast = Toast.makeText(toastContext, message, Toast.LENGTH_LONG);
+                toast.show();
+            } catch (RuntimeException exception) {
+                ReleaseLog.error("Toast", exception);
+            }
+        };
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            show.run();
+        } else {
+            new Handler(Looper.getMainLooper()).post(show);
+        }
     }
     public void Log(String message) {
-        Log.e("KowsarApp = ",message);
+        ReleaseLog.debug("App", message);
     }
 
 
@@ -119,19 +123,19 @@ public class CallMethod extends Application {
             }
             jsonObject.put(key, value);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            ReleaseLog.error("CreateJson", exception);
         }
 
-        return jsonObject.toString()+"";
+        return jsonObject == null ? "{}" : jsonObject.toString();
     }
     public RequestBody RetrofitBody(String jsonRequestBody) {
-
-        Log(jsonRequestBody);
-
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonRequestBody);
-
-        return requestBody;
+        String safeBody = jsonRequestBody == null ? "" : jsonRequestBody;
+        if (BuildConfig.DEBUG) {
+            ReleaseLog.debug("Network", "JSON request prepared; bytes="
+                    + safeBody.getBytes(java.nio.charset.StandardCharsets.UTF_8).length);
+        }
+        return RequestBody.create(MediaType.parse("application/json"), safeBody);
     }
 
 

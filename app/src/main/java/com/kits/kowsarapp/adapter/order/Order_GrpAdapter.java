@@ -13,13 +13,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.order.Order_ValueParser;
 import com.kits.kowsarapp.fragment.order.Order_SearchViewFragment;
 import com.kits.kowsarapp.model.base.GoodGroup;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -36,21 +37,20 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
     ArrayList<GoodGroup> GoodGroups;
     Context mContext;
-    FragmentTransaction fragmentTransaction;
+    FragmentManager fragmentManager;
     CallMethod callMethod;
     String Parent_GourpCode;
     String selectedGroup;
 
     Order_APIInterface order_apiInterface;
-    Call<RetrofitResponse> call2;
 
 
-    public Order_GrpAdapter(ArrayList<GoodGroup> GoodGroups, String parentcode, String selectedGroup, FragmentTransaction fragmentTransaction, Context mContext) {
+    public Order_GrpAdapter(ArrayList<GoodGroup> GoodGroups, String parentcode, String selectedGroup, FragmentManager fragmentManager, Context mContext) {
         this.GoodGroups = GoodGroups;
         this.mContext = mContext;
         this.Parent_GourpCode = parentcode;
         this.selectedGroup = selectedGroup;
-        this.fragmentTransaction = fragmentTransaction;
+        this.fragmentManager = fragmentManager;
         this.callMethod = new CallMethod(mContext);
         this.order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
 
@@ -73,10 +73,12 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
     @Override
     public void onBindViewHolder(@NonNull GoodGroupViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        cancelImageCall(holder);
         GoodGroup goodGroup = GoodGroups.get(position);
 
         holder.grpname.setText(goodGroup.getGoodGroupFieldValue("Name"));
-        if (Integer.parseInt(goodGroup.getGoodGroupFieldValue("ChildNo")) > 0) {
+        if (Order_ValueParser.nonNegativeLongOrDefault(
+                goodGroup.getGoodGroupFieldValue("ChildNo"), 0) > 0) {
             holder.extraimg.setVisibility(View.VISIBLE);
         } else {
             holder.extraimg.setVisibility(View.GONE);
@@ -110,17 +112,27 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
 
         } else {
 
-            call2 = order_apiInterface.GetImage("getImage", goodGroup.getGoodGroupFieldValue("GroupCode"), "TGoodsGrp", "0", "400");
-            call2.enqueue(new Callback<RetrofitResponse>() {
+            Call<RetrofitResponse> imageCall = order_apiInterface.GetImage(
+                    "getImage",
+                    goodGroup.getGoodGroupFieldValue("GroupCode"),
+                    "TGoodsGrp",
+                    "0",
+                    "400");
+            holder.imageCall = imageCall;
+            imageCall.enqueue(new Callback<RetrofitResponse>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
-                public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-
-                        assert response.body() != null;
-                        if (!response.body().getText().equals("no_photo")) {
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if (holder.imageCall != call) return;
+                    holder.imageCall = null;
+                    if (response.isSuccessful() && response.body() != null
+                            && response.body().getText() != null) {
+                        if (!"no_photo".equals(response.body().getText())) {
                             goodGroup.setGoodGroupImageName(response.body().getText());
-                            notifyItemChanged(position);
+                            int modelPosition = GoodGroups.indexOf(goodGroup);
+                            if (modelPosition >= 0) {
+                                notifyItemChanged(modelPosition);
+                            }
                         }else{
                             callMethod.Log("test"+position+" = "+response.body().getText());
 
@@ -130,47 +142,53 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
-
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    if (holder.imageCall == call) {
+                        holder.imageCall = null;
+                    }
+                    if (!call.isCanceled()) {
+                        callMethod.Log("Order group image failed: "
+                                + t.getClass().getSimpleName());
+                    }
                 }
             });
         }
 
-        holder.grpname.setOnClickListener(v -> {
-            Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
-            searchViewFragment.setParent_GourpCode(Parent_GourpCode);
-            searchViewFragment.setGood_GourpCode(goodGroup.getGoodGroupFieldValue("GroupCode"));
-            fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
-            fragmentTransaction.commit();
-
-
-        });
-        holder.rltv.setOnClickListener(v -> {
-            Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
-            searchViewFragment.setParent_GourpCode(Parent_GourpCode);
-            searchViewFragment.setGood_GourpCode(goodGroup.getGoodGroupFieldValue("GroupCode"));
-            fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
-            fragmentTransaction.commit();
-
-
-        });
-
-        holder.extraimg.setOnClickListener(v -> {
-            Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
-            searchViewFragment.setParent_GourpCode(Parent_GourpCode);
-            searchViewFragment.setGood_GourpCode(goodGroup.getGoodGroupFieldValue("GroupCode"));
-            fragmentTransaction.replace(R.id.ord_search_a_framelayout, searchViewFragment);
-            fragmentTransaction.commit();
-
-        });
+        View.OnClickListener groupClick = v -> navigateToGroup(goodGroup);
+        holder.grpname.setOnClickListener(groupClick);
+        holder.rltv.setOnClickListener(groupClick);
+        holder.extraimg.setOnClickListener(groupClick);
 
     }
+
+    private void navigateToGroup(GoodGroup goodGroup) {
+        if (fragmentManager == null || fragmentManager.isStateSaved()) return;
+
+        Order_SearchViewFragment searchViewFragment = new Order_SearchViewFragment();
+        searchViewFragment.setParent_GourpCode(Parent_GourpCode);
+        searchViewFragment.setGood_GourpCode(goodGroup.getGoodGroupFieldValue("GroupCode"));
+        fragmentManager.beginTransaction()
+                .replace(R.id.ord_search_a_framelayout, searchViewFragment)
+                .commit();
+    }
+
+    private void cancelImageCall(GoodGroupViewHolder holder) {
+        if (holder.imageCall != null) {
+            holder.imageCall.cancel();
+            holder.imageCall = null;
+        }
+    }
+
     @Override
     public void onViewDetachedFromWindow(@NonNull GoodGroupViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        if (call2.isExecuted()) {
-            call2.cancel();
-        }
+        cancelImageCall(holder);
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull GoodGroupViewHolder holder) {
+        cancelImageCall(holder);
+        super.onViewRecycled(holder);
     }
     @Override
     public int getItemCount() {
@@ -182,6 +200,7 @@ public class Order_GrpAdapter extends RecyclerView.Adapter<Order_GrpAdapter.Good
         ImageView extraimg;
         TextView grpname;
         LinearLayoutCompat rltv;
+        Call<RetrofitResponse> imageCall;
 
         GoodGroupViewHolder(View itemView) {
             super(itemView);

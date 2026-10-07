@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.downloader.PRDownloader;
-import com.downloader.Status;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.model.base.Activation;
@@ -59,10 +57,19 @@ public class Base_AllAppAdapter extends RecyclerView.Adapter<Base_AllAppViewHold
     @Override
     public void onViewDetachedFromWindow(@NonNull Base_AllAppViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        if (PRDownloader.getStatus(holder.downloadId) == Status.RUNNING) {
-            PRDownloader.cancel(holder.downloadId);
+        holder.release();
+    }
 
-        }
+    @Override
+    public void onViewAttachedToWindow(@NonNull Base_AllAppViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        holder.onAttachedToWindow();
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull Base_AllAppViewHolder holder) {
+        holder.release();
+        super.onViewRecycled(holder);
     }
 
 

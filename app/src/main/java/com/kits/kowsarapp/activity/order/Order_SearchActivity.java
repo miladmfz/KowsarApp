@@ -26,6 +26,7 @@ import com.kits.kowsarapp.activity.base.Base_SplashActivity;
 import com.kits.kowsarapp.adapter.order.Order_InternetConnection;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.order.Order_ValueParser;
 import com.kits.kowsarapp.databinding.OrderActivitySearchBinding;
 import com.kits.kowsarapp.fragment.order.Order_SearchViewFragment;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -50,6 +51,7 @@ public class Order_SearchActivity extends AppCompatActivity {
     Order_DBH order_dbh;
     Intent intent;
     TextView textCartItemCount;
+    Call<RetrofitResponse> summaryCall;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -109,7 +111,8 @@ public class Order_SearchActivity extends AppCompatActivity {
             try {
                 init();
             } catch (Exception e) {
-                e.printStackTrace();
+                callMethod.Log("Order search initialization failed: "
+                        + e.getClass().getSimpleName());
             }
         } else {
             intent = new Intent(this, Base_SplashActivity.class);
@@ -184,18 +187,19 @@ public class Order_SearchActivity extends AppCompatActivity {
                 textCartItemCount.setVisibility(View.GONE);
             }
             //Call<RetrofitResponse> call2 = apiInterface.GetOrderSum("GetOrderSum", callMethod.ReadString("AppBasketInfoCode"));
-            Call<RetrofitResponse> call2 = order_apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
+            if (summaryCall != null) summaryCall.cancel();
+            summaryCall = order_apiInterface.OrderGetSummmary("OrderGetSummmary", callMethod.ReadString("AppBasketInfoCode"));
 
-            call2.enqueue(new Callback<RetrofitResponse>() {
+            summaryCall.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        if (response.body().getBasketInfos() == null || response.body().getBasketInfos().isEmpty()) {
-                            return;
-                        }
-                        textCartItemCount.setText(callMethod.NumberRegion(response.body().getBasketInfos().get(0).getSumFacAmount()));
-                        if (Integer.parseInt(response.body().getBasketInfos().get(0).getSumFacAmount()) > 0) {
+                    if (isFinishing() || isDestroyed() || textCartItemCount == null) return;
+                    if (response.isSuccessful() && response.body() != null
+                            && response.body().getBasketInfos() != null
+                            && !response.body().getBasketInfos().isEmpty()) {
+                        String amount = response.body().getBasketInfos().get(0).getSumFacAmount();
+                        textCartItemCount.setText(callMethod.NumberRegion(amount == null ? "0" : amount));
+                        if (Order_ValueParser.nonNegativeLongOrDefault(amount, 0) > 0) {
                             if (textCartItemCount.getVisibility() != View.VISIBLE) {
                                 textCartItemCount.setVisibility(View.VISIBLE);
                             }
@@ -205,8 +209,9 @@ public class Order_SearchActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
-
+                    if (!call.isCanceled()) {
+                        callMethod.Log("Order summary failed: " + t.getClass().getSimpleName());
+                    }
                 }
             });
         }
@@ -260,6 +265,12 @@ public class Order_SearchActivity extends AppCompatActivity {
 
     public String getAppLanguage() {
         return Locale.getDefault().getLanguage();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (summaryCall != null) summaryCall.cancel();
+        super.onDestroy();
     }
 }
 

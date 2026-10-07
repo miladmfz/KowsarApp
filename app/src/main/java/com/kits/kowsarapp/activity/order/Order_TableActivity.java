@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -34,6 +35,7 @@ import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ThirdPartyResult;
 import com.kits.kowsarapp.application.order.Order_Payment;
+import com.kits.kowsarapp.application.order.Order_ValueParser;
 import com.kits.kowsarapp.model.base.ObjectType;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
@@ -42,7 +44,6 @@ import com.kits.kowsarapp.webService.order.Order_APIInterface;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -69,10 +70,12 @@ public class Order_TableActivity extends AppCompatActivity {
     Spinner spinner;
     private boolean isTableLoading = false;
     private String lastCallState = "";
+    private Call<RetrofitResponse> tableCall;
+    private Call<RetrofitResponse> objectTypeCall;
     public String State = "0";
     public String EditTable = "0";
 
-    LinearLayout init_ll;
+    LinearLayoutCompat init_ll;
     LottieAnimationView progressBar;
     LottieAnimationView img_lottiestatus;
     TextView tv_lottiestatus;
@@ -179,7 +182,10 @@ public class Order_TableActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, InfoState_array);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinner_adapter);
-        spinner.setSelection(Integer.parseInt(State));
+        int initialState = Order_ValueParser.intInRangeOrDefault(
+                State, 0, InfoState_array.size() - 1, 0);
+        State = String.valueOf(initialState);
+        spinner.setSelection(initialState);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -202,83 +208,142 @@ public class Order_TableActivity extends AppCompatActivity {
         if (String.valueOf(spinner.getSelectedItemPosition()).equals(State)) {
             CallTable();
         } else {
-            spinner.setSelection(Integer.parseInt(State));
+            int statePosition = Order_ValueParser.intInRangeOrDefault(
+                    State, 0, InfoState_array.size() - 1, 0);
+            State = String.valueOf(statePosition);
+            spinner.setSelection(statePosition);
         }
 
     }
 
     public void CallTable() {
 
+        final String requestState = State;
+        final String requestKey = requestState + "|" + callMethod.ReadString("ObjectType");
+        if (isTableLoading) {
+            if (requestKey.equals(lastCallState)) {
+                return;
+            }
+            if (tableCall != null) {
+                tableCall.cancel();
+            }
+        }
+        isTableLoading = true;
+        lastCallState = requestKey;
+
         progressBar.setVisibility(View.VISIBLE);
         img_lottiestatus.setVisibility(View.GONE);
         tv_lottiestatus.setVisibility(View.GONE);
 
-        Call<RetrofitResponse> call1 = order_apiInterface.OrderMizList(
-                "OrderMizList",
-                State,
-                callMethod.ReadString("ObjectType")
-        );
+        try {
+            tableCall = order_apiInterface.OrderMizList(
+                    "OrderMizList",
+                    requestState,
+                    callMethod.ReadString("ObjectType")
+            );
 
-        call1.enqueue(new Callback<RetrofitResponse>() {
+            tableCall.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    if (!response.body().getBasketInfos().equals(basketInfos)) {
-                        basketInfos.clear();
-                        basketInfos = response.body().getBasketInfos();
-                        callrecycler();
-                    }
+                if (!requestKey.equals(lastCallState)) return;
+                isTableLoading = false;
+                tableCall = null;
+                if (!canUpdateUi()) return;
+
+                if (!response.isSuccessful() || response.body() == null
+                        || response.body().getBasketInfos() == null) {
+                    progressBar.setVisibility(View.GONE);
+                    callMethod.showToast("پاسخ لیست میزها نامعتبر است.");
+                    return;
                 }
+
+                ArrayList<Order_BasketInfo> newBasketInfos =
+                        new ArrayList<>(response.body().getBasketInfos());
+                if (!newBasketInfos.equals(basketInfos)) {
+                    basketInfos = newBasketInfos;
+                }
+                callrecycler();
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                if (!requestKey.equals(lastCallState)) return;
                 isTableLoading = false;
-                basketInfos.clear();
-                callrecycler();
+                tableCall = null;
+                if (!call.isCanceled() && canUpdateUi()) {
+                    progressBar.setVisibility(View.GONE);
+                    callMethod.Log("OrderMizList failed: "
+                            + (t.getMessage() == null ? "" : t.getMessage()));
+                }
             }
-        });
+            });
+        } catch (RuntimeException exception) {
+            isTableLoading = false;
+            tableCall = null;
+            if (canUpdateUi()) progressBar.setVisibility(View.GONE);
+            callMethod.Log("OrderMizList failed before enqueue: "
+                    + (exception.getMessage() == null ? "" : exception.getMessage()));
+        }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        CallTable();
         super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && order_apiInterface != null) {
+            CallTable();
+        }
     }
 
     public void init() {
 
-        Call<RetrofitResponse> call1 = order_apiInterface.GetObjectTypeFromDbSetup("GetObjectTypeFromDbSetup", "RstMiz_MizType");
-        call1.enqueue(new Callback<RetrofitResponse>() {
+        try {
+            objectTypeCall = order_apiInterface.GetObjectTypeFromDbSetup(
+                    "GetObjectTypeFromDbSetup", "RstMiz_MizType");
+            objectTypeCall.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    objectTypes.clear();
-                    ObjectType ob = new ObjectType();
-                    ob.setTid("0");
-                    ob.setaType("");
-                    ob.setIsDefault("0");
-                    objectTypes = response.body().getObjectTypes();
-                    objectTypes.add(0, ob);
-
-                    CallSpinner();
-
-
-                    Order_ObjectTypeAdapter objectadapter = new Order_ObjectTypeAdapter(objectTypes, Order_TableActivity.this);
-                    recyclerView_object.setLayoutManager(new GridLayoutManager(Order_TableActivity.this, 1));
-                    recyclerView_object.setAdapter(objectadapter);
-                    recyclerView_object.setItemAnimator(new DefaultItemAnimator());
-
+                objectTypeCall = null;
+                if (!canUpdateUi()) return;
+                if (!response.isSuccessful() || response.body() == null
+                        || response.body().getObjectTypes() == null) {
+                    progressBar.setVisibility(View.GONE);
+                    callMethod.showToast("پاسخ نوع میزها نامعتبر است.");
+                    return;
                 }
+
+                ObjectType defaultType = new ObjectType();
+                defaultType.setTid("0");
+                defaultType.setaType("");
+                defaultType.setIsDefault("0");
+                objectTypes = new ArrayList<>(response.body().getObjectTypes());
+                objectTypes.add(0, defaultType);
+
+                CallSpinner();
+
+                Order_ObjectTypeAdapter objectadapter = new Order_ObjectTypeAdapter(
+                        objectTypes, Order_TableActivity.this);
+                recyclerView_object.setLayoutManager(
+                        new GridLayoutManager(Order_TableActivity.this, 1));
+                recyclerView_object.setAdapter(objectadapter);
+                recyclerView_object.setItemAnimator(new DefaultItemAnimator());
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-               progressBar.setVisibility(View.GONE);
+                objectTypeCall = null;
+                if (!call.isCanceled() && canUpdateUi()) {
+                    progressBar.setVisibility(View.GONE);
+                    callMethod.Log("GetObjectTypeFromDbSetup failed: "
+                            + (t.getMessage() == null ? "" : t.getMessage()));
+                }
             }
-        });
+            });
+        } catch (RuntimeException exception) {
+            objectTypeCall = null;
+            if (canUpdateUi()) progressBar.setVisibility(View.GONE);
+            callMethod.Log("GetObjectTypeFromDbSetup failed before enqueue: "
+                    + (exception.getMessage() == null ? "" : exception.getMessage()));
+        }
 
     }
 
@@ -330,41 +395,42 @@ public class Order_TableActivity extends AppCompatActivity {
         if (requestCode != REQUEST_POS) return;
 
         // یک لاگ خام که همیشه ذخیره می‌کنیم (حتی اگر JSON نیاد)
-        StringBuilder rawLog = new StringBuilder();
-        rawLog.append("activityResultCode=").append(resultCode).append("\n");
-
-        if (data != null && data.getExtras() != null) {
-            rawLog.append("---- extras ----\n");
-            for (String key : data.getExtras().keySet()) {
-                Object v = data.getExtras().get(key);
-                rawLog.append(key).append("=").append(String.valueOf(v)).append("\n");
-            }
-        } else {
-            rawLog.append("extras=null\n");
-        }
-
         // JSON نتیجه
         String resultJson = (data == null) ? null : data.getStringExtra("paymentResult");
-        if (resultJson == null || resultJson.trim().isEmpty()) {
-            rawLog.append("paymentResult=NULL_OR_EMPTY\n");
-        } else {
-            rawLog.append("---- paymentResult ----\n");
-            rawLog.append(resultJson);
-        }
-
         // تلاش برای parse (اگر شد)
         BehPardakht_pos_result = null;
         try {
             if (resultJson != null && !resultJson.trim().isEmpty()) {
-                BehPardakht_pos_result = gson.fromJson(resultJson, (Type) ThirdPartyResult.class);
+                BehPardakht_pos_result = gson.fromJson(resultJson, ThirdPartyResult.class);
             }
-        } catch (Exception ignored) {
+        } catch (Exception exception) {
+            callMethod.Log("POS result parse failed: "
+                    + exception.getClass().getSimpleName());
             // لاگش رو در DB/File می‌فرستیم، لازم نیست اینجا کاری کنیم
         }
-        callMethod.Log(resultJson);
-        order_payment.BasketInfopayment_request(BehPardakht_pos_result,resultJson);
+        if (BehPardakht_pos_result != null
+                && "000".equals(BehPardakht_pos_result.resultCode)) {
+            order_payment.BasketInfopayment_request(BehPardakht_pos_result, resultJson);
+        } else {
+            order_payment.rejectPosResult(BehPardakht_pos_result == null);
+        }
 
 
 
+    }
+
+    private boolean canUpdateUi() {
+        return !isFinishing()
+                && (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1
+                || !isDestroyed());
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (tableCall != null) tableCall.cancel();
+        if (objectTypeCall != null) objectTypeCall.cancel();
+        if (order_payment != null) order_payment.cancelPending();
+        if (order_rstMizAdapter != null) order_rstMizAdapter.release();
+        super.onDestroy();
     }
 }

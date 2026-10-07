@@ -2,6 +2,7 @@ package com.kits.kowsarapp.adapter.order;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -28,7 +29,9 @@ import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
 import com.kits.kowsarapp.application.order.Order_Payment;
 import com.kits.kowsarapp.application.order.Order_Print;
-import com.kits.kowsarapp.application.order.Order_PrintChangeTable;
+import com.kits.kowsarapp.application.order.Order_PrintRequestCoordinator;
+import com.kits.kowsarapp.application.order.Order_TableTransferCoordinator;
+import com.kits.kowsarapp.application.order.Order_ValueParser;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.model.order.Order_BasketInfo;
 import com.kits.kowsarapp.model.order.Order_DBH;
@@ -58,12 +61,13 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
     Call<RetrofitResponse> call;
     Order_Action order_action;
     Order_Payment order_payment;
-    Order_Print order_print;
-    Order_PrintChangeTable order_printChangeTable;
+    Order_PrintRequestCoordinator printCoordinator;
+    Order_TableTransferCoordinator transferCoordinator;
     NotificationManager notificationManager;
     String channel_id = "Kowsarmobile";
     String channel_name = "home";
     String changeTable;
+    private volatile boolean released;
 
     public void updateData(List<Order_BasketInfo> newList, String changeFlag) {
         this.basketInfos.clear();
@@ -72,30 +76,44 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
         notifyDataSetChanged();
     }
 
+    public void release() {
+        released = true;
+        if (call != null) call.cancel();
+        if (order_action != null) order_action.cancelPending();
+        if (order_payment != null) order_payment.cancelPending();
+    }
+
     public Order_RstMizAdapter(ArrayList<Order_BasketInfo> BasketInfos, String changeflag, Context context) {
         this.mContext = context;
         this.basketInfos = BasketInfos;
         this.callMethod = new CallMethod(mContext);
         this.order_action = new Order_Action(mContext);
         this.order_payment = new Order_Payment(mContext);
-        this.order_print = new Order_Print(mContext);
-        this.order_printChangeTable = new Order_PrintChangeTable(mContext);
+        this.printCoordinator = new Order_PrintRequestCoordinator(mContext);
+        this.transferCoordinator = new Order_TableTransferCoordinator(mContext);
         this.order_dbh = new Order_DBH(mContext, callMethod.ReadString("DatabaseName"));
         this.order_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Order_APIInterface.class);
-        call = order_apiInterface.GetTodeyFromServer("GetTodeyFromServer");
         this.changeTable = changeflag;
-        call.enqueue(new Callback<RetrofitResponse>() {
+        try {
+            call = order_apiInterface.GetTodeyFromServer("GetTodeyFromServer");
+            call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                assert response.body() != null;
-                date = response.body().getText();
+                if (!canUseUi()) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    date = safeString(response.body().getText());
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
+                logFailure("GetTodeyFromServer", call, t);
             }
-        });
+            });
+        } catch (RuntimeException exception) {
+            callMethod.Log("GetTodeyFromServer enqueue failed: "
+                    + exception.getClass().getSimpleName());
+        }
 
     }
 
@@ -103,14 +121,14 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
     @Override
     public Order_RstMizViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (changeTable.equals("0")) {
+        if ("0".equals(changeTable)) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_table_card, parent, false);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_tableempty_card, parent, false);
         }
-        if (callMethod.ReadString("LANG").equals("fa")) {
+        if ("fa".equals(callMethod.ReadString("LANG"))) {
             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        } else if (callMethod.ReadString("LANG").equals("ar")) {
+        } else if ("ar".equals(callMethod.ReadString("LANG"))) {
             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         } else {
             view.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
@@ -128,16 +146,33 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
     }
 
     private int safeInt(String value) {
-        try {
-            if (value == null || value.trim().isEmpty()) return 0;
-            return Integer.parseInt(value.trim());
-        } catch (Exception e) {
-            return 0;
+        int parsed = Order_ValueParser.intInRangeOrDefault(
+                value, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        if (parsed == Integer.MAX_VALUE
+                && !String.valueOf(Integer.MAX_VALUE).equals(value == null ? "" : value.trim())) {
+            callMethod.Log("Invalid integer in table response");
         }
+        return parsed;
     }
 
     private String safeString(String value) {
         return value == null ? "" : value;
+    }
+
+    private void logFailure(String operation, Call<RetrofitResponse> failedCall, Throwable throwable) {
+        if (failedCall != null && failedCall.isCanceled()) return;
+        callMethod.Log(operation + " failed: "
+                + (throwable == null ? "unknown" : throwable.getClass().getSimpleName()));
+        if (canUseUi()) callMethod.showToast("ارتباط با سرور برقرار نشد");
+    }
+
+    private boolean canUseUi() {
+        if (released) return false;
+        if (!(mContext instanceof Activity)) return true;
+        Activity activity = (Activity) mContext;
+        return !activity.isFinishing()
+                && (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1
+                || !activity.isDestroyed());
     }
 
     private int safeHour(String time) {
@@ -145,6 +180,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
             if (time == null || time.length() < 2) return 0;
             return Integer.parseInt(time.substring(0, 2));
         } catch (Exception e) {
+            callMethod.Log("Invalid table hour");
             return 0;
         }
     }
@@ -154,13 +190,14 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
             if (time == null || time.length() < 5) return 0;
             return Integer.parseInt(time.substring(3, 5));
         } catch (Exception e) {
+            callMethod.Log("Invalid table minute");
             return 0;
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     @Override
-    public void onBindViewHolder(@NonNull final Order_RstMizViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(@NonNull final Order_RstMizViewHolder holder, final int position) {
         if (basketInfos == null || position < 0 || position >= basketInfos.size()) {
             return;
         }
@@ -168,7 +205,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
         Order_BasketInfo basketInfo = basketInfos.get(position);
         holder.tv_name.setText(callMethod.NumberRegion(basketInfo.getRstMizName()));
 
-        if (changeTable.equals("0")) {
+        if ("0".equals(changeTable)) {
             if (callMethod.ReadBoolan("ReserveActive")) {
                 holder.btn_reserve.setVisibility(View.VISIBLE);
             }else{
@@ -176,21 +213,21 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
             }
             holder.tv_placecount.setText(callMethod.NumberRegion(basketInfo.getPlaceCount()));
 
-            if (basketInfo.getExplain().length() > 0) {
+            if (!safeString(basketInfo.getExplain()).isEmpty()) {
                 holder.ll_table_mizexplain.setVisibility(View.VISIBLE);
                 holder.tv_mizexplain.setText(callMethod.NumberRegion(basketInfo.getExplain()));
             } else {
                 holder.ll_table_mizexplain.setVisibility(View.GONE);
             }
 
-            if (basketInfo.getInfoExplain().length() > 0) {
+            if (!safeString(basketInfo.getInfoExplain()).isEmpty()) {
                 holder.ll_table_infoexplain.setVisibility(View.VISIBLE);
                 holder.tv_infoexplain.setText(callMethod.NumberRegion(basketInfo.getInfoExplain()));
             } else {
                 holder.ll_table_infoexplain.setVisibility(View.GONE);
             }
 
-            if (basketInfo.getRes_BrokerName().length() > 0) {
+            if (!safeString(basketInfo.getRes_BrokerName()).isEmpty()) {
                 holder.ll_table_reserve.setVisibility(View.VISIBLE);
                 holder.tv_reservestart.setText(callMethod.NumberRegion(basketInfo.getReserveStart()));
                 holder.tv_reservebrokername.setText(callMethod.NumberRegion(basketInfo.getPersonName()));
@@ -200,7 +237,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
             }
 
 
-            switch (basketInfo.getInfoState()) {
+            switch (safeString(basketInfo.getInfoState())) {
                 case "0":
                 case "3":
                     holder.ll_table_timebroker.setVisibility(View.GONE);
@@ -208,7 +245,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     holder.ll_table_mizexplain.setVisibility(View.GONE);
                     holder.ll_table_infoexplain.setVisibility(View.GONE);
                     holder.btn_cleartable.setVisibility(View.GONE);
-                    if (basketInfo.getIsReserved().equals("1")) {
+                    if ("1".equals(basketInfo.getIsReserved())) {
                         holder.btn_cleartable.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -240,11 +277,11 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     thourOfDay = "0" + (bet / (1000 * 60 * 60));
                     tminute = "0" + ((bet / (1000 * 60)) % 60);
                     Time = thourOfDay.substring(thourOfDay.length() - 2) + ":" + tminute.substring(tminute.length() - 2);
-                    basketInfos.get(position).setTime(Time);
+                    basketInfo.setTime(Time);
                     holder.tv_time.setText(callMethod.NumberRegion(basketInfo.getTime()));
                     holder.tv_brokername.setText(callMethod.NumberRegion(basketInfo.getBrokerName()));
                     if (safeHour(basketInfo.getTime()) > 1) {
-                        noti_Messaging("اتمام زمان ", basketInfos.get(position).getRstMizName());
+                        noti_Messaging("اتمام زمان ", basketInfo.getRstMizName());
                     }
 
 
@@ -255,42 +292,43 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
 
             holder.btn_select.setOnClickListener(v -> {
-                callMethod.EditString("RstMizName", basketInfos.get(position).getRstMizName());
-                callMethod.EditString("AppBasketInfoCode", basketInfos.get(position).getAppBasketInfoCode());
+                callMethod.EditString("RstMizName", basketInfo.getRstMizName());
+                callMethod.EditString("AppBasketInfoCode", basketInfo.getAppBasketInfoCode());
 
-                if (call.isExecuted()) {
+                if (call != null && call.isExecuted()) {
                     call.cancel();
                 }
 
-                if (basketInfo.getInfoState().equals("0") || basketInfos.get(position).getInfoState().equals("3")) {
+                if ("0".equals(basketInfo.getInfoState()) || "3".equals(basketInfo.getInfoState())) {
 
-                    if (basketInfo.getIsReserved().equals("1")) {
-                        call = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "1", basketInfos.get(position).getReserve_AppBasketInfoCode());
+                    if ("1".equals(basketInfo.getIsReserved())) {
+                        call = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfo.getRstmizCode(), basketInfo.getPersonName(), basketInfo.getMobileNo(), basketInfo.getExplain(), "0", basketInfo.getReserveStart(), basketInfo.getReserveEnd(), basketInfo.getToday(), "1", basketInfo.getReserve_AppBasketInfoCode());
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                if (response.body() == null ||
+                                if (!canUseUi()) return;
+                                if (!response.isSuccessful() || response.body() == null ||
                                         response.body().getBasketInfos() == null ||
                                         response.body().getBasketInfos().isEmpty()) {
                                     return;
                                 }
-                                if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
+                                if (safeInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
                                     callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                                 } else {
 
-                                    callMethod.EditString("RstMizName", basketInfos.get(position).getRstMizName());
-                                    callMethod.EditString("MizType", basketInfos.get(position).getMizType());
+                                    callMethod.EditString("RstMizName", basketInfo.getRstMizName());
+                                    callMethod.EditString("MizType", basketInfo.getMizType());
 
-                                    callMethod.EditString("RstmizCode", basketInfos.get(position).getRstmizCode());
-                                    callMethod.EditString("PersonName", basketInfos.get(position).getPersonName());
-                                    callMethod.EditString("MobileNo", basketInfos.get(position).getMobileNo());
-                                    callMethod.EditString("InfoExplain", basketInfos.get(position).getInfoExplain());
-                                    callMethod.EditString("Prepayed", basketInfos.get(position).getPrepayed());
-                                    callMethod.EditString("ReserveStart", basketInfos.get(position).getReserveStart());
-                                    callMethod.EditString("ReserveEnd", basketInfos.get(position).getReserveEnd());
-                                    callMethod.EditString("Today", basketInfos.get(position).getToday());
-                                    callMethod.EditString("InfoState", basketInfos.get(position).getInfoState());
-                                    callMethod.EditString("AppBasketInfoCode", basketInfos.get(position).getAppBasketInfoCode());
+                                    callMethod.EditString("RstmizCode", basketInfo.getRstmizCode());
+                                    callMethod.EditString("PersonName", basketInfo.getPersonName());
+                                    callMethod.EditString("MobileNo", basketInfo.getMobileNo());
+                                    callMethod.EditString("InfoExplain", basketInfo.getInfoExplain());
+                                    callMethod.EditString("Prepayed", basketInfo.getPrepayed());
+                                    callMethod.EditString("ReserveStart", basketInfo.getReserveStart());
+                                    callMethod.EditString("ReserveEnd", basketInfo.getReserveEnd());
+                                    callMethod.EditString("Today", basketInfo.getToday());
+                                    callMethod.EditString("InfoState", basketInfo.getInfoState());
+                                    callMethod.EditString("AppBasketInfoCode", basketInfo.getAppBasketInfoCode());
 
 
                                     intent = new Intent(mContext, Order_SearchActivity.class);
@@ -303,23 +341,24 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
+                                logFailure("OrderInfoInsert reserved", call, t);
                             }
                         });
                     } else {
-                        call = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), "", "", "", "0", "", "", basketInfos.get(position).getToday(), "1", "0");
+                        call = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfo.getRstmizCode(), "", "", "", "0", "", "", basketInfo.getToday(), "1", "0");
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                if (response.body() == null ||
+                                if (!canUseUi()) return;
+                                if (!response.isSuccessful() || response.body() == null ||
                                         response.body().getBasketInfos() == null ||
                                         response.body().getBasketInfos().isEmpty()) {
                                     return;
                                 }
-                                if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
+                                if (safeInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
                                     callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                                 } else {
-                                    callMethod.EditString("RstMizName", basketInfos.get(position).getRstMizName());
+                                    callMethod.EditString("RstMizName", basketInfo.getRstMizName());
 
                                     callMethod.EditString("AppBasketInfoCode", response.body().getBasketInfos().get(0).getAppBasketInfoCode());
                                     intent = new Intent(mContext, Order_SearchActivity.class);
@@ -329,7 +368,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
+                                logFailure("OrderInfoInsert empty table", call, t);
                             }
                         });
                     }
@@ -367,10 +406,10 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                     case "1":
                         Call<RetrofitResponse> call1;
-                        if (basketInfo.getIsReserved().equals("1")) {
-                            call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
+                        if ("1".equals(basketInfo.getIsReserved())) {
+                            call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfo.getRstmizCode(), basketInfo.getPersonName(), basketInfo.getMobileNo(), basketInfo.getExplain(), "0", basketInfo.getReserveStart(), basketInfo.getReserveEnd(), date, "3", basketInfo.getReserve_AppBasketInfoCode());
                         } else {
-                            call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
+                            call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfo.getRstmizCode(), basketInfo.getPersonName(), basketInfo.getMobileNo(), basketInfo.getExplain(), "0", basketInfo.getReserveStart(), basketInfo.getReserveEnd(), basketInfo.getToday(), "3", basketInfo.getAppBasketInfoCode());
                         }
 
 
@@ -384,24 +423,29 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                             call1.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                    if (response.body() == null ||
+                                    if (!canUseUi()) return;
+                                    if (!response.isSuccessful() || response.body() == null ||
                                             response.body().getBasketInfos() == null ||
                                             response.body().getBasketInfos().isEmpty()) {
                                         return;
                                     }
-                                    if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
+                                    if (safeInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
                                         callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                                     } else {
-                                        Order_TableActivity activity = (Order_TableActivity) mContext;
-                                        activity.CallSpinner();
-                                        callMethod.showToast(activity.getString(R.string.textvalue_recorded));
+                                        if (mContext instanceof Order_TableActivity) {
+                                            Order_TableActivity activity = (Order_TableActivity) mContext;
+                                            activity.CallSpinner();
+                                            callMethod.showToast(activity.getString(R.string.textvalue_recorded));
+                                        } else {
+                                            callMethod.Log("Clear table callback has non-table Context");
+                                        }
                                     }
 
                                 }
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
+                                    logFailure("OrderInfoInsert clear table", call, t);
                                 }
                             });
                         });
@@ -417,26 +461,27 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                     case "2":
 
                         if (callMethod.ReadBoolan("PaymentWithDevice")){
-                            Call<RetrofitResponse> call2 = order_apiInterface.OrderGetSummmary("OrderGetSummmary", basketInfos.get(position).getAppBasketInfoCode());
+                            Call<RetrofitResponse> call2 = order_apiInterface.OrderGetSummmary("OrderGetSummmary", basketInfo.getAppBasketInfoCode());
                             call2.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                                    if (!canUseUi()) return;
                                     if (response.isSuccessful()) {
-                                        if (response.body() == null ||
+                                        if (!response.isSuccessful() || response.body() == null ||
                                                 response.body().getBasketInfos() == null ||
                                                 response.body().getBasketInfos().isEmpty()) {
                                             return;
                                         }
-                                        if (Integer.parseInt(response.body().getBasketInfos().get(0).getNotReceived())>0){
+                                        if (safeInt(response.body().getBasketInfos().get(0).getNotReceived()) > 0){
 
                                             order_payment.BasketInfopayment(response.body().getBasketInfos().get(0));
                                         }else{
 
                                             Call<RetrofitResponse> call1;
-                                            if (basketInfo.getIsReserved().equals("1")) {
-                                                call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
+                                            if ("1".equals(basketInfo.getIsReserved())) {
+                                                call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfo.getRstmizCode(), basketInfo.getPersonName(), basketInfo.getMobileNo(), basketInfo.getExplain(), "0", basketInfo.getReserveStart(), basketInfo.getReserveEnd(), date, "3", basketInfo.getReserve_AppBasketInfoCode());
                                             } else {
-                                                call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
+                                                call1 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfo.getRstmizCode(), basketInfo.getPersonName(), basketInfo.getMobileNo(), basketInfo.getExplain(), "0", basketInfo.getReserveStart(), basketInfo.getReserveEnd(), basketInfo.getToday(), "3", basketInfo.getAppBasketInfoCode());
                                             }
 
 
@@ -450,24 +495,29 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                                                 call1.enqueue(new Callback<RetrofitResponse>() {
                                                     @Override
                                                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                                        if (response.body() == null ||
+                                                        if (!canUseUi()) return;
+                                                        if (!response.isSuccessful() || response.body() == null ||
                                                                 response.body().getBasketInfos() == null ||
                                                                 response.body().getBasketInfos().isEmpty()) {
                                                             return;
                                                         }
-                                                        if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
+                                                        if (safeInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
                                                             callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                                                         } else {
-                                                            Order_TableActivity activity = (Order_TableActivity) mContext;
-                                                            activity.CallSpinner();
-                                                            callMethod.showToast(activity.getString(R.string.textvalue_recorded));
+                                                            if (mContext instanceof Order_TableActivity) {
+                                                                Order_TableActivity activity = (Order_TableActivity) mContext;
+                                                                activity.CallSpinner();
+                                                                callMethod.showToast(activity.getString(R.string.textvalue_recorded));
+                                                            } else {
+                                                                callMethod.Log("Paid table callback has non-table Context");
+                                                            }
                                                         }
 
                                                     }
 
                                                     @Override
                                                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
+                                                        logFailure("OrderInfoInsert paid table", call, t);
                                                     }
                                                 });
                                             });
@@ -488,16 +538,16 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
                                 @Override
                                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
+                                    logFailure("OrderGetSummmary payment check", call, t);
                                 }
                             });
 
                         }else{
                             Call<RetrofitResponse> call2;
-                            if (basketInfo.getIsReserved().equals("1")) {
-                                call2 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), date, "3", basketInfos.get(position).getReserve_AppBasketInfoCode());
+                            if ("1".equals(basketInfo.getIsReserved())) {
+                                call2 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfo.getRstmizCode(), basketInfo.getPersonName(), basketInfo.getMobileNo(), basketInfo.getExplain(), "0", basketInfo.getReserveStart(), basketInfo.getReserveEnd(), date, "3", basketInfo.getReserve_AppBasketInfoCode());
                             } else {
-                                call2 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfos.get(position).getRstmizCode(), basketInfos.get(position).getPersonName(), basketInfos.get(position).getMobileNo(), basketInfos.get(position).getExplain(), "0", basketInfos.get(position).getReserveStart(), basketInfos.get(position).getReserveEnd(), basketInfos.get(position).getToday(), "3", basketInfos.get(position).getAppBasketInfoCode());
+                                call2 = order_apiInterface.OrderInfoInsert("OrderInfoInsert", order_dbh.ReadConfig("BrokerCode"), basketInfo.getRstmizCode(), basketInfo.getPersonName(), basketInfo.getMobileNo(), basketInfo.getExplain(), "0", basketInfo.getReserveStart(), basketInfo.getReserveEnd(), basketInfo.getToday(), "3", basketInfo.getAppBasketInfoCode());
                             }
 
 
@@ -511,25 +561,29 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                                 call2.enqueue(new Callback<RetrofitResponse>() {
                                     @Override
                                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                        if (response.body() == null ||
+                                        if (!canUseUi()) return;
+                                        if (!response.isSuccessful() || response.body() == null ||
                                                 response.body().getBasketInfos() == null ||
                                                 response.body().getBasketInfos().isEmpty()) {
                                             return;
                                         }
-                                        if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
+                                        if (safeInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
                                             callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
                                         } else {
-                                            Order_TableActivity activity = (Order_TableActivity) mContext;
-
-                                            activity.CallSpinner();
-                                            callMethod.showToast(activity.getString(R.string.textvalue_recorded));
+                                            if (mContext instanceof Order_TableActivity) {
+                                                Order_TableActivity activity = (Order_TableActivity) mContext;
+                                                activity.CallSpinner();
+                                                callMethod.showToast(activity.getString(R.string.textvalue_recorded));
+                                            } else {
+                                                callMethod.Log("Direct clear callback has non-table Context");
+                                            }
                                         }
 
                                     }
 
                                     @Override
                                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
+                                        logFailure("OrderInfoInsert direct clear", call, t);
                                     }
                                 });
                             });
@@ -553,56 +607,40 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
             });
 
-            holder.btn_reserve.setOnClickListener(v -> order_action.ReserveBoxDialog(basketInfos.get(position)));
+            holder.btn_reserve.setOnClickListener(v -> order_action.ReserveBoxDialog(basketInfo));
 
 
             holder.btn_print.setOnClickListener(v -> {
-                callMethod.EditString("AppBasketInfoCode", basketInfos.get(position).getAppBasketInfoCode());
-                if (basketInfo.getInfoState().equals("2")) {
+                final String basketCode = basketInfo.getAppBasketInfoCode();
+                callMethod.EditString("AppBasketInfoCode", basketCode);
 
-
-
-
+                if ("2".equals(basketInfo.getInfoState())) {
+                    final boolean hasFailedPrinters = printCoordinator.hasFailedPrintersForBasket(basketCode);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.AlertDialogCustom);
                     builder.setTitle(R.string.textvalue_allert);
-                    builder.setMessage(R.string.textvalue_reprinting);
 
-                    builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) -> {
-
-
-                        call = order_apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
-                        call.enqueue(new Callback<RetrofitResponse>() {
-                            @Override
-                            public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                                if (response.isSuccessful()) {
-                                    assert response.body() != null;
-                                    if (response.body().getText().equals("Done")) {
-                                        order_print.GetHeader_Data("");
-                                    }
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
-
-                            }
+                    if (hasFailedPrinters) {
+                        builder.setMessage("چاپ قبلی برای بعضی پرینترها کامل نشده است. فقط پرینترهای ناموفق دوباره چاپ شوند یا چاپ مجدد کامل انجام شود؟");
+                        builder.setPositiveButton("فقط ناموفق‌ها", (dialog, which) ->
+                                requestKitchenPrint(holder, basketCode, Order_Print.PrintReason.RETRY_FAILED));
+                        builder.setNeutralButton("چاپ مجدد کامل", (dialog, which) ->
+                                requestKitchenPrint(holder, basketCode, Order_Print.PrintReason.REPRINT));
+                        builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
                         });
-                    });
-
-                    builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
-
-                    });
+                    } else {
+                        builder.setMessage(R.string.textvalue_reprinting);
+                        builder.setPositiveButton(R.string.textvalue_yes, (dialog, which) ->
+                                requestKitchenPrint(holder, basketCode, Order_Print.PrintReason.REPRINT));
+                        builder.setNegativeButton(R.string.textvalue_no, (dialog, which) -> {
+                        });
+                    }
 
                     AlertDialog dialog = builder.create();
                     dialog.show();
-
-
                 } else {
                     intent = new Intent(mContext, Order_BasketActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mContext.startActivity(intent);
                 }
             });
@@ -610,7 +648,7 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
             holder.btn_changemiz.setOnClickListener(v -> {
 
 
-                Order_BasketInfo basketInfo_change =basketInfos.get(position);
+                Order_BasketInfo basketInfo_change = basketInfo;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.AlertDialogCustom);
                 builder.setTitle(R.string.textvalue_allert);
@@ -651,12 +689,18 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 
             });
 
-            holder.btn_explainedit.setOnClickListener(v -> order_action.EditBasketInfoExplain(basketInfos.get(position)));
+            holder.btn_explainedit.setOnClickListener(v -> order_action.EditBasketInfoExplain(basketInfo));
         }
         else {
             holder.tv_name.setTextColor(R.color.colorPrimaryDark);
 
             holder.btn_select.setOnClickListener(v -> {
+                if (!holder.btn_select.isEnabled()) {
+                    return;
+                }
+
+                final Order_BasketInfo targetBasketInfo = basketInfo;
+                holder.btn_select.setEnabled(false);
 
                 Dialog dialogProg = new Dialog(mContext);
                 dialogProg.setContentView(R.layout.order_spinner_box);
@@ -664,75 +708,28 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
                 tv_rep.setText(R.string.textvalue_receiveinformation);
                 dialogProg.show();
 
-                String explainvalue="";
+                transferCoordinator.transferTo(
+                        targetBasketInfo,
+                        new Order_TableTransferCoordinator.Listener() {
+                            @Override
+                            public void onPrintStarted() {
+                                if (dialogProg.isShowing()) {
+                                    dialogProg.dismiss();
+                                }
+                                // Keep the button disabled. The transfer print engine
+                                // owns the flow now and navigates after completion.
+                            }
 
-                if (callMethod.ReadString("InfoExplain").contains("*")) {
-                    int startsub = callMethod.ReadString("InfoExplain").indexOf("*");
-                    String temp = callMethod.ReadString("InfoExplain").substring(startsub);
-                    int endsub = temp.indexOf("*");
-                    explainvalue = temp.substring(0, endsub);
-                }
-
-                String extraexplain = mContext.getString(R.string.textvalue_transfertext) + callMethod.ReadString("RstMizName") + mContext.getString(R.string.textvalue_transfer_to) + basketInfos.get(position).getRstMizName() + ") ";
-
-                call = order_apiInterface.OrderInfoInsert("OrderInfoInsert",
-                        order_dbh.ReadConfig("BrokerCode"),
-                        callMethod.ReadString("RstmizCode"),
-                        callMethod.ReadString("PersonName"),
-                        callMethod.ReadString("MobileNo"),
-                        explainvalue + extraexplain,
-                        "0",
-                        callMethod.ReadString("ReserveStart"),
-                        callMethod.ReadString("ReserveEnd"),
-                        callMethod.ReadString("Today"),
-                        callMethod.ReadString("InfoState"),
-                        callMethod.ReadString("AppBasketInfoCode")
-                );
-                call.enqueue(new Callback<RetrofitResponse>() {
-                    @Override
-                    public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                        if (response.isSuccessful()) {
-                            assert response.body() != null;
-                            if (Integer.parseInt(response.body().getBasketInfos().get(0).getErrCode()) > 0) {
-                                callMethod.showToast(response.body().getBasketInfos().get(0).getErrDesc());
-                            } else {
-                                callMethod.EditString("InfoExplain", callMethod.ReadString("InfoExplain") + extraexplain);
-                                call = order_apiInterface.Order_CanPrint("Order_CanPrint", callMethod.ReadString("AppBasketInfoCode"), "1");
-                                call.enqueue(new Callback<RetrofitResponse>() {
-                                    @Override
-                                    public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                                        if (response.isSuccessful()) {
-                                            assert response.body() != null;
-
-                                            if (response.body().getText().equals("Done")) {
-                                                order_printChangeTable.GetHeader_Data("MizType", basketInfos.get(position));
-
-                                            }
-
-
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-
-                                    }
-                                });
-
-
+                            @Override
+                            public void onError(String message) {
+                                holder.btn_select.setEnabled(true);
+                                if (dialogProg.isShowing()) {
+                                    dialogProg.dismiss();
+                                }
+                                callMethod.showToast(message);
                             }
                         }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                        callMethod.Log(t.getMessage());
-
-                    }
-                });
-
-
+                );
             });
         }
 
@@ -1574,6 +1571,35 @@ public class Order_RstMizAdapter extends RecyclerView.Adapter<Order_RstMizViewHo
 //            });
 //        }
 
+    }
+
+    private void requestKitchenPrint(
+            Order_RstMizViewHolder holder,
+            String basketCode,
+            Order_Print.PrintReason reason
+    ) {
+        if (!holder.btn_print.isEnabled()) {
+            return;
+        }
+        holder.btn_print.setEnabled(false);
+
+        printCoordinator.requestPrint(
+                basketCode,
+                reason,
+                new Order_PrintRequestCoordinator.Listener() {
+                    @Override
+                    public void onPrintStarted() {
+                        // Print engine owns the flow; keep disabled to prevent duplicate taps.
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        if (!canUseUi()) return;
+                        holder.btn_print.setEnabled(true);
+                        callMethod.showToast(message);
+                    }
+                }
+        );
     }
 
     @Override

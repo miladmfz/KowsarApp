@@ -22,6 +22,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -39,6 +40,9 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.ocr.Ocr_StacksAdapter;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.LatestRequestGate;
+import com.kits.kowsarapp.application.base.SafeListAccess;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -53,7 +57,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import retrofit2.Call;
@@ -70,6 +73,11 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
         Dialog dialog1;
         Call<RetrofitResponse> Requset_List_call;
         Call<RetrofitResponse> Requset_ListCount_call;
+        Call<RetrofitResponse> moreFactorCall;
+        Call<RetrofitResponse> pathCall;
+        Call<RetrofitResponse> stackCall;
+        Call<RetrofitResponse> editedCountCall;
+        Call<RetrofitResponse> shortageCountCall;
 
         Ocr_APIInterface apiInterface;
         Ocr_APIInterface secendApiInterface;
@@ -77,7 +85,9 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
         Ocr_StacksAdapter ocr_stacksAdapter;
 
         Handler handler;
-        Handler counthandler=new Handler();
+        Handler counthandler = new Handler(Looper.getMainLooper());
+        Handler lifecycleHandler = new Handler(Looper.getMainLooper());
+        private final LatestRequestGate listRequestGate = new LatestRequestGate();
         CallMethod callMethod;
         Ocr_DBH ocr_dbh;
 
@@ -128,7 +138,9 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
             dialog1 = new Dialog(this);
             dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+            if (dialog1.getWindow() != null) {
+                dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
             dialog1.setContentView(R.layout.ocr_spinner_box);
             TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
             repw.setText("در حال خواندن اطلاعات");
@@ -136,12 +148,16 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
             intent();
             Config();
-            try {
-                Handler handler = new Handler();
-                handler.postDelayed(this::init, 100);
-            }catch (Exception e){
-                callMethod.Log(e.getMessage());
-            }
+            lifecycleHandler.postDelayed(() -> {
+                if (!isUiActive()) return;
+                try {
+                    init();
+                } catch (RuntimeException exception) {
+                    callMethod.Log("OCR collect startup failed: "
+                            + exception.getClass().getSimpleName());
+                    dismissLoadingDialog();
+                }
+            }, 100);
 
 
 
@@ -150,15 +166,14 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
         public  void intent(){
             Bundle bundle =getIntent().getExtras();
-            assert bundle != null;
-            state = bundle.getString("State");
+            state = bundle == null ? "0" : bundle.getString("State", "0");
             StateEdited ="0";
             StateShortage ="0";
-            if(state.equals("5"))
+            if("5".equals(state))
             {
                 state = "0";
-                StateEdited = bundle.getString("StateEdited");
-                StateShortage = bundle.getString("StateShortage");
+                StateEdited = bundle.getString("StateEdited", "0");
+                StateShortage = bundle.getString("StateShortage", "0");
             }
 
 
@@ -170,7 +185,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
             ocr_dbh = new Ocr_DBH(this, callMethod.ReadString("DatabaseName"));
             apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
             secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
-            handler=new Handler();
+            handler = new Handler(Looper.getMainLooper());
             prog = findViewById(R.id.ocr_collectlist_a_prog);
 
             Toolbar toolbar = findViewById(R.id.ocr_collectlist_a_toolbar);
@@ -216,8 +231,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                 clickCount++;
 
                 if (clickCount == 2) {
-
-                    ocr_stacksAdapter.Clear_selectedItems();
+                    clearStackSelection();
                     visibleItemCount =  0;
                     totalItemCount =   0;
                     pastVisiblesItems =   0;
@@ -242,8 +256,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     clickCount++;
 
                     if (clickCount == 2) {
-
-                        ocr_stacksAdapter.Clear_selectedItems();
+                        clearStackSelection();
                         visibleItemCount =  0;
                         totalItemCount =   0;
                         pastVisiblesItems =   0;
@@ -264,8 +277,8 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
             RetrofitRequset_shortageCount();
 
 
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
+            lifecycleHandler.postDelayed(() -> {
+                if (!isUiActive()) return;
                 String Titlequery="";
                 String Bodyquery="";
                 if (ShortageCount>0){
@@ -286,6 +299,10 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
     public void CheckStackList() {
 
         final String TAG = "CheckStackList";
+        if (ocr_stacksAdapter == null) {
+            callMethod.Log("OCR stack filter ignored before categories loaded");
+            return;
+        }
         visible_factors_temp.clear();
         List<String> selectedItems = ocr_stacksAdapter.getSelectedItems();
         if (selectedItems.size() > 0) {
@@ -330,39 +347,46 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
         public void init(){
 
-            Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
-            call.enqueue(new Callback<RetrofitResponse>() {
+            stackCall = apiInterface.GetCustomerPath("GetStackCategory");
+            stackCall.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if (!isUiActive() || !response.isSuccessful() || response.body() == null) return;
 
-                    if(response.isSuccessful()) {
-                        assert response.body() != null;
-                        try {
-                            for ( Ocr_Good good : response.body().getOcr_Goods()) {
-
-                                stacks.add(good.getGoodExplain4());
-                            }
-                        }catch (Exception e){
-                            for ( Good good : response.body().getGoods()) {
-
+                    stacks.clear();
+                    if (response.body().getOcr_Goods() != null) {
+                        for (Ocr_Good good : response.body().getOcr_Goods()) {
+                            if (good != null && good.getGoodExplain4() != null) {
                                 stacks.add(good.getGoodExplain4());
                             }
                         }
-
-
-                        ocr_stacksAdapter=new Ocr_StacksAdapter(Ocr_Collect_List_Api_Activity.this,stacks);
-
-
-                        stacks_list_recycler.setLayoutManager(new GridLayoutManager(App.getContext(), 1, GridLayoutManager.HORIZONTAL, false
-                        ));
-                        stacks_list_recycler.setAdapter(ocr_stacksAdapter);
-
+                    } else if (response.body().getGoods() != null) {
+                        for (Good good : response.body().getGoods()) {
+                            if (good != null && good.getGoodExplain4() != null) {
+                                stacks.add(good.getGoodExplain4());
+                            }
+                        }
                     }
+
+                    ocr_stacksAdapter = new Ocr_StacksAdapter(
+                            Ocr_Collect_List_Api_Activity.this,
+                            stacks
+                    );
+                    stacks_list_recycler.setLayoutManager(new GridLayoutManager(
+                            Ocr_Collect_List_Api_Activity.this,
+                            1,
+                            GridLayoutManager.HORIZONTAL,
+                            false
+                    ));
+                    stacks_list_recycler.setAdapter(ocr_stacksAdapter);
 
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
+                    if (!call.isCanceled()) {
+                        callMethod.Log("OCR stack categories failed: "
+                                + t.getClass().getSimpleName());
+                    }
                 }
             });
 
@@ -402,6 +426,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                         public void afterTextChanged( Editable editable) {
                             handler.removeCallbacksAndMessages(null);
                             handler.postDelayed(() -> {
+                                if (!isUiActive()) return;
                                 srch = NumberFunctions.EnglishNumber(ocr_dbh.GetRegionText(editable.toString()));
                                 srch=srch.replace(" ","%");
                                 callMethod.EditString("Last_search", srch);
@@ -543,12 +568,10 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
             prog.setVisibility(View.VISIBLE);
 
-            Call<RetrofitResponse> call;
-
-
             callMethod.ReadString("ActiveDatabase");
 
-            call=apiInterface.GetOcrFactorList(
+            if (moreFactorCall != null) moreFactorCall.cancel();
+            moreFactorCall = apiInterface.GetOcrFactorList(
                     "GetFactorList",
                     state,
                     srch,
@@ -561,33 +584,41 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     "0",
                     callMethod.ReadString("ActiveDatabase")
             );
-            call.enqueue(new Callback<RetrofitResponse>() {
+            moreFactorCall.enqueue(new Callback<RetrofitResponse>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                    if(response.isSuccessful()) {
+                    if (!isUiActive()) return;
+                    if(response.isSuccessful() && response.body() != null) {
                         prog.setVisibility(View.GONE);
 
-                        assert response.body() != null;
-                        ArrayList<Factor> factor_page = response.body().getFactors();
+                        ArrayList<Factor> factor_page = SafeListAccess.mutableNonNullCopyOrEmpty(
+                                response.body().getFactors()
+                        );
                         factors.addAll(factor_page);
                         visible_factors=factors;
 
-                        ocr_collect_listApi_adapter.notifyDataSetChanged();
+                        if (ocr_collect_listApi_adapter != null) {
+                            ocr_collect_listApi_adapter.notifyDataSetChanged();
+                        }
 
                         CallRecycle();
                         String textView_st="تعداد "+ocr_collect_listApi_adapter.getItemCount()+" از "+TotallistCount+"";
                         textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
                         loading=true;
 
+                    } else {
+                        PageNo = Math.max(0, PageNo - 1);
+                        prog.setVisibility(View.GONE);
+                        loading = true;
+                        callMethod.Log("OCR collect next page response was empty or HTTP failed");
                     }
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-
-                    PageNo--;
+                    if (call.isCanceled() || !isUiActive()) return;
+                    PageNo = Math.max(0, PageNo - 1);
                     callMethod.showToast("فاکتور بیشتری موجود نیست");
                     prog.setVisibility(View.GONE);
                     loading = true;
@@ -599,6 +630,8 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
         public void CallRecycle() {
 
+            if (!isUiActive()) return;
+
             ocr_collect_listApi_adapter = new Ocr_Collect_ListApi_Adapter(visible_factors,state, App.getContext());
             if (ocr_collect_listApi_adapter.getItemCount()==0){
                 prog.setVisibility(View.GONE);
@@ -607,6 +640,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
             }
 
             counthandler.postDelayed(() -> {
+                if (!isUiActive() || ocr_collect_listApi_adapter == null) return;
                 String textView_st="تعداد "+ocr_collect_listApi_adapter.getItemCount()+" از "+TotallistCount+"";
                 textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
             }, 500);
@@ -616,15 +650,16 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
             factor_list_recycler.setItemAnimator(new DefaultItemAnimator());
             factor_list_recycler.scrollToPosition(pastVisiblesItems);
 
-            if (Integer.parseInt(callMethod.ReadString("LastTcPrint"))>0){
+            if (SafeValueParser.intOrDefault(callMethod.ReadString("LastTcPrint"), 0) > 0){
                 for (Factor singlefactor :factors) {
-                    if(singlefactor.getAppTcPrintRef().equals(callMethod.ReadString("LastTcPrint")))
+                    if(singlefactor != null
+                            && callMethod.ReadString("LastTcPrint").equals(singlefactor.getAppTcPrintRef()))
                         factor_list_recycler.scrollToPosition(factors.indexOf(singlefactor));
                 }
 
             }
 
-            dialog1.dismiss();
+            dismissLoadingDialog();
 
 
         }
@@ -632,16 +667,20 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
         public void RetrofitRequset_Path() {
 
 
-            Call<RetrofitResponse> call=apiInterface.GetCustomerPath("GetCustomerPath");
-            call.enqueue(new Callback<RetrofitResponse>() {
+            if (pathCall != null) pathCall.cancel();
+            pathCall = apiInterface.GetCustomerPath("GetCustomerPath");
+            pathCall.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
+                    if (!isUiActive()) return;
+                    if (response.isSuccessful() && response.body() != null) {
 
                         recallcount=0;
-                        assert response.body() != null;
-                        for (Factor factor : response.body().getFactors()) {
-                            customerpath.add(factor.getCustomerPath());
+                        for (Factor factor : SafeListAccess.mutableNonNullCopyOrEmpty(
+                                response.body().getFactors())) {
+                            if (factor != null && factor.getCustomerPath() != null) {
+                                customerpath.add(factor.getCustomerPath());
+                            }
                         }
 
                         ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(App.getContext(),
@@ -649,14 +688,15 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinnerPath.setAdapter(spinner_adapter);
 
-                        try {
-                            if (customerpath.size() < Integer.parseInt(callMethod.ReadString("ConditionPosition"))) {
-                                callMethod.EditString("ConditionPosition", "0");
-                            }
-                            spinnerPath.setSelection(Integer.parseInt(callMethod.ReadString("ConditionPosition")));
-                        } catch (Exception e) {
-                            spinnerPath.setSelection(0);
+                        int selectedPosition = SafeValueParser.intOrDefault(
+                                callMethod.ReadString("ConditionPosition"),
+                                0
+                        );
+                        if (selectedPosition < 0 || selectedPosition >= customerpath.size()) {
+                            selectedPosition = 0;
+                            callMethod.EditString("ConditionPosition", "0");
                         }
+                        spinnerPath.setSelection(selectedPosition);
 
 
                     }
@@ -665,7 +705,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
+                    if (call.isCanceled() || !isUiActive()) return;
                     recallcount++;
                     if(recallcount<2){
                         RetrofitRequset_Path();
@@ -684,9 +724,11 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
         public void RetrofitRequset_List() {
 
-            if (Requset_List_call != null && !Requset_List_call.isExecuted() && !Requset_List_call.isCanceled()) {
+            if (Requset_List_call != null && !Requset_List_call.isCanceled()) {
                 Requset_List_call.cancel();
             }
+            cancelCall(moreFactorCall);
+            int requestToken = listRequestGate.begin();
 
 /*
         PageNo=0;
@@ -728,23 +770,23 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     "0",
                     callMethod.ReadString("ActiveDatabase")
             );
-            callMethod.Log(Requset_List_call.request().url()+"");
-            callMethod.Log(""+Requset_List_call.request().body());
             Requset_List_call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                    if(response.isSuccessful()) {
+                    if (!canHandleListRequest(requestToken)) return;
+                    if(response.isSuccessful() && response.body() != null) {
 
                         prog.setVisibility(View.GONE);
                         loading = true;
                         recallcount=0;
-                        assert response.body() != null;
                         factors.clear();
                         visible_factors.clear();
-                        factors= response.body().getFactors();
+                        factors = SafeListAccess.mutableNonNullCopyOrEmpty(
+                                response.body().getFactors()
+                        );
                         visible_factors=factors;
-                        all_factors=factors;
+                        all_factors = new ArrayList<>(factors);
 
                         callMethod.showToast("بارگیری شد");
 
@@ -756,12 +798,14 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                             callMethod.showToast("فاکتوری موجود نمی باشد");
                         }
 
-
+                    } else {
+                        showListFailure("OCR collect list response was empty or HTTP failed");
                     }
                 }
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    if (call.isCanceled() || !canHandleListRequest(requestToken)) return;
                     recallcount++;
                     loading = true;
 
@@ -776,12 +820,14 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     }else {
                         try {
                             factors.clear();
-                            dialog1.dismiss();
+                            dismissLoadingDialog();
                             prog.setVisibility(View.GONE);
                             textView_status.setVisibility(View.VISIBLE);
                             textView_status.setText("فاکتوری یافت نشد");
                             textView_Count.setText(NumberFunctions.PerisanNumber("تعداد 0"));
-                            ocr_collect_listApi_adapter.notifyDataSetChanged();
+                            if (ocr_collect_listApi_adapter != null) {
+                                ocr_collect_listApi_adapter.notifyDataSetChanged();
+                            }
 
                         }catch (Exception ignored){}
 
@@ -794,7 +840,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 
         public void RetrofitRequset_ListCount() {
 
-            if (Requset_ListCount_call != null && !Requset_ListCount_call.isExecuted() && !Requset_ListCount_call.isCanceled()) {
+            if (Requset_ListCount_call != null && !Requset_ListCount_call.isCanceled()) {
                 Requset_ListCount_call.cancel();
             }
 
@@ -833,14 +879,19 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
             Requset_ListCount_call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if(response.isSuccessful()) {
-                        assert response.body() != null;
-                        TotallistCount=String.valueOf(response.body().getFactors().get(0).getTotalRow());
-                    }
+                    if (!isUiActive() || call != Requset_ListCount_call
+                            || !response.isSuccessful() || response.body() == null) return;
+                    Factor first = SafeListAccess.firstOrNull(response.body().getFactors());
+                    TotallistCount = first == null || first.getTotalRow() == null
+                            ? "0"
+                            : first.getTotalRow();
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    callMethod.Log(t.getMessage());
+                    if (!call.isCanceled()) {
+                        callMethod.Log("OCR collect count failed: "
+                                + t.getClass().getSimpleName());
+                    }
                 }
             });
         }
@@ -862,9 +913,8 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 //
 //        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 
-            Call<RetrofitResponse> call;
-
-            call=apiInterface.GetOcrFactorList(
+            if (editedCountCall != null) editedCountCall.cancel();
+            editedCountCall = apiInterface.GetOcrFactorList(
                     "GetFactorList",
                     state,
                     "0",
@@ -877,16 +927,23 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                     "1",
                     callMethod.ReadString("ActiveDatabase")
             );
-            call.enqueue(new Callback<RetrofitResponse>() {
+            editedCountCall.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if(response.isSuccessful()) {
-                        assert response.body() != null;
-                        EditedCount=Integer.parseInt(response.body().getFactors().get(0).getTotalRow());
-                    }
+                    if (!isUiActive() || call != editedCountCall
+                            || !response.isSuccessful() || response.body() == null) return;
+                    Factor first = SafeListAccess.firstOrNull(response.body().getFactors());
+                    EditedCount = first == null
+                            ? 0
+                            : SafeValueParser.intOrDefault(first.getTotalRow(), 0);
                 }
                 @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    if (!call.isCanceled()) {
+                        callMethod.Log("OCR edited count failed: "
+                                + t.getClass().getSimpleName());
+                    }
+                }
             });
         }
 
@@ -914,9 +971,11 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
 //        }else{
 //            call = secendApiInterface.GetOcrFactorList(callMethod.RetrofitBody(Body_str));
 //        }
-            Call<RetrofitResponse> call;
-            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                call=apiInterface.GetOcrFactorList(
+            if (shortageCountCall != null) shortageCountCall.cancel();
+            if (java.util.Objects.equals(
+                    callMethod.ReadString("FactorDbName"),
+                    callMethod.ReadString("DbName"))){
+                shortageCountCall = apiInterface.GetOcrFactorList(
                         "GetFactorList",
                         state,
                         "",
@@ -931,7 +990,7 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
                 );
 
             }else{
-                call=secendApiInterface.GetOcrFactorList(
+                shortageCountCall = secendApiInterface.GetOcrFactorList(
                         "GetFactorList",
                         state,
                         "",
@@ -948,16 +1007,23 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
             }
 
 
-            call.enqueue(new Callback<RetrofitResponse>() {
+            shortageCountCall.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if(response.isSuccessful()) {
-                        assert response.body() != null;
-                        ShortageCount=Integer.parseInt(response.body().getFactors().get(0).getTotalRow());
-                    }
+                    if (!isUiActive() || call != shortageCountCall
+                            || !response.isSuccessful() || response.body() == null) return;
+                    Factor first = SafeListAccess.firstOrNull(response.body().getFactors());
+                    ShortageCount = first == null
+                            ? 0
+                            : SafeValueParser.intOrDefault(first.getTotalRow(), 0);
                 }
                 @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    if (!call.isCanceled()) {
+                        callMethod.Log("OCR shortage count failed: "
+                                + t.getClass().getSimpleName());
+                    }
+                }
             });
         }
 
@@ -1003,6 +1069,57 @@ public class Ocr_Collect_List_Api_Activity extends AppCompatActivity {
         @Override
         public void onWindowFocusChanged(boolean hasFocus) {
             super.onWindowFocusChanged(hasFocus);
+        }
+
+        private boolean canHandleListRequest(int requestToken) {
+            return isUiActive() && listRequestGate.isCurrent(requestToken);
+        }
+
+        private boolean isUiActive() {
+            return !isFinishing() && !isDestroyed();
+        }
+
+        private void showListFailure(String diagnostic) {
+            if (!isUiActive()) return;
+            callMethod.Log(diagnostic);
+            loading = true;
+            dismissLoadingDialog();
+            if (prog != null) prog.setVisibility(View.GONE);
+            if (textView_status != null) {
+                textView_status.setVisibility(View.VISIBLE);
+                textView_status.setText("پاسخ فهرست فاکتورها نامعتبر است");
+            }
+        }
+
+        private void dismissLoadingDialog() {
+            if (dialog1 != null && dialog1.isShowing()) dialog1.dismiss();
+        }
+
+        private void cancelCall(Call<?> call) {
+            if (call != null && !call.isCanceled()) call.cancel();
+        }
+
+        private void clearStackSelection() {
+            if (ocr_stacksAdapter != null) {
+                ocr_stacksAdapter.Clear_selectedItems();
+            }
+        }
+
+        @Override
+        protected void onDestroy() {
+            listRequestGate.invalidate();
+            cancelCall(Requset_List_call);
+            cancelCall(Requset_ListCount_call);
+            cancelCall(moreFactorCall);
+            cancelCall(pathCall);
+            cancelCall(stackCall);
+            cancelCall(editedCountCall);
+            cancelCall(shortageCountCall);
+            if (handler != null) handler.removeCallbacksAndMessages(null);
+            counthandler.removeCallbacksAndMessages(null);
+            lifecycleHandler.removeCallbacksAndMessages(null);
+            dismissLoadingDialog();
+            super.onDestroy();
         }
 
 

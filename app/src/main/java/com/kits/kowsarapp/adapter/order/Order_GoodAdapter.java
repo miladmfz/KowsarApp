@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.order.Order_Action;
+import com.kits.kowsarapp.application.order.Order_ValueParser;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.viewholder.order.Order_GoodItemViewHolder;
@@ -63,7 +64,8 @@ public class Order_GoodAdapter extends RecyclerView.Adapter<Order_GoodItemViewHo
 
         Good good = goods.get(position);
         holder.tv_name.setText(callMethod.NumberRegion(good.getGoodName()));
-        holder.tv_price.setText(callMethod.NumberRegion(decimalFormat.format(Integer.parseInt(good.getMaxSellPrice()))));
+        long price = Order_ValueParser.nonNegativeLongOrDefault(good.getMaxSellPrice(), 0);
+        holder.tv_price.setText(callMethod.NumberRegion(decimalFormat.format(price)));
         holder.rltv.setOnClickListener(v -> order_action.GoodBoxDialog(good, "0"));
         holder.callimage(good);
 
@@ -79,9 +81,15 @@ public class Order_GoodAdapter extends RecyclerView.Adapter<Order_GoodItemViewHo
     @Override
     public void onViewDetachedFromWindow(@NonNull Order_GoodItemViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        if (holder.call.isExecuted()) {
+        if (holder.call != null && holder.call.isExecuted()) {
             holder.call.cancel();
         }
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        order_action.cancelPending();
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 
 }

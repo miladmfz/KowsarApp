@@ -76,9 +76,11 @@ public class Find_GoodAdapter extends RecyclerView.Adapter<Find_GoodItemViewHold
     @Override
     public void onViewDetachedFromWindow(@NonNull Find_GoodItemViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-//        if (holder.call.isExecuted()) {
-//            holder.call.cancel();
-//
-//        }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull Find_GoodItemViewHolder holder) {
+        holder.recycle();
+        super.onViewRecycled(holder);
     }
 }

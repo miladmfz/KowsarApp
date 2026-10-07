@@ -8,7 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,9 +17,9 @@ import androidx.annotation.NonNull;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_NavActivity;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
 import com.kits.kowsarapp.application.base.ImageInfo;
-import com.kits.kowsarapp.application.base.NetworkUtils;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.KowsarLocation;
 import com.kits.kowsarapp.model.base.KowsarLocationNew;
@@ -39,9 +40,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Calendar;
-import java.util.Objects;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,13 +54,17 @@ import retrofit2.Response;
 public class Broker_Replication {
     private final Context mContext;
     private final SQLiteDatabase database;
-    private final Integer RepRowCount = 100;
     private final Broker_DBH broker_dbh;
-    ArrayList<KowsarLocation> locations = new ArrayList<>();
-    ArrayList<KowsarLocationNew> locationsNew = new ArrayList<>();
+    private final ExecutorService replicationExecutor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final BrokerReplicationSession replicationSession = new BrokerReplicationSession();
+    private final BrokerReplicationCallTracker<Call<RetrofitResponse>> replicationCalls =
+            new BrokerReplicationCallTracker<>();
+    private final Object replicationLifecycleLock = new Object();
+    private volatile int currentRunToken;
+    private volatile boolean currentRunAutomatic;
+    private static final int LEGACY_REPLICATION_ROW_COUNT = 100;
     private final LinkedHashSet<String> changedGoodCodesForFTS = new LinkedHashSet<>();
-    KowsarLocation location;
-    KowsarLocationNew locationnew;
 
     CallMethod callMethod;
     Broker_APIInterface broker_apiInterface;
@@ -70,7 +77,6 @@ public class Broker_Replication {
     public Dialog dialog;
     ArrayList<TableDetail> tableDetails = new ArrayList<>();
     ArrayList<ReplicationModel> replicationModels = new ArrayList<>();
-
     String url;
     Integer replicatelevel;
     Cursor cursor;
@@ -117,6 +123,8 @@ public class Broker_Replication {
 
     public void DoingReplicate() {
 
+        int runToken = beginReplicationRun(false);
+
         dialog = new Dialog(mContext);
         dialog();
         SendGpsLocation();
@@ -125,42 +133,49 @@ public class Broker_Replication {
 
         if (broker_dbh.GetColumnscount().equals("0")) {
             tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی تنظیم جدول"));
-            GoodTypeReplication();
+            GoodTypeReplication(runToken);
         } else {
 //            Call<RetrofitResponse> call1 = broker_apiInterface.GetMaxRepLog("MaxRepLogCode");
             Call<RetrofitResponse> call1 = broker_apiInterface.MaxRepLogCode("MaxRepLogCode");
+            if (!trackReplicationCall(runToken, call1)) {
+                return;
+            }
             callMethod.Log(call1.request().toString()+"");
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-
-                    assert response.body() != null;
-                    callMethod.Log(response.body().getText()+"");
-                    broker_dbh.SaveConfig("MaxRepLogCode", Objects.requireNonNull(response.body()).getText());
+                    if (!acceptReplicationCallback(runToken, call)) {
+                        return;
+                    }
+                    String maxReplicationCode = responseText(response);
+                    if (maxReplicationCode == null) {
+                        failReplication(runToken, "Broker MaxRepLogCode", null);
+                        return;
+                    }
+                    try {
+                        Long.parseLong(maxReplicationCode);
+                    } catch (NumberFormatException exception) {
+                        failReplication(runToken, "Broker MaxRepLogCode", exception);
+                        return;
+                    }
+                    broker_dbh.SaveConfig("MaxRepLogCode", maxReplicationCode);
                     changedGoodCodesForFTS.clear();
-                    RetrofitReplicate(0);
+                    requestReplicationStep(0, false, runToken);
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                    if (!acceptReplicationCallback(runToken, call) || call.isCanceled()) {
+                        return;
                     }
+                    Base_NetworkFailure.show(
+                            mContext,
+                            callMethod,
+                            "Broker MaxRepLogCode",
+                            call,
+                            t
+                    );
+                    failReplication(runToken, "Broker MaxRepLogCode", t);
                 }
             });
         }
@@ -169,37 +184,46 @@ public class Broker_Replication {
     }
 
     public void DoingReplicateAuto() {
+        int runToken = beginReplicationRun(true);
         Call<RetrofitResponse> call1 = broker_apiInterface.MaxRepLogCode("MaxRepLogCode");
+        if (!trackReplicationCall(runToken, call1)) {
+            return;
+        }
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                assert response.body() != null;
-
-                broker_dbh.SaveConfig("MaxRepLogCode", response.body().getText());
+                if (!acceptReplicationCallback(runToken, call)) {
+                    return;
+                }
+                String maxReplicationCode = responseText(response);
+                if (maxReplicationCode == null) {
+                    failReplication(runToken, "Broker automatic MaxRepLogCode", null);
+                    return;
+                }
+                try {
+                    Long.parseLong(maxReplicationCode);
+                } catch (NumberFormatException exception) {
+                    failReplication(runToken, "Broker automatic MaxRepLogCode", exception);
+                    return;
+                }
+                broker_dbh.SaveConfig("MaxRepLogCode", maxReplicationCode);
                 changedGoodCodesForFTS.clear();
-                RetrofitReplicateAuto(0);
+                requestReplicationStep(0, true, runToken);
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                if (!acceptReplicationCallback(runToken, call) || call.isCanceled()) {
+                    return;
                 }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "Broker automatic MaxRepLogCode",
+                        call,
+                        t
+                );
+                failReplication(runToken, "Broker automatic MaxRepLogCode", t);
             }
         });
 
@@ -210,13 +234,16 @@ public class Broker_Replication {
         tv_rep = dialog.findViewById(R.id.b_spinner_text);
         tv_step = dialog.findViewById(R.id.b_spinner_step);
         dialog.show();
+        dialog.setOnCancelListener(ignored -> cancelReplication());
 
 
     }
 
     public void Closedialog() {
 
-        dialog.dismiss();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
 
 
     }
@@ -306,7 +333,393 @@ public class Broker_Replication {
             RetrofitReplicateAuto(nextLevel);
         }
     }
+
+    private int beginReplicationRun(boolean automatic) {
+        int token;
+        Call<RetrofitResponse> previousCall;
+        synchronized (replicationLifecycleLock) {
+            token = replicationSession.begin();
+            previousCall = replicationCalls.clear();
+            currentRunToken = token;
+            currentRunAutomatic = automatic;
+        }
+        cancelCall(previousCall);
+        return token;
+    }
+
+    private boolean trackReplicationCall(int token, Call<RetrofitResponse> call) {
+        Call<RetrofitResponse> previousCall = null;
+        boolean accepted;
+        synchronized (replicationLifecycleLock) {
+            accepted = replicationSession.isActive(token);
+            if (accepted) {
+                previousCall = replicationCalls.replace(call);
+            }
+        }
+        if (!accepted) {
+            cancelCall(call);
+            return false;
+        }
+        cancelCall(previousCall);
+        return true;
+    }
+
+    private boolean acceptReplicationCallback(int token, Call<RetrofitResponse> call) {
+        synchronized (replicationLifecycleLock) {
+            return replicationSession.isActive(token) && replicationCalls.complete(call);
+        }
+    }
+
+    private void cancelCall(Call<RetrofitResponse> call) {
+        if (call != null && !call.isCanceled()) {
+            call.cancel();
+        }
+    }
+
+    public void cancelReplication() {
+        Call<RetrofitResponse> call;
+        synchronized (replicationLifecycleLock) {
+            int token = currentRunToken;
+            if (!replicationSession.cancel(token)) {
+                return;
+            }
+            call = replicationCalls.clear();
+        }
+        broker_dbh.cancelPendingAsync();
+        cancelCall(call);
+        callMethod.Log("Broker replication cancelled; committed checkpoint preserved");
+        closeDialogSafely();
+    }
+
+    public void release() {
+        Call<RetrofitResponse> call;
+        synchronized (replicationLifecycleLock) {
+            replicationSession.cancel(currentRunToken);
+            call = replicationCalls.clear();
+        }
+        cancelCall(call);
+        mainHandler.removeCallbacksAndMessages(null);
+        broker_dbh.closedb();
+        closeDialogSafely();
+    }
+
+    private void failReplication(int token, String operation, Throwable throwable) {
+        Call<RetrofitResponse> call;
+        synchronized (replicationLifecycleLock) {
+            if (!replicationSession.fail(token)) {
+                return;
+            }
+            call = replicationCalls.clear();
+        }
+        cancelCall(call);
+        String reason = throwable == null
+                ? "invalid response"
+                : throwable.getClass().getSimpleName();
+        callMethod.Log(operation + " stopped safely: " + reason);
+        if (!currentRunAutomatic) {
+            mainHandler.post(() -> {
+                closeDialogSafely();
+                callMethod.showToast("بروزرسانی کامل نشد؛ از آخرین مرحله موفق دوباره اجرا کنید");
+            });
+        }
+    }
+
     public void RetrofitReplicate(Integer replevel) {
+        requestReplicationStep(replevel, false, currentRunToken);
+    }
+
+    public void RetrofitReplicateAuto(Integer replevel) {
+        requestReplicationStep(replevel, true, currentRunToken);
+    }
+
+    private void requestReplicationStep(int level, boolean automatic, int runToken) {
+        if (!replicationSession.isActive(runToken)) {
+            return;
+        }
+
+        ArrayList<ReplicationModel> models = broker_dbh.GetReplicationTable();
+        if (models.isEmpty()) {
+            failReplication(runToken, "Broker replication table", null);
+            return;
+        }
+        if (level < 0 || level >= models.size()) {
+            if (automatic) {
+                replicationSession.complete(runToken);
+                callMethod.Log("Broker automatic replication completed");
+            } else {
+                mainHandler.post(() -> {
+                    if (replicationSession.isActive(runToken)) {
+                        replicateGoodImageChange();
+                    }
+                });
+            }
+            return;
+        }
+
+        ReplicationModel model = models.get(level);
+        BrokerReplicationPolicy.StepSpec step =
+                BrokerReplicationPolicy.step(model.getReplicationCode());
+        try {
+            BrokerReplicationBatchApplier.validateModelIdentifiers(model);
+        } catch (RuntimeException exception) {
+            failReplication(runToken, "Broker replication identifiers", exception);
+            return;
+        }
+        ArrayList<TableDetail> schema = broker_dbh.GetTableDetail(model.getClientTable());
+        try {
+            BrokerReplicationBatchApplier.validateContract(model, schema);
+        } catch (RuntimeException exception) {
+            failReplication(runToken, "Broker replication contract", exception);
+            return;
+        }
+
+        updateReplicationProgress(runToken, automatic, step, 0, 0);
+        Call<RetrofitResponse> call = broker_apiInterface.RetrofitReplicate(
+                "repinfo",
+                String.valueOf(model.getLastRepLogCode()),
+                model.getServerTable(),
+                "",
+                "1",
+                String.valueOf(step.getBatchSize())
+        );
+        if (!trackReplicationCall(runToken, call)) {
+            return;
+        }
+        callMethod.Log("Broker replication request step=" + step.getCode()
+                + " checkpoint=" + model.getLastRepLogCode());
+
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<RetrofitResponse> completedCall,
+                    @NonNull Response<RetrofitResponse> response
+            ) {
+                if (!acceptReplicationCallback(runToken, completedCall)) {
+                    return;
+                }
+                String responseText = responseText(response);
+                if (responseText == null) {
+                    failReplication(runToken, "Broker replication response", null);
+                    return;
+                }
+
+                boolean ftsWasReady = broker_dbh.IsGoodSearchFTSReady();
+                replicationExecutor.execute(() -> applyReplicationResponse(
+                        level,
+                        automatic,
+                        runToken,
+                        model,
+                        schema,
+                        step,
+                        ftsWasReady,
+                        responseText
+                ));
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<RetrofitResponse> failedCall,
+                    @NonNull Throwable throwable
+            ) {
+                if (!acceptReplicationCallback(runToken, failedCall) || failedCall.isCanceled()) {
+                    return;
+                }
+                if (automatic) {
+                    Base_NetworkFailure.logOnly(
+                            callMethod,
+                            "Broker automatic replication step",
+                            failedCall,
+                            throwable
+                    );
+                } else {
+                    Base_NetworkFailure.show(
+                            mContext,
+                            callMethod,
+                            "Broker replication step",
+                            failedCall,
+                            throwable
+                    );
+                }
+                failReplication(runToken, "Broker replication network", throwable);
+            }
+        });
+    }
+
+    private void applyReplicationResponse(
+            int level,
+            boolean automatic,
+            int runToken,
+            ReplicationModel model,
+            ArrayList<TableDetail> schema,
+            BrokerReplicationPolicy.StepSpec step,
+            boolean ftsWasReady,
+            String responseText
+    ) {
+        if (!replicationSession.isActive(runToken)) {
+            return;
+        }
+
+        try {
+            JSONArray rows = new JSONArray(responseText);
+            BrokerReplicationBatchApplier.Result result =
+                    BrokerReplicationBatchApplier.apply(
+                            database,
+                            model,
+                            schema,
+                            rows,
+                            step.getCode(),
+                            broker_dbh.ReadConfig("MaxRepLogCode")
+                    );
+            LastRepCode = result.getLastReplicationCode();
+            int expectedRows = readExpectedRows(rows, step.getBatchSize());
+            updateReplicationProgress(
+                    runToken, automatic, step, result.getAppliedRows(), expectedRows);
+
+            if (!replicationSession.isActive(runToken)) {
+                return;
+            }
+
+            if (result.isCheckpointRebased()) {
+                continueAfterReplicationBatch(
+                        level,
+                        automatic,
+                        runToken,
+                        step.getCode(),
+                        ftsWasReady,
+                        result.getAffectedGoodCodes()
+                );
+                return;
+            }
+
+            BrokerReplicationPolicy.NextAction action = result.isNoChanges()
+                    ? BrokerReplicationPolicy.NextAction.NEXT_STEP
+                    : BrokerReplicationPolicy.nextAction(
+                            result.getReceivedRows(), step.getBatchSize());
+            int nextLevel = action == BrokerReplicationPolicy.NextAction.REPEAT_STEP
+                    ? level
+                    : level + 1;
+            continueAfterReplicationBatch(
+                    nextLevel,
+                    automatic,
+                    runToken,
+                    step.getCode(),
+                    ftsWasReady,
+                    result.getAffectedGoodCodes()
+            );
+        } catch (Exception exception) {
+            failReplication(runToken, "Broker replication batch", exception);
+        }
+    }
+
+    private void continueAfterReplicationBatch(
+            int nextLevel,
+            boolean automatic,
+            int runToken,
+            int currentStep,
+            boolean ftsWasReady,
+            List<String> affectedGoodCodes
+    ) {
+        if (!replicationSession.isActive(runToken)) {
+            return;
+        }
+
+        Runnable continueReplication = () -> requestReplicationStep(
+                nextLevel, automatic, runToken);
+        if ((currentStep == 1 || currentStep == 16)
+                && !affectedGoodCodes.isEmpty()
+                && ftsWasReady) {
+            broker_dbh.SyncGoodsSearchFTSBatchAsync(
+                    new ArrayList<>(affectedGoodCodes),
+                    new Broker_DBH.OneGoodFTSCallback() {
+                        @Override
+                        public void onStart(String message) {
+                            updateStepText(runToken, automatic, message);
+                        }
+
+                        @Override
+                        public void onDone(String message) {
+                            broker_dbh.SaveFTSReady("1");
+                            callMethod.Log(message);
+                            if (replicationSession.isActive(runToken)) {
+                                continueReplication.run();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Exception exception) {
+                            broker_dbh.SaveFTSReady("0");
+                            callMethod.Log("Broker derived FTS update failed; replication checkpoint is safe");
+                            if (replicationSession.isActive(runToken)) {
+                                continueReplication.run();
+                            }
+                        }
+                    }
+            );
+        } else {
+            continueReplication.run();
+        }
+    }
+
+    private int readExpectedRows(JSONArray rows, int fallback) {
+        if (rows.length() == 0) {
+            return fallback;
+        }
+        try {
+            int expected = rows.getJSONObject(0).optInt("RowsCount", fallback);
+            return expected > 0 ? expected : fallback;
+        } catch (JSONException ignored) {
+            return fallback;
+        }
+    }
+
+    private void updateReplicationProgress(
+            int runToken,
+            boolean automatic,
+            BrokerReplicationPolicy.StepSpec step,
+            int appliedRows,
+            int expectedRows
+    ) {
+        if (automatic) {
+            return;
+        }
+        mainHandler.post(() -> {
+            if (!replicationSession.isActive(runToken)) {
+                return;
+            }
+            if (tv_rep != null) {
+                String message = "مرحله " + step.getCode() + " از "
+                        + BrokerReplicationPolicy.TOTAL_STEPS
+                        + " در حال بروز رسانی " + step.getTitle();
+                tv_rep.setText(NumberFunctions.PerisanNumber(message));
+            }
+            if (tv_step != null) {
+                int percent = BrokerReplicationPolicy.overallProgressPercent(
+                        step.getCode(), appliedRows, expectedRows);
+                tv_step.setVisibility(View.VISIBLE);
+                tv_step.setText(NumberFunctions.PerisanNumber(
+                        percent + "% - " + appliedRows + " از " + expectedRows));
+            }
+        });
+    }
+
+    private void updateStepText(int runToken, boolean automatic, String message) {
+        if (automatic) {
+            callMethod.Log(message);
+            return;
+        }
+        mainHandler.post(() -> {
+            if (!replicationSession.isActive(runToken)) {
+                return;
+            }
+            if (tv_step != null) {
+                tv_step.setVisibility(View.VISIBLE);
+                tv_step.setText(NumberFunctions.PerisanNumber(message));
+            }
+        });
+    }
+
+    @Deprecated
+    private void RetrofitReplicateLegacy(Integer replevel) {
         broker_dbh.closedb();
         replicatelevel = replevel;
         replicationModels = broker_dbh.GetReplicationTable();
@@ -418,9 +831,11 @@ public class Broker_Replication {
                     if (response.isSuccessful()) {
                         try {
                             JSONArray arrayobject = null;
+                            RetrofitResponse responseBody = successfulBody(response);
 
-                            if (response.body() != null) {
-                                arrayobject = new JSONArray(response.body().getText());
+                            if (responseBody != null) {
+                                arrayobject = new JSONArray(
+                                        BrokerReplicationResponsePolicy.text(responseBody));
                             }
 
                             if (arrayobject == null || arrayobject.length() == 0) {
@@ -666,7 +1081,7 @@ public class Broker_Replication {
                                     break;
                             }
 
-                            if (arrayobject.length() >= RepRowCount) {
+                            if (arrayobject.length() >= LEGACY_REPLICATION_ROW_COUNT) {
 
                                 RetrofitReplicate(replicatelevel);
 
@@ -698,27 +1113,13 @@ public class Broker_Replication {
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
-
-                    callMethod.Log("9");
-                    callMethod.Log("kowsar_____" + t.getMessage());
+                    Base_NetworkFailure.show(
+                            mContext,
+                            callMethod,
+                            "Broker replication step",
+                            call,
+                            t
+                    );
 
                     RetrofitReplicate(replicatelevel);
                 }
@@ -735,7 +1136,8 @@ public class Broker_Replication {
     }
 
 
-    public void RetrofitReplicateAuto(Integer replevel) {
+    @Deprecated
+    private void RetrofitReplicateAutoLegacy(Integer replevel) {
         broker_dbh.closedb();
         replicationModels = broker_dbh.GetReplicationTable();
         if (replevel < replicationModels.size()) {
@@ -844,14 +1246,11 @@ public class Broker_Replication {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                    if (response.isSuccessful()) {
+                    String responseText = responseText(response);
+                    if (responseText != null) {
                         new Thread(() -> {
-                            assert response.body() != null;
-                            callMethod.Log("response.body().getText()=" + response.body().getText());
-
-                            assert response.body() != null;
                             try {
-                                JSONArray arrayobject = new JSONArray(response.body().getText());
+                                JSONArray arrayobject = new JSONArray(responseText);
                                 int ObjectSize = arrayobject.length();
                                 JSONObject singleobject = arrayobject.getJSONObject(0);
                                 String state = singleobject.getString("RLOpType");
@@ -961,7 +1360,8 @@ public class Broker_Replication {
 
                                                         LastRepCode = repcode;
 
-                                                    } catch (Exception ignored) {
+                                                    } catch (Exception exception) {
+                                                        logLegacyFailure("automatic row upsert", exception);
                                                     }
 
                                                     d.close();
@@ -1007,7 +1407,8 @@ public class Broker_Replication {
                                                                 }
                                                             }
                                                             LastRepCode = repcode;
-                                                        } catch (Exception ignored) {
+                                                        } catch (Exception exception) {
+                                                            logLegacyFailure("automatic row delete", exception);
                                                         }
                                                     }
 
@@ -1017,7 +1418,7 @@ public class Broker_Replication {
                                         database.execSQL("Update ReplicationTable Set LastRepLogCode = " + LastRepCode + " Where ServerTable = '" + replicatedetail.getServerTable() + "' ");
                                         break;
                                 }
-                                if (arrayobject.length() >= RepRowCount) {
+                                if (arrayobject.length() >= LEGACY_REPLICATION_ROW_COUNT) {
                                     RetrofitReplicateAuto(replevel);
                                 } else {
                                     if (Integer.parseInt(LastRepCode) < 0) {
@@ -1029,17 +1430,25 @@ public class Broker_Replication {
                                         GoNextReplicationAutoStepAfterFTS(currentStep, replevel + 1);
                                     }
                                 }
-                            } catch (JSONException ignored) {
+                            } catch (JSONException exception) {
+                                callMethod.Log("Broker automatic replication JSON failed: "
+                                        + exception.getClass().getSimpleName());
                             }
 
                         }).start();
+                    } else {
+                        callMethod.Log("Broker automatic replication response is empty or invalid");
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    callMethod.Log("t.getMessage=" + t.getMessage());
-
+                    Base_NetworkFailure.logOnly(
+                            callMethod,
+                            "Broker automatic replication step",
+                            call,
+                            t
+                    );
                 }
             });
 
@@ -1048,6 +1457,162 @@ public class Broker_Replication {
 
     }
     public void replicateGoodImageChange() {
+        int runToken = currentRunToken;
+        if (!replicationSession.isActive(runToken)) {
+            return;
+        }
+        mainHandler.post(() -> {
+            if (replicationSession.isActive(runToken) && tv_rep != null) {
+                tv_rep.setText(NumberFunctions.PerisanNumber(
+                        "در حال بروزرسانی عکس"));
+            }
+        });
+
+        String checkpoint = broker_dbh.ReadConfig("KsrImage_LastRepCode");
+        try {
+            Long.parseLong(checkpoint);
+        } catch (NumberFormatException exception) {
+            failReplication(runToken, "Broker image checkpoint", exception);
+            return;
+        }
+
+        Call<RetrofitResponse> call = broker_apiInterface.RetrofitReplicate(
+                "repinfo", checkpoint, "KsrImage", "", "1", "400");
+        if (!trackReplicationCall(runToken, call)) {
+            return;
+        }
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(
+                    @NotNull Call<RetrofitResponse> completedCall,
+                    @NotNull Response<RetrofitResponse> response
+            ) {
+                if (!acceptReplicationCallback(runToken, completedCall)) {
+                    return;
+                }
+                String responseText = responseText(response);
+                if (responseText == null) {
+                    failReplication(runToken, "Broker image replication", null);
+                    return;
+                }
+                replicationExecutor.execute(() -> applyImageReplicationResponse(
+                        runToken, checkpoint, responseText));
+            }
+
+            @Override
+            public void onFailure(
+                    @NotNull Call<RetrofitResponse> failedCall,
+                    @NotNull Throwable throwable
+            ) {
+                if (!acceptReplicationCallback(runToken, failedCall) || failedCall.isCanceled()) {
+                    return;
+                }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "Broker image replication",
+                        failedCall,
+                        throwable
+                );
+                failReplication(runToken, "Broker image replication", throwable);
+            }
+        });
+    }
+
+    private void applyImageReplicationResponse(
+            int runToken,
+            String checkpoint,
+            String responseText
+    ) {
+        try {
+            JSONArray rows = new JSONArray(responseText);
+            BrokerImageReplicationBatchApplier.Result result =
+                    BrokerImageReplicationBatchApplier.apply(database, rows, checkpoint);
+            LastRepCode = result.getLastReplicationCode();
+            for (String imageCode : result.getFilesToDelete()) {
+                image_info.DeleteImage(imageCode);
+            }
+            if (!replicationSession.isActive(runToken)) {
+                return;
+            }
+            if (!result.isNoChanges() && result.getReceivedRows() >= 400) {
+                replicateGoodImageChange();
+            } else {
+                mainHandler.post(() -> finishReplicationAfterImages(runToken));
+            }
+        } catch (Exception exception) {
+            failReplication(runToken, "Broker image replication batch", exception);
+        }
+    }
+
+    private void finishReplicationAfterImages(int runToken) {
+        if (!replicationSession.isActive(runToken)) {
+            return;
+        }
+        if (!broker_dbh.IsGoodSearchFTSHealthy()) {
+            broker_dbh.ForceRebuildGoodSearchFTS();
+            if (tv_step != null) {
+                tv_step.setVisibility(View.VISIBLE);
+                tv_step.setText(NumberFunctions.PerisanNumber("شروع ساخت جستجو"));
+            }
+            if (tv_rep != null) {
+                tv_rep.setVisibility(View.VISIBLE);
+                tv_rep.setText(NumberFunctions.PerisanNumber(
+                        "در حال آماده سازی جستجوی کالا"));
+            }
+            broker_dbh.SyncGoodSearchFTSAsync(new Broker_DBH.ProgressCallback() {
+                @Override
+                public void onProgress(int percent, int done, int total) {
+                    if (!replicationSession.isActive(runToken) || tv_step == null) {
+                        return;
+                    }
+                    tv_step.setText(NumberFunctions.PerisanNumber(
+                            percent + "% - " + done + " از " + total));
+                }
+
+                @Override
+                public void onDone() {
+                    if (!replicationSession.isActive(runToken)) {
+                        return;
+                    }
+                    if (broker_dbh.IsGoodSearchFTSHealthy()) {
+                        finishReplicationUpdate(runToken);
+                    } else {
+                        broker_dbh.SaveFTSReady("0");
+                        failReplication(runToken, "Broker FTS health", null);
+                    }
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    broker_dbh.SaveFTSReady("0");
+                    failReplication(runToken, "Broker FTS rebuild", exception);
+                }
+            });
+        } else {
+            finishReplicationUpdate(runToken);
+        }
+    }
+
+    private void finishReplicationUpdate(int runToken) {
+        if (!replicationSession.complete(runToken)) {
+            return;
+        }
+        PersianCalendar calendar = new PersianCalendar();
+        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Tehran"));
+        broker_dbh.SaveConfig("LastUpdate", calendar.getPersianShortDateTime());
+        closeDialogSafely();
+        Intent navigation = new Intent(mContext, Broker_NavActivity.class);
+        navigation.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mContext.startActivity(navigation);
+        if (mContext instanceof Activity) {
+            ((Activity) mContext).finish();
+        }
+        callMethod.showToast("بروز رسانی انجام شد");
+    }
+
+    @Deprecated
+    private void replicateGoodImageChangeLegacy() {
 
         tv_rep.setText(NumberFunctions.PerisanNumber("در حال بروز رسانی عکس"));
         FinalStep = 0;
@@ -1067,10 +1632,10 @@ public class Broker_Replication {
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
+                String responseText = responseText(response);
+                if (responseText != null) {
                     try {
-                        JSONArray arrayobject = new JSONArray(response.body().getText());
+                        JSONArray arrayobject = new JSONArray(responseText);
                         int ObjectSize = arrayobject.length();
                         JSONObject singleobject = arrayobject.getJSONObject(0);
                         String state = singleobject.getString("RLOpType");
@@ -1106,7 +1671,8 @@ public class Broker_Replication {
                                                 try {
                                                     database.execSQL(qCol);
                                                     callMethod.Log("qCol=" + qCol);
-                                                } catch (Exception ignored) {
+                                                } catch (Exception exception) {
+                                                    logLegacyFailure("image row replace-delete", exception);
                                                 }
                                                 image_info.DeleteImage(code);
                                             }
@@ -1116,7 +1682,8 @@ public class Broker_Replication {
                                             try {
                                                 database.execSQL(qCol);
                                                 callMethod.Log("qCol=" + qCol);
-                                            } catch (Exception ignored) {
+                                            } catch (Exception exception) {
+                                                logLegacyFailure("image row insert", exception);
                                             }
                                             d.close();
                                             break;
@@ -1132,7 +1699,8 @@ public class Broker_Replication {
                                                 database.execSQL(qCol);
 
                                                 callMethod.Log("qCol=" + qCol);
-                                            } catch (Exception ignored) {
+                                            } catch (Exception exception) {
+                                                logLegacyFailure("image row delete", exception);
                                             }
                                             d.close();
                                             break;
@@ -1272,16 +1840,24 @@ public class Broker_Replication {
                             database.execSQL("Update Config Set DataValue = '" + calendar1.getPersianShortDateTime() + "' Where KeyValue = 'LastUpdate'");
                             */
                         }
-                    } catch (JSONException ignored) {
-
+                    } catch (JSONException exception) {
+                        stopReplication("Broker image replication JSON");
                     }
-
+                } else {
+                    stopReplication("Broker image replication");
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                replicateGoodImageChange();
+                closeDialogSafely();
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "Broker image replication",
+                        call,
+                        t
+                );
             }
         });
     }
@@ -1330,36 +1906,23 @@ public class Broker_Replication {
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    if (!response.body().getText().equals(broker_dbh.ReadConfig("BrokerStack"))) {
-                        broker_dbh.SaveConfig("BrokerStack", response.body().getText());
+                String responseText = responseText(response);
+                if (responseText != null) {
+                    if (!responseText.equals(broker_dbh.ReadConfig("BrokerStack"))) {
+                        broker_dbh.SaveConfig("BrokerStack", responseText);
                     }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                callMethod.Log("Request Failed: " + t.getMessage());
-
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "Broker stack",
+                        call,
+                        t
+                );
             }
         });
         MenuBroker();
@@ -1372,12 +1935,11 @@ public class Broker_Replication {
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-
-                    if (!response.body().getText().equals("")) {
-                        if (!response.body().getText().equals(broker_dbh.ReadConfig("GroupCodeDefult"))) {
-                            broker_dbh.SaveConfig("GroupCodeDefult", response.body().getText());
+                String responseText = responseText(response);
+                if (responseText != null) {
+                    if (!responseText.equals("")) {
+                        if (!responseText.equals(broker_dbh.ReadConfig("GroupCodeDefult"))) {
+                            broker_dbh.SaveConfig("GroupCodeDefult", responseText);
                         }
                     } else {
                         broker_dbh.SaveConfig("GroupCodeDefult", "0");
@@ -1387,6 +1949,12 @@ public class Broker_Replication {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                Base_NetworkFailure.logOnly(
+                        callMethod,
+                        "Broker default group",
+                        call,
+                        t
+                );
             }
         });
     }
@@ -1397,39 +1965,67 @@ public class Broker_Replication {
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    if (!response.body().getText().equals(broker_dbh.ReadConfig("MenuBroker"))) {
-                        broker_dbh.SaveConfig("MenuBroker", response.body().getText());
+                String responseText = responseText(response);
+                if (responseText != null) {
+                    if (!responseText.equals(broker_dbh.ReadConfig("MenuBroker"))) {
+                        broker_dbh.SaveConfig("MenuBroker", responseText);
                     }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                Base_NetworkFailure.logOnly(
+                        callMethod,
+                        "Broker menu",
+                        call,
+                        t
+                );
             }
         });
         GroupCodeDefult();
     }
 
     public void GoodTypeReplication() {
+        GoodTypeReplication(currentRunToken);
+    }
+
+    private void GoodTypeReplication(int runToken) {
 
         Call<RetrofitResponse> call1 = broker_apiInterface.GetGoodType("GetGoodType");
+        if (!trackReplicationCall(runToken, call1)) {
+            return;
+        }
         call1.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    ArrayList<Column> columns = response.body().getColumns();
+                if (!acceptReplicationCallback(runToken, call)) {
+                    return;
+                }
+                ArrayList<Column> columns = responseColumns(response);
+                if (columns != null) {
                     for (Column column : columns) {
                         broker_dbh.ReplicateGoodtype(column);
                     }
-                    columnReplication(0);
+                    columnReplication(0, runToken);
+                } else {
+                    failReplication(runToken, "Broker good-type replication", null);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                if (!acceptReplicationCallback(runToken, call) || call.isCanceled()) {
+                    return;
+                }
+                Base_NetworkFailure.show(
+                        mContext,
+                        callMethod,
+                        "Broker good-type replication",
+                        call,
+                        t
+                );
+                failReplication(runToken, "Broker good-type replication", t);
             }
         });
 
@@ -1437,35 +2033,59 @@ public class Broker_Replication {
     }
 
     public void columnReplication(Integer i) {
+        columnReplication(i, currentRunToken);
+    }
 
+    private void columnReplication(Integer i, int runToken) {
+
+        if (!replicationSession.isActive(runToken)) {
+            return;
+        }
         callMethod.Log(""+i);
         if (i < 4) {
             Call<RetrofitResponse> call2 = broker_apiInterface.GetColumnList( "GetColumnList","" + i, "1", "1");
+            if (!trackReplicationCall(runToken, call2)) {
+                return;
+            }
             callMethod.Log(call2.request().toString());
             call2.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        ArrayList<Column> columns = response.body().getColumns();
+                    if (!acceptReplicationCallback(runToken, call)) {
+                        return;
+                    }
+                    ArrayList<Column> columns = responseColumns(response);
+                    if (columns != null) {
                         int j = 0;
                         for (Column column : columns) {
                             broker_dbh.ReplicateColumn(column, i);
                             j++;
                         }
                         if (j == columns.size()) {
-                            columnReplication(i + 1);
+                            columnReplication(i + 1, runToken);
                         }
+                    } else {
+                        failReplication(runToken, "Broker column replication", null);
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-                    callMethod.Log(t.getMessage());
+                    if (!acceptReplicationCallback(runToken, call) || call.isCanceled()) {
+                        return;
+                    }
+                    Base_NetworkFailure.show(
+                            mContext,
+                            callMethod,
+                            "Broker column replication",
+                            call,
+                            t
+                    );
+                    failReplication(runToken, "Broker column replication", t);
                 }
             });
         } else {
+            closeDialogSafely();
             DoingReplicate();
 
         }
@@ -1475,40 +2095,45 @@ public class Broker_Replication {
     @SuppressLint("Range")
     public void SendGpsLocationnew() {
 
-        locationsNew.clear();
+        ArrayList<KowsarLocationNew> pageLocations = new ArrayList<>();
+        String checkpoint = broker_dbh.ReadConfig("LastGpsLocationCodeNew");
+        try {
+            Long.parseLong(checkpoint);
+        } catch (NumberFormatException exception) {
+            callMethod.Log("Broker new GPS checkpoint is invalid");
+            return;
+        }
 
-        cursor = sqLiteDatabase.rawQuery("select * from GpsLocationNew where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCodeNew") + " order by GpsLocationCode limit 20", null);
+        Cursor gpsCursor = sqLiteDatabase.rawQuery(
+                "select * from GpsLocationNew where GpsLocationCode > ? "
+                        + "order by GpsLocationCode limit 20",
+                new String[]{checkpoint});
 
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                locationnew = new KowsarLocationNew();
-                locationnew.setGpsLocationCode(String.valueOf(cursor.getInt(cursor.getColumnIndex("GpsLocationCode"))));
-                locationsNew.add(locationnew);
+        if (gpsCursor != null) {
+            while (gpsCursor.moveToNext()) {
+                KowsarLocationNew pageLocation = new KowsarLocationNew();
+                pageLocation.setGpsLocationCode(String.valueOf(
+                        gpsCursor.getInt(gpsCursor.getColumnIndex("GpsLocationCode"))));
+                pageLocations.add(pageLocation);
             }
         }
 
-        assert cursor != null;
-        String GpsLocationString = CursorToJson(cursor);
-        cursor.close();
+        String GpsLocationString = CursorToJson(gpsCursor);
+        gpsCursor.close();
 
         callMethod.Log(GpsLocationString);
 
-        if (locationsNew.size()>0) {
+        int pageSize = pageLocations.size();
+        if (pageSize > 0) {
+            String lastPageCode = pageLocations.get(pageSize - 1).getGpsLocationCode();
             Call<RetrofitResponse> call1 = broker_apiInterface.UpdateLocation( "UpdateLocationNew",GpsLocationString);
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-
-                        broker_dbh.SaveConfig("LastGpsLocationCodeNew", locationsNew.get(locationsNew.size() - 1).getGpsLocationCode());
-
-                        cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCodeNew"), null);
-                        if (cursor.getCount() > 1) {
-                            cursor.close();
+                    if (hasLocationsResponse(response)) {
+                        broker_dbh.SaveConfig("LastGpsLocationCodeNew", lastPageCode);
+                        if (pageSize >= 20) {
                             SendGpsLocationnew();
-                        } else {
-                            cursor.close();
                         }
 
                     }
@@ -1516,6 +2141,12 @@ public class Broker_Replication {
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    Base_NetworkFailure.logOnly(
+                            callMethod,
+                            "Broker new GPS upload",
+                            call,
+                            t
+                    );
                 }
             });
         } else {
@@ -1528,38 +2159,43 @@ public class Broker_Replication {
     @SuppressLint("Range")
     public void SendGpsLocation() {
 
-        locations.clear();
+        ArrayList<KowsarLocation> pageLocations = new ArrayList<>();
+        String checkpoint = broker_dbh.ReadConfig("LastGpsLocationCode");
+        try {
+            Long.parseLong(checkpoint);
+        } catch (NumberFormatException exception) {
+            callMethod.Log("Broker GPS checkpoint is invalid");
+            return;
+        }
 
-        cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCode") + " order by GpsLocationCode limit 20", null);
+        Cursor gpsCursor = sqLiteDatabase.rawQuery(
+                "select * from GpsLocation where GpsLocationCode > ? "
+                        + "order by GpsLocationCode limit 20",
+                new String[]{checkpoint});
 
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                location = new KowsarLocation();
-                location.setGpsLocationCode(String.valueOf(cursor.getInt(cursor.getColumnIndex("GpsLocationCode"))));
-                locations.add(location);
+        if (gpsCursor != null) {
+            while (gpsCursor.moveToNext()) {
+                KowsarLocation pageLocation = new KowsarLocation();
+                pageLocation.setGpsLocationCode(String.valueOf(
+                        gpsCursor.getInt(gpsCursor.getColumnIndex("GpsLocationCode"))));
+                pageLocations.add(pageLocation);
             }
         }
 
-        assert cursor != null;
-        String GpsLocationString = CursorToJson(cursor);
-        cursor.close();
+        String GpsLocationString = CursorToJson(gpsCursor);
+        gpsCursor.close();
 
-        if (locations.size()>0) {
+        int pageSize = pageLocations.size();
+        if (pageSize > 0) {
+            String lastPageCode = pageLocations.get(pageSize - 1).getGpsLocationCode();
             Call<RetrofitResponse> call1 = broker_apiInterface.UpdateLocation( "UpdateLocation",GpsLocationString);
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-
-                        broker_dbh.SaveConfig("LastGpsLocationCode", locations.get(locations.size() - 1).getGpsLocationCode());
-
-                        cursor = sqLiteDatabase.rawQuery("select * from GpsLocation where GpsLocationCode > " + broker_dbh.ReadConfig("LastGpsLocationCode"), null);
-                        if (cursor.getCount() > 1) {
-                            cursor.close();
+                    if (hasLocationsResponse(response)) {
+                        broker_dbh.SaveConfig("LastGpsLocationCode", lastPageCode);
+                        if (pageSize >= 20) {
                             SendGpsLocation();
-                        } else {
-                            cursor.close();
                         }
 
                     }
@@ -1567,10 +2203,54 @@ public class Broker_Replication {
 
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    Base_NetworkFailure.logOnly(
+                            callMethod,
+                            "Broker GPS upload",
+                            call,
+                            t
+                    );
                 }
             });
         } else {
             callMethod.Log("kowsar_Gps zero size");
+        }
+    }
+
+    private RetrofitResponse successfulBody(Response<RetrofitResponse> response) {
+        boolean successful = response != null && response.isSuccessful();
+        RetrofitResponse body = successful ? response.body() : null;
+        return BrokerReplicationResponsePolicy.successfulBody(successful, body);
+    }
+
+    private String responseText(Response<RetrofitResponse> response) {
+        return BrokerReplicationResponsePolicy.text(successfulBody(response));
+    }
+
+    private ArrayList<Column> responseColumns(Response<RetrofitResponse> response) {
+        return BrokerReplicationResponsePolicy.columns(successfulBody(response));
+    }
+
+    private boolean hasLocationsResponse(Response<RetrofitResponse> response) {
+        return BrokerReplicationResponsePolicy.hasLocations(successfulBody(response));
+    }
+
+    private void logLegacyFailure(String operation, Exception exception) {
+        callMethod.Log("Broker legacy replication " + operation + " failed: "
+                + exception.getClass().getSimpleName());
+    }
+
+    private void stopReplication(String operation) {
+        callMethod.Log(operation + " response is empty or invalid");
+        closeDialogSafely();
+        callMethod.showToast("بروزرسانی کامل نشد؛ دوباره تلاش کنید");
+    }
+
+    private void closeDialogSafely() {
+        try {
+            if (dialog != null && dialog.isShowing()) dialog.dismiss();
+        } catch (RuntimeException exception) {
+            callMethod.Log("Broker replication dialog close failed: "
+                    + exception.getClass().getSimpleName());
         }
     }
 
@@ -1586,7 +2266,8 @@ public class Broker_Replication {
                     try {
                         rowObject.put(cursor.getColumnName(i), cursor.getString(i));
                     } catch (Exception e) {
-                        Log.d("CursorToJson_Error: ", Objects.requireNonNull(e.getMessage()));
+                        callMethod.Log("Cursor serialization failed: "
+                                + e.getClass().getSimpleName());
                     }
                 }
             }

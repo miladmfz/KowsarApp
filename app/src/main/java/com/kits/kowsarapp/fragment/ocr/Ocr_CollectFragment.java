@@ -14,7 +14,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,9 +40,11 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.kowsarapp.activity.ocr.Ocr_Check_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_Collect_Confirm_Activity;
 import com.kits.kowsarapp.activity.ocr.Ocr_NavActivity;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.ocr.OcrFragmentResponsePolicy;
 import com.kits.kowsarapp.application.ocr.Ocr_Print;
 import com.kits.kowsarapp.model.base.Factor;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -74,6 +75,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     Intent intent;
     View view;
     Dialog dialogProg;
+    private boolean viewActive;
 
     Ocr_APIInterface apiInterface;
     Ocr_APIInterface secendApiInterface;
@@ -193,6 +195,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewActive = true;
 
         try {
             callMethod = new CallMethod(requireActivity());
@@ -200,7 +203,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
             ocr_action = new Ocr_Action(requireActivity());
             apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
             secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
-            handler=new Handler();
+            handler=new Handler(Looper.getMainLooper());
             ocr_print = new Ocr_Print(requireActivity());
             for (final String[] ignored : arraygood_shortage) {
                 arraygood_shortage.add(new String[]{"goodcode", "amount "});
@@ -216,6 +219,19 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
             callMethod.Log(e.getMessage());
 
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        viewActive = false;
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+        dismissProgressSafely();
+        view = null;
+        ll_main = null;
+        scrollView_main = null;
+        super.onDestroyView();
     }
 
 
@@ -294,7 +310,11 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         tv_address.setText(NumberFunctions.PerisanNumber(" آدرس : " + factor.getAddress()));
         tv_phone.setText(NumberFunctions.PerisanNumber(" تلفن تماس : " + factor.getPhone()));
         tv_total_amount.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + factor.getSumAmount()));
-        tv_total_price.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Double.valueOf(factor.getSumPrice())) + " ریال"));
+        tv_total_price.setText(NumberFunctions.PerisanNumber(
+                " قیمت کل : "
+                        + decimalFormat.format(SafeValueParser.doubleOrDefault(factor.getSumPrice(), 0d))
+                        + " ریال"
+        ));
 
 
         btn_confirm.setText("تاییده بخش");
@@ -309,14 +329,20 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
         if(!factor.getNewSumPrice().equals(factor.getSumPrice())){
 
             TextView tv_total_newprice = new TextView(requireActivity().getApplicationContext());
-            tv_total_newprice.setText(NumberFunctions.PerisanNumber(" قیمت کل(جدید) : " + decimalFormat.format(Double.valueOf(factor.getNewSumPrice())) + " ریال"));
+            tv_total_newprice.setText(NumberFunctions.PerisanNumber(
+                    " قیمت کل(جدید) : "
+                            + decimalFormat.format(
+                                    SafeValueParser.doubleOrDefault(factor.getNewSumPrice(), 0d)
+                            )
+                            + " ریال"
+            ));
             tv_total_newprice.setLayoutParams(
                     new LinearLayoutCompat.LayoutParams(
                             LinearLayoutCompat.LayoutParams.MATCH_PARENT,
                             LinearLayoutCompat.LayoutParams.WRAP_CONTENT
                     )
             );
-            tv_total_newprice.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+            tv_total_newprice.setTextSize(TypedValue.COMPLEX_UNIT_SP, configuredTextSize("TitleSize", 14));
             tv_total_newprice.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
             tv_total_newprice.setGravity(Gravity.RIGHT);
             tv_total_newprice.setTypeface(null, Typeface.BOLD);
@@ -349,7 +375,9 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                 } else if (ocr_good_single.getFormNo() != null) {
 
-                    int FormNo = Integer.parseInt(ocr_good_single.getFormNo());  // Ensure this value is of type double
+                    int FormNo = SafeValueParser.intOrDefault(
+                            ocr_good_single.getFormNo(), Integer.MIN_VALUE
+                    );
 
 //                    if (callMethod.ReadString("StackCategory").equals("انبار1ب1") && FormNo >= 106000 && FormNo <= 114999) {
 //                        ocr_goods_visible.add(ocr_good_single);
@@ -399,7 +427,9 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                 } else if (ocr_good_single.getLocationTitle() != null) {
 
-                    int LocationTitle = Integer.parseInt(ocr_good_single.getLocationTitle());
+                    int LocationTitle = SafeValueParser.intOrDefault(
+                            ocr_good_single.getLocationTitle(), Integer.MIN_VALUE
+                    );
 
                     if (callMethod.ReadString("StackCategory").equals("انبار1") && LocationTitle >= 100000 && LocationTitle <= 199999) {
                         ocr_goods_visible.add(ocr_good_single);
@@ -494,7 +524,8 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
 
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+        handler.postDelayed(() -> {
+            if (!canHandleUiCallback()) return;
 
             for (int i = 0; i < ll_good_body_detail.getChildCount(); i++) {
                 View child = ll_good_body_detail.getChildAt(i);
@@ -543,7 +574,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                                     // continue;
                                                 } else {
                                                     try {
-                                                        if (Integer.parseInt(shortageAmount) > 0) {
+                                                        if (SafeValueParser.intOrDefault(shortageAmount, 0) > 0) {
                                                             // کمبود دارد -> رد کن و برو checkbox بعدی
                                                             continue;
                                                         }
@@ -570,7 +601,8 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                                 scrollView_main.post(() -> {
                                                     cb.getParent().requestChildFocus(cb, cb);
 
-                                                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                                    handler.postDelayed(() -> {
+                                                        if (!canHandleUiCallback()) return;
                                                         EditText edBarcode1 = requireActivity().findViewById(R.id.ocr_collect_confirm_a_barcode);
                                                         edBarcode1.selectAll();
 
@@ -613,6 +645,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if (!canHandleUiCallback()) return;
                     if(response.isSuccessful()) {
                         dialogProg.dismiss();
                         intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
@@ -629,24 +662,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    try {
-                        // 🟢 بررسی وضعیت اتصال
-                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                            callMethod.showToast("اتصال اینترنت قطع است!");
-                        } else if (NetworkUtils.isVPNActive()) {
-                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                        } else {
-                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                            } else {
-                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                            }
-                        }
-                    } catch (Exception e) {
-                        callMethod.Log("Network check error: " + e.getMessage());
-                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                    }
+                    reportNetworkFailure("SetOcrFactorExplain", call, t, false);
                 }
             });
         });
@@ -684,6 +700,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                if (!canHandleUiCallback()) return;
                                 if(response.isSuccessful()) {
                                     dialogProg.dismiss();
 
@@ -699,12 +716,15 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                     call1.enqueue(new Callback<RetrofitResponse>() {
                                         @Override
                                         public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                                            if (!canHandleUiCallback()) return;
                                             if(response.isSuccessful()) {
                                                 ocr_action.checkSumAmount(factor);
-                                                if (response.body().getText().equals("HasNotDoubleCheck")){
+                                                OcrFragmentResponsePolicy.DoubleCheckAction action =
+                                                        doubleCheckAction(response, "OcrDoubleCheck");
+                                                if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PACK_DETAIL){
                                                     ocr_action.Pack_detail(factor,"0");
 
-                                                }else if (response.body().getText().equals("HasDoubleCheck")){
+                                                }else if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PRINT){
                                                     ocr_print.Printing(factor,ocr_goods_visible,"0","0");
                                                 }
 
@@ -712,24 +732,8 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                         }
                                         @Override
                                         public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                            try {
-                                                // 🟢 بررسی وضعیت اتصال
-                                                if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                                    callMethod.showToast("اتصال اینترنت قطع است!");
-                                                } else if (NetworkUtils.isVPNActive()) {
-                                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                                } else {
-                                                    String serverUrl = callMethod.ReadString("ServerURLUse");
-                                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                                    } else {
-                                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                                    }
-                                                }
-                                            } catch (Exception e) {
-                                                callMethod.Log("Network check error: " + e.getMessage());
-                                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                            }                                        }
+                                            reportNetworkFailure("OcrDoubleCheck", call1, t, false);
+                                        }
                                     });
 
 
@@ -738,24 +742,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                try {
-                                    // 🟢 بررسی وضعیت اتصال
-                                    if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                    } else if (NetworkUtils.isVPNActive()) {
-                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                    } else {
-                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                        } else {
-                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    callMethod.Log("Network check error: " + e.getMessage());
-                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                }
+                                reportNetworkFailure("CheckState", call, t, false);
                             }
                         });
 
@@ -781,6 +768,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                        if (!canHandleUiCallback()) return;
                         if(response.isSuccessful()) {
                             dialogProg.dismiss();
 
@@ -796,12 +784,15 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                             call1.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                                    if (!canHandleUiCallback()) return;
                                     if(response.isSuccessful()) {
                                         ocr_action.checkSumAmount(factor);
-                                        if (response.body().getText().equals("HasNotDoubleCheck")){
+                                        OcrFragmentResponsePolicy.DoubleCheckAction action =
+                                                doubleCheckAction(response, "OcrDoubleCheck");
+                                        if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PACK_DETAIL){
                                             ocr_action.Pack_detail(factor,"0");
 
-                                        }else if (response.body().getText().equals("HasDoubleCheck")){
+                                        }else if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PRINT){
                                             ocr_print.Printing(factor,ocr_goods_visible,"0","0");
                                         }
 
@@ -809,24 +800,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                 }
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                    try {
-                                        // 🟢 بررسی وضعیت اتصال
-                                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                            callMethod.showToast("اتصال اینترنت قطع است!");
-                                        } else if (NetworkUtils.isVPNActive()) {
-                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                        } else {
-                                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                            } else {
-                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        callMethod.Log("Network check error: " + e.getMessage());
-                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                    }
+                                    reportNetworkFailure("OcrDoubleCheck", call1, t, false);
                                 }
                             });
 
@@ -836,24 +810,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                     }
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }
+                        reportNetworkFailure("CheckState", call, t, false);
                     }
                 });
             }
@@ -911,10 +868,10 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                 call.enqueue(new Callback<RetrofitResponse>() {
                                     @Override
                                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                        if (!canHandleUiCallback()) return;
                                         if(response.isSuccessful()) {
                                             conter_confirm = conter_confirm +1;
                                             if(conter_confirm==Array_GoodCodesCheck_count){
-                                                assert response.body() != null;
                                                 intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
                                                 intent.putExtra("ScanResponse", BarcodeScan);
                                                 intent.putExtra("State", "0");
@@ -929,27 +886,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                     }
                                     @Override
                                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                        try {
-                                            // 🟢 بررسی وضعیت اتصال
-                                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                                callMethod.showToast("اتصال اینترنت قطع است!");
-                                            } else if (NetworkUtils.isVPNActive()) {
-                                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                            } else {
-                                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                                } else {
-                                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            callMethod.Log("Network check error: " + e.getMessage());
-                                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                        }
-                                        dialogProg.dismiss();
-                                        callMethod.Log(t.getMessage());
-
+                                        reportNetworkFailure("ConfirmOcrGood", call, t, true);
                                     }
                                 });
 
@@ -999,10 +936,10 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                         call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                if (!canHandleUiCallback()) return;
                                 if(response.isSuccessful()) {
                                     conter_confirm = conter_confirm +1;
                                     if(conter_confirm==Array_GoodCodesCheck_count){
-                                        assert response.body() != null;
                                         intent = new Intent(requireActivity(), Ocr_Collect_Confirm_Activity.class);
                                         intent.putExtra("ScanResponse", BarcodeScan);
                                         intent.putExtra("State", "0");
@@ -1017,27 +954,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                             }
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                try {
-                                    // 🟢 بررسی وضعیت اتصال
-                                    if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                        callMethod.showToast("اتصال اینترنت قطع است!");
-                                    } else if (NetworkUtils.isVPNActive()) {
-                                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                    } else {
-                                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                        } else {
-                                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    callMethod.Log("Network check error: " + e.getMessage());
-                                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                }
-                                dialogProg.dismiss();
-                                callMethod.Log(t.getMessage());
-
+                                reportNetworkFailure("ConfirmOcrGood", call, t, true);
                             }
                         });
 
@@ -1451,12 +1368,55 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
     }
 
 
-    private int configuredTextSize(String key, int defaultValue) {
+    private boolean canHandleUiCallback() {
+        return viewActive
+                && isAdded()
+                && getView() != null
+                && getActivity() != null
+                && !getActivity().isFinishing()
+                && !getActivity().isDestroyed();
+    }
+
+
+    private void dismissProgressSafely() {
+        if (dialogProg == null || !dialogProg.isShowing()) return;
         try {
-            return Integer.parseInt(callMethod.ReadString(key));
-        } catch (Exception ignored) {
-            return defaultValue;
+            dialogProg.dismiss();
+        } catch (RuntimeException exception) {
+            if (callMethod != null) {
+                callMethod.Log("OCR progress dismiss failed: "
+                        + exception.getClass().getSimpleName());
+            }
         }
+    }
+
+
+    private void reportNetworkFailure(
+            String operation,
+            Call<?> call,
+            Throwable throwable,
+            boolean dismissProgress
+    ) {
+        if (dismissProgress) dismissProgressSafely();
+        Base_NetworkFailure.show(getActivity(), callMethod, operation, call, throwable);
+    }
+
+
+    private OcrFragmentResponsePolicy.DoubleCheckAction doubleCheckAction(
+            Response<RetrofitResponse> response,
+            String operation
+    ) {
+        RetrofitResponse body = response.body();
+        if (body == null) {
+            callMethod.Log(operation + " returned empty response body");
+            return OcrFragmentResponsePolicy.DoubleCheckAction.NONE;
+        }
+        return OcrFragmentResponsePolicy.doubleCheckAction(body.getText());
+    }
+
+
+    private int configuredTextSize(String key, int defaultValue) {
+        return Math.max(1, SafeValueParser.intOrDefault(callMethod.ReadString(key), defaultValue));
     }
 
 
@@ -2188,12 +2148,9 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
     private void handleGoodCheck(MaterialCheckBox checkBox, boolean isChecked, int correct_row) {
         if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
-            int amount = 0;
-            try {
-                amount = Integer.parseInt(ocr_goods_visible.get(correct_row).getFacAmount());
-            } catch (Exception e) {
-                amount = 0;
-            }
+            int amount = SafeValueParser.intOrDefault(
+                    ocr_goods_visible.get(correct_row).getFacAmount(), 0
+            );
 
             if (callMethod.ReadBoolan("ListOrSingle")) { // حالت لیستی
                 if (isChecked) {
@@ -2237,7 +2194,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
             }
 
             // ✅ نمایش جمع جدید (در TextView یا Log)
-            Log.e("SUM_DEBUG", "Sum_Confirm_Amount: " + Sum_Confirm_Amount);
+            callMethod.Log("Confirmed OCR amount recalculated");
             // یا اگر TextView داری:
             // txtSumConfirmAmount.setText(String.valueOf(Sum_Confirm_Amount));
 
@@ -2282,6 +2239,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                        if (!canHandleUiCallback()) return;
                         if (response.isSuccessful()) {
                             callMethod.showToast("تاییده ارسال شد.");
                             dialogProg.dismiss();
@@ -2298,15 +2256,16 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                             call1.enqueue(new Callback<RetrofitResponse>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call1, @NonNull Response<RetrofitResponse> response) {
+                                    if (!canHandleUiCallback()) return;
                                     if (response.isSuccessful()) {
-                                        dialogProg.dismiss();
-
-                                        assert response.body() != null;
-                                        if (response.body().getText().equals("HasNotDoubleCheck")) {
+                                        dismissProgressSafely();
+                                        OcrFragmentResponsePolicy.DoubleCheckAction action =
+                                                doubleCheckAction(response, "OcrDoubleCheck");
+                                        if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PACK_DETAIL) {
                                             ocr_action.checkSumAmount(factor);
 
 
-                                        } else if (response.body().getText().equals("HasDoubleCheck")) {
+                                        } else if (action == OcrFragmentResponsePolicy.DoubleCheckAction.PRINT) {
                                             ocr_print.Printing(factor, ocr_goods_visible, "0", "0");
                                         }
 
@@ -2315,24 +2274,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call1, @NonNull Throwable t) {
-                                    try {
-                                        // 🟢 بررسی وضعیت اتصال
-                                        if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                            callMethod.showToast("اتصال اینترنت قطع است!");
-                                        } else if (NetworkUtils.isVPNActive()) {
-                                            callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                        } else {
-                                            String serverUrl = callMethod.ReadString("ServerURLUse");
-                                            if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                                callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                            } else {
-                                                callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        callMethod.Log("Network check error: " + e.getMessage());
-                                        callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                                    }
+                                    reportNetworkFailure("OcrDoubleCheck", call1, t, false);
                                 }
                             });
 
@@ -2343,26 +2285,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        try {
-                            // 🟢 بررسی وضعیت اتصال
-                            if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                                callMethod.showToast("اتصال اینترنت قطع است!");
-                            } else if (NetworkUtils.isVPNActive()) {
-                                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                            } else {
-                                String serverUrl = callMethod.ReadString("ServerURLUse");
-                                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                } else {
-                                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                }
-                            }
-                        } catch (Exception e) {
-                            callMethod.Log("Network check error: " + e.getMessage());
-                            callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                        }
-                        dialogProg.dismiss();
-                        callMethod.Log(t.getMessage());
+                        reportNetworkFailure("CheckState", call, t, true);
                     }
                 });
 
@@ -2489,6 +2412,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                        if (!canHandleUiCallback()) return;
                         if (response.isSuccessful()) {
                             lastCunter++;
 
@@ -2515,8 +2439,7 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
 
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-                        callMethod.Log(t.getMessage());
+                        reportNetworkFailure("ocrShortage", call, t, false);
                     }
                 });
             }
@@ -3027,7 +2950,9 @@ public class Ocr_CollectFragment extends Fragment implements OnGoodConfirmListen
                                 }
                             }
 
-                        } catch (Exception ignored) {
+                        } catch (RuntimeException exception) {
+                            callMethod.Log("OCR shortage input ignored: "
+                                    + exception.getClass().getSimpleName());
                         }
                     }
                 }

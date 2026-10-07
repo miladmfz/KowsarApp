@@ -7,6 +7,7 @@ import android.telephony.TelephonyManager;
 
 
 import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.ReleaseLog;
 
 import java.lang.reflect.Method;
 
@@ -40,7 +41,7 @@ public class Order_InternetConnection {
 
             setMobileDataEnabledMethod.invoke(telephonyService, setMobileDataEnabledMethod);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ReleaseLog.error("MobileData", ex);
         }
     }
 

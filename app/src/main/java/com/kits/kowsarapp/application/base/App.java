@@ -5,7 +5,7 @@ import android.content.Context;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-import com.behpardakht.behthirdparty.BehThirdparty;
+import com.kits.kowsarapp.application.order.Order_OperationJournal;
 
 public class App extends Application {
     private static App instance;
@@ -19,6 +19,18 @@ public class App extends Application {
                 .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
                 .build()
         );
+
+        // A process restart makes an interrupted payment/print result ambiguous.
+        // Never report it as failed or auto-retry a financial operation.
+        try {
+            int recovered = new Order_OperationJournal(this).recoverInterruptedOperations();
+            if (recovered > 0) {
+                ReleaseLog.debug("OrderOperation", "Recovered interrupted operations count=" + recovered);
+            }
+        } catch (RuntimeException exception) {
+            // Local audit availability must never prevent application startup.
+            ReleaseLog.error("OrderOperation", exception);
+        }
 
         // راه‌اندازی SDK به‌پرداخت
 //        BehThirdparty.INSTANCE.initialize(Integer.parseInt(String.valueOf()));

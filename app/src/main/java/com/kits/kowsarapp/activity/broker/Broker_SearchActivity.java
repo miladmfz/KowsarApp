@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -27,6 +28,8 @@ import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.broker.Broker_GoodAdapter;
 import com.kits.kowsarapp.adapter.broker.Broker_GroupLableAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.LatestRequestGate;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.application.broker.Broker_ProSearch;
 import com.kits.kowsarapp.databinding.BrokerActivitySearchBinding;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
@@ -45,8 +48,10 @@ public class Broker_SearchActivity extends AppCompatActivity {
     Menu item_multi;
     Dialog dialog1;
     Intent intent;
-    Handler handler;
-    Handler keyboardHandler = new Handler();
+    final Handler handler = new Handler(Looper.getMainLooper());
+    final Handler lifecycleHandler = new Handler(Looper.getMainLooper());
+    final Handler keyboardHandler = new Handler(Looper.getMainLooper());
+    final LatestRequestGate dataRequestGate = new LatestRequestGate();
     CallMethod callMethod;
     GridLayoutManager gridLayoutManager;
 
@@ -79,6 +84,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
     //*************************************************
     private final Runnable keyboardRunnable = () -> {
+        if (!isUiActive()) return;
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(binding.bSearchAEdtsearch.getWindowToken(),
                 0
@@ -104,8 +110,8 @@ public class Broker_SearchActivity extends AppCompatActivity {
         Config();
 
         try {
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
+            lifecycleHandler.postDelayed(() -> {
+                if (!isUiActive()) return;
                 if (broker_dbh.GetColumnscount().equals("0")) {
                     callMethod.showToast("تنظیم جدول از سمت دیتابیس مشکل دارد");
                     finish();
@@ -114,7 +120,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
                     init();
                 }
             }, 100);
-            handler.postDelayed(dialog1::dismiss, 1000);
+            lifecycleHandler.postDelayed(this::dismissLoadingDialog, 1000);
         } catch (Exception e) {
             callMethod.Log(e.getMessage());
         }
@@ -126,17 +132,15 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
         callMethod = new CallMethod(this);
         broker_dbh = new Broker_DBH(this, callMethod.ReadString("DatabaseName"));
-        handler = new Handler();
-        grid = Integer.parseInt(callMethod.ReadString("Grid"));
+        grid = Math.max(1, SafeValueParser.intOrDefault(callMethod.ReadString("Grid"), 1));
 
     }
 
     public void intent() {
         Bundle data = getIntent().getExtras();
-        assert data != null;
-        AutoSearch = data.getString("scan");
-        id = data.getString("id");
-        title = data.getString("title");
+        AutoSearch = data == null ? "" : safeString(data.getString("scan"), "");
+        id = data == null ? "0" : safeString(data.getString("id"), "0");
+        title = data == null ? "" : safeString(data.getString("title"), "");
     }
 
     //
@@ -192,8 +196,10 @@ public class Broker_SearchActivity extends AppCompatActivity {
                     @Override
                     public void afterTextChanged(final Editable editable) {
                         handler.removeCallbacksAndMessages(null);
+                        String query = editable == null ? "" : editable.toString();
                         handler.postDelayed(() -> {
-                            AutoSearch = editable.toString();
+                            if (!isUiActive()) return;
+                            AutoSearch = query;
                             proSearchCondition = "";
                             GetDataFromDataBase();
                             binding.bSearchAEdtsearch.setFocusable(true);
@@ -207,12 +213,12 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
                                 keyboardHandler.removeCallbacks(keyboardRunnable);
                                 keyboardHandler.postDelayed(keyboardRunnable,
-                                        Integer.parseInt(callMethod.ReadString("Delay")) + Integer.parseInt(callMethod.ReadString("Delay"))
+                                        safeSearchDelay() * 2L
                                 );
 
                             }
 
-                        }, Integer.parseInt(callMethod.ReadString("Delay")));
+                        }, safeSearchDelay());
 
 
                     }
@@ -331,19 +337,32 @@ public class Broker_SearchActivity extends AppCompatActivity {
                             } else {
                                 temppercent = NumberFunctions.EnglishNumber(unitratio_mlti.getText().toString());
                             }
-                            if (Double.parseDouble(good.getGoodFieldValue("MaxSellPrice")) > 0) {
-                                long Pricetemp = (long) Integer.parseInt(good.getGoodFieldValue("MaxSellPrice")) - ((long) Double.parseDouble(good.getGoodFieldValue("MaxSellPrice")) * Integer.parseInt(temppercent) / 100);
-                                broker_dbh.InsertPreFactorwithPercent(callMethod.ReadString("PreFactorCode"),
+                            double maxSellPrice = Double.parseDouble(good.getGoodFieldValue("MaxSellPrice"));
+                            double percent = Double.parseDouble(temppercent);
+
+                            if (maxSellPrice > 0) {
+
+                                long priceTemp = (long) (
+                                        maxSellPrice - (maxSellPrice * percent / 100.0)
+                                );
+
+                                broker_dbh.InsertPreFactorwithPercent(
+                                        callMethod.ReadString("PreFactorCode"),
                                         good.getGoodFieldValue("GoodCode"),
                                         AmountMulti,
-                                        String.valueOf(Pricetemp),
-                                        "0");
+                                        String.valueOf(priceTemp),
+                                        "0"
+                                );
+
                             } else {
-                                broker_dbh.InsertPreFactor(callMethod.ReadString("PreFactorCode"),
+
+                                broker_dbh.InsertPreFactor(
+                                        callMethod.ReadString("PreFactorCode"),
                                         good.getGoodFieldValue("GoodCode"),
                                         AmountMulti,
                                         "0",
-                                        "0");
+                                        "0"
+                                );
                             }
                         }
                         callMethod.showToast("به سبد خرید اضافه شد");
@@ -387,7 +406,8 @@ public class Broker_SearchActivity extends AppCompatActivity {
                     if (loading) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount - 1) {
                             loading = false;
-                            PageMoreData = String.valueOf(Integer.parseInt(PageMoreData) + 1);
+                            PageMoreData = String.valueOf(
+                                    SafeValueParser.intOrDefault(PageMoreData, 0) + 1);
                             binding.bSearchAProg.setVisibility(View.VISIBLE);
                             GetMoreDataFromDataBase();
                         }
@@ -412,7 +432,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.b_bag_shop) {
-            if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) != 0) {
+            if (SafeValueParser.intOrDefault(callMethod.ReadString("PreFactorCode"), 0) != 0) {
                 intent = new Intent(this, Broker_BasketActivity.class);
                 intent.putExtra("PreFac", callMethod.ReadString("PreFactorCode"));
                 startActivity(intent);
@@ -442,6 +462,8 @@ public class Broker_SearchActivity extends AppCompatActivity {
     }
 
     public void GetDataFromDataBase() {
+        if (!isUiActive()) return;
+        final int requestToken = dataRequestGate.begin();
 
         goods.clear();
         Multi_Good.clear();
@@ -461,8 +483,9 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void onResult(ArrayList<Good> result) {
+                        if (!dataRequestGate.isCurrent(requestToken) || !isUiActive()) return;
 
-                        Moregoods = result;
+                        Moregoods = result == null ? new ArrayList<>() : result;
 
                         if (goods.isEmpty()) {
                             goods.addAll(Moregoods);
@@ -473,8 +496,9 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Exception e) {
+                        if (!dataRequestGate.isCurrent(requestToken) || !isUiActive()) return;
 
-                        callMethod.Log(e.getMessage());
+                        callMethod.Log(e == null ? "Broker search failed" : e.getClass().getSimpleName());
 
                         binding.bSearchAProg.setVisibility(View.GONE);
 
@@ -504,6 +528,8 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     public void GetMoreDataFromDataBase() {
+        if (!isUiActive()) return;
+        final int requestToken = dataRequestGate.begin();
 
         Moregoods.clear();
 
@@ -512,8 +538,9 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void onResult(ArrayList<Good> result) {
+                        if (!dataRequestGate.isCurrent(requestToken) || !isUiActive()) return;
 
-                        Moregoods = result;
+                        Moregoods = result == null ? new ArrayList<>() : result;
 
                         if (Moregoods.size() > 0) {
 
@@ -521,7 +548,7 @@ public class Broker_SearchActivity extends AppCompatActivity {
                                 goods.addAll(Moregoods);
                             }
 
-                            if (goods.size() > (Integer.parseInt(callMethod.ReadString("Grid")) * 10)) {
+                            if (goods.size() > (grid * 10)) {
                                 goods.addAll(Moregoods);
                             }
 
@@ -541,15 +568,16 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
                             PageMoreData =
                                     String.valueOf(
-                                            Integer.parseInt(PageMoreData) - 1
+                                            Math.max(0, SafeValueParser.intOrDefault(PageMoreData, 1) - 1)
                                     );
                         }
                     }
 
                     @Override
                     public void onError(Exception e) {
+                        if (!dataRequestGate.isCurrent(requestToken) || !isUiActive()) return;
 
-                        callMethod.Log(e.getMessage());
+                        callMethod.Log(e == null ? "Broker paging failed" : e.getClass().getSimpleName());
 
                         binding.bSearchAProg.setVisibility(View.GONE);
 
@@ -617,16 +645,20 @@ public class Broker_SearchActivity extends AppCompatActivity {
     }
 
     public void RefreshState() {
+        if (!isUiActive()) return;
 
         binding.bSearchAEdtsearch.selectAll();
 
-        if (Integer.parseInt(callMethod.ReadString("PreFactorCode")) == 0) {
+        if (SafeValueParser.intOrDefault(callMethod.ReadString("PreFactorCode"), 0) == 0) {
             binding.bSearchACustomer.setText("فاکتوری انتخاب نشده");
             binding.bSearchALlSumFactor.setVisibility(View.GONE);
         } else {
             binding.bSearchALlSumFactor.setVisibility(View.VISIBLE);
             binding.bSearchACustomer.setText(NumberFunctions.PerisanNumber(broker_dbh.getFactorCustomer(callMethod.ReadString("PreFactorCode"))));
-            binding.bSearchASumFactor.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Double.parseDouble(broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode"))))));
+            double factorSum = SafeValueParser.doubleOrDefault(
+                    broker_dbh.getFactorSum(callMethod.ReadString("PreFactorCode")), 0.0);
+            binding.bSearchASumFactor.setText(
+                    NumberFunctions.PerisanNumber(decimalFormat.format(factorSum)));
         }
 
         if (callMethod.ReadBoolan("ActiveStack")) {
@@ -663,10 +695,44 @@ public class Broker_SearchActivity extends AppCompatActivity {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        RefreshState();
+        if (hasFocus) RefreshState();
 
 
         super.onWindowFocusChanged(hasFocus);
+    }
+
+    private int safeSearchDelay() {
+        return Math.max(0, SafeValueParser.intOrDefault(callMethod.ReadString("Delay"), 300));
+    }
+
+    private static String safeString(String value, String fallback) {
+        return value == null ? fallback : value;
+    }
+
+    private boolean isUiActive() {
+        return binding != null && !isFinishing() && !isDestroyed();
+    }
+
+    private void dismissLoadingDialog() {
+        if (dialog1 != null && dialog1.isShowing() && !isFinishing()) {
+            dialog1.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        dataRequestGate.invalidate();
+        handler.removeCallbacksAndMessages(null);
+        lifecycleHandler.removeCallbacksAndMessages(null);
+        keyboardHandler.removeCallbacksAndMessages(null);
+        if (dialog1 != null && dialog1.isShowing()) {
+            dialog1.dismiss();
+        }
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+        }
+        binding = null;
+        super.onDestroy();
     }
 }
 

@@ -13,10 +13,11 @@ public class APIClient_kowsar {
 
     //private static final String BASE_URL_log = "http://itmali.ir/api/";
 
-    public static Retrofit getCleint_log() {
+    public static synchronized Retrofit getCleint_log() {
         if (t == null) {
             t = new Retrofit.Builder()
-                    .baseUrl(BASE_URL_log)
+                    .baseUrl(EndpointSecurityPolicy.normalizeFixedInfrastructureUrl(BASE_URL_log))
+                    .client(NetworkClientFactory.client())
                     .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                     .build();
         }

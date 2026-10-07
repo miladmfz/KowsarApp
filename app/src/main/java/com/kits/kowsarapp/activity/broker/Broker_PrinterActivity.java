@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -25,6 +24,7 @@ import com.bixolon.printer.BixolonPrinter;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.App;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ReleaseLog;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -988,7 +988,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                 case BixolonPrinter.MESSAGE_STATE_CHANGE:
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_STATE_CHANGE"
                     );
@@ -999,7 +999,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                             updateScreenStatus(layoutPrinterReady);
 
-                            Log.i(
+                            ReleaseLog.debug(
                                     "Handler",
                                     "BixolonPrinter.STATE_CONNECTED"
                             );
@@ -1014,7 +1014,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                             updateScreenStatus(layoutLoading);
 
-                            Log.i(
+                            ReleaseLog.debug(
                                     "Handler",
                                     "BixolonPrinter.STATE_CONNECTING"
                             );
@@ -1027,7 +1027,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                             updateScreenStatus(layoutLoading);
 
-                            Log.i(
+                            ReleaseLog.debug(
                                     "Handler",
                                     "BixolonPrinter.STATE_NONE"
                             );
@@ -1044,23 +1044,23 @@ public class Broker_PrinterActivity extends AppCompatActivity {
                     switch (msg.arg1) {
 
                         case BixolonPrinter.PROCESS_SET_SINGLE_BYTE_FONT:
-                            Log.i("Handler", "BixolonPrinter.PROCESS_SET_SINGLE_BYTE_FONT");
+                            ReleaseLog.debug("Handler", "BixolonPrinter.PROCESS_SET_SINGLE_BYTE_FONT");
                             break;
 
                         case BixolonPrinter.PROCESS_SET_DOUBLE_BYTE_FONT:
-                            Log.i("Handler", "BixolonPrinter.PROCESS_SET_DOUBLE_BYTE_FONT");
+                            ReleaseLog.debug("Handler", "BixolonPrinter.PROCESS_SET_DOUBLE_BYTE_FONT");
                             break;
 
                         case BixolonPrinter.PROCESS_DEFINE_NV_IMAGE:
-                            Log.i("Handler", "BixolonPrinter.PROCESS_DEFINE_NV_IMAGE");
+                            ReleaseLog.debug("Handler", "BixolonPrinter.PROCESS_DEFINE_NV_IMAGE");
                             break;
 
                         case BixolonPrinter.PROCESS_REMOVE_NV_IMAGE:
-                            Log.i("Handler", "BixolonPrinter.PROCESS_REMOVE_NV_IMAGE");
+                            ReleaseLog.debug("Handler", "BixolonPrinter.PROCESS_REMOVE_NV_IMAGE");
                             break;
 
                         case BixolonPrinter.PROCESS_UPDATE_FIRMWARE:
-                            Log.i("Handler", "BixolonPrinter.PROCESS_UPDATE_FIRMWARE");
+                            ReleaseLog.debug("Handler", "BixolonPrinter.PROCESS_UPDATE_FIRMWARE");
                             break;
                     }
 
@@ -1068,7 +1068,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                 case BixolonPrinter.MESSAGE_READ:
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_READ"
                     );
@@ -1083,7 +1083,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
                             )
                     );
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_DEVICE_NAME - " +
                                     msg.getData().getString(
@@ -1095,7 +1095,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                 case BixolonPrinter.MESSAGE_TOAST:
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_TOAST - " +
                                     msg.getData().getString("toast")
@@ -1105,7 +1105,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                 case BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET:
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_BLUETOOTH_DEVICE_SET"
                     );
@@ -1147,7 +1147,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                 case BixolonPrinter.MESSAGE_PRINT_COMPLETE:
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_PRINT_COMPLETE"
                     );
@@ -1156,7 +1156,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                 case BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP:
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_COMPLETE_PROCESS_BITMAP"
                     );
@@ -1165,19 +1165,19 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                 case MESSAGE_START_WORK:
 
-                    Log.i("Handler", "MESSAGE_START_WORK");
+                    ReleaseLog.debug("Handler", "MESSAGE_START_WORK");
 
                     break;
 
                 case MESSAGE_END_WORK:
 
-                    Log.i("Handler", "MESSAGE_END_WORK");
+                    ReleaseLog.debug("Handler", "MESSAGE_END_WORK");
 
                     break;
 
                 case BixolonPrinter.MESSAGE_USB_DEVICE_SET:
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_USB_DEVICE_SET"
                     );
@@ -1190,7 +1190,7 @@ public class Broker_PrinterActivity extends AppCompatActivity {
 
                 case BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET:
 
-                    Log.i(
+                    ReleaseLog.debug(
                             "Handler",
                             "BixolonPrinter.MESSAGE_NETWORK_DEVICE_SET"
                     );
@@ -1231,8 +1231,8 @@ public class Broker_PrinterActivity extends AppCompatActivity {
                     Thread.sleep(2000);
 
                 } catch (InterruptedException e) {
-
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    ReleaseLog.error("PrinterWorker", e);
                 }
             }
 
@@ -1505,5 +1505,13 @@ public class Broker_PrinterActivity extends AppCompatActivity {
         v.draw(c);
 
         return b;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+        }
+        super.onDestroy();
     }
 }

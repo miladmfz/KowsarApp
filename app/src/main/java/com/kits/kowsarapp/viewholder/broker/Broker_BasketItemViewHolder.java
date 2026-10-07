@@ -19,6 +19,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.broker.Broker_BasketActivity;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.ReleaseLog;
 import com.kits.kowsarapp.application.base.ImageInfo;
 import com.kits.kowsarapp.application.broker.Broker_Action;
 import com.kits.kowsarapp.model.broker.Broker_DBH;
@@ -96,7 +97,7 @@ public class Broker_BasketItemViewHolder extends RecyclerView.ViewHolder {
             }
         } catch (Exception e) {
             offer.setText("");
-            e.printStackTrace();
+            ReleaseLog.error("BrokerBasket", e);
         }
 
 

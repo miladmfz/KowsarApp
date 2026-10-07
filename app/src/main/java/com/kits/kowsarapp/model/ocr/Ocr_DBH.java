@@ -1,319 +1,291 @@
 package com.kits.kowsarapp.model.ocr;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.base.Factor;
-import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.Utilities;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 
 public class Ocr_DBH extends SQLiteOpenHelper {
 
-    CallMethod callMethod;
-    ArrayList<Good> goods;
-    Context context;
-    Cursor cursor;
+    private static final int DATABASE_VERSION = 1;
 
-    String query = "";
-
-    boolean SH_ArabicText;
-
-
+    private final CallMethod callMethod;
+    private boolean SH_ArabicText;
 
     public Ocr_DBH(Context context, String DATABASE_NAME) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.callMethod = new CallMethod(context);
-        this.goods = new ArrayList<>();
-        this.context = context;
-
     }
 
     public void GetPreference() {
-
-
         this.SH_ArabicText = callMethod.ReadBoolan("ArabicText");
     }
 
-
-
     public void DatabaseCreate() {
         callMethod.Log("Ocr DatabaseCreate");
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS FactorScan (RowCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE " +
-                ", AppOCRFactorCode TEXT" +
-                ", FactorBarcode TEXT" +
-                ", FactorPrivateCode TEXT" +
-                ", FactorImage TEXT" +
-                ", CameraImage TEXT" +
-                ", SignatureImage TEXT" +
-                ", FactorDate TEXT" +
-                ", ScanDate TEXT" +
-                ", IsSent TEXT" +
-                ", CustomerName TEXT" +
-                ", CustomerCode TEXT" +
-                ", Deliverer TEXT" +
-                ", DbName TEXT)");
+        SQLiteDatabase database = getWritableDatabase();
+        database.beginTransaction();
+        try {
+            database.execSQL("CREATE TABLE IF NOT EXISTS FactorScan (RowCode INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE " +
+                    ", AppOCRFactorCode TEXT" +
+                    ", FactorBarcode TEXT" +
+                    ", FactorPrivateCode TEXT" +
+                    ", FactorImage TEXT" +
+                    ", CameraImage TEXT" +
+                    ", SignatureImage TEXT" +
+                    ", FactorDate TEXT" +
+                    ", ScanDate TEXT" +
+                    ", IsSent TEXT" +
+                    ", CustomerName TEXT" +
+                    ", CustomerCode TEXT" +
+                    ", Deliverer TEXT" +
+                    ", DbName TEXT)");
 
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailReader (PackDetailReader INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Reader TEXT )");
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailControler (PackDetailControler INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Controler TEXT)");
-        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailpack (PackDetailpack INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , pack TEXT)");
+            database.execSQL("CREATE TABLE IF NOT EXISTS PackDetailReader (PackDetailReader INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Reader TEXT )");
+            database.execSQL("CREATE TABLE IF NOT EXISTS PackDetailControler (PackDetailControler INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Controler TEXT)");
+            database.execSQL("CREATE TABLE IF NOT EXISTS PackDetailpack (PackDetailpack INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , pack TEXT)");
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
+        }
     }
-
-
-
 
     @SuppressLint("Range")
     public ArrayList<Factor> factorscan(String IsSent, String SearchTarget, String signature) {
-        String query = "SELECT *  FROM FactorScan ";
-        String cond = "";
-        SearchTarget = SearchTarget.replaceAll(" ", "%");
-        if (SearchTarget.equals("")) {
-            cond = "Where 1=1";
-        } else {
-            cond = "Where (" +
-                    "FactorBarcode Like '%" + SearchTarget + "%' or " +
-                    "FactorPrivateCode Like '%" + SearchTarget + "%' or " +
-                    "CustomerCode Like '%" + SearchTarget + "%' or " +
-                    "CustomerName Like '%" + GetPersianText(SearchTarget) + "%' or " +
-                    "CustomerName Like '%" + GetArabicText(SearchTarget) + "%'" +
-                    ")";
+        String normalizedSearch = SearchTarget == null ? "" : SearchTarget.replace(" ", "%");
+        ArrayList<String> conditions = new ArrayList<>();
+        ArrayList<String> arguments = new ArrayList<>();
+
+        if (!normalizedSearch.isEmpty()) {
+            conditions.add("(FactorBarcode LIKE ? OR FactorPrivateCode LIKE ? OR CustomerCode LIKE ? OR CustomerName LIKE ? OR CustomerName LIKE ?)");
+            arguments.add("%" + normalizedSearch + "%");
+            arguments.add("%" + normalizedSearch + "%");
+            arguments.add("%" + normalizedSearch + "%");
+            arguments.add("%" + GetPersianText(normalizedSearch) + "%");
+            arguments.add("%" + GetArabicText(normalizedSearch) + "%");
         }
 
-        if (IsSent.equals("0")) {
-            cond = cond + " And IsSent = '0' ";
+        if ("0".equals(IsSent)) {
+            conditions.add("IsSent = ?");
+            arguments.add("0");
         }
 
-        if (signature.equals("1")) {
-             cond = cond+" And SignatureImage = '' ";
+        if ("1".equals(signature)) {
+            conditions.add("SignatureImage = ?");
+            arguments.add("");
         }
 
-        query = query + cond;
-        query=query+" Order By FactorBarcode DESC";
+        StringBuilder sql = new StringBuilder("SELECT * FROM FactorScan WHERE 1=1");
+        for (String condition : conditions) {
+            sql.append(" AND ").append(condition);
+        }
+        sql.append(" ORDER BY FactorBarcode DESC");
 
-
-        ArrayList<Factor> factors = new ArrayList<Factor>();
-
-        callMethod.Log("query = "+ query);
-
-        cursor = getWritableDatabase().rawQuery(query, null);
-        if (cursor != null) {
+        ArrayList<Factor> factors = new ArrayList<>();
+        callMethod.Log("Ocr factorscan query executed");
+        try (Cursor cursor = getReadableDatabase().rawQuery(
+                sql.toString(), arguments.toArray(new String[0]))) {
             while (cursor.moveToNext()) {
-                Factor factor_detail = new Factor();
-                factor_detail.setAppOCRFactorCode(cursor.getString(cursor.getColumnIndex("AppOCRFactorCode")));
-                factor_detail.setFactorBarcode(cursor.getString(cursor.getColumnIndex("FactorBarcode")));
-                factor_detail.setFactorPrivateCode(cursor.getString(cursor.getColumnIndex("FactorPrivateCode")));
-                factor_detail.setSignatureImage(cursor.getString(cursor.getColumnIndex("SignatureImage")));
-                factor_detail.setFactorImage(cursor.getString(cursor.getColumnIndex("FactorImage")));
-                factor_detail.setCameraImage(cursor.getString(cursor.getColumnIndex("CameraImage")));
-                factor_detail.setFactorDate(cursor.getString(cursor.getColumnIndex("FactorDate")));
-                factor_detail.setScanDate(cursor.getString(cursor.getColumnIndex("ScanDate")));
-                factor_detail.setIsSent(cursor.getString(cursor.getColumnIndex("IsSent")));
-                factor_detail.setCustName(cursor.getString(cursor.getColumnIndex("CustomerName")));
-                factor_detail.setCustomerCode(cursor.getString(cursor.getColumnIndex("CustomerCode")));
-                factor_detail.setDeliverer(cursor.getString(cursor.getColumnIndex("Deliverer")));
-                factor_detail.setDbname(cursor.getString(cursor.getColumnIndex("DbName")));
-                factor_detail.setCheck(false);
-
-                factors.add(factor_detail);
+                Factor factorDetail = new Factor();
+                factorDetail.setAppOCRFactorCode(cursor.getString(cursor.getColumnIndex("AppOCRFactorCode")));
+                factorDetail.setFactorBarcode(cursor.getString(cursor.getColumnIndex("FactorBarcode")));
+                factorDetail.setFactorPrivateCode(cursor.getString(cursor.getColumnIndex("FactorPrivateCode")));
+                factorDetail.setSignatureImage(cursor.getString(cursor.getColumnIndex("SignatureImage")));
+                factorDetail.setFactorImage(cursor.getString(cursor.getColumnIndex("FactorImage")));
+                factorDetail.setCameraImage(cursor.getString(cursor.getColumnIndex("CameraImage")));
+                factorDetail.setFactorDate(cursor.getString(cursor.getColumnIndex("FactorDate")));
+                factorDetail.setScanDate(cursor.getString(cursor.getColumnIndex("ScanDate")));
+                factorDetail.setIsSent(cursor.getString(cursor.getColumnIndex("IsSent")));
+                factorDetail.setCustName(cursor.getString(cursor.getColumnIndex("CustomerName")));
+                factorDetail.setCustomerCode(cursor.getString(cursor.getColumnIndex("CustomerCode")));
+                factorDetail.setDeliverer(cursor.getString(cursor.getColumnIndex("Deliverer")));
+                factorDetail.setDbname(cursor.getString(cursor.getColumnIndex("DbName")));
+                factorDetail.setCheck(false);
+                factors.add(factorDetail);
             }
         }
-
-        assert cursor != null;
-        cursor.close();
         return factors;
     }
 
     @SuppressLint("Range")
     public String getimagefromfactor(String FactorBarcode, String ImageRequest) {
-        String bitmap_String = "";
-        String query = "SELECT *  FROM FactorScan Where FactorBarcode= '"+FactorBarcode+"'";
+        if (!isImageColumn(ImageRequest)) {
+            return "";
+        }
 
-
-        cursor = getWritableDatabase().rawQuery(query, null);
-
-        callMethod.Log("query=" + query);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                bitmap_String =cursor.getString(cursor.getColumnIndex(ImageRequest));
+        try (Cursor cursor = getReadableDatabase().query(
+                "FactorScan",
+                new String[]{ImageRequest},
+                "FactorBarcode = ?",
+                new String[]{legacyText(FactorBarcode)},
+                null,
+                null,
+                null)) {
+            if (cursor.moveToFirst()) {
+                String value = cursor.getString(cursor.getColumnIndex(ImageRequest));
+                return value == null ? "" : value;
             }
         }
-        cursor.close();
-        return bitmap_String;
+        return "";
     }
 
-    @SuppressLint("Range")
-    public String GetRegionText(String String) {
+    private boolean isImageColumn(String columnName) {
+        return "SignatureImage".equals(columnName)
+                || "FactorImage".equals(columnName)
+                || "CameraImage".equals(columnName);
+    }
+
+    public String GetRegionText(String value) {
         GetPreference();
-        if(SH_ArabicText) {
-            //arabic
-            query = "Select Replace(Replace(Cast('" + String + "' as nvarchar(500)),char(1740),char(1610)),char(1705),char(1603)) result  ";
-        }else{
-            //Persian
-            query = "Select Replace(Replace(Cast('" + String + "' as nvarchar(500)),char(1610),char(1740)),char(1603),char(1705)) result  " ;
+        return SH_ArabicText ? GetArabicText(value) : GetPersianText(value);
+    }
+
+    public String GetPersianText(String value) {
+        return OcrTextNormalizer.toPersian(value);
+    }
+
+    public String GetArabicText(String value) {
+        return OcrTextNormalizer.toArabic(value);
+    }
+
+    public void InsertScan(String AppOCRFactorCode, String factorbarcode, String factorprivatecode,
+                           String FactorDate, String customername, String customercode) {
+        SQLiteDatabase database = getWritableDatabase();
+        database.beginTransaction();
+        try (Cursor cursor = database.query(
+                "FactorScan",
+                new String[]{"RowCode"},
+                "FactorBarcode = ?",
+                new String[]{legacyText(factorbarcode)},
+                null,
+                null,
+                null,
+                "1")) {
+            if (cursor.moveToFirst()) {
+                callMethod.showToast("ظپط§ع©طھظˆط± ط§ط³ع©ظ† ط´ط¯ظ‡ ط§ط³طھ");
+            } else {
+                ContentValues values = new ContentValues();
+                values.put("AppOCRFactorCode", legacyText(AppOCRFactorCode));
+                values.put("FactorBarcode", legacyText(factorbarcode));
+                values.put("FactorPrivateCode", legacyText(factorprivatecode));
+                values.put("SignatureImage", "");
+                values.put("FactorImage", "");
+                values.put("CameraImage", "");
+                values.put("IsSent", "0");
+                values.put("FactorDate", legacyText(FactorDate));
+                values.put("ScanDate", Utilities.getCurrentShamsidate());
+                values.put("CustomerName", legacyText(customername));
+                values.put("CustomerCode", legacyText(customercode));
+                values.put("Deliverer", callMethod.ReadString("Deliverer"));
+                values.put("DbName", callMethod.ReadString("FactorDbName"));
+                database.insertOrThrow("FactorScan", null, values);
+            }
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
-
-        cursor = getWritableDatabase().rawQuery(query, null);
-        cursor.moveToFirst();
-        String result = cursor.getString(cursor.getColumnIndex("result"));
-        cursor.close();
-
-        return result;
     }
-
-    @SuppressLint("Range")
-    public String GetPersianText(String String) {
-        query = "Select Replace(Replace(Cast('" + String + "' as nvarchar(500)),char(1610),char(1740)),char(1603),char(1705)) result  " ;
-        cursor = getWritableDatabase().rawQuery(query, null);
-        cursor.moveToFirst();
-        String result = cursor.getString(cursor.getColumnIndex("result"));
-        cursor.close();
-        return result;
-    }
-
-    @SuppressLint("Range")
-    public String GetArabicText(String String) {
-        query = "Select Replace(Replace(Cast('" + String + "' as nvarchar(500)),char(1740),char(1610)),char(1705),char(1603)) result  ";
-        cursor = getWritableDatabase().rawQuery(query, null);
-        cursor.moveToFirst();
-        String result = cursor.getString(cursor.getColumnIndex("result"));
-        cursor.close();
-        return result;
-    }
-
-
-    public void InsertScan(String AppOCRFactorCode,String factorbarcode, String factorprivatecode, String FactorDate, String customername, String customercode) {
-        String Date = Utilities.getCurrentShamsidate();
-        String query = "SELECT *  FROM FactorScan where FactorBarcode = '"+factorbarcode+"'";
-
-        cursor = getWritableDatabase().rawQuery(query, null);
-
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            callMethod.showToast("فاکتور اسکن شده است");
-        } else {
-            getWritableDatabase().execSQL("INSERT INTO FactorScan(AppOCRFactorCode,FactorBarcode, FactorPrivateCode, SignatureImage, FactorImage, CameraImage,IsSent, FactorDate, ScanDate, CustomerName, CustomerCode,Deliverer,DbName)" +
-                    " VALUES ('"+AppOCRFactorCode+"','"+factorbarcode+"', '"+factorprivatecode+"', '','','', '0', '"+FactorDate+"', '"+Date+"', '"+customername+"', '"+customercode+"', '"+callMethod.ReadString("Deliverer")+"','"+callMethod.ReadString("FactorDbName")+"')");
-
-        }
-        cursor.close();
-    }
-
-
-
-
 
     public void Insert_signature(String factorbarcode, String Image) {
-
-        String sq="Update FactorScan set SignatureImage= '" + Image + "' where FactorBarcode = '"+ factorbarcode+"'";
-        getWritableDatabase().execSQL(sq);
-
+        updateFactorValue("SignatureImage", Image, factorbarcode);
     }
-//
-//
-//    public void DeleteLastWeek() throws ParseException {
-//        String query = "SELECT date('now','-10 day') As xDay";
-//        Cursor dc = getWritableDatabase().rawQuery(query, null);
-//        dc.moveToFirst();
-//
-//        Utilities utilities = new Utilities();
-//        SimpleDateFormat frmt = new SimpleDateFormat("yyyy-MM-dd");
-//        @SuppressLint("Range") Date mDate = frmt.parse(dc.getString(dc.getColumnIndex("xDay")));
-//        String xDate = utilities.getShamsidate(mDate);
-//
-//        String sq="Delete from  FactorScan Where ScanDate <="+xDate;
-//        getWritableDatabase().execSQL(sq);
-//
-//    }
 
     public ArrayList<String> Packdetail(String Key) {
+        ArrayList<String> packDetails = new ArrayList<>();
+        packDetails.add("");
 
-        ArrayList<String> Packdetails = new ArrayList<String>();
-        String query ="";
-        Packdetails.add("");
-        switch (Key) {
-            case "Reader":
-                query="SELECT Reader  FROM PackDetailReader";
-                break;
-            case "Controler":
-                query="SELECT Controler  FROM PackDetailControler";
-                break;
-            case "pack":
-                query="SELECT pack  FROM PackDetailpack";
-                break;
+        String tableName = packDetailTable(Key);
+        if (tableName == null) {
+            return packDetails;
         }
 
-        cursor = getWritableDatabase().rawQuery(query, null);
-        if (cursor != null) {
+        try (Cursor cursor = getReadableDatabase().query(
+                tableName,
+                new String[]{Key},
+                null,
+                null,
+                null,
+                null,
+                null)) {
+            int valueIndex = cursor.getColumnIndex(Key);
             while (cursor.moveToNext()) {
-
-                @SuppressLint("Range") String s=cursor.getString(cursor.getColumnIndex(Key));
-                Packdetails.add(s);
+                packDetails.add(cursor.getString(valueIndex));
             }
         }
-        assert cursor != null;
-        cursor.close();
-
-        return Packdetails;
+        return packDetails;
     }
 
     public void Insert_Packdetail(String Key, String value) {
-        switch (Key) {
-            case "Reader":
-                getWritableDatabase().execSQL("INSERT INTO PackDetailReader(Reader) VALUES ('" + value + "')");
-                break;
-            case "Controler":
-                getWritableDatabase().execSQL("INSERT INTO PackDetailControler(Controler) VALUES ('" + value + "')");
-                break;
-            case "pack":
-                getWritableDatabase().execSQL("INSERT INTO PackDetailpack(pack) VALUES ('" + value + "')");
-                break;
+        String tableName = packDetailTable(Key);
+        if (tableName == null) {
+            return;
         }
+
+        ContentValues values = new ContentValues();
+        values.put(Key, legacyText(value));
+        getWritableDatabase().insertOrThrow(tableName, null, values);
+    }
+
+    private String packDetailTable(String key) {
+        if ("Reader".equals(key)) {
+            return "PackDetailReader";
+        }
+        if ("Controler".equals(key)) {
+            return "PackDetailControler";
+        }
+        if ("pack".equals(key)) {
+            return "PackDetailpack";
+        }
+        return null;
     }
 
     public void Insert_factorImage(String factorbarcode, String Image) {
-
-        String sq="Update FactorScan set FactorImage= '" + Image + "' where FactorBarcode = '"+ factorbarcode+"'";
-        getWritableDatabase().execSQL(sq);
-
+        updateFactorValue("FactorImage", Image, factorbarcode);
     }
 
-    public void  Insert_cameraImage(String factorbarcode, String Image) {
-
-        String sq="Update FactorScan set CameraImage= '" + Image + "' where FactorBarcode = '"+ factorbarcode+"'";
-        getWritableDatabase().execSQL(sq);
-
+    public void Insert_cameraImage(String factorbarcode, String Image) {
+        updateFactorValue("CameraImage", Image, factorbarcode);
     }
 
     public void Insert_IsSent(String factorbarcode) {
+        updateFactorValue("IsSent", "1", factorbarcode);
+    }
 
-        String sq="Update FactorScan set IsSent= '1' where FactorBarcode = '"+ factorbarcode+"'";
-
-        getWritableDatabase().execSQL(sq);
-
+    private void updateFactorValue(String columnName, String value, String factorBarcode) {
+        ContentValues values = new ContentValues();
+        values.put(columnName, legacyText(value));
+        getWritableDatabase().update(
+                "FactorScan",
+                values,
+                "FactorBarcode = ?",
+                new String[]{legacyText(factorBarcode)});
     }
 
     public void deletescan(String barcode) {
-        String query = " Delete From FactorScan Where FactorBarcode= '" + barcode+"'";
-        getWritableDatabase().execSQL(query);
+        getWritableDatabase().delete(
+                "FactorScan",
+                "FactorBarcode = ?",
+                new String[]{legacyText(barcode)});
     }
 
+    private static String legacyText(String value) {
+        return String.valueOf(value);
+    }
 
-        @Override
+    @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
     }
+
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
     }
 }

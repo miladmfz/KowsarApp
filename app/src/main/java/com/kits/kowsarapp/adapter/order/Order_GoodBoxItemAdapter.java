@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.order.Order_NetworkFailure;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
 import com.kits.kowsarapp.viewholder.order.Order_GoodBoxItemViewHolder;
@@ -85,35 +85,22 @@ public class Order_GoodBoxItemAdapter extends RecyclerView.Adapter<Order_GoodBox
                         @SuppressLint("NotifyDataSetChanged")
                         @Override
                         public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                            if (response.isSuccessful()) {
-                                assert response.body() != null;
-                                if (response.body().getText().equals("Done")) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                if ("Done".equals(response.body().getText())) {
                                     goods.remove(good);
                                     notifyDataSetChanged();
+                                } else {
+                                    callMethod.showToast("حذف کالا توسط سرور تأیید نشد");
                                 }
+                            } else {
+                                callMethod.showToast("پاسخ حذف کالا معتبر نیست");
                             }
                         }
 
                         @Override
                         public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                            try {
-                                // 🟢 بررسی وضعیت اتصال
-                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                    callMethod.showToast("اتصال اینترنت قطع است!");
-                                } else if (NetworkUtils.isVPNActive()) {
-                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                } else {
-                                    String serverUrl = callMethod.ReadString("ServerURLUse");
-                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                    } else {
-                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                    }
-                                }
-                            } catch (Exception e) {
-                                callMethod.Log("Network check error: " + e.getMessage());
-                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                            }
+                            Order_NetworkFailure.show(mContext, callMethod,
+                                    "DeleteGoodFromBasket", call, t);
                         }
                     });
 
@@ -139,6 +126,12 @@ public class Order_GoodBoxItemAdapter extends RecyclerView.Adapter<Order_GoodBox
     @Override
     public int getItemCount() {
         return goods.size();
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        if (call != null) call.cancel();
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 
 

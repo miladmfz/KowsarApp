@@ -1,5 +1,6 @@
 package com.kits.kowsarapp.viewholder.find;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.util.Base64;
@@ -21,8 +22,10 @@ import com.google.android.material.card.MaterialCardView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.activity.find.Find_SearchActivity;
 
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.LatestRequestGate;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.application.find.Find_Action;
 import com.kits.kowsarapp.model.base.Column;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -37,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +55,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
 
     private final Context mContext;
+    private final LatestRequestGate imageRequestGate = new LatestRequestGate();
     CallMethod callMethod;
 
     Find_DBH find_dbh;
@@ -90,12 +93,16 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
         for (Column Column : Columns) {
 
-            if (Integer.parseInt(Column.getSortOrder()) > 1) {
+            if (SafeValueParser.intOrDefault(Column.getSortOrder(), 0) > 1) {
                 TextView extra_TextView = new TextView(mContext);
                 extra_TextView.setText(NumberFunctions.PerisanNumber(good.getGoodFieldValue(Column.getColumnFieldValue("columnname"))));
                 extra_TextView.setBackgroundResource(R.color.white);
                 extra_TextView.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
-                extra_TextView.setTextSize(Integer.parseInt(callMethod.ReadString("BodySize")));
+                extra_TextView.setTextSize(
+                        Math.max(1, SafeValueParser.intOrDefault(
+                                callMethod.ReadString("BodySize"), 16
+                        ))
+                );
                 extra_TextView.setGravity(Gravity.CENTER);
                 extra_TextView.setTextColor(mContext.getColor(R.color.grey_1000));
 
@@ -139,7 +146,9 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
                 final Dialog dialog = new Dialog(mContext);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                }
                 dialog.setContentView(R.layout.find_selectedfeild);
 
 
@@ -163,6 +172,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                 dialog.show();
                 selectedfeild_et1.requestFocus();
                 selectedfeild_et1.postDelayed(() -> {
+                    if (!isContextActive() || !dialog.isShowing()) return;
                     InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.showSoftInput(selectedfeild_et1, InputMethodManager.SHOW_IMPLICIT);
                 }, 500);
@@ -200,43 +210,42 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                     call2.enqueue(new Callback<RetrofitResponse>() {
                         @Override
                         public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                            good.setGoodFieldValue("GoodName",NumberFunctions.EnglishNumber(GoodName_str));
-                            good.setGoodFieldValue("MaxSellPrice",NumberFunctions.EnglishNumber(MaxSellPrice_str));
-                            good.setGoodFieldValue("GoodExplain3",NumberFunctions.EnglishNumber(GoodExplain3_str));
-                            good.setGoodFieldValue("SellPrice6",NumberFunctions.EnglishNumber(SellPrice6_str));
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful() && response.body() != null
+                                    && isContextActive()
+                                    && mContext instanceof Find_SearchActivity) {
+                                good.setGoodFieldValue("GoodName",NumberFunctions.EnglishNumber(GoodName_str));
+                                good.setGoodFieldValue("MaxSellPrice",NumberFunctions.EnglishNumber(MaxSellPrice_str));
+                                good.setGoodFieldValue("GoodExplain3",NumberFunctions.EnglishNumber(GoodExplain3_str));
+                                good.setGoodFieldValue("SellPrice6",NumberFunctions.EnglishNumber(SellPrice6_str));
                                 Find_SearchActivity activity = (Find_SearchActivity) mContext;
                                 activity.refresh();
                                 find_action.dialogdissmiss();
 
-                                assert response.body() != null;
-                                dialog.dismiss();
+                                if (dialog.isShowing()) dialog.dismiss();
                                 callMethod.showToast("ثبت گردید");
+                            } else {
+                                if (isContextActive()) {
+                                    find_action.dialogdissmiss();
+                                    if (dialog.isShowing()) dialog.dismiss();
+                                    callMethod.showToast("ثبت نگردید");
+                                }
                             }
                         }
 
                         @Override
                         public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                            try {
-                                // 🟢 بررسی وضعیت اتصال
-                                if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                                    callMethod.showToast("اتصال اینترنت قطع است!");
-                                } else if (NetworkUtils.isVPNActive()) {
-                                    callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                                } else {
-                                    String serverUrl = callMethod.ReadString("ServerURLUse");
-                                    if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                                        callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                                    } else {
-                                        callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                                    }
-                                }
-                            } catch (Exception e) {
-                                callMethod.Log("Network check error: " + e.getMessage());
-                                callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                            Base_NetworkFailure.show(
+                                    mContext,
+                                    callMethod,
+                                    "Find good detail update",
+                                    call,
+                                    t
+                            );
+                            if (isContextActive()) {
+                                find_action.dialogdissmiss();
+                                if (dialog.isShowing()) dialog.dismiss();
+                                callMethod.showToast("ثبت نگردید");
                             }
-                            dialog.dismiss();
-                            callMethod.showToast("ثبت نگردید");
 
                         }
                     });
@@ -259,6 +268,9 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
 
     public void callimage(Find_Good good){
 
+        imageRequestGate.invalidate();
+        if (call != null) call.cancel();
+
         if (!callMethod.ReadBoolan("ShowGoodImage")) {
             img.setVisibility(View.GONE);
 
@@ -274,7 +286,8 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                     .fitCenter()
                     .into(img);
 
-            if (!good.getGoodImageName().equals("")) {
+            String cachedImage = good.getGoodImageName();
+            if (cachedImage != null && !cachedImage.isEmpty()) {
                 Glide.with(img)
                         .asBitmap()
                         .load(R.drawable.img_white)
@@ -283,12 +296,7 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                         .into(img);
                 img.setVisibility(View.VISIBLE);
 
-                Glide.with(img)
-                        .asBitmap()
-                        .load(Base64.decode(good.getGoodFieldValue("GoodImageName"), Base64.DEFAULT))
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .fitCenter()
-                        .into(img);
+                loadImagePayload(cachedImage);
 
 
             } else {
@@ -301,49 +309,86 @@ public class Find_GoodItemViewHolder extends RecyclerView.ViewHolder {
                         .into(img);
                 img.setVisibility(View.VISIBLE);
 
+                int requestToken = imageRequestGate.begin();
                 call = find_apiInterface.GetImagefind("getImage",good.getGoodFieldValue("GoodCode"),0,150);
                 call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(Call<RetrofitResponse> call2, Response<RetrofitResponse> response) {
-                        if (response.isSuccessful()) {
+                        if (!canHandleImage(requestToken) || !response.isSuccessful()
+                                || response.body() == null) return;
 
-                            assert response.body() != null;
-                            try {
-                                if(!response.body().getText().equals("no_photo")) {
-                                    good.setGoodImageName(response.body().getText());
-                                    Glide.with(img)
-                                            .asBitmap()
-                                            .load(Base64.decode(response.body().getText(), Base64.DEFAULT))
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .fitCenter()
-                                            .into(img);
+                        String payload = response.body().getText();
+                        if (payload == null || payload.isEmpty() || payload.equals("no_photo")) {
+                            showNoPhoto();
+                            return;
+                        }
 
-                                } else {
-                                    Glide.with(img)
-                                            .asBitmap()
-                                            .load(R.drawable.img_base_no_photo)
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .fitCenter()
-                                            .into(img);
-
-                                }
-                            } catch (Exception e) {
-                                e.getMessage();
-                            }
-
-
+                        if (loadImagePayload(payload)) {
+                            good.setGoodImageName(payload);
                         }
                     }
                     @Override
                     public void onFailure(Call<RetrofitResponse> call2, Throwable t) {
-                        callMethod.Log(t.getMessage());
-
+                        if (call2.isCanceled() || !imageRequestGate.isCurrent(requestToken)) return;
+                        Base_NetworkFailure.logOnly(
+                                callMethod,
+                                "Find good image",
+                                call2,
+                                t
+                        );
                     }
                 });
             }
         }
 
 
+    }
+
+    private boolean loadImagePayload(String payload) {
+        if (!isContextActive()) return false;
+        try {
+            Glide.with(img)
+                    .asBitmap()
+                    .load(Base64.decode(payload, Base64.DEFAULT))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .fitCenter()
+                    .into(img);
+            return true;
+        } catch (IllegalArgumentException exception) {
+            callMethod.Log("Find image payload was invalid");
+            showNoPhoto();
+            return false;
+        }
+    }
+
+    private void showNoPhoto() {
+        if (!isContextActive()) return;
+        Glide.with(img)
+                .asBitmap()
+                .load(R.drawable.img_base_no_photo)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .fitCenter()
+                .into(img);
+    }
+
+    private boolean canHandleImage(int requestToken) {
+        return imageRequestGate.isCurrent(requestToken)
+                && isContextActive();
+    }
+
+    public void recycle() {
+        imageRequestGate.invalidate();
+        if (call != null) {
+            call.cancel();
+            call = null;
+        }
+        Glide.with(img).clear(img);
+    }
+
+    private boolean isContextActive() {
+        if (!(mContext instanceof Activity)) return true;
+        Activity activity = (Activity) mContext;
+        return !activity.isFinishing() && !activity.isDestroyed();
     }
 
 

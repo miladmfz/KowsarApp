@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -21,6 +22,9 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.LatestRequestGate;
+import com.kits.kowsarapp.application.base.SafeListAccess;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.application.ocr.Ocr_Action;
 import com.kits.kowsarapp.fragment.ocr.Ocr_StackFragment;
 import com.kits.kowsarapp.model.base.NumberFunctions;
@@ -68,6 +72,8 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
     LottieAnimationView img_lottiestatus;
     Call<RetrofitResponse> call;
     TextView tv_lottiestatus;
+    private final LatestRequestGate requestGate = new LatestRequestGate();
+    private Dialog startupDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,28 +81,27 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
         setTheme(getSharedPreferences("ThemePrefs", MODE_PRIVATE).getInt("selectedTheme", R.style.RoyalGoldTheme));
 
         setContentView(R.layout.ocr_activity_selection);
-        Dialog dialog1 = new Dialog(this);
+        Config();
+        readIntent();
+        stackFragment.setBarcodeScan(BarcodeScan);
+        startupDialog = new Dialog(this);
 
         try {
 
-            dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-            dialog1.setContentView(R.layout.ocr_spinner_box);
-            TextView repw = dialog1.findViewById(R.id.ocr_spinner_text);
+            startupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Objects.requireNonNull(startupDialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+            startupDialog.setContentView(R.layout.ocr_spinner_box);
+            TextView repw = startupDialog.findViewById(R.id.ocr_spinner_text);
             repw.setText("در حال خواندن اطلاعات");
-            dialog1.show();
+            startupDialog.show();
         }catch (Exception e){
             callMethod.Log(e.getMessage());
         }
 
-
-
-        intent();
-        Config();
         try {
-            Handler handler = new Handler();
+            Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(this::init, 100);
-            handler.postDelayed(dialog1::dismiss, 1000);
+            handler.postDelayed(this::dismissStartupDialog, 1000);
         }catch (Exception e){
             callMethod.Log(e.getMessage());
         }
@@ -106,11 +111,10 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
     ////////////////////////////////////////////////////
 
 
-    public  void intent(){
+    public void readIntent(){
         Bundle bundle =getIntent().getExtras();
-        assert bundle != null;
-        BarcodeScan=bundle.getString("ScanResponse");
-        State=bundle.getString("State");
+        BarcodeScan = bundle == null ? "" : bundle.getString("ScanResponse", "");
+        State = bundle == null ? "" : bundle.getString("State", "");
 
     }
 
@@ -123,10 +127,7 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Ocr_APIInterface.class);
         secendApiInterface = APIClientSecond.getCleint(callMethod.ReadString("SecendServerURL")).create(Ocr_APIInterface.class);
 
-        handler=new Handler();
-        for (final String[] ignored : arraygood_shortage) {
-            arraygood_shortage.add(new String[]{"goodcode","amount "});
-        }
+        handler=new Handler(Looper.getMainLooper());
 
         ll_main = findViewById(R.id.ocr_confirm_a_layout);
         ed_barcode = findViewById(R.id.ocr_confirm_a_barcode);
@@ -143,8 +144,6 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
         fragmentTransaction = fragmentManager.beginTransaction();
 
         stackFragment = new Ocr_StackFragment();
-
-        stackFragment.setBarcodeScan(BarcodeScan);
 
         ocr_goods_scan.clear();
     }
@@ -237,7 +236,9 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
 
 
 
-                        },  Integer.parseInt(callMethod.ReadString("Delay")));
+                        }, Math.max(0, SafeValueParser.intOrDefault(
+                                callMethod.ReadString("Delay"), 300
+                        )));
 
 
 
@@ -254,10 +255,17 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
 
 
     public void Search_call(){
+        if (!isUiActive()) {
+            return;
+        }
         searchtarget = NumberFunctions.EnglishNumber(ed_barcode.getText().toString());
         searchtarget = searchtarget.replaceAll(" ", "%");
 
-
+        requestGate.invalidate();
+        if (call != null) {
+            call.cancel();
+        }
+        int requestToken = requestGate.begin();
         call=apiInterface.GetOcrGoodList("GetOcrGoodList",searchtarget);
         action.dialogProg();
 
@@ -265,11 +273,18 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    action.dialogProg_dismiss();
+                if (!canHandleRequest(requestToken)) {
+                    return;
+                }
+                action.dialogProg_dismiss();
+                if (!response.isSuccessful() || response.body() == null) {
+                    showEmptyResult("GetOcrGoodList invalid HTTP response");
+                    return;
+                }
 
-                    ocr_goods.clear();
-                    ocr_goods = response.body().getOcr_Goods();
+                    ocr_goods = SafeListAccess.mutableNonNullCopyOrEmpty(
+                            response.body().getOcr_Goods()
+                    );
 
                     if (ocr_goods.size()> 0) {
                         try {
@@ -305,32 +320,80 @@ public class Ocr_SelectionActivity extends AppCompatActivity {
 
                         }
                     } else {
-                        tv_lottiestatus.setText("موردی یافت نشد");
-                        img_lottiestatus.setVisibility(View.VISIBLE);
-                        tv_lottiestatus.setVisibility(View.VISIBLE);
+                        showEmptyResult(null);
                     }
-                }
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                if (call.isCanceled() || !canHandleRequest(requestToken)) {
+                    return;
+                }
                 action.dialogProg_dismiss();
+                callMethod.Log("GetOcrGoodList failed: " + t.getClass().getSimpleName());
                 callMethod.showToast("مشکلی در برقراری ارتباط");
-                tv_lottiestatus.setText("موردی یافت نشد");
-                img_lottiestatus.setVisibility(View.VISIBLE);
-                tv_lottiestatus.setVisibility(View.VISIBLE);
+                showEmptyResult(null);
             }
         });
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
+        if (ed_barcode == null || !isUiActive()) {
+            super.onWindowFocusChanged(hasFocus);
+            return;
+        }
         ed_barcode.setFocusable(true);
         ed_barcode.requestFocus();
         ed_barcode.selectAll();
 
 
         super.onWindowFocusChanged(hasFocus);
+    }
+
+    private boolean canHandleRequest(int requestToken) {
+        return isUiActive() && requestGate.isCurrent(requestToken);
+    }
+
+    private boolean isUiActive() {
+        return !isFinishing() && !isDestroyed();
+    }
+
+    private void showEmptyResult(String diagnostic) {
+        if (!isUiActive()) {
+            return;
+        }
+        if (diagnostic != null) {
+            callMethod.Log(diagnostic);
+        }
+        ocr_goods.clear();
+        progressBar.setVisibility(View.GONE);
+        tv_lottiestatus.setText("موردی یافت نشد");
+        img_lottiestatus.setVisibility(View.VISIBLE);
+        tv_lottiestatus.setVisibility(View.VISIBLE);
+    }
+
+    private void dismissStartupDialog() {
+        if (startupDialog != null && startupDialog.isShowing()) {
+            startupDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        requestGate.invalidate();
+        if (call != null) {
+            call.cancel();
+        }
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+        dismissStartupDialog();
+        if (action != null) {
+            action.cancelActiveSubmission();
+            action.dialogProg_dismiss();
+        }
+        super.onDestroy();
     }
 
 

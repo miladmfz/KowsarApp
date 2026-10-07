@@ -70,13 +70,9 @@ public class Broker_ConfigActivity extends AppCompatActivity {
      void setButtonListeners() {
         binding.bConfigAToReg.setOnClickListener(view -> {
 
-//
 //            if (callMethod.ReadString("ActivationCode").equals("111111") ||callMethod.ReadString("ActivationCode").equals("555555")) {
-//
 //            }else {
-//
 //            }
-//
 
             if (callMethod.IsDebugBuild(this)){
                 Intent intent = new Intent(this, Broker_RegistrationActivity.class);

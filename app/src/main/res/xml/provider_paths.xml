@@ -3,7 +3,10 @@
     <files-path
         name="app_directory"
         path="." />
-    <external-path
-        name="external_files"
-        path="Android/data/com.kits.brokerkowsar/files/Download/" />
+    <external-files-path
+        name="ocr_external_files"
+        path="." />
+    <cache-path
+        name="ocr_cache"
+        path="." />
 </paths>

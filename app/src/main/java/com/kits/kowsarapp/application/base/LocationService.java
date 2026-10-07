@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteException;
 import android.location.Location;
 import android.os.IBinder;
 import android.os.Looper;
@@ -35,111 +36,121 @@ public class LocationService extends Service {
     private LocationCallback locationCallback;
     private CallMethod callMethod;
     private Broker_DBH broker_dbh;
-    private PersianCalendar calendar1 = new PersianCalendar();
+    private final PersianCalendar calendar1 = new PersianCalendar();
+    private Location lastLocation;
+    private boolean stopping;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        callMethod = new CallMethod(getApplicationContext());
+        if (!startForegroundServiceWithNotification()) return;
 
-        callMethod = new CallMethod(App.getContext());
-        broker_dbh = new Broker_DBH(App.getContext(), callMethod.ReadString("DatabaseName"));
+        String databaseName = callMethod.ReadString("DatabaseName");
+        if (databaseName == null || databaseName.trim().isEmpty()) {
+            callMethod.Log("Location service stopped: profile database is unavailable");
+            stopSafely();
+            return;
+        }
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        try {
+            broker_dbh = new Broker_DBH(getApplicationContext(), databaseName);
+            fusedLocationProviderClient =
+                    LocationServices.getFusedLocationProviderClient(this);
+            locationCallback = createLocationCallback();
+            startLocationUpdates();
+        } catch (SQLiteException | IllegalArgumentException | IllegalStateException |
+                 SecurityException exception) {
+            ReleaseLog.error("LocationServiceInit", exception);
+            stopSafely();
+        }
+    }
 
-        locationCallback = new LocationCallback() {
+    private LocationCallback createLocationCallback() {
+        return new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-
-                Location location = locationResult.getLastLocation();
-                if (location != null && !callMethod.ReadString("ServerURLUse").isEmpty()) {
-                    calendar1.setTimeInMillis((location.getTime() + 12600000)-86400000); // GMT+3:30 adjustment
-                    int hour = calendar1.get(Calendar.HOUR_OF_DAY);
-                    Location lastLocation = null;
-
-                    if (hour > 7 && hour < 23) {
-                        try {
-                            Location currentLocation = locationResult.getLastLocation();
-
-                            if (lastLocation == null) {
-                                lastLocation = currentLocation; // اولین بار مقداردهی کن
-                            }
-
-//                            if (lastLocation == null) {
-//                                lastLocation = broker_dbh.getLastSavedLocation(); // متدی که آخرین مختصات رو از SQLite می‌خونه
-//                            }
-                            float distance = lastLocation.distanceTo(currentLocation); // فاصله برحسب متر
-                            String datetime = calendar1.getPersianShortDateTime();
-                            broker_dbh.UpdateLocationService(locationResult, datetime);
-                            broker_dbh.UpdateLocationService_New(locationResult, datetime,String.valueOf(distance));
-                            callMethod.Log("Location Updated: " + datetime + " | Distance: " + distance);
-                            lastLocation = currentLocation; // موقعیت جدید رو ذخیره کن
-
-
-
-                            if (distance > 5) {
-
-                            }else{
-                                callMethod.Log("  Distance: " + distance);
-                            }
-                        } catch (Exception ignored) { }
-                    }
-
-
-//
-//                    if (hour > 7 && hour < 23) {
-//                        try {
-//                            String datetime = calendar1.getPersianShortDateTime();
-//                            broker_dbh.UpdateLocationService(locationResult, datetime);
-//                            broker_dbh.UpdateLocationService_New(locationResult, datetime);
-//                            callMethod.Log("Location Updated: " + datetime);
-//                        }catch (Exception ignored){ }
-//                    }
-                }
+                handleLocationResult(locationResult);
             }
         };
+    }
 
-        startLocationUpdates();
-        startForegroundServiceWithNotification();
+    private void handleLocationResult(LocationResult locationResult) {
+        if (stopping || callMethod == null || broker_dbh == null) return;
+        Location currentLocation = locationResult.getLastLocation();
+        String serverUrl = callMethod.ReadString("ServerURLUse");
+        if (currentLocation == null || serverUrl == null || serverUrl.trim().isEmpty()) return;
+
+        calendar1.setTimeInMillis((currentLocation.getTime() + 12600000L) - 86400000L);
+        int hour = calendar1.get(Calendar.HOUR_OF_DAY);
+        if (hour <= 7 || hour >= 23) return;
+
+        float distance = distanceFromPrevious(lastLocation, currentLocation);
+        try {
+            String datetime = calendar1.getPersianShortDateTime();
+            broker_dbh.UpdateLocationService(locationResult, datetime);
+            broker_dbh.UpdateLocationService_New(
+                    locationResult, datetime, String.valueOf(distance));
+            lastLocation = new Location(currentLocation);
+            callMethod.Log("Location Updated: " + datetime + " | Distance: " + distance);
+        } catch (SQLiteException | IllegalArgumentException | IllegalStateException |
+                 SecurityException exception) {
+            ReleaseLog.error("LocationPersistence", exception);
+        }
     }
 
     private void startLocationUpdates() {
         LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(5000); // 15 seconds
-        locationRequest.setFastestInterval(3000); // 10 seconds
+        locationRequest.setInterval(5000); // 5 seconds
+        locationRequest.setFastestInterval(3000); // 3 seconds
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setSmallestDisplacement(5); // فقط اگر حداقل ۱۰ متر حرکت کرده
+        locationRequest.setSmallestDisplacement(5); // at least 5 meters
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             callMethod.Log("Permission not granted");
-            stopSelf();
+            stopSafely();
             return;
         }
 
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-        callMethod.Log("Started location updates");
+        fusedLocationProviderClient
+                .requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+                .addOnSuccessListener(unused -> callMethod.Log("Started location updates"))
+                .addOnFailureListener(exception -> {
+                    ReleaseLog.error("LocationRequest", exception);
+                    stopSafely();
+                });
     }
 
-    private void startForegroundServiceWithNotification() {
+    private boolean startForegroundServiceWithNotification() {
         String channelId = "location_channel_id";
         String channelName = "Location Service";
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null && notificationManager.getNotificationChannel(channelId) == null) {
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW);
-            channel.setDescription("Channel for Location Service");
-            notificationManager.createNotificationChannel(channel);
+        try {
+            if (notificationManager != null &&
+                    notificationManager.getNotificationChannel(channelId) == null) {
+                NotificationChannel channel = new NotificationChannel(
+                        channelId, channelName, NotificationManager.IMPORTANCE_LOW);
+                channel.setDescription("Channel for Location Service");
+                notificationManager.createNotificationChannel(channel);
+            }
+
+            Notification notification = new NotificationCompat.Builder(this, channelId)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText("Kowsar service active")
+                    .setSmallIcon(R.drawable.img_logo_kits_jpg)
+                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setSilent(true)
+                    .build();
+
+            startForeground(Constants.Location_Service_ID, notification);
+            return true;
+        } catch (IllegalArgumentException | IllegalStateException | SecurityException exception) {
+            ReleaseLog.error("LocationForeground", exception);
+            stopSafely();
+            return false;
         }
-
-        Notification notification = new NotificationCompat.Builder(this, channelId)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText("Kowsar service active")
-                .setSmallIcon(R.drawable.img_logo_kits_jpg)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setSilent(true)
-                .build();
-
-        startForeground(Constants.Location_Service_ID, notification);
     }
 
     @Override
@@ -150,9 +161,32 @@ public class LocationService extends Service {
 
     @Override
     public void onDestroy() {
+        stopping = true;
+        if (fusedLocationProviderClient != null && locationCallback != null) {
+            try {
+                fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+            } catch (IllegalArgumentException | IllegalStateException | SecurityException exception) {
+                ReleaseLog.error("LocationRemoveUpdates", exception);
+            }
+        }
+        if (broker_dbh != null) {
+            broker_dbh.closedb();
+            broker_dbh = null;
+        }
+        if (callMethod != null) callMethod.Log("Location updates stopped");
         super.onDestroy();
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-        callMethod.Log("Location updates stopped");
+    }
+
+    private void stopSafely() {
+        stopping = true;
+        stopSelf();
+    }
+
+    static float distanceFromPrevious(
+            @Nullable Location previousLocation,
+            @NonNull Location currentLocation
+    ) {
+        return previousLocation == null ? 0f : previousLocation.distanceTo(currentLocation);
     }
 
     @Nullable

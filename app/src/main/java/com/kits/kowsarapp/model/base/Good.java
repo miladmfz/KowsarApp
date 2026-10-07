@@ -2,6 +2,7 @@ package com.kits.kowsarapp.model.base;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 
 import java.io.Serializable;
 
@@ -916,16 +917,16 @@ public class Good implements Serializable {
                 GoodName = Res;
                 break;
             case "goodcode":
-                GoodCode = Integer.parseInt(Res);
+                GoodCode = SafeValueParser.intOrCurrent(Res, GoodCode);
                 break;
             case "ksrimagecode":
-                KsrImageCode = Integer.parseInt(Res);
+                KsrImageCode = SafeValueParser.intOrCurrent(Res, KsrImageCode);
                 break;
             case "goodmaincode":
-                GoodMainCode = Integer.parseInt(Res);
+                GoodMainCode = SafeValueParser.intOrCurrent(Res, GoodMainCode);
                 break;
             case "goodsubcode":
-                GoodSubCode = Integer.parseInt(Res);
+                GoodSubCode = SafeValueParser.intOrCurrent(Res, GoodSubCode);
                 break;
             case "activestack":
                 ActiveStack = Res;
@@ -961,31 +962,31 @@ public class Good implements Serializable {
                 SellPrice = Res;
                 break;
             case "sellprice1":
-                SellPrice1 = Float.parseFloat(Res);
+                SellPrice1 = SafeValueParser.floatOrCurrent(Res, SellPrice1);
                 break;
             case "sellprice2":
-                SellPrice2 = Float.parseFloat(Res);
+                SellPrice2 = SafeValueParser.floatOrCurrent(Res, SellPrice2);
                 break;
             case "sellprice3":
-                SellPrice3 = Float.parseFloat(Res);
+                SellPrice3 = SafeValueParser.floatOrCurrent(Res, SellPrice3);
                 break;
             case "sellprice4":
-                SellPrice4 = Float.parseFloat(Res);
+                SellPrice4 = SafeValueParser.floatOrCurrent(Res, SellPrice4);
                 break;
             case "sellprice5":
-                SellPrice5 = Float.parseFloat(Res);
+                SellPrice5 = SafeValueParser.floatOrCurrent(Res, SellPrice5);
                 break;
             case "sellprice6":
-                SellPrice6 = Float.parseFloat(Res);
+                SellPrice6 = SafeValueParser.floatOrCurrent(Res, SellPrice6);
                 break;
             case "firstbarcode":
                 FirstBarCode = Res;
                 break;
             case "goodunitref":
-                GoodUnitRef = Integer.parseInt(Res);
+                GoodUnitRef = SafeValueParser.intOrCurrent(Res, GoodUnitRef);
                 break;
             case "defaultunitvalue":
-                DefaultUnitValue = Integer.parseInt(Res);
+                DefaultUnitValue = SafeValueParser.intOrCurrent(Res, DefaultUnitValue);
                 break;
             case "isbn":
                 Isbn = Res;
@@ -1081,64 +1082,64 @@ public class Good implements Serializable {
                 Nvarchar20 = Res;
                 break;
             case "int1":
-                Int1 = Integer.parseInt(Res);
+                Int1 = SafeValueParser.intOrCurrent(Res, Int1);
                 break;
             case "int2":
-                Int2 = Integer.parseInt(Res);
+                Int2 = SafeValueParser.intOrCurrent(Res, Int2);
                 break;
             case "int3":
-                Int3 = Integer.parseInt(Res);
+                Int3 = SafeValueParser.intOrCurrent(Res, Int3);
                 break;
             case "int4":
-                Int4 = Integer.parseInt(Res);
+                Int4 = SafeValueParser.intOrCurrent(Res, Int4);
                 break;
             case "int5":
-                Int5 = Integer.parseInt(Res);
+                Int5 = SafeValueParser.intOrCurrent(Res, Int5);
                 break;
             case "int6":
-                Int6 = Integer.parseInt(Res);
+                Int6 = SafeValueParser.intOrCurrent(Res, Int6);
                 break;
             case "int7":
-                Int7 = Integer.parseInt(Res);
+                Int7 = SafeValueParser.intOrCurrent(Res, Int7);
                 break;
             case "int8":
-                Int8 = Integer.parseInt(Res);
+                Int8 = SafeValueParser.intOrCurrent(Res, Int8);
                 break;
             case "int9":
-                Int9 = Integer.parseInt(Res);
+                Int9 = SafeValueParser.intOrCurrent(Res, Int9);
                 break;
             case "int10":
-                Int10 = Integer.parseInt(Res);
+                Int10 = SafeValueParser.intOrCurrent(Res, Int10);
                 break;
             case "float1":
-                Float1 = Float.parseFloat(Res);
+                Float1 = SafeValueParser.floatOrCurrent(Res, Float1);
                 break;
             case "float2":
-                Float2 = Float.parseFloat(Res);
+                Float2 = SafeValueParser.floatOrCurrent(Res, Float2);
                 break;
             case "float3":
-                Float3 = Float.parseFloat(Res);
+                Float3 = SafeValueParser.floatOrCurrent(Res, Float3);
                 break;
             case "float4":
-                Float4 = Float.parseFloat(Res);
+                Float4 = SafeValueParser.floatOrCurrent(Res, Float4);
                 break;
             case "float5":
-                Float5 = Float.parseFloat(Res);
+                Float5 = SafeValueParser.floatOrCurrent(Res, Float5);
                 break;
             case "float6":
-                Float6 = Float.parseFloat(Res);
+                Float6 = SafeValueParser.floatOrCurrent(Res, Float6);
                 break;
             case "float7":
-                Float7 = Float.parseFloat(Res);
+                Float7 = SafeValueParser.floatOrCurrent(Res, Float7);
                 break;
             case "float8":
-                Float8 = Float.parseFloat(Res);
+                Float8 = SafeValueParser.floatOrCurrent(Res, Float8);
                 break;
             case "float9":
-                Float9 = Float.parseFloat(Res);
+                Float9 = SafeValueParser.floatOrCurrent(Res, Float9);
                 break;
             case "float10":
-                Float10 = Float.parseFloat(Res);
+                Float10 = SafeValueParser.floatOrCurrent(Res, Float10);
                 break;
             case "date1":
                 Date1 = Res;
@@ -1156,25 +1157,25 @@ public class Good implements Serializable {
                 Date5 = Res;
                 break;
             case "bit1":
-                Bit1 = Float.parseFloat(Res);
+                Bit1 = SafeValueParser.floatOrCurrent(Res, Bit1);
                 break;
             case "bit2":
-                Bit2 = Float.parseFloat(Res);
+                Bit2 = SafeValueParser.floatOrCurrent(Res, Bit2);
                 break;
             case "bit3":
-                Bit3 = Float.parseFloat(Res);
+                Bit3 = SafeValueParser.floatOrCurrent(Res, Bit3);
                 break;
             case "bit4":
-                Bit4 = Float.parseFloat(Res);
+                Bit4 = SafeValueParser.floatOrCurrent(Res, Bit4);
                 break;
             case "bit5":
-                Bit5 = Float.parseFloat(Res);
+                Bit5 = SafeValueParser.floatOrCurrent(Res, Bit5);
                 break;
             case "bit6":
-                Bit6 = Float.parseFloat(Res);
+                Bit6 = SafeValueParser.floatOrCurrent(Res, Bit6);
                 break;
             case "bit7":
-                Bit7 = Float.parseFloat(Res);
+                Bit7 = SafeValueParser.floatOrCurrent(Res, Bit7);
                 break;
             case "text1":
                 Text1 = Res;
@@ -1192,28 +1193,28 @@ public class Good implements Serializable {
                 Text5 = Res;
                 break;
             case "state":
-                state = Integer.parseInt(Res);
+                state = SafeValueParser.intOrCurrent(Res, state);
                 break;
             case "stackamount":
-                StackAmount = Integer.parseInt(Res);
+                StackAmount = SafeValueParser.intOrCurrent(Res, StackAmount);
                 break;
             case "stackamount1":
-                StackAmount1 = Integer.parseInt(Res);
+                StackAmount1 = SafeValueParser.intOrCurrent(Res, StackAmount1);
                 break;
             case "stackamount2":
-                StackAmount2 = Integer.parseInt(Res);
+                StackAmount2 = SafeValueParser.intOrCurrent(Res, StackAmount2);
                 break;
             case "reservedamount":
-                ReservedAmount = Integer.parseInt(Res);
+                ReservedAmount = SafeValueParser.intOrCurrent(Res, ReservedAmount);
                 break;
             case "factoramount":
-                FactorAmount = Integer.parseInt(Res);
+                FactorAmount = SafeValueParser.intOrCurrent(Res, FactorAmount);
                 break;
             case "shortage":
-                Shortage = Integer.parseInt(Res);
+                Shortage = SafeValueParser.intOrCurrent(Res, Shortage);
                 break;
             case "price":
-                Price = Integer.parseInt(Res);
+                Price = SafeValueParser.intOrCurrent(Res, Price);
                 break;
             case "imagename":
                 ImageName = Res;
@@ -1222,7 +1223,7 @@ public class Good implements Serializable {
                 UnitName = Res;
                 break;
             case "prefactorrowcode":
-                PreFactorRowCode = Integer.parseInt(Res);
+                PreFactorRowCode = SafeValueParser.intOrCurrent(Res, PreFactorRowCode);
                 break;
             case "goodtype":
                 GoodType = Res;

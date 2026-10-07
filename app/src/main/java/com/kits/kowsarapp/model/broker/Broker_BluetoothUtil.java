@@ -4,11 +4,11 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.pm.PackageManager;
-import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
 import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.ReleaseLog;
 
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -53,7 +53,7 @@ public class Broker_BluetoothUtil {
                     String mac = bluetoothDevice.getAddress();
                     if (mac.equals(macToRemove)) {
                         removeBondMethod.invoke(bluetoothDevice);
-                        Log.e(TAG, "Cleared Pairing");
+                        ReleaseLog.debug(TAG, "Cleared pairing");
 
                         cleared = true;
                         break;
@@ -61,10 +61,10 @@ public class Broker_BluetoothUtil {
                 }
 
                 if (!cleared) {
-                    Log.e(TAG, "Not Paired");
+                    ReleaseLog.debug(TAG, "Device was not paired");
                 }
             } catch (Throwable th) {
-                Log.e(TAG, "Error pairing", th);
+                ReleaseLog.error(TAG, th);
             }
         }
 

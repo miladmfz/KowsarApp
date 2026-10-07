@@ -76,6 +76,7 @@
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="9sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 tools:text="۴ نفر" />
 
             <Button
@@ -201,7 +202,7 @@
                     android:layout_height="16dp"
                     android:gravity="center"
                     android:text="@string/tableitem_usetime"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_black"
                     android:textSize="8sp"
                     android:textStyle="bold" />
 
@@ -212,7 +213,7 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_black"
                     android:textSize="10sp"
                     android:textStyle="bold"
                     tools:text="۰۱:۲۵" />
@@ -237,7 +238,7 @@
                     android:layout_height="16dp"
                     android:gravity="center"
                     android:text="@string/tableitem_brokerstate"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_black"
                     android:textSize="8sp"
                     android:textStyle="bold" />
 
@@ -250,7 +251,7 @@
                     android:maxLines="1"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_black"
                     android:textSize="9sp"
                     android:textStyle="bold"
                     tools:text="کاربر صندوق شماره ۱" />
@@ -369,7 +370,7 @@
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/tableitem_reservetable"
-                android:textColor="@color/white"
+                android:textColor="@color/color_black"
                 android:textSize="9sp"
                 android:textStyle="bold" />
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -22,8 +23,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.google.android.material.button.MaterialButton;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.find.Find_GoodAdapter;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
-import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.LatestRequestGate;
+import com.kits.kowsarapp.application.base.SafeListAccess;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.databinding.FindActivitySearchBinding;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -45,9 +49,11 @@ public class Find_SearchActivity extends AppCompatActivity {
 
     Find_GoodAdapter find_goodAdapter;
     CallMethod callMethod;
-    private final Handler keyboardHandler = new Handler();
+    private final Handler keyboardHandler = new Handler(Looper.getMainLooper());
+    private final Handler lifecycleHandler = new Handler(Looper.getMainLooper());
+    private final LatestRequestGate requestGate = new LatestRequestGate();
     Dialog dialog1;
-    Handler handler;
+    Handler searchHandler;
     GridLayoutManager gridLayoutManager;
 
     Find_DBH find_dbh;
@@ -63,8 +69,10 @@ public class Find_SearchActivity extends AppCompatActivity {
     private Integer grid;
 
     FindActivitySearchBinding binding;
+    private Call<RetrofitResponse> goodListCall;
 
     private final Runnable keyboardRunnable = () -> {
+        if (!isUiActive() || binding == null) return;
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(binding.findSearchAEdtsearch.getWindowToken(),
                 0
@@ -79,9 +87,8 @@ public class Find_SearchActivity extends AppCompatActivity {
         );
     }
     public void intent() {
-        Bundle data = getIntent().getExtras();
-        assert data != null;
-        AutoSearch = data.getString("scan");
+        String scan = getIntent().getStringExtra("scan");
+        AutoSearch = scan == null ? "" : scan;
 
     }
 
@@ -103,28 +110,31 @@ public class Find_SearchActivity extends AppCompatActivity {
 
         dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+        if (dialog1.getWindow() != null) {
+            dialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
         dialog1.setContentView(R.layout.broker_spinner_box);
         TextView repw = dialog1.findViewById(R.id.b_spinner_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
-
-
-
-        try {
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                if (find_dbh.GetColumnscount().equals("0")) {
+        lifecycleHandler.postDelayed(() -> {
+            if (!isUiActive()) return;
+            try {
+                if ("0".equals(find_dbh.GetColumnscount())) {
                     callMethod.showToast("تنظیم جدول از سمت دیتابیس مشکل دارد");
+                    dismissLoadingDialog();
                     finish();
-                    dialog1.dismiss();
                 } else {
                     init();
                 }
-            }, 100);
-            handler.postDelayed(dialog1::dismiss, 1000);
-        } catch (Exception e) {
-        }
+            } catch (RuntimeException exception) {
+                callMethod.Log("Find startup failed: "
+                        + exception.getClass().getSimpleName());
+                dismissLoadingDialog();
+                callMethod.showToast("خطا در خواندن تنظیمات جستجو");
+            }
+        }, 100);
+        lifecycleHandler.postDelayed(this::dismissLoadingDialog, 1000);
 
 
 
@@ -159,11 +169,14 @@ public class Find_SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void afterTextChanged(final Editable editable) {
-                        handler.removeCallbacksAndMessages(null);
-                        handler.postDelayed(() -> {
+                        searchHandler.removeCallbacksAndMessages(null);
+                        int delay = Math.max(0,
+                                SafeValueParser.intOrDefault(callMethod.ReadString("Delay"), 300));
+                        searchHandler.postDelayed(() -> {
+                            if (!isUiActive()) return;
 
                             AutoSearch = NumberFunctions.EnglishNumber(editable.toString());
-                            AutoSearch.replace(" ","%");
+                            AutoSearch = AutoSearch.replace(" ","%");
                             allgood();
 
                             if(callMethod.ReadBoolan("SelectAllAfterSearch")){
@@ -180,7 +193,7 @@ public class Find_SearchActivity extends AppCompatActivity {
                                         200
                                 );
                             }
-                        }, Integer.parseInt(callMethod.ReadString("Delay")));
+                        }, delay);
                     }
                 });
         allgood();
@@ -192,9 +205,8 @@ public class Find_SearchActivity extends AppCompatActivity {
         find_dbh = new Find_DBH(this, callMethod.ReadString("DatabaseName"));
         find_apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(Find_APIInterface.class);
 
-
-        handler = new Handler();
-        grid = Integer.parseInt(callMethod.ReadString("Grid"));
+        searchHandler = new Handler(Looper.getMainLooper());
+        grid = Math.max(1, SafeValueParser.intOrDefault(callMethod.ReadString("Grid"), 1));
 
     }
 
@@ -205,47 +217,40 @@ public class Find_SearchActivity extends AppCompatActivity {
 //        Call<RetrofitResponse> call = find_apiInterface.GetGoodList(callMethod.RetrofitBody(Body_str));
 //
 
+        requestGate.invalidate();
+        if (goodListCall != null) goodListCall.cancel();
+        int requestToken = requestGate.begin();
+
         find_goods.clear();
 
         binding.findSearchAProg.setVisibility(View.VISIBLE);
-        Call<RetrofitResponse> call = find_apiInterface.GetGoodList ("GetFindGoodList", AutoSearch);
-        call.enqueue(new Callback<RetrofitResponse>() {
+        goodListCall = find_apiInterface.GetGoodList ("GetFindGoodList", AutoSearch);
+        goodListCall.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-
-                    assert response.body() != null;
-                    find_goods = response.body().getFind_Goods();
-                    find_goodAdapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
-
-                    CallRecyclerView();
-
-
+                if (!canHandleRequest(requestToken)) return;
+                if (!response.isSuccessful() || response.body() == null) {
+                    showEmptyResults("Find search response was empty or HTTP failed");
+                    return;
                 }
+
+                find_goods = SafeListAccess.mutableNonNullCopyOrEmpty(
+                        response.body().getFind_Goods()
+                );
+                find_goodAdapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
+                CallRecyclerView();
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(Find_SearchActivity.this)) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
-                }
-                find_goods.clear();
-                find_goodAdapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
-                CallRecyclerView();
+                if (call.isCanceled() || !canHandleRequest(requestToken)) return;
+                Base_NetworkFailure.show(
+                        Find_SearchActivity.this,
+                        callMethod,
+                        "Find good search",
+                        call,
+                        t
+                );
+                showEmptyResults(null);
             }
         });
 
@@ -255,12 +260,14 @@ public class Find_SearchActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     public void refresh() {
-        find_goodAdapter.notifyDataSetChanged();
+        if (isUiActive() && find_goodAdapter != null) {
+            find_goodAdapter.notifyDataSetChanged();
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void CallRecyclerView() {
-        //adapter.notifyDataSetChanged();
+        if (!isUiActive() || find_goodAdapter == null) return;
 
 
         if (find_goodAdapter.getItemCount() == 0) {
@@ -342,10 +349,41 @@ public class Find_SearchActivity extends AppCompatActivity {
         } else {
 
         }
-        new Handler().postDelayed(() -> backPressCount = 0, 2000);
+        lifecycleHandler.postDelayed(() -> backPressCount = 0, 2000);
         }else{
             finish();
         }
+    }
+
+    private boolean canHandleRequest(int requestToken) {
+        return isUiActive() && requestGate.isCurrent(requestToken);
+    }
+
+    private boolean isUiActive() {
+        return !isFinishing() && !isDestroyed();
+    }
+
+    private void showEmptyResults(String diagnostic) {
+        if (!isUiActive()) return;
+        if (diagnostic != null) callMethod.Log(diagnostic);
+        find_goods = new ArrayList<>();
+        find_goodAdapter = new Find_GoodAdapter(find_goods, Find_SearchActivity.this);
+        CallRecyclerView();
+    }
+
+    private void dismissLoadingDialog() {
+        if (dialog1 != null && dialog1.isShowing()) dialog1.dismiss();
+    }
+
+    @Override
+    protected void onDestroy() {
+        requestGate.invalidate();
+        if (goodListCall != null) goodListCall.cancel();
+        if (searchHandler != null) searchHandler.removeCallbacksAndMessages(null);
+        keyboardHandler.removeCallbacksAndMessages(null);
+        lifecycleHandler.removeCallbacksAndMessages(null);
+        dismissLoadingDialog();
+        super.onDestroy();
     }
 
 

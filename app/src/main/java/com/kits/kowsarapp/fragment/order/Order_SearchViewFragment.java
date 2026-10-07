@@ -1,8 +1,10 @@
 package com.kits.kowsarapp.fragment.order;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +29,9 @@ import com.kits.kowsarapp.activity.order.Order_BasketActivity;
 import com.kits.kowsarapp.adapter.order.Order_GoodAdapter;
 import com.kits.kowsarapp.adapter.order.Order_GrpAdapter;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.LatestRequestGate;
 import com.kits.kowsarapp.application.base.NetworkUtils;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.model.base.Good;
 import com.kits.kowsarapp.model.base.NumberFunctions;
 import com.kits.kowsarapp.model.base.RetrofitResponse;
@@ -53,11 +56,13 @@ public class Order_SearchViewFragment extends Fragment {
     RecyclerView rc_grp;
     RecyclerView rc_good;
     EditText ed_search;
-    Handler handler = new Handler();
+    final Handler handler = new Handler(Looper.getMainLooper());
+    final LatestRequestGate groupRequestGate = new LatestRequestGate();
+    final LatestRequestGate goodsRequestGate = new LatestRequestGate();
     String searchtarget = "", Where = "";
     FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
     Call<RetrofitResponse> call;
+    Call<RetrofitResponse> groupCall;
     Order_GoodAdapter order_goodAdapter;
     ArrayList<Good> Goods = new ArrayList<>();
     LottieAnimationView progressBar;
@@ -103,7 +108,6 @@ public class Order_SearchViewFragment extends Fragment {
         order_dbh = new Order_DBH(requireActivity(), callMethod.ReadString("DatabaseName"));
 
         fragmentManager = requireActivity().getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
 
 
         ed_search.setText(searchtarget);
@@ -119,12 +123,14 @@ public class Order_SearchViewFragment extends Fragment {
             @Override
             public void afterTextChanged(final Editable editable) {
                 handler.removeCallbacksAndMessages(null);
+                String query = editable == null ? "" : editable.toString();
                 handler.postDelayed(() -> {
-                    searchtarget = NumberFunctions.EnglishNumber(ed_search.getText().toString());
+                    if (!isUiActive()) return;
+                    searchtarget = NumberFunctions.EnglishNumber(query);
                     Where = "GoodName Like N''%" + searchtarget.replaceAll(" ", "%") + "%'' ";
                     good_GourpCode=order_dbh.ReadConfig("GroupCodeDefult");
                     allgood();
-                }, Integer.parseInt(callMethod.ReadString("Delay")));
+                }, Math.max(0, SafeValueParser.intOrDefault(callMethod.ReadString("Delay"), 300)));
             }
         });
 
@@ -142,49 +148,48 @@ public class Order_SearchViewFragment extends Fragment {
 
     void allgrp() {
         //Call<RetrofitResponse> call = order_apiInterface.GetOrdergroupList("GetOrdergroupList", Parent_GourpCode);
-        Call<RetrofitResponse> call = order_apiInterface.Getgrp("GoodGroupInfo", Parent_GourpCode);
+        if (groupCall != null) groupCall.cancel();
+        int requestToken = groupRequestGate.begin();
+        groupCall = order_apiInterface.Getgrp("GoodGroupInfo", Parent_GourpCode);
 
-        callMethod.Log(call.request().url().toString());
-        call.enqueue(new Callback<RetrofitResponse>() {
+        callMethod.Log(groupCall.request().url().toString());
+        groupCall.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    callMethod.Log(response.body().getGroups().size()+"");
-                    assert response.body() != null;
-
-                    Order_GrpAdapter adapter = new Order_GrpAdapter(response.body().getGroups(), Parent_GourpCode,good_GourpCode, fragmentTransaction, requireActivity());
-                    rc_grp.setLayoutManager(new LinearLayoutManager(requireActivity()));
-                    rc_grp.setAdapter(adapter);
+                if (!groupRequestGate.isCurrent(requestToken) || !isUiActive()) return;
+                if (Order_SearchViewFragment.this.groupCall == call) {
+                    Order_SearchViewFragment.this.groupCall = null;
                 }
+                RetrofitResponse body = response.body();
+                if (!response.isSuccessful() || body == null || body.getGroups() == null) {
+                    rc_grp.setVisibility(View.GONE);
+                    return;
+                }
+
+                Context context = getContext();
+                if (context == null) return;
+                callMethod.Log(body.getGroups().size()+"");
+                Order_GrpAdapter adapter = new Order_GrpAdapter(
+                        body.getGroups(), Parent_GourpCode, good_GourpCode, fragmentManager, context);
+                rc_grp.setVisibility(View.VISIBLE);
+                rc_grp.setLayoutManager(new LinearLayoutManager(context));
+                rc_grp.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                if (call.isCanceled() || !groupRequestGate.isCurrent(requestToken) || !isUiActive()) return;
+                if (Order_SearchViewFragment.this.groupCall == call) {
+                    Order_SearchViewFragment.this.groupCall = null;
                 }
-                rc_grp.setVisibility(View.GONE);
+                handleNetworkFailure(rc_grp);
             }
         });
     }
 
 
     void allgood() {
+        if (!isUiActive()) return;
         Goods.clear();
         progressBar.setVisibility(View.VISIBLE);
         img_lottiestatus.setVisibility(View.GONE);
@@ -201,6 +206,8 @@ public class Order_SearchViewFragment extends Fragment {
 //
 //        Call<RetrofitResponse> call = order_apiInterface.GetOrderGoodList(callMethod.RetrofitBody(RequestBody_str));
 
+        if (call != null) call.cancel();
+        int requestToken = goodsRequestGate.begin();
         call = order_apiInterface.GetGoodFromGroup("GetOrderGoodList",
                 Where,
                 good_GourpCode,
@@ -211,36 +218,28 @@ public class Order_SearchViewFragment extends Fragment {
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-
-                    Goods = response.body().getGoods();
-
-                    callrecycler();
-
+                if (!goodsRequestGate.isCurrent(requestToken) || !isUiActive()) return;
+                if (Order_SearchViewFragment.this.call == call) {
+                    Order_SearchViewFragment.this.call = null;
                 }
+                RetrofitResponse body = response.body();
+                if (!response.isSuccessful() || body == null || body.getGoods() == null) {
+                    Goods.clear();
+                    callrecycler();
+                    return;
+                }
+
+                Goods = body.getGoods();
+                callrecycler();
             }
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                try {
-                    // 🟢 بررسی وضعیت اتصال
-                    if (!NetworkUtils.isNetworkAvailable(requireActivity())) {
-                        callMethod.showToast("اتصال اینترنت قطع است!");
-                    } else if (NetworkUtils.isVPNActive()) {
-                        callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
-                    } else {
-                        String serverUrl = callMethod.ReadString("ServerURLUse");
-                        if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
-                            callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
-                        } else {
-                            callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
-                        }
-                    }
-                } catch (Exception e) {
-                    callMethod.Log("Network check error: " + e.getMessage());
-                    callMethod.showToast("خطا در بررسی وضعیت شبکه");
+                if (call.isCanceled() || !goodsRequestGate.isCurrent(requestToken) || !isUiActive()) return;
+                if (Order_SearchViewFragment.this.call == call) {
+                    Order_SearchViewFragment.this.call = null;
                 }
+                handleNetworkFailure(null);
                 Goods.clear();
                 callrecycler();
 
@@ -250,10 +249,14 @@ public class Order_SearchViewFragment extends Fragment {
 
 
     private void callrecycler() {
+        if (!isUiActive()) return;
+        Context context = getContext();
+        if (context == null) return;
 
         progressBar.setVisibility(View.GONE);
+        rc_good.setVisibility(View.VISIBLE);
 
-        order_goodAdapter = new Order_GoodAdapter(Goods, requireActivity());
+        order_goodAdapter = new Order_GoodAdapter(Goods, context);
         if (order_goodAdapter.getItemCount() == 0) {
             tv_lottiestatus.setText(R.string.textvalue_notfound);
             img_lottiestatus.setVisibility(View.VISIBLE);
@@ -262,10 +265,38 @@ public class Order_SearchViewFragment extends Fragment {
             img_lottiestatus.setVisibility(View.GONE);
             tv_lottiestatus.setVisibility(View.GONE);
         }
-        rc_good.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
+        rc_good.setLayoutManager(new GridLayoutManager(context, 2));
         rc_good.setAdapter(order_goodAdapter);
         rc_good.setItemAnimator(new DefaultItemAnimator());
 
+    }
+
+    private void handleNetworkFailure(View affectedView) {
+        Context context = getContext();
+        if (context == null) return;
+        try {
+            if (!NetworkUtils.isNetworkAvailable(context)) {
+                callMethod.showToast("اتصال اینترنت قطع است!");
+            } else if (NetworkUtils.isVPNActive()) {
+                callMethod.showToast("VPN فعال است، ممکن است ارتباط با سرور مختل شود!");
+            } else {
+                String serverUrl = callMethod.ReadString("ServerURLUse");
+                if (serverUrl != null && !serverUrl.isEmpty() && !NetworkUtils.canReachServer(serverUrl)) {
+                    callMethod.showToast("سرور در دسترس نیست یا فیلتر شده است!");
+                } else {
+                    callMethod.showToast("مشکل در برقراری ارتباط با سرور برای بارگیری عکس");
+                }
+            }
+        } catch (Exception e) {
+            callMethod.Log("Network check error: " + e.getClass().getSimpleName());
+            callMethod.showToast("خطا در بررسی وضعیت شبکه");
+        }
+        if (affectedView != null) affectedView.setVisibility(View.GONE);
+    }
+
+    private boolean isUiActive() {
+        return isAdded() && getView() != null && getActivity() != null
+                && !getActivity().isFinishing();
     }
 
 
@@ -277,9 +308,26 @@ public class Order_SearchViewFragment extends Fragment {
 
 
     // In your fragment's onDestroyView or onDestroy
+    @Override
     public void onDestroyView() {
+        handler.removeCallbacksAndMessages(null);
+        groupRequestGate.invalidate();
+        goodsRequestGate.invalidate();
+        if (groupCall != null) groupCall.cancel();
+        if (call != null) call.cancel();
+        groupCall = null;
+        call = null;
+        if (rc_grp != null) rc_grp.setAdapter(null);
+        if (rc_good != null) rc_good.setAdapter(null);
+        rc_grp = null;
+        rc_good = null;
+        ed_search = null;
+        Btn_GoodToOrder = null;
+        progressBar = null;
+        img_lottiestatus = null;
+        tv_lottiestatus = null;
+        view = null;
         super.onDestroyView();
-
     }
 
 

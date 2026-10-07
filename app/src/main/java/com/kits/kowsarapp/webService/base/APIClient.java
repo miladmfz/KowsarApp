@@ -12,21 +12,15 @@ public class APIClient {
     private static Retrofit retrofit = null;
     public static String apiBaseUrl = "";
 
-    public static Retrofit getCleint(String BASE_URL) {
-        apiBaseUrl = BASE_URL;
-        if (retrofit == null) {
-
+    public static synchronized Retrofit getCleint(String BASE_URL) {
+        String normalizedBaseUrl = EndpointSecurityPolicy.normalizeBaseUrl(BASE_URL);
+        if (retrofit == null || !normalizedBaseUrl.equals(apiBaseUrl)) {
+            apiBaseUrl = normalizedBaseUrl;
             retrofit = new Retrofit.Builder()
                     .baseUrl(apiBaseUrl)
+                    .client(NetworkClientFactory.client())
                     .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                     .build();
-        } else {
-            if (!retrofit.baseUrl().equals(BASE_URL)) {
-                retrofit = new Retrofit.Builder()
-                        .baseUrl(BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
-                        .build();
-            }
         }
         return retrofit;
     }

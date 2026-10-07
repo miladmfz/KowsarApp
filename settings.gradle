@@ -8,9 +8,33 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        // Direct Google Maven access is unavailable in the current build environment.
+        // This mirror is deliberately limited to detached Android Lint/UTP toolchains.
+        maven {
+            name = 'AliyunGoogleLintMirror'
+            url = uri('https://maven.aliyun.com/repository/google')
+            content {
+                includeGroup 'com.android.tools.lint'
+                includeGroup 'com.android.tools.utp'
+                includeGroup 'com.android.tools.emulator'
+                includeGroup 'com.google.testing.platform'
+                includeGroup 'com.android.tools.external.com-intellij'
+                includeGroup 'com.android.tools.external.org-jetbrains'
+                includeModule 'com.android.tools', 'play-sdk-proto'
+            }
+        }
         google()
         mavenCentral()
-        jcenter()
+        // Three legacy UI artifacts are not published on Maven Central. Keep JCenter
+        // narrowly scoped until those components can be replaced in a UI-focused phase.
+        jcenter {
+            content {
+                includeGroup 'com.thoughtbot'
+                includeGroup 'com.mohamadamin'
+                includeGroup 'com.github.juanlabrador'
+                includeGroup 'com.github.smarteist'
+            }
+        }
         maven { url 'https://jitpack.io' }
 
     }

@@ -19,7 +19,10 @@ import com.kits.kowsarapp.BuildConfig;
 import com.kits.kowsarapp.R;
 import com.kits.kowsarapp.adapter.base.Base_AllAppAdapter;
 import com.kits.kowsarapp.application.base.App;
+import com.kits.kowsarapp.application.base.Base_NetworkFailure;
 import com.kits.kowsarapp.application.base.CallMethod;
+import com.kits.kowsarapp.application.base.SafeListAccess;
+import com.kits.kowsarapp.application.base.SafeValueParser;
 import com.kits.kowsarapp.databinding.DefaultActivityDbBinding;
 import com.kits.kowsarapp.model.base.Activation;
 import com.kits.kowsarapp.model.base.Base_DBH;
@@ -30,7 +33,6 @@ import com.kits.kowsarapp.webService.base.Kowsar_APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -56,6 +58,9 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     boolean doubleBackToExitPressedOnce = false;
 
     DefaultActivityDbBinding binding;
+    private Call<RetrofitResponse> activationCall;
+    private Call<RetrofitResponse> logReportCall;
+    private boolean activationInProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +69,14 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         binding = DefaultActivityDbBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Config();
-
+        callMethod = new CallMethod(this);
         try {
+            Config();
             init();
-        } catch (Exception e) {
-            callMethod.Log(e.getMessage());
+        } catch (RuntimeException e) {
+            callMethod.Log("Base activation screen initialization failed: "
+                    + e.getClass().getSimpleName());
+            callMethod.showToast("آماده‌سازی صفحه فعال‌سازی انجام نشد");
         }
     }
 
@@ -77,7 +84,6 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     @SuppressLint("SdCardPath")
     public void Config() {
 
-        callMethod = new CallMethod(this);
         activation = new Activation();
         apiInterface = APIClient_kowsar.getCleint_log().create(Kowsar_APIInterface.class);
         base_dbh = new Base_DBH(App.getContext(), "/data/data/com.kits.kowsarapp/databases/KowsarDb.sqlite");
@@ -92,52 +98,87 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
     }
 
 
-    public void test() {
-        android.content.Intent intent = new android.content.Intent(
-                this,
-                com.kits.kowsarapp.activity.base.TestPaymentActivity.class
-        );
-        startActivity(intent);
-
-    }
-
     @SuppressLint("SdCardPath")
     public void init() {
 
         activations = base_dbh.getActivation();
+        if (activations == null) {
+            callMethod.Log("Activation list was null; using an empty list");
+            activations = new ArrayList<>();
+        }
 
         binding.baseAppVersion.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : " + BuildConfig.VERSION_NAME));
         binding.baseAppRegistercode.setOnClickListener(v -> {
-            ///test();
+            if (activationInProgress) return;
+            CharSequence enteredText = binding.baseAppTvGetcode.getText();
+            String activationCode = enteredText == null ? "" : enteredText.toString();
+            if (activationCode.trim().isEmpty()) {
+                callMethod.showToast("کد فعال‌سازی را وارد کنید");
+                return;
+            }
 
             int exist=0;
             for (Activation singleactive : activations) {
-                if (Objects.requireNonNull(binding.baseAppTvGetcode.getText()).toString().equals(singleactive.getActivationCode())){
+                if (singleactive != null
+                        && activationCode.equals(singleactive.getActivationCode())){
                     exist=exist+1;
                 }
             }
             if (exist<1){
-                Call<RetrofitResponse> call1 = apiInterface.Activation(
-                        Objects.requireNonNull(binding.baseAppTvGetcode.getText()).toString(),"1");
-                call1.enqueue(new Callback<RetrofitResponse>() {
+                setActivationInProgress(true);
+                activationCall = apiInterface.Activation(activationCode,"1");
+                activationCall.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                        if (response.isSuccessful()) {
-                            assert response.body() != null;
-                            activation = response.body().getActivations().get(0);
-                            if (Integer.parseInt(activation.getErrCode())>0){
-                                callMethod.showToast(activation.getErrDesc());
-                            }else{
-                                FirstActivation(activation);
+                        if (!canUpdateUi()) return;
+                        activationCall = null;
+                        RetrofitResponse body = response.body();
+                        Activation responseActivation = body == null
+                                ? null
+                                : SafeListAccess.firstOrNull(body.getActivations());
+                        if (!response.isSuccessful() || responseActivation == null) {
+                            setActivationInProgress(false);
+                            callMethod.Log("Activation response is empty or invalid");
+                            callMethod.showToast("پاسخ فعال‌سازی معتبر نیست؛ دوباره تلاش کنید");
+                            return;
+                        }
+
+                        activation = responseActivation;
+                        Integer errorCode = SafeValueParser.intOrNull(activation.getErrCode());
+                        if (errorCode == null) {
+                            setActivationInProgress(false);
+                            callMethod.Log("Activation ErrCode is invalid");
+                            callMethod.showToast("پاسخ فعال‌سازی معتبر نیست؛ دوباره تلاش کنید");
+                        } else if (errorCode > 0){
+                            setActivationInProgress(false);
+                            callMethod.showToast(activation.getErrDesc());
+                        }else{
+                            try {
                                 base_dbh.InsertActivation(activation);
-                                finish();
-                                startActivity(getIntent());
+                            } catch (RuntimeException exception) {
+                                setActivationInProgress(false);
+                                callMethod.Log("Activation persistence failed: "
+                                        + exception.getClass().getSimpleName());
+                                callMethod.showToast("ذخیره‌سازی فعال‌سازی انجام نشد؛ دوباره تلاش کنید");
+                                return;
                             }
+                            FirstActivation(activation);
+                            finish();
+                            startActivity(getIntent());
                         }
                     }
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        callMethod.Log(t.getMessage());
+                        if (!canUpdateUi()) return;
+                        activationCall = null;
+                        setActivationInProgress(false);
+                        Base_NetworkFailure.show(
+                                Base_ChoiceDBActivity.this,
+                                callMethod,
+                                "Activation",
+                                call,
+                                t
+                        );
                     }
                 });
             }else{
@@ -162,10 +203,8 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
 
     @SuppressLint("HardwareIds")
     public void FirstActivation(Activation activation) {
-
-
-
-
+        if (activation == null) return;
+        try {
         @SuppressLint("HardwareIds") String android_id = BuildConfig.BUILD_TYPE.equals("release") ?
                 Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID) :
                 "debug";
@@ -198,32 +237,53 @@ public class Base_ChoiceDBActivity extends AppCompatActivity {
         Body_str =callMethod.CreateJson("SdkVersion", Build.VERSION.SDK_INT+"", Body_str);
         Body_str =callMethod.CreateJson("DeviceIp", "---- / -----", Body_str);
 
-        callMethod.Log("Body_str = "+Body_str);
+        logReportCall = apiInterface.LogReport(callMethod.RetrofitBody(Body_str));
 
-        Call<RetrofitResponse> call = apiInterface.LogReport(callMethod.RetrofitBody(Body_str));
-        callMethod.Log(""+call.request().url());
-        callMethod.Log(""+call.request().body());
-
-
-        call.enqueue(new Callback<RetrofitResponse>() {
+        logReportCall.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call,@NonNull  Response<RetrofitResponse> response) {
-
-
+                if (logReportCall == call) logReportCall = null;
             }
 
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                // Handle failure
+                if (logReportCall == call) logReportCall = null;
+                if (call.isCanceled()) return;
+                Base_NetworkFailure.logOnly(callMethod, "FirstActivation LogReport", call, t);
             }
         });
+        } catch (RuntimeException exception) {
+            logReportCall = null;
+            callMethod.Log("FirstActivation LogReport setup failed: "
+                    + exception.getClass().getSimpleName());
+        }
+    }
 
+    private void setActivationInProgress(boolean inProgress) {
+        activationInProgress = inProgress;
+        if (binding != null) binding.baseAppRegistercode.setEnabled(!inProgress);
+    }
 
+    private boolean canUpdateUi() {
+        return binding != null && !isFinishing() && !isDestroyed();
+    }
 
-
-
-
+    @Override
+    protected void onDestroy() {
+        if (activationCall != null) activationCall.cancel();
+        if (logReportCall != null) logReportCall.cancel();
+        if (dialog != null && dialog.isShowing()) {
+            try {
+                dialog.dismiss();
+            } catch (IllegalArgumentException exception) {
+                callMethod.Log("Activation dialog dismissal failed: "
+                        + exception.getClass().getSimpleName());
+            }
+        }
+        if (base_dbh != null) base_dbh.close();
+        binding = null;
+        super.onDestroy();
     }
 
 
